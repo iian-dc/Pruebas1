@@ -319,4 +319,4 @@ window.actualizarDirRest=function(){const dir=document.getElementById("ajDirRest
 window.guardarAjustes=function(){const newUser=document.getElementById("ajUser").value.trim();const newPass=document.getElementById("ajPass").value.trim();if(newUser&&newPass){adminCred={user:newUser,pass:newPass};db.ref('admin').set(adminCred);}config.whatsapp=document.getElementById("ajWhatsapp").value.trim()||config.whatsapp;config.nombre=document.getElementById("ajNombre").value.trim()||config.nombre;if(tempLogo){config.logo=tempLogo;}if(tempPortada){config.portada=tempPortada;}config.color=document.getElementById("ajColor").value||config.color;config.direccionRest=document.getElementById("ajDirRest").value.trim()||config.direccionRest;aplicarConfig();db.ref('config').set(config);db.ref('coords').set(restauranteCoords);showElegant("Guardado en la nube","Portada y datos actualizados al instante.");}
 </script>
 </body>
-</html>"""
+</html>
