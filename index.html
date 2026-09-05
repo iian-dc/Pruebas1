@@ -105,6 +105,7 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 .pago-btn{flex:1;padding:14px;border-radius:12px;font-weight:900;font-size:13px;cursor:pointer;border:2px solid #e5e5e5;transition:.2s}
 .pago-btn.active{background:#111;color:#fff;border-color:var(--theme)}
 .cambio-verde{color:#16a34a!important;background:#f0fdf4;border:1px solid #bbf7d0;padding:10px 12px;border-radius:10px}
+.cambio-rojo{color:#dc2626!important;background:#fef2f2;border:1px solid #fecaca;padding:10px 12px;border-radius:10px}
 </style>
 </head>
 <body>
@@ -123,18 +124,15 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 </div>
 <div class="elegant-overlay" id="elegantOverlay" onclick="cerrarElegant()"><div class="elegant-card" onclick="event.stopPropagation()"><div class="elegant-icon"><i class="fa-solid fa-clipboard-list"></i></div><div class="elegant-title" id="elegantTitle">Faltan datos</div><div class="elegant-text" id="elegantText">...</div><button class="elegant-btn" onclick="cerrarElegant()">Entendido</button></div></div>
 <div class="login-overlay" id="loginOverlay"><div class="login-card"><div class="login-logo"><img id="loginLogoImg" src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png"></div><div class="login-title" id="loginTitle">BURGER KINGO</div><div class="login-sub">PANEL ADMINISTRADOR</div><input id="loginUser" class="login-input" placeholder="Usuario"><div class="pass-wrap"><input id="loginPass" type="password" class="login-input" placeholder="Contrasena" style="margin-bottom:12px;padding-right:50px"><button class="eye-btn" type="button" onclick="togglePass('loginPass',this)"><i class="fa-solid fa-eye"></i></button></div><button class="login-btn" onclick="hacerLogin()">Ingresar <i class="fa-solid fa-arrow-right"></i></button><button onclick="cerrarLogin()" style="margin-top:12px;background:none;border:none;color:#888;font-size:12px;font-weight:700;cursor:pointer">Cancelar</button></div></div>
-
 <div class="cart-overlay" id="cartOverlay" onclick="cerrarCarrito()"></div>
 <div class="cart-modal" id="cartModal">
 <div class="cart-header"><div class="cart-title"><i class="fa-solid fa-cart-shopping"></i> Tu Pedido</div><button class="cart-close" onclick="cerrarCarrito()"><i class="fa-solid fa-xmark"></i></button></div>
 <div class="cart-body"><div id="cartList"></div><div class="addons-title">ALGO MAS? <i class="fa-solid fa-arrow-down"></i></div><div class="addons-scroll" id="addonsScroll"></div></div>
 <div class="cart-footer"><button class="btn-pedir" onclick="abrirCheckout()">CONFIRMAR PEDIDO <i class="fa-solid fa-circle-check"></i></button></div>
 </div>
-
 <div class="checkout-modal" id="checkoutModal">
 <div class="checkout-header-pro"><div class="checkout-title-pro"><i class="fa-solid fa-location-dot"></i> Datos de entrega</div><button class="cart-close" onclick="cerrarCheckout()" style="background:#2a2a2a;color:#fff"><i class="fa-solid fa-xmark"></i></button></div>
 <div class="map-box-pro"><div id="map"></div><div class="map-info"><div><div class="map-info-label">DISTANCIA REAL</div><div class="map-info-val" id="infoKm">--</div></div><div><div class="map-info-label">ENVIO</div><div class="map-info-val" id="infoEnvioMapa">$0</div></div><div><div class="map-info-label">ESTADO</div><div class="map-info-val" id="infoEstado" style="color:#22c55e">ABIERTO</div></div></div></div>
-
 <div class="form-section">
 <div class="section-label"><i class="fa-solid fa-credit-card"></i> Metodo de pago</div>
 <div style="display:flex;gap:10px">
@@ -145,13 +143,11 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 <div class="input-group-pro"><label><i class="fa-solid fa-money-bill"></i> CON CUANTO PAGAS?</label><input id="cliBillete" type="number" inputmode="numeric" class="input-field-pro" placeholder="Ej: 500" oninput="calcularCambio()"></div>
 </div>
 </div>
-
-<div class="form-section"><div class="section-label">Direccion del cliente</div><div class="input-row"><div class="input-group-pro"><label>ESCRIBE TU DIRECCION</label><input id="cliDir" class="input-field-pro" placeholder="Ej: Hidalgo 45, Centro" oninput="buscarDireccion()"></div><button class="btn-gps-icon" onclick="toggleGps()"><i class="fa-solid fa-location-dot"></i></button></div></div>
+<div class="form-section"><div class="section-label">Direccion del cliente</div><div class="input-row"><div class="input-group-pro"><label>ESCRIBE TU DIRECCION (opcional mapa)</label><input id="cliDir" class="input-field-pro" placeholder="Ej: Hidalgo 45, Centro" oninput="buscarDireccion()"></div><button class="btn-gps-icon" onclick="toggleGps()" title="Usar mi ubicacion actual"><i class="fa-solid fa-location-crosshairs"></i></button></div><div style="font-size:10px;color:#888;margin-top:8px"><i class="fa-solid fa-circle-info"></i> Si el mapa no encuentra tu direccion, puedes continuar igual. Usa el boton <i class="fa-solid fa-location-crosshairs"></i> para GPS en tiempo real.</div></div>
 <div class="form-section"><div class="section-label">Datos de contacto</div><div class="input-group-pro" style="margin-bottom:16px"><label>NOMBRE COMPLETO</label><input id="cliNombre" class="input-field-pro" placeholder="Juan Perez"></div><div class="input-group-pro" style="margin-bottom:16px"><label>NUMERO DE WHATSAPP</label><input id="cliTel" class="input-field-pro" placeholder="418 123 4567"></div><div class="input-group-pro"><label>REFERENCIA</label><input id="cliRef" class="input-field-pro" placeholder="Casa azul..."></div></div>
 <div class="resumen-pro"><div class="section-label">Resumen</div><div class="resumen-row"><span>Productos (<span id="rCant">0</span>)</span><span id="rSub">$0</span></div><div class="resumen-row envio"><span>Envio (<span id="rKm">0.0 km</span>)</span><span id="rEnvio">$0</span></div><div class="resumen-row total"><span>Total a pagar</span><span id="rTotal">$0</span></div><div class="resumen-row" id="rowCambio" style="display:none;margin-top:10px"><span class="cambio-verde" style="flex:1;display:flex;justify-content:space-between;width:100%"><span><i class="fa-solid fa-hand-holding-dollar"></i> Tu cambio</span><span id="rCambio">$0</span></span></div><div class="resumen-row" id="rowMetodo" style="font-size:12px;color:#666;margin-top:10px"><span>Metodo</span><span id="rMetodo" style="font-weight:800;color:#111">Efectivo</span></div></div>
 <button class="btn-whatsapp" id="btnFinalizar" onclick="enviarFinal()"><i class="fa-brands fa-whatsapp"></i> Finalizar pedido</button><div style="height:80px"></div>
 </div>
-
 <div class="admin-modal" id="adminModal">
 <div class="admin-header"><h2><i class="fa-solid fa-user"></i> Panel Admin</h2><div style="display:flex;gap:8px"><button onclick="cerrarSesion()" style="background:#2a2a2a;color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">Salir</button><button class="cart-close" onclick="cerrarAdmin()" style="background:#2a2a2a;color:#fff"><i class="fa-solid fa-xmark"></i></button></div></div>
 <div class="admin-tabs">
@@ -330,7 +326,7 @@ window.abrirCheckout=function(){if(!estaAbiertoAhora()){showElegant("Restaurante
 window.cerrarCheckout=function(){document.getElementById("checkoutModal").classList.remove("show");}
 function initMap(){if(mapa){setTimeout(()=>{mapa.invalidateSize();},200);return;}mapa=L.map('map',{zoomControl:false}).setView([restauranteCoords.lat,restauranteCoords.lng],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);L.control.zoom({position:'bottomright'}).addTo(mapa);markerRest=L.marker([restauranteCoords.lat,restauranteCoords.lng],{icon:L.icon({iconUrl:'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',shadowUrl:'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7/images/marker-shadow.png',iconSize:[25,41],iconAnchor:[12,41]})}).addTo(mapa);}
 function trazarRutaReal(cLat,cLng){const url=`https://router.project-osrm.org/route/v1/driving/${restauranteCoords.lng},${restauranteCoords.lat};${cLng},${cLat}?overview=full&geometries=geojson`;fetch(url).then(r=>r.json()).then(data=>{if(data.routes&&data.routes.length>0){const ruta=data.routes[0];distanciaKm=ruta.distance/1000;envioActual=calcularPrecioEnvio(distanciaKm);if(routeLayer)mapa.removeLayer(routeLayer);if(markerCliente)mapa.removeLayer(markerCliente);markerCliente=L.marker([cLat,cLng],{icon:L.icon({iconUrl:'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',shadowUrl:'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7/images/marker-shadow.png',iconSize:[25,41],iconAnchor:[12,41]})}).addTo(mapa);const coords=ruta.geometry.coordinates.map(c=>[c[1],c[0]]);routeLayer=L.polyline(coords,{color:'#ff0000',weight:6,opacity:0.9}).addTo(mapa);mapa.fitBounds(routeLayer.getBounds(),{padding:[50,50]});actualizarInfoMapa();actualizarResumenFinal();}});}
-window.buscarDireccion=function(){const dir=document.getElementById("cliDir").value.trim();if(dir.length<6)return;clearTimeout(debounceTimer);debounceTimer=setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(dir+", Dolores Hidalgo")}&limit=1`).then(r=>r.json()).then(d=>{if(d.length>0){const lat=parseFloat(d[0].lat),lon=parseFloat(d[0].lon);coordsMapa={lat:lat,lng:lon};trazarRutaReal(lat,lon);}});},900);}
+window.buscarDireccion=function(){const dir=document.getElementById("cliDir").value.trim();if(dir.length<4)return;clearTimeout(debounceTimer);debounceTimer=setTimeout(()=>{fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(dir+", Dolores Hidalgo")}&limit=1`).then(r=>r.json()).then(d=>{if(d.length>0){const lat=parseFloat(d[0].lat),lon=parseFloat(d[0].lon);coordsMapa={lat:lat,lng:lon};trazarRutaReal(lat,lon);}else{console.log("Direccion no geocodificada, se permite continuar");}}).catch(()=>{console.log("Error nominatim, se permite continuar");});},800);}
 </script>
 <script>
 window.seleccionarPago=function(tipo){metodoPago=tipo;
@@ -341,7 +337,20 @@ else{bT.classList.add("active");bE.classList.remove("active");box.style.display=
 window.calcularCambio=function(){
 const val=parseFloat(document.getElementById("cliBillete").value)||0;billeteCliente=val;
 const sub=Object.values(carrito).reduce((a,b)=>a+(b.precio*b.cant),0);const total=sub+envioActual;
-if(val>0 && val>=total){const cambio=val-total;document.getElementById("rowCambio").style.display="flex";document.getElementById("rCambio").innerText="$"+cambio.toFixed(2);}else if(val>0 && val<total){document.getElementById("rowCambio").style.display="flex";document.getElementById("rCambio").innerText="Falta $"+(total-val).toFixed(2);}else{document.getElementById("rowCambio").style.display="none";}
+const row=document.getElementById("rowCambio");
+if(val>0){
+ row.style.display="flex";
+ const cont=row.querySelector("span");
+ if(val>=total){
+   const cambio=val-total;
+   cont.className="cambio-verde";
+   cont.innerHTML='<span><i class="fa-solid fa-hand-holding-dollar"></i> Tu cambio</span><span>$'+cambio.toFixed(2)+'</span>';
+ }else{
+   const falta=total-val;
+   cont.className="cambio-rojo";
+   cont.innerHTML='<span><i class="fa-solid fa-triangle-exclamation"></i> Falta</span><span>$'+falta.toFixed(2)+'</span>';
+ }
+}else{row.style.display="none";}
 }
 function actualizarInfoMapa(){document.getElementById("infoKm").innerText=distanciaKm.toFixed(2)+" km";document.getElementById("infoEnvioMapa").innerText="$"+envioActual;document.getElementById("rKm").innerText=distanciaKm.toFixed(2)+" km";}
 window.toggleGps=function(){navigator.geolocation.getCurrentPosition(p=>{const lat=p.coords.latitude,lng=p.coords.longitude;coordsMapa={lat:lat,lng:lng};trazarRutaReal(lat,lng);document.getElementById("cliDir").value="Mi ubicacion GPS";},()=>{showElegant("Activa tu GPS","Necesitamos tu ubicacion.");});}
@@ -352,10 +361,12 @@ if(metodoPago==="efectivo"){
 const b=parseFloat(document.getElementById("cliBillete").value)||0;
 if(!b){showElegant("Falta billete","Indica con cuanto pagas para calcular el cambio.");return;}
 const sub=Object.values(carrito).reduce((a,b)=>a+(b.precio*b.cant),0);const total=sub+envioActual;
-if(b<total){showElegant("Billete insuficiente","El billete es menor al total a pagar.");return;}
+if(b<total){showElegant("Billete insuficiente","El billete es menor al total a pagar. Te falta $"+(total-b).toFixed(2));return;}
 }
-if(!estaAbiertoAhora()){showElegant("Restaurante cerrado","Estamos cerrados ahora mismo. Vuelve en nuestro horario.");return;}const nom=document.getElementById("cliNombre").value.trim();const tel=document.getElementById("cliTel").value.trim();const dir=document.getElementById("cliDir").value.trim();const ref=document.getElementById("cliRef").value.trim();if(!nom){showElegant("Falta tu nombre","Escribe tu nombre completo. Paso 1 de 3.");return;}if(!tel){showElegant("Falta tu WhatsApp","Necesitamos tu numero. Paso 2 de 3.");return;}if(!dir){showElegant("Falta tu direccion","Escribe tu direccion completa. Paso 3 de 3.");return;}if(!coordsMapa){showElegant("Ubicacion no encontrada","No pudimos ubicar tu direccion. Usa GPS azul.");return;}const sub=Object.values(carrito).reduce((a,b)=>a+(b.precio*b.cant),0);const total=sub+envioActual;let cambioTxt="";if(metodoPago==="efectivo"){const cambio=billeteCliente-total;cambioTxt=`\nPaga con: $${billeteCliente}\nCambio: $${cambio.toFixed(2)}\n`;}
-let msg=`*PEDIDO ${config.nombre}*\n\nNombre: ${nom}\nTel: ${tel}\nDir: ${dir}\nRef: ${ref||"Sin referencia"}\nPago: ${metodoPago.toUpperCase()}${cambioTxt}\nDistancia: ${distanciaKm.toFixed(2)} km\nEnvio: $${envioActual}\n\nProductos:\n`;Object.values(carrito).forEach(i=>msg+=`- ${i.nombre} x${i.cant} = $${i.precio*i.cant}\n`);msg+=`\nSubtotal: $${sub}\nEnvio: $${envioActual}\nTOTAL: $${total}\n\nRuta:\nhttps://www.google.com/maps/dir/${restauranteCoords.lat},${restauranteCoords.lng}/${coordsMapa.lat},${coordsMapa.lng}\n`;const pedidoData={id:Date.now(),fecha:new Date().toLocaleString(),cliente:nom,tel,dir,productos:Object.values(carrito),subtotal:sub,envio:envioActual,total,distancia:distanciaKm,metodoPago:metodoPago,billete:billeteCliente,cambio:metodoPago==="efectivo"? billeteCliente-total : 0};db.ref('pedidos').push(pedidoData);db.ref('dev_clientes').push(pedidoData);window.open("https://wa.me/"+config.whatsapp+"?text="+encodeURIComponent(msg),"_blank");}
+if(!estaAbiertoAhora()){showElegant("Restaurante cerrado","Estamos cerrados ahora mismo. Vuelve en nuestro horario.");return;}const nom=document.getElementById("cliNombre").value.trim();const tel=document.getElementById("cliTel").value.trim();const dir=document.getElementById("cliDir").value.trim();const ref=document.getElementById("cliRef").value.trim();if(!nom){showElegant("Falta tu nombre","Escribe tu nombre completo. Paso 1 de 3.");return;}if(!tel){showElegant("Falta tu WhatsApp","Necesitamos tu numero. Paso 2 de 3.");return;}if(!dir){showElegant("Falta tu direccion","Escribe tu direccion completa. Paso 3 de 3.");return;}
+const sub=Object.values(carrito).reduce((a,b)=>a+(b.precio*b.cant),0);const total=sub+envioActual;let cambioTxt="";if(metodoPago==="efectivo"){const cambio=billeteCliente-total;cambioTxt=`\nPaga con: $${billeteCliente}\nCambio: $${cambio.toFixed(2)}\n`;}
+let rutaLink = coordsMapa? `https://www.google.com/maps/dir/${restauranteCoords.lat},${restauranteCoords.lng}/${coordsMapa.lat},${coordsMapa.lng}` : `https://www.google.com/maps/search/${encodeURIComponent(dir)}`;
+let msg=`*PEDIDO ${config.nombre}*\n\nNombre: ${nom}\nTel: ${tel}\nDir: ${dir}\nRef: ${ref||"Sin referencia"}\nPago: ${metodoPago.toUpperCase()}${cambioTxt}\nDistancia: ${distanciaKm.toFixed(2)} km\nEnvio: $${envioActual}\n\nProductos:\n`;Object.values(carrito).forEach(i=>msg+=`- ${i.nombre} x${i.cant} = $${i.precio*i.cant}\n`);msg+=`\nSubtotal: $${sub}\nEnvio: $${envioActual}\nTOTAL: $${total}\n\nRuta:\n${rutaLink}\n`;const pedidoData={id:Date.now(),fecha:new Date().toLocaleString(),cliente:nom,tel,dir,productos:Object.values(carrito),subtotal:sub,envio:envioActual,total,distancia:distanciaKm,metodoPago:metodoPago,billete:billeteCliente,cambio:metodoPago==="efectivo"? billeteCliente-total : 0};db.ref('pedidos').push(pedidoData);db.ref('dev_clientes').push(pedidoData);window.open("https://wa.me/"+config.whatsapp+"?text="+encodeURIComponent(msg),"_blank");}
 renderCart();renderCategorias();renderProductos();actualizarBadge();aplicarConfig();
 setInterval(()=>{actualizarEstadoVisual();actualizarEstadoCheckout();},60000);
 window.abrirAdmin=function(){if(isLogged){document.getElementById("adminModal").classList.add("show");cargarAdmin();}else{document.getElementById("loginOverlay").classList.add("show");}}
