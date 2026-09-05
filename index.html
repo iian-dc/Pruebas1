@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SALCHI - Sistema de Gestión</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *{font-family:'Inter',sans-serif}
+  h1,h2,h3{font-family:'Manrope',sans-serif}
+ .card{transition:all.2s}
+ .card:hover{transform:translateY(-2px); box-shadow:0 12px 24px -10px rgba(0,0,0,.15)}
+  ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-thumb{background:#e5e7eb; border-radius:10px}
+</style>
+</head>
+<body class="bg-[#fafaf8] text-zinc-900">
+<div class="flex min-h-screen">
+  <!-- SIDEBAR -->
+  <aside class="w-[280px] bg-[#111111] text-white flex flex-col fixed h-full z-20">
+    <div class="p-8 border-b border-zinc-800">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-white text-black rounded-lg flex items-center justify-center font-bold text-[18px]">S</div>
+        <div>
+          <h1 id="brandName" class="font-bold text-[16px] tracking-tight">SALCHI PRO</h1>
+          <p class="text-[11px] text-zinc-400 tracking-widest uppercase">Management System</p>
+        </div>
+      </div>
+    </div>
+    <nav class="flex-1 p-4 space-y-1 mt-2">
+      <button onclick="showPanel('estandar')" id="btn-estandar" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white text-black font-medium"><i data-lucide="book-open" class="w-5 h-5"></i> Estandarización</button>
+      <button onclick="showPanel('inventario')" id="btn-inventario" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800"><i data-lucide="package" class="w-5 h-5"></i> Inventario</button>
+      <button onclick="showPanel('ventas')" id="btn-ventas" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800"><i data-lucide="bar-chart-3" class="w-5 h-5"></i> Ventas</button>
+      <button onclick="showPanel('finanzas')" id="btn-finanzas" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800"><i data-lucide="wallet" class="w-5 h-5"></i> Gastos / Ingresos</button>
+      <button onclick="showPanel('ajustes')" id="btn-ajustes" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800"><i data-lucide="settings-2" class="w-5 h-5"></i> Ajustes</button>
+    </nav>
+    <div class="p-4 border-t border-zinc-800">
+      <div class="bg-zinc-800 rounded-xl p-4">
+        <p class="text-xs text-zinc-400">Ventas Hoy</p>
+        <p id="miniVentas" class="text-xl font-bold mt-1">$0</p>
+        <div class="h-1 bg-zinc-700 rounded-full mt-3"><div id="miniBar" class="h-full bg-white rounded-full" style="width:0%"></div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="ml-[280px] flex-1 p-10">
+    <!-- ESTANDARIZACION -->
+    <section id="panel-estandar" class="panel">
+      <div class="flex justify-between items-start mb-8">
+        <div><h2 class="text-3xl font-bold tracking-tight">Estandarización de Productos</h2><p class="text-zinc-500 mt-2">Define gramos, costos y procedimiento exacto</p></div>
+        <button onclick="openModal('modalProducto')" class="bg-black text-white px-6 py-3 rounded-full font-medium flex items-center gap-2 hover:bg-zinc-800"><i data-lucide="plus" class="w-4 h-4"></i> Nuevo Producto</button>
+      </div>
+      <div id="listaProductos" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- INVENTARIO -->
+    <section id="panel-inventario" class="panel hidden">
+      <div class="flex justify-between items-start mb-8">
+        <div><h2 class="text-3xl font-bold">Inventario</h2><p class="text-zinc-500 mt-2">Control de stock y valorización</p></div>
+        <button onclick="openModal('modalInsumo')" class="bg-black text-white px-6 py-3 rounded-full font-medium flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> Nuevo Insumo</button>
+      </div>
+      <div class="bg-white rounded-[24px] border border-zinc-200 overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-zinc-50 text-zinc-500 text-[11px] uppercase tracking-widest"><tr><th class="text-left p-4 pl-6">Insumo</th><th class="text-left p-4">Stock</th><th class="text-left p-4">Costo / Kg</th><th class="text-left p-4">Valor Total</th><th class="text-left p-4">Estado</th><th class="p-4"></th></tr></thead>
+          <tbody id="tablaInventario"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VENTAS -->
+    <section id="panel-ventas" class="panel hidden">
+      <h2 class="text-3xl font-bold mb-8">Estadísticas de Ventas</h2>
+      <div class="grid grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-[20px] border"><p class="text-[11px] uppercase tracking-widest text-zinc-500">Ventas Hoy</p><p id="statHoy" class="text-2xl font-bold mt-2">$0</p><p id="statHoyCant" class="text-xs text-zinc-500 mt-1">0 pedidos</p></div>
+        <div class="bg-white p-6 rounded-[20px] border"><p class="text-[11px] uppercase tracking-widest text-zinc-500">Costo Insumos Hoy</p><p id="statGasto" class="text-2xl font-bold mt-2 text-amber-600">$0</p></div>
+        <div class="bg-black text-white p-6 rounded-[20px]"><p class="text-[11px] uppercase tracking-widest text-zinc-400">Utilidad Neta Hoy</p><p id="statUtilidad" class="text-2xl font-bold mt-2">$0</p></div>
+        <div class="bg-white p-6 rounded-[20px] border"><p class="text-[11px] uppercase tracking-widest text-zinc-500">Margen</p><p id="statMargen" class="text-2xl font-bold mt-2">0%</p></div>
+      </div>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="col-span-2 bg-white rounded-[24px] border p-6">
+          <div class="flex justify-between items-center mb-6"><h3 class="font-semibold">Registrar Venta</h3><button onclick="renderVentaSelect()" class="text-xs border px-3 py-1.5 rounded-full">Actualizar</button></div>
+          <div class="flex gap-3"><select id="ventaProducto" class="flex-1 border border-zinc-200 rounded-xl px-4 py-3 bg-white"></select><input id="ventaCant" type="number" value="1" min="1" class="w-20 border rounded-xl px-3 py-3"><button onclick="registrarVenta()" class="bg-black text-white px-6 rounded-xl">Vender</button></div>
+          <div id="listaVentasHoy" class="mt-6 space-y-2 max-h-[300px] overflow-y-auto"></div>
+        </div>
+        <div class="bg-white rounded-[24px] border p-6"><h3 class="font-semibold mb-4">Más vendidos</h3><div id="topProductos" class="space-y-3"></div></div>
+      </div>
+    </section>
+
+    <!-- FINANZAS -->
+    <section id="panel-finanzas" class="panel hidden">
+      <h2 class="text-3xl font-bold mb-8">Control Financiero</h2>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-[24px] border p-6"><h3 class="font-semibold flex items-center gap-2"><i data-lucide="trending-down" class="w-4 h-4"></i> Registrar Gasto</h3>
+          <div class="mt-4 space-y-3"><input id="gastoConcepto" placeholder="Concepto Ej: Compra de papa" class="w-full border rounded-xl px-4 py-3"><div class="flex gap-3"><input id="gastoMonto" type="number" placeholder="Monto" class="flex-1 border rounded-xl px-4 py-3"><select id="gastoTipo" class="border rounded-xl px-3"><option value="insumo">Insumo</option><option value="operativo">Operativo</option><option value="otro">Otro</option></select></div><button onclick="registrarGasto()" class="w-full bg-zinc-900 text-white py-3 rounded-xl">Guardar Gasto</button></div>
+          <div id="listaGastos" class="mt-6 space-y-2"></div>
+        </div>
+        <div class="bg-white rounded-[24px] border p-6"><h3 class="font-semibold">Resumen</h3><div class="mt-6 space-y-4"><div class="flex justify-between p-4 bg-zinc-50 rounded-xl"><span class="text-sm text-zinc-500">Ingresos Totales</span><span id="resIngresos" class="font-bold">$0</span></div><div class="flex justify-between p-4 bg-amber-50 rounded-xl"><span class="text-sm text-zinc-500">Gastos Totales</span><span id="resGastos" class="font-bold text-amber-700">$0</span></div><div class="flex justify-between p-4 bg-black text-white rounded-xl"><span class="text-sm text-zinc-300">Balance Final</span><span id="resBalance" class="font-bold">$0</span></div></div></div>
+      </div>
+    </section>
+
+    <!-- AJUSTES -->
+    <section id="panel-ajustes" class="panel hidden">
+      <h2 class="text-3xl font-bold mb-8">Ajustes del Sistema</h2>
+      <div class="grid grid-cols-2 gap-6 max-w-4xl">
+        <div class="bg-white rounded-[24px] border p-8"><h3 class="font-semibold mb-6 flex items-center gap-2"><i data-lucide="store" class="w-5 h-5"></i> Negocio</h3>
+          <label class="text-xs uppercase tracking-widest text-zinc-500">Nombre del panel</label><input id="ajNombre" class="w-full border rounded-xl px-4 py-3 mt-2 mb-4" value="SALCHI PRO">
+          <label class="text-xs uppercase tracking-widest text-zinc-500">Moneda</label><select id="ajMoneda" class="w-full border rounded-xl px-4 py-3 mt-2"><option>COP $</option><option>MXN $</option><option>USD $</option></select>
+          <button onclick="guardarAjustes()" class="mt-6 w-full bg-black text-white py-3 rounded-xl">Guardar Cambios</button>
+        </div>
+        <div class="bg-white rounded-[24px] border p-8"><h3 class="font-semibold mb-6 flex items-center gap-2"><i data-lucide="user-cog" class="w-5 h-5"></i> Acceso</h3>
+          <label class="text-xs uppercase tracking-widest text-zinc-500">Usuario</label><input id="ajUser" class="w-full border rounded-xl px-4 py-3 mt-2 mb-4" placeholder="admin">
+          <label class="text-xs uppercase tracking-widest text-zinc-500">Nueva Contraseña</label><input id="ajPass" type="password" class="w-full border rounded-xl px-4 py-3 mt-2"><p class="text-[11px] text-zinc-400 mt-3">Se guarda localmente. Para producción conecta a tu base de datos.</p>
+          <button onclick="guardarCredenciales()" class="mt-6 w-full border border-zinc-900 py-3 rounded-xl font-medium">Actualizar Credenciales</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- MODALES -->
+<div id="modalProducto" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-6">
+  <div class="bg-white w-full max-w-2xl rounded-[28px] p-8 max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Nuevo Producto - Ficha Técnica</h3><button onclick="closeModal('modalProducto')"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+    <div class="space-y-4">
+      <input id="pNombre" placeholder="Nombre Ej: Salchipapa Sencilla" class="w-full border rounded-xl px-4 py-3 font-medium">
+      <input id="pPrecio" type="number" placeholder="Precio venta Ej: 12000" class="w-full border rounded-xl px-4 py-3">
+      <div class="border-t pt-4"><p class="text-xs uppercase tracking-widest font-semibold mb-3">Ingredientes con Gramaje</p><div id="pIngredientes" class="space-y-2"></div><button onclick="addIngredienteRow()" class="text-xs border px-3 py-2 rounded-full mt-2">+ Agregar ingrediente</button></div>
+      <div class="border-t pt-4"><p class="text-xs uppercase tracking-widest font-semibold mb-3">Paso a paso preparación</p><textarea id="pPasos" rows="4" placeholder="1. Freír papa 150g a 180°C por 3 min&#10;2. Cortar salchicha..." class="w-full border rounded-xl px-4 py-3"></textarea></div>
+      <button onclick="guardarProducto()" class="w-full bg-black text-white py-4 rounded-xl font-medium">Guardar Ficha Técnica</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalInsumo" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-md rounded-[28px] p-8">
+    <h3 class="text-xl font-bold mb-6">Nuevo Insumo Inventario</h3>
+    <div class="space-y-3"><input id="iNombre" placeholder="Nombre Ej: Papa precocida" class="w-full border rounded-xl px-4 py-3"><div class="flex gap-3"><input id="iStock" type="number" placeholder="Stock kg" class="flex-1 border rounded-xl px-4 py-3"><input id="iCosto" type="number" placeholder="Costo x kg" class="flex-1 border rounded-xl px-4 py-3"></div><input id="iMin" type="number" placeholder="Stock mínimo alerta" class="w-full border rounded-xl px-4 py-3"><button onclick="guardarInsumo()" class="w-full bg-black text-white py-3 rounded-xl">Guardar</button></div>
+  </div>
+</div>
+
+<script>
+let db = JSON.parse(localStorage.getItem('salchiDB') || '{"productos":[{"id":1,"nombre":"Salchipapa Sencilla","precio":12000,"ingredientes":[{"nombre":"Papa a la francesa","gramos":200,"costoKg":4500},{"nombre":"Salchicha premium","gramos":80,"costoKg":18000},{"nombre":"Queso costeño","gramos":20,"costoKg":22000},{"nombre":"Salsas","gramos":30,"costoKg":8000}],"pasos":"1. Pesar 200g de papa y freír a 180°C por 3:30 min.\n2. Cortar 80g salchicha en diagonal y saltear 45 seg.\n3. Emplatar papa base, salchicha encima.\n4. Agregar 20g queso rayado y 30g salsas (rosada, piña, tártara).\n5. Entregar en menos de 4 min."}],"insumos":[{"id":1,"nombre":"Papa a la francesa","stock":25,"costo":4500,"min":5},{"id":2,"nombre":"Salchicha premium","stock":8,"costo":18000,"min":2}],"ventas":[],"gastos":[],"ajustes":{"nombre":"SALCHI PRO","moneda":"COP $"}}');
+
+function save(){localStorage.setItem('salchiDB', JSON.stringify(db)); renderAll()}
+function showPanel(name){document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden')); document.getElementById('panel-'+name).classList.remove('hidden'); document.querySelectorAll('.nav-btn').forEach(b=>{b.classList.remove('bg-white','text-black'); b.classList.add('text-zinc-400')}); document.getElementById('btn-'+name).classList.add('bg-white','text-black'); document.getElementById('btn-'+name).classList.remove('text-zinc-400')}
+function openModal(id){document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); lucide.createIcons()}
+function closeModal(id){document.getElementById(id).classList.add('hidden');}
+
+function calcCostoProducto(p){return p.ingredientes.reduce((s,i)=>s+ (i.gramos/1000)*i.costoKg,0)}
+function renderProductos(){
+  const cont=document.getElementById('listaProductos'); cont.innerHTML='';
+  db.productos.forEach(p=>{
+    const costo=calcCostoProducto(p); const margen=((p.precio-costo)/p.precio*100).toFixed(1);
+    cont.innerHTML+=`<div class="card bg-white rounded-[24px] border border-zinc-200 p-6">
+      <div class="flex justify-between items-start"><div><h3 class="font-bold text-[18px]">${p.nombre}</h3><p class="text-xs text-zinc-500 mt-1">Costo: $${costo.toFixed(0)} | Venta: $${p.precio} | Margen: ${margen}%</p></div><button onclick="deleteProducto(${p.id})" class="p-2 hover:bg-zinc-100 rounded-full"><i data-lucide="trash-2" class="w-4 h-4 text-zinc-400"></i></button></div>
+      <div class="mt-4"><p class="text-[11px] uppercase tracking-widest font-semibold text-zinc-500 mb-2">Receta Estandarizada</p><div class="space-y-1.5">${p.ingredientes.map(i=>`<div class="flex justify-between text-sm bg-zinc-50 px-3 py-2 rounded-lg"><span>${i.nombre}</span><span class="font-medium">${i.gramos}g</span></div>`).join('')}</div></div>
+      <div class="mt-4"><p class="text-[11px] uppercase tracking-widest font-semibold text-zinc-500 mb-2">Procedimiento</p><pre class="text-[13px] text-zinc-600 whitespace-pre-wrap bg-[#fafaf8] p-3 rounded-xl border">${p.pasos}</pre></div>
+    </div>`;
+  }); lucide.createIcons()
+}
+function renderInventario(){
+  const tbody=document.getElementById('tablaInventario'); tbody.innerHTML='';
+  db.insumos.forEach(ins=>{
+    const valor=ins.stock*ins.costo; const estado=ins.stock<=ins.min?'<span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-[11px] font-medium">BAJO</span>': ins.stock<=ins.min*2?'<span class="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full text-[11px]">MEDIO</span>':'<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-[11px]">OK</span>';
+    tbody.innerHTML+=`<tr class="border-b border-zinc-100 hover:bg-zinc-50"><td class="p-4 pl-6 font-medium">${ins.nombre}</td><td class="p-4">${ins.stock} kg</td><td class="p-4">$${ins.costo}</td><td class="p-4 font-medium">$${valor.toLocaleString()}</td><td class="p-4">${estado}</td><td class="p-4 text-right"><button onclick="deleteInsumo(${ins.id})" class="text-zinc-400 hover:text-black"><i data-lucide="x" class="w-4 h-4"></i></button></td></tr>`;
+  }); lucide.createIcons()
+}
+function renderVentas(){
+  const hoy=new Date().toDateString(); const ventasHoy=db.ventas.filter(v=>new Date(v.fecha).toDateString()===hoy);
+  const total=ventasHoy.reduce((s,v)=>s+v.total,0); const costo=ventasHoy.reduce((s,v)=>s+v.costo,0);
+  document.getElementById('statHoy').innerText=`$${total.toLocaleString()}`; document.getElementById('statHoyCant').innerText=`${ventasHoy.length} pedidos`; document.getElementById('statGasto').innerText=`$${costo.toLocaleString()}`; document.getElementById('statUtilidad').innerText=`$${(total-costo).toLocaleString()}`; document.getElementById('statMargen').innerText=total?`${(((total-costo)/total)*100).toFixed(1)}%`:'0%';
+  document.getElementById('miniVentas').innerText=`$${total.toLocaleString()}`; document.getElementById('miniBar').style.width=total?`${Math.min(100, total/50000*100)}%`:'0%';
+  const list=document.getElementById('listaVentasHoy'); list.innerHTML=ventasHoy.reverse().map(v=>`<div class="flex justify-between items-center text-sm border-b py-2"><span>${v.producto} x${v.cant}</span><span class="font-medium">$${v.total}</span></div>`).join('')||'<p class="text-xs text-zinc-400">Sin ventas hoy</p>';
+  const counts={}; ventasHoy.forEach(v=>counts[v.producto]=(counts[v.producto]||0)+v.cant); const top=document.getElementById('topProductos'); top.innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([n,c])=>`<div class="flex justify-between text-sm"><span>${n}</span><span class="font-bold">${c}</span></div>`).join('')||'<p class="text-xs text-zinc-400">Sin datos</p>';
+  renderVentaSelect();
+}
+function renderVentaSelect(){const sel=document.getElementById('ventaProducto'); sel.innerHTML=db.productos.map(p=>`<option value="${p.id}">${p.nombre} - $${p.precio}</option>`).join('')}
+function renderFinanzas(){
+  const totalIng=db.ventas.reduce((s,v)=>s+v.total,0); const totalGast=db.gastos.reduce((s,g)=>s+g.monto,0);
+  document.getElementById('resIngresos').innerText=`$${totalIng.toLocaleString()}`; document.getElementById('resGastos').innerText=`$${totalGast.toLocaleString()}`; document.getElementById('resBalance').innerText=`$${(totalIng-totalGast).toLocaleString()}`;
+  document.getElementById('listaGastos').innerHTML=db.gastos.slice(-10).reverse().map(g=>`<div class="flex justify-between text-sm bg-zinc-50 p-3 rounded-xl"><div><p class="font-medium">${g.concepto}</p><p class="text-[11px] text-zinc-500">${g.tipo} - ${new Date(g.fecha).toLocaleDateString()}</p></div><span class="font-bold">$${g.monto.toLocaleString()}</span></div>`).join('');
+}
+function renderAll(){renderProductos(); renderInventario(); renderVentas(); renderFinanzas(); document.getElementById('brandName').innerText=db.ajustes.nombre; document.getElementById('ajNombre').value=db.ajustes.nombre}
+function addIngredienteRow(){const div=document.createElement('div'); div.className='flex gap-2'; div.innerHTML=`<input placeholder="Insumo" class="ing-nombre flex-1 border rounded-lg px-3 py-2 text-sm"><input type="number" placeholder="Gramos" class="ing-gramos w-20 border rounded-lg px-2 py-2 text-sm"><input type="number" placeholder="Costo/Kg" class="ing-costo w-24 border rounded-lg px-2 py-2 text-sm">`; document.getElementById('pIngredientes').appendChild(div)}
+function guardarProducto(){
+  const nombre=document.getElementById('pNombre').value; const precio=parseFloat(document.getElementById('pPrecio').value)||0; const pasos=document.getElementById('pPasos').value;
+  const rows=document.querySelectorAll('#pIngredientes > div'); const ingredientes=[...rows].map(r=>({nombre:r.querySelector('.ing-nombre').value, gramos:parseFloat(r.querySelector('.ing-gramos').value)||0, costoKg:parseFloat(r.querySelector('.ing-costo').value)||0})).filter(i=>i.nombre);
+  if(!nombre ||!ingredientes.length) return alert('Completa nombre e ingredientes');
+  db.productos.push({id:Date.now(), nombre, precio, ingredientes, pasos}); save(); closeModal('modalProducto'); document.getElementById('pNombre').value=''; document.getElementById('pPrecio').value=''; document.getElementById('pPasos').value=''; document.getElementById('pIngredientes').innerHTML='';
+}
+function guardarInsumo(){const n=document.getElementById('iNombre').value; const s=parseFloat(document.getElementById('iStock').value)||0; const c=parseFloat(document.getElementById('iCosto').value)||0; const m=parseFloat(document.getElementById('iMin').value)||0; if(!n) return; db.insumos.push({id:Date.now(), nombre:n, stock:s, costo:c, min:m}); save(); closeModal('modalInsumo')}
+function registrarVenta(){const id=parseInt(document.getElementById('ventaProducto').value); const cant=parseInt(document.getElementById('ventaCant').value)||1; const prod=db.productos.find(p=>p.id===id); if(!prod) return; const costo=calcCostoProducto(prod)*cant; db.ventas.push({id:Date.now(), producto:prod.nombre, cant, total:prod.precio*cant, costo, fecha:new Date().toISOString()}); prod.ingredientes.forEach(ing=>{const ins=db.insumos.find(i=>i.nombre.toLowerCase().includes(ing.nombre.toLowerCase().split(' ')[0])); if(ins) ins.stock=Math.max(0, ins.stock - (ing.gramos/1000)*cant)}); save()}
+function registrarGasto(){const concepto=document.getElementById('gastoConcepto').value; const monto=parseFloat(document.getElementById('gastoMonto').value)||0; const tipo=document.getElementById('gastoTipo').value; if(!concepto ||!monto) return; db.gastos.push({id:Date.now(), concepto, monto, tipo, fecha:new Date().toISOString()}); save(); document.getElementById('gastoConcepto').value=''; document.getElementById('gastoMonto').value=''}
+function guardarAjustes(){db.ajustes.nombre=document.getElementById('ajNombre').value; db.ajustes.moneda=document.getElementById('ajMoneda').value; save(); alert('Ajustes guardados')}
+function guardarCredenciales(){localStorage.setItem('salchiUser', document.getElementById('ajUser').value); localStorage.setItem('salchiPass', document.getElementById('ajPass').value); alert('Credenciales actualizadas localmente')}
+function deleteProducto(id){if(confirm('Eliminar producto?')){db.productos=db.productos.filter(p=>p.id!==id); save()}}
+function deleteInsumo(id){db.insumos=db.insumos.filter(i=>i.id!==id); save()}
+
+addIngredienteRow(); renderAll(); lucide.createIcons();
+</script>
+</body>
+</html>
