@@ -59,12 +59,25 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 .addon-card{min-width:100px;max-width:110px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:14px;padding:8px;text-align:center;cursor:pointer;flex:0 0 auto}
 .addon-card img{width:70px;height:70px;border-radius:10px;object-fit:cover}.addon-name{font-size:11px;font-weight:800;margin-top:6px}.addon-price{font-size:11px;color:var(--theme);font-weight:900}
 .cart-footer{padding:16px 20px;border-top:1px solid #2a2a2a;background:#1c1c1c}.btn-pedir{width:100%;background:var(--theme);color:#111;border:none;padding:14px;border-radius:14px;font-weight:900;cursor:pointer}
-.loader-overlay{position:fixed;inset:0;background:#0f0f0f;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity.25s ease}
-.loader-logo{width:110px;height:110px;border-radius:50%;background:#1c1c1c;border:4px solid var(--theme);display:flex;align-items:center;justify-content:center;overflow:hidden;animation:loaderPop.6s ease}
+/* LOADER OPCION 1 */
+.loader-overlay{position:fixed;inset:0;background:#0f0f0f;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity.3s ease}
+.loader-logo{width:115px;height:115px;border-radius:50%;background:#1c1c1c;border:4px solid var(--theme);display:flex;align-items:center;justify-content:center;overflow:hidden;animation:logoBeat 1.1s infinite ease-in-out;box-shadow:0 0 25px rgba(255,204,0,.25)}
 .loader-logo img{width:100%;height:100%;object-fit:cover;display:none}
-@keyframes loaderPop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes logoBeat{0%{transform:scale(.92)}50%{transform:scale(1.08)}100%{transform:scale(.92)}}
+.loader-dots{display:flex;gap:6px;margin-top:18px}
+.loader-dots span{width:8px;height:8px;background:var(--theme);border-radius:50%;animation:dotPulse 1.2s infinite}
+.loader-dots span:nth-child(2){animation-delay:.2s}
+.loader-dots span:nth-child(3){animation-delay:.4s}
+@keyframes dotPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+/* SKELETON MENU */
 .skeleton{animation:skeleton-loading 1s linear infinite alternate}
 @keyframes skeleton-loading{0%{background:#1c1c1c}100%{background:#2a2a2a}}
+.skeleton-card{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:18px;display:flex;overflow:hidden;min-height:110px}
+.skeleton-img{width:110px;background:#222}
+.skeleton-line{height:12px;background:#2a2a2a;border-radius:6px;margin-bottom:8px}
+.shimmer{position:relative;overflow:hidden}
+.shimmer::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);animation:shim 1.2s infinite}
+@keyframes shim{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .clip-box{border:2px dashed #ddd;border-radius:12px;padding:20px;text-align:center;background:#fafafa;cursor:pointer;margin-top:8px;position:relative;overflow:hidden}
 .clip-box.has-img{border-style:solid;border-color:var(--theme);padding:0}.clip-box input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .clip-preview{width:100%;height:140px;object-fit:cover;display:none;border-radius:10px}.clip-text{font-size:12px;color:#666;font-weight:700}
@@ -163,13 +176,13 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 </style>
 </head>
 <body>
-<!-- LOADER CON TU LOGO -->
 <div class="loader-overlay" id="appLoader">
   <div class="loader-logo" id="loaderBox">
     <img id="loaderLogoImg" src="" style="display:none">
     <i id="loaderIcon" class="fa-solid fa-burger" style="font-size:36px;color:var(--theme)"></i>
   </div>
-  <div style="margin-top:14px;font-weight:900;font-size:11px;letter-spacing:2px;color:#888" id="loaderText">CARGANDO...</div>
+  <div style="margin-top:12px;font-weight:900;font-size:12px;letter-spacing:1px;color:#fff" id="loaderName">Cargando...</div>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
 </div>
 
 <div class="header" id="headerBg" style="background:#0f0f0f">
@@ -178,8 +191,22 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 <div class="restaurant-name" id="restNameDisplay" style="opacity:0">.</div>
 <div class="tagline">DOLORES HIDALGO - COMIDA RAPIDA</div>
 </div>
-<div class="categories" id="categories"></div>
-<div class="products" id="products"></div>
+
+<!-- SKELETON CATEGORIAS -->
+<div class="categories" id="categories">
+  <div class="cat-btn skeleton shimmer" style="width:90px;height:38px"></div>
+  <div class="cat-btn skeleton shimmer" style="width:110px;height:38px"></div>
+  <div class="cat-btn skeleton shimmer" style="width:80px;height:38px"></div>
+</div>
+
+<!-- SKELETON PRODUCTOS - se ve al instante, evita blanco -->
+<div class="products" id="products">
+  <div class="skeleton-card shimmer"><div class="skeleton-img"></div><div style="flex:1;padding:14px"><div class="skeleton-line" style="width:70%"></div><div class="skeleton-line" style="width:90%"></div><div class="skeleton-line" style="width:40%;margin-top:18px"></div></div></div>
+  <div class="skeleton-card shimmer"><div class="skeleton-img"></div><div style="flex:1;padding:14px"><div class="skeleton-line" style="width:60%"></div><div class="skeleton-line" style="width:85%"></div><div class="skeleton-line" style="width:40%;margin-top:18px"></div></div></div>
+  <div class="skeleton-card shimmer"><div class="skeleton-img"></div><div style="flex:1;padding:14px"><div class="skeleton-line" style="width:65%"></div><div class="skeleton-line" style="width:80%"></div><div class="skeleton-line" style="width:35%;margin-top:18px"></div></div></div>
+  <div class="skeleton-card shimmer"><div class="skeleton-img"></div><div style="flex:1;padding:14px"><div class="skeleton-line" style="width:70%"></div><div class="skeleton-line" style="width:90%"></div><div class="skeleton-line" style="width:40%;margin-top:18px"></div></div></div>
+</div>
+
 <div class="bottom-nav">
 <button class="nav-item active"><div><i class="fa-solid fa-house"></i></div>INICIO</button>
 <div class="nav-center-wrap" onclick="abrirAdmin()"><div class="nav-center skeleton" id="adminLogoBox"><img id="adminLogoImg" style="display:none"></div><div class="nav-center-label">ADMIN</div></div>
@@ -239,17 +266,15 @@ let defaultHorario={lunes:{activo:true,apertura:"10:00",cierre:"22:00"},martes:{
 let config=null,menuData=null,categoriaActiva=null,categoryOrder=[],cantidades={},carrito={},restauranteCoords={lat:21.1556,lng:-100.9348},adminCred={user:'admin',pass:'0831'},envioActual=0,distanciaKm=0,tempProdImg="",tempLogo="",tempPortada="",isLogged=false,metodoPago="efectivo",billeteCliente=0,loaderOcultado=false,configListo=false,menuListo=false;
 let pedidosCache={},pedidosCountPrev=0,audioCtx=null,pedTabActual='activos',allPedidosList=[];
 
-// FIX CARGA RAPIDA - quita espacio en blanco
 function intentarOcultarLoader(){
  if(loaderOcultado) return;
  if(!configListo ||!menuListo) return;
  loaderOcultado=true;
  const l=document.getElementById("appLoader");
- if(l){ l.style.opacity="0"; setTimeout(()=>{ l.style.display="none"; },200); }
+ if(l){ l.style.opacity="0"; setTimeout(()=>{ l.style.display="none"; },250); }
  document.getElementById("statusBadge").style.opacity="1";
  document.getElementById("restNameDisplay").style.opacity="1";
 }
-function ocultarLoaderYa(){ intentarOcultarLoader(); }
 
 db.ref('categoryOrder').on('value',s=>{if(s.val()&&Array.isArray(s.val())){categoryOrder=s.val();renderCategorias();renderListaAdmin();renderOrdenCategorias();}});
 db.ref('menu').on('value',s=>{
@@ -301,7 +326,7 @@ function actualizarManifestPWA(){
 
 function aplicarConfig(){
  if(!config)return;
- const li=document.getElementById("logoImg"),ai=document.getElementById("adminLogoImg"),lo=document.getElementById("loginLogoImg"),loaderImg=document.getElementById("loaderLogoImg"),loaderIcon=document.getElementById("loaderIcon");
+ const li=document.getElementById("logoImg"),ai=document.getElementById("adminLogoImg"),lo=document.getElementById("loginLogoImg"),loaderImg=document.getElementById("loaderLogoImg"),loaderIcon=document.getElementById("loaderIcon"),loaderName=document.getElementById("loaderName");
  if(config.logo&&config.logo.length>20){
   li.src=config.logo;li.style.display="block";
   ai.src=config.logo;ai.style.display="block";
@@ -311,6 +336,7 @@ function aplicarConfig(){
   document.getElementById("adminLogoBox").classList.remove("skeleton");
   document.getElementById("loaderBox").style.borderColor=config.color||"#ffcc00";
  }
+ if(loaderName) loaderName.innerText=config.nombre||"Cargando...";
  document.getElementById("restNameDisplay").innerHTML=config.nombre.includes(' ')?config.nombre.split(' ')[0]+' <span>'+config.nombre.split(' ').slice(1).join(' ')+'</span>':config.nombre;
  document.getElementById("loginTitle").innerText=config.nombre;
  document.getElementById("pageTitle").innerText=config.nombre;
@@ -477,4 +503,4 @@ window.actualizarDirRest=()=>{const dir=document.getElementById("ajDirRest").val
 window.guardarAjustes=()=>{const nu=document.getElementById("ajUser").value.trim(),np=document.getElementById("ajPass").value.trim();if(nu&&np){adminCred={user:nu,pass:np};db.ref('admin').set(adminCred);}config.whatsapp=document.getElementById("ajWhatsapp").value.trim()||config.whatsapp;config.nombre=document.getElementById("ajNombre").value.trim()||config.nombre;if(tempLogo&&tempLogo.length>20)config.logo=tempLogo;if(tempPortada&&tempPortada.length>20)config.portada=tempPortada;config.envioGratisMin=parseFloat(document.getElementById("ajEnvioGratis").value)||0;config.envioGratisActivo=document.getElementById("ajEnvioGratisActivo").checked;config.color=document.getElementById("ajColor").value||config.color;config.direccionRest=document.getElementById("ajDirRest").value.trim()||config.direccionRest;aplicarConfig();db.ref('config').set(config);db.ref('coords').set(restauranteCoords);showElegant("Guardado","Todo actualizado.");};
 </script>
 </body>
-</html> 
+</html>  
