@@ -59,7 +59,6 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 .addon-card{min-width:100px;max-width:110px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:14px;padding:8px;text-align:center;cursor:pointer;flex:0 0 auto}
 .addon-card img{width:70px;height:70px;border-radius:10px;object-fit:cover}.addon-name{font-size:11px;font-weight:800;margin-top:6px}.addon-price{font-size:11px;color:var(--theme);font-weight:900}
 .cart-footer{padding:16px 20px;border-top:1px solid #2a2a2a;background:#1c1c1c}.btn-pedir{width:100%;background:var(--theme);color:#111;border:none;padding:14px;border-radius:14px;font-weight:900;cursor:pointer}
-/* LOADER OPCION 1 */
 .loader-overlay{position:fixed;inset:0;background:#0f0f0f;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity.3s ease}
 .loader-logo{width:115px;height:115px;border-radius:50%;background:#1c1c1c;border:4px solid var(--theme);display:flex;align-items:center;justify-content:center;overflow:hidden;animation:logoBeat 1.1s infinite ease-in-out;box-shadow:0 0 25px rgba(255,204,0,.25)}
 .loader-logo img{width:100%;height:100%;object-fit:cover;display:none}
@@ -69,7 +68,6 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
 .loader-dots span:nth-child(2){animation-delay:.2s}
 .loader-dots span:nth-child(3){animation-delay:.4s}
 @keyframes dotPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
-/* SKELETON MENU */
 .skeleton{animation:skeleton-loading 1s linear infinite alternate}
 @keyframes skeleton-loading{0%{background:#1c1c1c}100%{background:#2a2a2a}}
 .skeleton-card{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:18px;display:flex;overflow:hidden;min-height:110px}
@@ -184,29 +182,22 @@ body{background:#0f0f0f;color:#fff;padding-bottom:90px}
   <div style="margin-top:12px;font-weight:900;font-size:12px;letter-spacing:1px;color:#fff" id="loaderName">Cargando...</div>
   <div class="loader-dots"><span></span><span></span><span></span></div>
 </div>
-
 <div class="header" id="headerBg" style="background:#0f0f0f">
 <div id="statusBadge" class="status-neon abierto" style="opacity:0"><i class="fa-solid fa-circle" style="color:#22c55e"></i> ABIERTO</div>
 <div class="logo-box skeleton" id="logoBox"><img id="logoImg" style="display:none"></div>
 <div class="restaurant-name" id="restNameDisplay" style="opacity:0">.</div>
 <div class="tagline">DOLORES HIDALGO - COMIDA RAPIDA</div>
 </div>
-
-<!-- SKELETON CATEGORIAS -->
 <div class="categories" id="categories">
   <div class="cat-btn skeleton shimmer" style="width:90px;height:38px"></div>
   <div class="cat-btn skeleton shimmer" style="width:110px;height:38px"></div>
   <div class="cat-btn skeleton shimmer" style="width:80px;height:38px"></div>
 </div>
-
-<!-- SKELETON PRODUCTOS - se ve al instante, evita blanco -->
 <div class="products" id="products">
   <div class="skeleton-card shimmer"><div class="skeleton-img"></div><div style="flex:1;padding:14px"><div class="skeleton-line" style="width:70%"></div><div class="skeleton-line" style="width:90%"></div><div class="skeleton-line" style="width:40%;margin-top:18px"></div></div></div>
   <div class="skeleton-card shimmer"><div class="skeleton-img"></div><div style="flex:1;padding:14px"><div class="skeleton-line" style="width:60%"></div><div class="skeleton-line" style="width:85%"></div><div class="skeleton-line" style="width:40%;margin-top:18px"></div></div></div>
   <div class="skeleton-card shimmer"><div class="skeleton-img"></div><div style="flex:1;padding:14px"><div class="skeleton-line" style="width:65%"></div><div class="skeleton-line" style="width:80%"></div><div class="skeleton-line" style="width:35%;margin-top:18px"></div></div></div>
-  <div class="skeleton-card shimmer"><div class="skeleton-img"></div><div style="flex:1;padding:14px"><div class="skeleton-line" style="width:70%"></div><div class="skeleton-line" style="width:90%"></div><div class="skeleton-line" style="width:40%;margin-top:18px"></div></div></div>
 </div>
-
 <div class="bottom-nav">
 <button class="nav-item active"><div><i class="fa-solid fa-house"></i></div>INICIO</button>
 <div class="nav-center-wrap" onclick="abrirAdmin()"><div class="nav-center skeleton" id="adminLogoBox"><img id="adminLogoImg" style="display:none"></div><div class="nav-center-label">ADMIN</div></div>
@@ -373,7 +364,35 @@ window.toggleGps=()=>{navigator.geolocation.getCurrentPosition(p=>{const lat=p.c
 function actualizarEstadoCheckout(){const ab=estaAbiertoAhora(),btn=document.getElementById("btnFinalizar"),est=document.getElementById("infoEstado");if(ab){btn.disabled=false;btn.innerHTML='<i class="fa-brands fa-whatsapp"></i> Finalizar pedido';est.innerText="ABIERTO";est.style.color="#22c55e";}else{btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-ban"></i> Cerrado';est.innerText="CERRADO";est.style.color="#ff4444";}}
 window.actualizarResumenFinal=()=>{const cant=Object.values(carrito).reduce((a,b)=>a+b.cant,0),sub=Object.values(carrito).reduce((a,b)=>a+b.precio*b.cant,0);if(config&&config.envioGratisActivo)envioActual=getEnvioReal(distanciaKm,sub);const total=sub+envioActual;actualizarPromoEnvio();const e1=document.getElementById("rCant");if(e1){e1.innerText=cant;document.getElementById("rSub").innerText="$"+sub;const re=document.getElementById("rEnvio");if(envioActual===0&&config&&config.envioGratisActivo)re.innerHTML="<span style='text-decoration:line-through;color:#888'>$"+calcularPrecioEnvio(distanciaKm)+"</span> <span style='color:#22c55e;font-weight:900'>GRATIS</span>";else re.innerText="$"+envioActual;document.getElementById("rTotal").innerText="$"+total;document.getElementById("rKm").innerText=distanciaKm.toFixed(2)+" km";if(metodoPago==="efectivo")calcularCambio();}};
 window.enviarFinal=()=>{if(metodoPago==="efectivo"){const b=parseFloat(document.getElementById("cliBillete").value)||0;if(!b){showElegant("Falta billete","Indica con cuanto pagas.");return;}const sub=Object.values(carrito).reduce((a,b)=>a+b.precio*b.cant,0),total=sub+envioActual;if(b<total){showElegant("Billete insuficiente","Te falta $"+(total-b).toFixed(2));return;}}if(!estaAbiertoAhora()){showElegant("Cerrado","Estamos cerrados.");return;}const nom=document.getElementById("cliNombre").value.trim(),tel=document.getElementById("cliTel").value.trim(),dir=document.getElementById("cliDir").value.trim(),ref=document.getElementById("cliRef").value.trim();if(!nom){showElegant("Falta tu nombre","Escribe tu nombre.");return;}if(!tel){showElegant("Falta tu WhatsApp","Numero.");return;}if(!dir){showElegant("Falta direccion","Escribe direccion.");return;}const sub=Object.values(carrito).reduce((a,b)=>a+b.precio*b.cant,0),total=sub+envioActual;let cambioTxt="";if(metodoPago==="efectivo"){const c=billeteCliente-total;cambioTxt=`\nPaga con: $${billeteCliente}\nCambio: $${c.toFixed(2)}\n`;}let rutaLink=coordsMapa?`https://www.google.com/maps/dir/${restauranteCoords.lat},${restauranteCoords.lng}/${coordsMapa.lat},${coordsMapa.lng}`:`https://www.google.com/maps/search/${encodeURIComponent(dir)}`;let msg=`*PEDIDO ${config?config.nombre:'Santillos'}*\n\nNombre: ${nom}\nTel: ${tel}\nDir: ${dir}\nRef: ${ref||"Sin ref"}\nPago: ${metodoPago.toUpperCase()}${cambioTxt}\nDistancia: ${distanciaKm.toFixed(2)} km\nEnvio: ${envioActual===0?'GRATIS':'$'+envioActual}\n\nProductos:\n`;Object.values(carrito).forEach(i=>msg+=`- ${i.nombre} x${i.cant} = $${i.precio*i.cant}\n`);msg+=`\nSubtotal: $${sub}\nEnvio: ${envioActual===0?'GRATIS':'$'+envioActual}\nTOTAL: $${total}\n\nRuta:\n${rutaLink}\n`;const pedidoData={id:Date.now(),fecha:new Date().toLocaleString(),cliente:nom,tel,dir,productos:Object.values(carrito),subtotal:sub,envio:envioActual,total,distancia:distanciaKm,metodoPago,billete:billeteCliente,cambio:metodoPago==="efectivo"?billeteCliente-total:0,timestamp:Date.now(),status:'pendiente',fechaEntregado:null};db.ref('pedidos').push(pedidoData);db.ref('dev_clientes').push(pedidoData);window.open("https://wa.me/"+(config?config.whatsapp:'524181234567')+"?text="+encodeURIComponent(msg),"_blank");};
-function tocarSonidoNuevo(){try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(0.3,audioCtx.currentTime);o.connect(g);g.connect(audioCtx.destination);o.start();o.frequency.exponentialRampToValueAtTime(440,audioCtx.currentTime+0.3);g.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+0.5);o.stop(audioCtx.currentTime+0.5);}catch(e){}}
+
+// SONIDO RAPPI - 5 SEGUNDOS ALERTA FUERTE
+function tocarSonidoNuevo(){
+ try{
+  if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') audioCtx.resume();
+  let duracionTotal=5; // segundos
+  let intervalo=0.45; // cada cuanto suena el doble pitido
+  let repeticiones=Math.ceil(duracionTotal/intervalo);
+  for(let k=0;k<repeticiones;k++){
+   let t=audioCtx.currentTime + k*intervalo;
+   // primer pitido agudo
+   let o1=audioCtx.createOscillator(), g1=audioCtx.createGain();
+   o1.type='square'; o1.frequency.setValueAtTime(950,t);
+   g1.gain.setValueAtTime(0.35,t); g1.gain.exponentialRampToValueAtTime(0.01,t+0.18);
+   o1.connect(g1); g1.connect(audioCtx.destination);
+   o1.start(t); o1.stop(t+0.2);
+   // segundo pitido más agudo estilo Rappi
+   let o2=audioCtx.createOscillator(), g2=audioCtx.createGain();
+   o2.type='square'; o2.frequency.setValueAtTime(1400,t+0.22);
+   g2.gain.setValueAtTime(0.35,t+0.22); g2.gain.exponentialRampToValueAtTime(0.01,t+0.22+0.22);
+   o2.connect(g2); g2.connect(audioCtx.destination);
+   o2.start(t+0.22); o2.stop(t+0.22+0.25);
+  }
+  // vibración si es móvil
+  if(navigator.vibrate) navigator.vibrate([300,100,300,100,300,100,500]);
+ }catch(e){}
+}
+
 function calcularTiempoPedido(ts){if(!ts)return{min:0,txt:'--',clase:'tiempo-verde'};const diff=Date.now()-ts,min=Math.floor(diff/60000);let clase='tiempo-verde';if(min>=40)clase='tiempo-rojo';else if(min>=20)clase='tiempo-amarillo';let txt=min<1?'Ahora':min===1?'Hace 1 min':`Hace ${min} min`;return{min,txt,clase};}
 function getStatusClass(s){return s==='pendiente'?'estado-pendiente':s==='preparando'?'estado-preparando':s==='camino'?'estado-camino':s==='entregado'?'estado-entregado':'estado-cancelado';}
 function getStatusLabel(s){return s==='pendiente'?'PENDIENTE':s==='preparando'?'PREPARANDO':s==='camino'?'EN CAMINO':s==='entregado'?'ENTREGADO':'CANCELADO';}
@@ -420,7 +439,7 @@ function cargarPedidos(){
  const div=document.getElementById("listaPedidosAdmin");
  db.ref('pedidos').on('value',snap=>{
   const data=snap.val();pedidosCache=data||{};const keys=data?Object.keys(data):[];
-  if(keys.length>pedidosCountPrev && pedidosCountPrev!==0){tocarSonidoNuevo();if(isLogged)showElegant("Nuevo pedido!","Tienes un pedido nuevo");}
+  if(keys.length>pedidosCountPrev && pedidosCountPrev!==0){tocarSonidoNuevo();if(isLogged)showElegant("¡Nuevo pedido! 🔔","Tienes un pedido nuevo - ¡Atento!");}
   pedidosCountPrev=keys.length;
   if(!data){allPedidosList=[];div.innerHTML='<div style="text-align:center;padding:20px;color:#888">Sin pedidos</div>';calcularIngresos([]);return;}
   allPedidosList=keys.map(k=>({key:k,...data[k]})).reverse();
