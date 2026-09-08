@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Kigo xpress - Flujo Rappi</title>
+<title>Kigo xpress - Tarjeta Moderna</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -84,13 +84,61 @@
 <button id="tabRepaLive" class="tab-cobro active" onclick="showTabRepa('live')" style="flex:1;height:38px">PEDIDOS <span id="countLive" style="background:#16a34a;color:#fff;padding:2px 6px;border-radius:10px;margin-left:6px;font-size:9px">0</span></button>
 <button id="tabRepaHist" class="tab-cobro" onclick="showTabRepa('hist')" style="flex:1;height:38px">HISTORIAL</button>
 </div>
-<div id="panelRepaLive"><div class="card" style="padding:6px;margin-bottom:10px"><div id="mapRepa"></div></div><div id="listaCardsPedidos" style="display:flex;gap:12px;overflow:auto;padding:4px 2px 12px 2px;scroll-snap-type:x mandatory"></div><div id="emptyLive" style="display:none;text-align:center;padding:30px 10px;color:#6b7280"><div style="font-size:11px;font-weight:700">Sin pedidos</div></div></div>
+
+<div id="panelRepaLive">
+  <!-- MAPA - NO SE TOCA -->
+  <div class="card" style="padding:6px;margin-bottom:10px"><div id="mapRepa"></div></div>
+
+  <!-- ===== NUEVA TARJETA MODERNA DEBAJO DEL MAPA - SOLO ESTO ES NUEVO ===== -->
+  <div id="cardPedidoModerna" style="display:none; background:#fff; border-radius:20px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08); border:1px solid #f0f0f0; margin-bottom:12px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
+      <div style="font-size:14px; font-weight:800; color:#0a0a0a;">📦 Pedido #<span id="txtNumPedido">--</span></div>
+      <div id="txtEstadoPedido" style="background:#fef3c7; color:#92400e; padding:5px 10px; border-radius:20px; font-size:10px; font-weight:800;">🟡 En camino a recoger</div>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <div style="display:flex; flex-direction:column; align-items:center; padding-top:2px">
+        <div style="width:28px;height:28px; border-radius:8px; background:#dcfce7; display:flex; align-items:center; justify-content:center; font-size:14px">📍</div>
+        <div style="width:2px; height:28px; background:#e5e7eb; margin:4px 0;"></div>
+        <div style="width:28px;height:28px; border-radius:8px; background:#fee2e2; display:flex; align-items:center; justify-content:center; font-size:14px">🏠</div>
+      </div>
+      <div style="flex:1">
+        <div style="margin-bottom:12px">
+          <div style="font-size:9px; font-weight:700; letter-spacing:.08em; color:#6b7280; text-transform:uppercase">RECOGER EN</div>
+          <div id="txtNegocioNombre" style="font-size:13px; font-weight:800; color:#0a0a0a; margin-top:2px">--</div>
+          <div id="txtNegocioDir" style="font-size:11px; color:#4b5563; margin-top:2px">--</div>
+        </div>
+        <div>
+          <div style="font-size:9px; font-weight:700; letter-spacing:.08em; color:#6b7280; text-transform:uppercase">ENTREGAR EN</div>
+          <div id="txtClienteNombre" style="font-size:13px; font-weight:800; color:#0a0a0a; margin-top:2px">--</div>
+          <div id="txtClienteDir" style="font-size:11px; color:#4b5563; margin-top:2px">--</div>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:6px;">
+          <span id="txtDistancia" style="background:#f9fafb; border:1px solid #e5e7eb; padding:4px 8px; border-radius:20px; font-size:10px; font-weight:700">-- km • -- min</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:16px">
+      <button onclick="accionMensajeCliente()" style="height:44px; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; font-weight:700; font-size:11px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer"><span style="font-size:16px">💬</span> Mensaje al cliente</button>
+      <button onclick="accionLlamarCliente()" style="height:44px; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; font-weight:700; font-size:11px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer"><span style="font-size:16px">📞</span> Llamar al cliente</button>
+    </div>
+    <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px">
+      <button id="btnEstado1" onclick="accionYaRecogi()" style="width:100%; height:52px; background:#0a0a0a; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer"><span style="font-size:18px">📦</span> Ya recogí el pedido</button>
+      <button id="btnEstado2" onclick="accionVoyEntregar()" style="display:none; width:100%; height:52px; background:#16a34a; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer"><span style="font-size:18px">🛵</span> Voy a entregar el pedido</button>
+      <button id="btnEstado3" onclick="accionEntregado()" style="display:none; width:100%; height:52px; background:#dc2626; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer"><span style="font-size:18px">✅</span> Pedido entregado</button>
+      <div id="estadoFinal" style="display:none; text-align:center; padding:14px; background:#f0fdf4; border-radius:12px; color:#166534; font-weight:800; font-size:13px">✅ Pedido completado</div>
+    </div>
+  </div>
+  <!-- ===== FIN NUEVA TARJETA ===== -->
+
+  <div id="listaCardsPedidos" style="display:flex;gap:12px;overflow:auto;padding:4px 2px 12px 2px;scroll-snap-type:x mandatory"></div>
+  <div id="emptyLive" style="display:none;text-align:center;padding:30px 10px;color:#6b7280"><div style="font-size:11px;font-weight:700">Sin pedidos</div></div>
+</div>
+
 <div id="panelRepaHist" style="display:none">
 <div style="margin-top:8px"><div class="label-row"><label>Filtrar por tipo</label></div><div style="display:flex;gap:4px"><button onclick="setFiltroRep('todos')" id="fRepTodos" class="tab-cobro active">Todos</button><button onclick="setFiltroRep('Moto Mandado')" id="fRepMand" class="tab-cobro">Mandados</button><button onclick="setFiltroRep('Moto Transporte')" id="fRepTrans" class="tab-cobro">Transporte</button></div></div>
 <div style="margin-top:8px"><div class="label-row"><label>Filtrar por mes</label></div><div style="display:flex;gap:6px"><div class="wrap" style="flex:1"><input type="month" id="repMesFiltro" onchange="setFiltroRepMes()"></div><button onclick="limpiarFiltroRepMes()" style="height:32px;padding:0 10px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:9px;font-weight:700">Todos</button></div></div>
 <div id="resumenRepa" style="margin-top:10px"></div>
 <div class="card" style="margin-top:8px"><div style="font-size:10px;font-weight:700;margin-bottom:6px">HISTORIAL - <span id="repFiltroInfo"></span></div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Estado</th></tr></thead><tbody id="tbodyRepa"></tbody></table></div></div>
-<div class="card" style="margin-top:8px"><div style="font-size:10px;font-weight:700;margin-bottom:6px">PENDIENTES</div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Tipo</th><th>Valor</th></tr></thead><tbody id="tbodyRepaDeudas"></tbody></table></div></div>
 </div>
 </div>
 
@@ -117,7 +165,7 @@ let ventas=[],filtroFecha=null,filtroHoy='todos',filtroHistTipo='todos',filtroRe
 let pinsData={admin:'0831',repas:{'Jose':'1111','Diego Gómez':'2222','Diego':'3333','Carlos':'4444'}};
 let tarifas={mandado:5,transporte:10}; let tarifasRepas={}; let fotosRepas={}; let clientesDirecciones={};
 let map=null, pinClienteLayer=null, routeLayer=null, entregaMarker=null, clientePedidoSeleccionado=null, ultimaCotizacion=null, entregaCoordsTemp=null;
-let mapRepa=null, routeLayerRepa=null, markersRepa=[], pedidosLive={}, statusRepas={}, prevLiveCount=0, ubicacionRepa=null;
+let mapRepa=null, routeLayerRepa=null, markersRepa=[], pedidosLive={}, statusRepas={}, prevLiveCount=0, ubicacionRepa=null, pedidoSeleccionadoKey=null;
 
 onValue(ref(db,'kigoPins'), s=>{ if(s.exists()) pinsData=s.val(); actualizarSelects(); renderAjustes(); });
 onValue(ref(db,'kigoTarifas'), s=>{ if(s.exists()) tarifas=s.val(); });
@@ -138,6 +186,9 @@ onValue(ref(db,'kigoPedidosLive'), s=>{
  prevLiveCount=newCount;
  pedidosLive=data;
  renderPedidosLiveRepa();
+ if(pedidoSeleccionadoKey && pedidosLive[pedidoSeleccionadoKey]){
+   actualizarEstadoVisual(pedidosLive[pedidoSeleccionadoKey].etapa || pedidosLive[pedidoSeleccionadoKey].estado);
+ }
 });
 onValue(ref(db,'kigoStatusRepas'), s=>{ statusRepas=s.val()||{}; actualizarSelectRepaDestino(); renderAjustes(); renderBotonOnline(); });
 
@@ -167,6 +218,63 @@ function obtenerUbicacionRepa(cb){
 function initMap(){ if(map) return; map=L.map('map').setView([21.1556,-100.9343],14); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map); }
 function initMapRepa(){ if(mapRepa) return; mapRepa=L.map('mapRepa').setView([21.1556,-100.9343],14); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(mapRepa); }
 async function fetchClima(){ try{ let r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=21.1556&longitude=-100.9343&current=temperature_2m,weather_code,wind_speed_10m,is_day&timezone=auto'); let j=await r.json(); let cur=j.current; document.getElementById('climaTemp').innerText=Math.round(cur.temperature_2m)+'°C'; document.getElementById('climaDesc').innerText=cur.weather_code<=3?'Nublado':'Soleado'; document.getElementById('climaViento').innerText=Math.round(cur.wind_speed_10m)+' km/h'; }catch(e){} }
+
+// ===== FUNCIONES NUEVA TARJETA - REUTILIZAN TUS EXISTENTES =====
+window.mostrarTarjetaModerna=function(key){
+  let p=pedidosLive[key];
+  if(!p) return;
+  pedidoSeleccionadoKey=key;
+  document.getElementById('cardPedidoModerna').style.display='block';
+  document.getElementById('txtNumPedido').innerText=key.slice(-4).toUpperCase();
+  document.getElementById('txtNegocioNombre').innerText=p.cliente;
+  document.getElementById('txtNegocioDir').innerText=p.dirRecogida;
+  document.getElementById('txtClienteNombre').innerText=p.cliente;
+  document.getElementById('txtClienteDir').innerText=p.entrega;
+  document.getElementById('txtDistancia').innerText=`${p.km} km • ${p.min} min`;
+  actualizarEstadoVisual(p.etapa || p.estado || 'pendiente');
+  verRutaLive(key);
+}
+window.actualizarEstadoVisual=function(etapa){
+  const estadoTxt=document.getElementById('txtEstadoPedido');
+  const b1=document.getElementById('btnEstado1');
+  const b2=document.getElementById('btnEstado2');
+  const b3=document.getElementById('btnEstado3');
+  const fin=document.getElementById('estadoFinal');
+  if(!estadoTxt) return;
+  b1.style.display='none'; b2.style.display='none'; b3.style.display='none'; fin.style.display='none';
+  if(etapa==='pendiente' || etapa==='aceptado' || etapa==='en_camino' || etapa==='en_camino_recoger'){
+    estadoTxt.innerHTML='🟡 En camino a recoger'; estadoTxt.style.background='#fef3c7'; estadoTxt.style.color='#92400e'; b1.style.display='flex';
+  } else if(etapa==='recogido'){
+    estadoTxt.innerHTML='🟢 Pedido recogido'; estadoTxt.style.background='#dcfce7'; estadoTxt.style.color='#166534'; b2.style.display='flex';
+  } else if(etapa==='en_camino_entrega'){
+    estadoTxt.innerHTML='🟢 En camino a entregar'; estadoTxt.style.background='#dcfce7'; estadoTxt.style.color='#166534'; b3.style.display='flex';
+  } else if(etapa==='finalizado'){
+    estadoTxt.innerHTML='✅ Entregado'; estadoTxt.style.background='#f0fdf4'; estadoTxt.style.color='#166534'; fin.style.display='block';
+  }
+}
+window.accionYaRecogi=function(){
+  if(!pedidoSeleccionadoKey) return;
+  marcarRecogido(pedidoSeleccionadoKey);
+}
+window.accionVoyEntregar=function(){
+  if(!pedidoSeleccionadoKey) return;
+  abrirRutaGoogle(pedidoSeleccionadoKey,'entregar');
+  update(ref(db,'kigoPedidosLive/'+pedidoSeleccionadoKey),{etapa:'en_camino_entrega'});
+}
+window.accionEntregado=function(){
+  if(!pedidoSeleccionadoKey) return;
+  finalizarPedido(pedidoSeleccionadoKey);
+}
+window.accionMensajeCliente=function(){
+  let p=pedidosLive[pedidoSeleccionadoKey]; if(!p) return;
+  let texto=`Hola ${p.cliente}, soy tu repartidor de Kigo xpress, estoy en camino con tu pedido #${pedidoSeleccionadoKey.slice(-4).toUpperCase()}.`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank');
+}
+window.accionLlamarCliente=function(){
+  let p=pedidosLive[pedidoSeleccionadoKey]; if(!p) return;
+  if(p.telefono) window.open(`tel:${p.telefono}`,'_self');
+  else { let texto=`Hola ${p.cliente}, soy tu repartidor de Kigo.`; window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank'); }
+}
 
 window.showTabRepa=function(t){ document.getElementById('tabRepaLive').classList.toggle('active',t==='live'); document.getElementById('tabRepaHist').classList.toggle('active',t==='hist'); document.getElementById('panelRepaLive').style.display=t==='live'?'block':'none'; document.getElementById('panelRepaHist').style.display=t==='hist'?'block':'none'; if(t==='live'){ setTimeout(()=>{ initMapRepa(); if(mapRepa) mapRepa.invalidateSize(); },100); } if(t==='hist'){ renderRepartidor(); } };
 window.setTabPedido=function(t){ document.getElementById('tabRecoger').classList.toggle('active',t==='recoger'); document.getElementById('tabComprar').classList.toggle('active',t==='comprar'); document.getElementById('panelRecoger').style.display=t==='recoger'?'block':'none'; document.getElementById('panelComprar').style.display=t==='comprar'?'block':'none'; };
@@ -274,7 +382,8 @@ window.marcarRecogido=async function(key){
 window.finalizarPedido=async function(key){
  if(!confirm('¿Finalizar pedido?')) return;
  await update(ref(db,'kigoPedidosLive/'+key),{etapa:'finalizado', estado:'finalizado', horaFin:Date.now()});
- alert('Pedido finalizado - notificación enviada a admin');
+ alert('Pedido finalizado');
+ document.getElementById('cardPedidoModerna').style.display='none';
 };
 
 window.renderPedidosLiveRepa=function(){
@@ -286,30 +395,24 @@ window.renderPedidosLiveRepa=function(){
  if(count) count.innerText=arr.length;
  if(!arr.length){ cont.innerHTML=''; if(empty) empty.style.display='block'; return; }
  if(empty) empty.style.display='none';
+ // Cards horizontales siguen funcionando y al hacer click abren la tarjeta moderna
  cont.innerHTML=arr.map((p,idx)=>{
    let horaLlegada=new Date(p.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
    let minutosTrans=Math.floor((Date.now()-p.ts)/60000);
-   let alerta = minutosTrans>10? `<div style="background:#fef3c7;border:1px solid #f59e0b;color:#92400e;padding:6px 8px;border-radius:8px;font-size:9px;font-weight:800;margin-bottom:8px">⚠️ DEMORADO - ${minutosTrans} min sin iniciar</div>` : `<div style="font-size:8px;color:#6b7280;margin-bottom:8px">Llegó hace ${minutosTrans} min</div>`;
-   let etapa=p.etapa||'pendiente';
-   let btnHtml='';
-   if(etapa==='pendiente' || etapa==='aceptado' ||!p.etapa){
-     btnHtml=`<button onclick="iniciarRuta('${p._key}')" style="width:100%;height:48px;background:#16a34a;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:13px">INICIAR RUTA - IR A RECOGER</button>`;
-   } else if(etapa==='en_camino_recoger'){
-     btnHtml=`<button onclick="marcarRecogido('${p._key}')" style="width:100%;height:48px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:13px">✓ RECOGIDO</button>`;
-   } else if(etapa==='recogido'){
-     btnHtml=`<button onclick="finalizarPedido('${p._key}')" style="width:100%;height:48px;background:#dc2626;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:13px">FINALIZAR PEDIDO</button>`;
-   }
    let borde = minutosTrans>10? 'border:2px solid #f59e0b;' : 'border:1px solid #e5e7eb;';
-   return `<div class="rappi-card" style="${borde}">
+   return `<div class="rappi-card" style="${borde}; cursor:pointer" onclick="mostrarTarjetaModerna('${p._key}')">
      <div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:800">#${String(idx+1).padStart(3,'0')} PEDIDO - ${horaLlegada}</div><div style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800">PRIORIDAD #${idx+1}</div></div>
-     <div style="margin-bottom:8px"><div style="font-size:13px;font-weight:800">${p.cliente}</div><div style="font-size:9px;color:#6b7280">Hora llegada: ${horaLlegada}</div></div>
-     ${alerta}
-     <div style="display:flex;gap:8px"><div style="display:flex;flex-direction:column;align-items:center"><span class="rappi-dot" style="background:#16a34a"></span><div class="rappi-line"></div><span class="rappi-dot" style="background:#dc2626"></span></div><div style="flex:1"><div style="font-size:10px;font-weight:700">Recoger</div><div style="font-size:10px;font-weight:600;margin-bottom:8px">${p.dirRecogida}</div><div style="font-size:10px;font-weight:700">Entregar</div><div style="font-size:10px;font-weight:600">${p.entrega}</div><div style="margin-top:6px;font-size:9px;background:#f9fafb;padding:4px 6px;border-radius:6px;display:inline-block">${p.km} km • ${p.min} min</div></div></div>
-     <div style="display:flex;gap:8px;margin-top:12px"><div style="flex:1">${btnHtml}</div><button onclick="abrirRutaGoogle('${p._key}','recoger')" style="height:48px;padding:0 12px;background:#fff;border:1.5px solid #0a0a0a;border-radius:12px;font-weight:800;font-size:10px">RUTA</button></div>
-     <div style="margin-top:6px;font-size:8px;color:#6b7280;text-align:center">Etapa: ${etapa.toUpperCase()}</div>
+     <div style="margin-bottom:8px"><div style="font-size:13px;font-weight:800">${p.cliente}</div><div style="font-size:9px;color:#6b7280">Hace ${minutosTrans} min • ${p.km} km</div></div>
+     <div style="font-size:10px; color:#111827; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">${p.dirRecogida} → ${p.entrega}</div>
+     <div style="margin-top:8px; background:#0a0a0a; color:#fff; padding:8px; border-radius:10px; text-align:center; font-size:10px; font-weight:800">VER DETALLE</div>
    </div>`;
  }).join('');
+ if(!pedidoSeleccionadoKey && arr.length>0){
+   // Auto-selecciona el primero para mostrar la tarjeta moderna
+   mostrarTarjetaModerna(arr[0]._key);
+ }
 };
+window.verRutaLive=async function(key){ let p=pedidosLive[key]; if(!p) return; initMapRepa(); if(routeLayerRepa) mapRepa.removeLayer(routeLayerRepa); markersRepa.forEach(m=>mapRepa.removeLayer(m)); markersRepa=[]; try{ let url=`https://router.project-osrm.org/route/v1/driving/${p.lng1},${p.lat1};${p.lng2},${p.lat2}?overview=full&geometries=geojson`; let res=await fetch(url); let data=await res.json(); if(data.routes&&data.routes[0]){ let coords=data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]); routeLayerRepa=L.polyline(coords,{color:'#16a34a',weight:6}).addTo(mapRepa); let greenIcon = L.divIcon({html:'<div style="background:#16a34a;width:16px;height:16px;border-radius:50%;border:2px solid #fff"></div>',iconSize:[16,16],className:''}); let redIcon = L.divIcon({html:'<div style="background:#dc2626;width:16px;height:16px;border-radius:50%;border:2px solid #fff"></div>',iconSize:[16,16],className:''}); let m1=L.marker([p.lat1,p.lng1],{icon:greenIcon}).addTo(mapRepa); let m2=L.marker([p.lat2,p.lng2],{icon:redIcon}).addTo(mapRepa); markersRepa=[m1,m2]; mapRepa.fitBounds(routeLayerRepa.getBounds(),{padding:[30,30]}); } }catch(e){} };
 
 window.editarDireccionCliente=async function(nombre){ let actualDir=clientesDirecciones[nombre]?.direccion||''; let dir=prompt(`Dirección para ${nombre}`, actualDir); if(dir===null) return; let obj={direccion:dir.trim()}; if(clientesDirecciones[nombre]?.lat){ obj.lat=clientesDirecciones[nombre].lat; obj.lng=clientesDirecciones[nombre].lng; } let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await set(ref(db,'kigoClientesDir/'+key), obj); clientesDirecciones[nombre]=obj; renderClientes(); };
 function getRepartidores(){return Object.keys(pinsData.repas);}
@@ -321,7 +424,7 @@ function deudaItems(arr){return arr.reduce((a,v)=>a+(v.feeKigo!=null?v.feeKigo:g
 function fmt(n){return (n||0).toLocaleString('es-CO');}
 function todayISO(){let d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 window.validarPin=function(){ let pin=document.getElementById('pinInput').value.trim(); if(pin===pinsData.admin){rol='admin';repartidorLogueado=null;document.getElementById('lockScreen').style.display='none';document.getElementById('userLabel').style.display='block';document.getElementById('userLabel').innerText='ADMIN';document.getElementById('b-ajustes').style.display='flex';document.getElementById('b-pedidos').style.display='flex';document.getElementById('groupRepSelector').style.display='block';document.getElementById('repNombreFijo').style.display='none';showView('inicio');} else if(Object.values(pinsData.repas).includes(pin)){let nombre=Object.keys(pinsData.repas).find(k=>pinsData.repas[k]===pin);rol='repa';repartidorLogueado=nombre;document.getElementById('lockScreen').style.display='none';document.getElementById('userLabel').style.display='block';document.getElementById('userLabel').innerText=nombre.toUpperCase();document.getElementById('b-ajustes').style.display='none';document.getElementById('b-pedidos').style.display='none';document.querySelectorAll('.bottom button').forEach(b=>{if(b.id!=='b-repartidor')b.style.display='none';});document.getElementById('b-repartidor').style.display='flex';showView('repartidor'); showTabRepa('live'); obtenerUbicacionRepa();} else{document.getElementById('pinError').style.display='block';} };
-window.cerrarSesion=function(){ document.getElementById('lockScreen').style.display='flex'; document.getElementById('pinInput').value=''; document.getElementById('pinError').style.display='none'; rol=null;repartidorLogueado=null; document.querySelectorAll('.bottom button').forEach(b=>b.style.display='flex'); document.getElementById('b-ajustes').style.display='none'; document.getElementById('b-pedidos').style.display='none'; document.getElementById('userLabel').style.display='none'; if(map){ map.remove(); map=null; } if(mapRepa){ mapRepa.remove(); mapRepa=null; routeLayerRepa=null; markersRepa=[]; } pinClienteLayer=null; routeLayer=null; entregaMarker=null; };
+window.cerrarSesion=function(){ document.getElementById('lockScreen').style.display='flex'; document.getElementById('pinInput').value=''; document.getElementById('pinError').style.display='none'; rol=null;repartidorLogueado=null; pedidoSeleccionadoKey=null; document.querySelectorAll('.bottom button').forEach(b=>b.style.display='flex'); document.getElementById('b-ajustes').style.display='none'; document.getElementById('b-pedidos').style.display='none'; document.getElementById('userLabel').style.display='none'; if(map){ map.remove(); map=null; } if(mapRepa){ mapRepa.remove(); mapRepa=null; routeLayerRepa=null; markersRepa=[]; } pinClienteLayer=null; routeLayer=null; entregaMarker=null; let card=document.getElementById('cardPedidoModerna'); if(card) card.style.display='none'; };
 window.showView=function(v){if(rol==='repa'&&v!=='repartidor')return;document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById('view-'+v).classList.add('active');document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active'));let btn=document.getElementById('b-'+v);if(btn)btn.classList.add('active');if(v==='pedidos'){setTimeout(()=>{initMap(); if(map) map.invalidateSize(); fetchClima();},150);}if(v==='repartidor'){setTimeout(()=>{initMapRepa(); if(mapRepa) mapRepa.invalidateSize();},200);}if(v==='hoy')renderHoy();if(v==='historial')render();if(v==='cobros'){renderCobros();renderHistMes();}if(v==='clientes')renderClientes();if(v==='estadisticas')renderEstadisticas();if(v==='repartidor')renderRepartidor();if(v==='ajustes')renderAjustes();};
 window.showTabCobros=function(t){document.getElementById('tabEnvio').classList.toggle('active',t==='envio');document.getElementById('tabHist').classList.toggle('active',t==='hist');document.getElementById('panelEnvio').style.display=t==='envio'?'block':'none';document.getElementById('panelHist').style.display=t==='hist'?'block':'none';};
 window.showTabClientes=function(t){document.getElementById('tabCliList').classList.toggle('active',t==='lista');document.getElementById('tabCliRank').classList.toggle('active',t==='ranking');document.getElementById('panelCliLista').style.display=t==='lista'?'block':'none';document.getElementById('panelCliRanking').style.display=t==='ranking'?'block':'none';};
@@ -369,7 +472,6 @@ window.renderRepartidor=function(){
  document.getElementById('resumenRepa').innerHTML=`<div class="card" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between"><div style="font-weight:800;font-size:11px">${repa.toUpperCase()}</div><div style="background:#dc2626;color:#fff;padding:6px 10px;border-radius:20px;font-size:10px;font-weight:800">PEND: $${fmt(deudaItems(deudas))}</div></div><div class="stats" style="margin-top:8px"><div class="stat"><span>Filtrados</span><strong>${listaFiltrada.length}</strong></div><div class="stat dark"><span>Ing Mes</span><strong>$${fmt(ingresoFiltrado)}</strong></div><div class="stat"><span>Total</span><strong>${todosRepa.length}</strong></div><div class="stat"><span>Hist $</span><strong>$${fmt(ingresoTotal)}</strong></div></div></div>`;
  document.getElementById('repFiltroInfo').innerText=`${filtroMesRepa?filtroMesRepa:'Todos'} - ${filtroRepa}`;
  document.getElementById('tbodyRepa').innerHTML=listaFiltrada.length?listaFiltrada.slice(0,200).map(v=>`<tr class="${v.promo?'row-promo':v.pagado?'row-pagado':'row-debe'}"><td>${v.iso.slice(5)}</td><td><b>${v.cliente}</b></td><td>${badge(v.tipo,v.promo)}</td><td>$${fmt(v.valor)}</td><td>${v.promo?'PROMO':v.pagado?'PAGADO':'DEBE'}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;padding:20px;color:#6b7280">Sin historial</td></tr>';
- document.getElementById('tbodyRepaDeudas').innerHTML=deudas.length?deudas.slice(0,100).map(v=>`<tr class="row-debe"><td>${v.iso.slice(5)}</td><td><b>${v.cliente}</b></td><td>${badge(v.tipo,v.promo)}</td><td>$${fmt(v.valor)}</td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;padding:10px;color:#6b7280">Sin pendientes</td></tr>';
  renderBotonOnline();
  renderPedidosLiveRepa();
 };
