@@ -2,10 +2,12 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Kigo xpress - Navegación Integrada</title>
+<title>Kigo xpress - Google Maps Dentro</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- GOOGLE MAPS DENTRO - PON TU KEY AQUI -->
+<script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_AQUI&libraries=geometry"></script>
 <style>
 :root{--bg:#fafafa;--card:#fff;--border:#e5e7eb;--black:#0a0a0a;--red:#dc2626;--green:#16a34a;--gray:#6b7280}
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:Manrope,sans-serif;background:var(--bg);color:var(--black);padding-bottom:96px}
@@ -16,7 +18,6 @@
 .group{margin-bottom:10px}.label-row{display:flex;justify-content:space-between;margin-bottom:4px}.label-row label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}
 .wrap{position:relative;border:1.5px solid var(--border);border-radius:12px;background:#fff;overflow:hidden}.wrap input,.wrap select{width:100%;height:44px;border:none;outline:none;padding:0 12px;font-size:13px}
 .btn{width:100%;height:48px;background:var(--black);color:#fff;border:none;border-radius:12px;font-weight:800;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-#list{position:absolute;left:0;right:0;top:100%;z-index:20;background:#fff;border:1.5px solid var(--black);border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none}
 .filtros-tipo{display:flex;gap:6px;margin-bottom:10px;overflow:auto}.filtros-tipo button{height:30px;padding:0 10px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:10px;font-weight:700;white-space:nowrap;cursor:pointer}.filtros-tipo button.active{background:var(--black);color:#fff}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}.stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center}.stat.dark{background:var(--black);color:#fff}.stat.red{background:var(--red);color:#fff}.stat span{display:block;font-size:8px;font-weight:700;opacity:.8}.stat strong{display:block;font-size:12px;font-weight:800}
 .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px;background:#fff}table{width:100%;border-collapse:collapse;font-size:11px}thead{background:#f9fafb}th{padding:7px 6px;text-align:left;font-size:8px;font-weight:700;color:var(--gray)}td{padding:7px 6px;border-bottom:1px solid #f3f4f6}
@@ -29,16 +30,16 @@
 .lock-card input{width:100%;height:48px;border-radius:12px;border:1.5px solid var(--border);text-align:center;font-size:20px;font-weight:800;letter-spacing:.3em}
 .lock-btn{width:100%;height:48px;background:var(--black);color:#fff;border:none;border-radius:12px;font-weight:800;margin-top:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
 #map{width:100%;height:260px;border-radius:14px;border:1px solid var(--border);z-index:1}
-#mapRepa{width:100%;height:340px;border-radius:16px;border:1px solid var(--border);z-index:1;overflow:hidden}
+#mapRepa{width:100%;height:380px;border-radius:16px;border:1px solid var(--border);z-index:1;overflow:hidden}
 .clima-card{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0a0a0a 0%,#334155 100%);color:#fff;border-radius:12px;padding:8px 10px;margin-bottom:8px}
 .rappi-card{background:#fff;border-radius:16px;padding:12px;min-width:285px;max-width:300px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,.06);scroll-snap-align:start;cursor:pointer}
-.btn-pro{width:100%;height:56px;border:none;border-radius:16px;font-weight:800;font-size:13px;letter-spacing:.02em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 20px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);transition:all.15s ease}
-.btn-pro:active{transform:scale(.98)}.btn-pro-dark{background:#0a0a0a;color:#fff}.btn-pro-green{background:#16a34a;color:#fff;box-shadow:0 8px 20px rgba(22,163,74,.25)}.btn-pro-red{background:#dc2626;color:#fff;box-shadow:0 8px 20px rgba(220,38,38,.25)}
+.btn-pro{width:100%;height:56px;border:none;border-radius:16px;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 20px rgba(0,0,0,.12);transition:all.15s}
+.btn-pro:active{transform:scale(.98)}.btn-pro-dark{background:#0a0a0a;color:#fff}.btn-pro-green{background:#16a34a;color:#fff}.btn-pro-red{background:#dc2626;color:#fff}
 .btn-contact{background:#fff;border:1.5px solid #e5e7eb;border-radius:14px;height:48px;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 </style>
 </head>
 <body>
-<div class="top"><div class="top-left"><div class="logo">K</div><div><h1 style="font-size:12px;font-weight:800">Kigo xpress</h1><small style="font-size:8px;color:var(--gray)">NAVEGACIÓN PRO</small></div></div><div style="display:flex;gap:6px;align-items:center"><div id="userLabel" style="display:none;background:var(--black);color:#fff;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:800"></div><button style="height:26px;padding:0 8px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:9px;font-weight:700;cursor:pointer" onclick="cerrarSesion()">Salir</button></div></div>
+<div class="top"><div class="top-left"><div class="logo">K</div><div><h1 style="font-size:12px;font-weight:800">Kigo xpress</h1><small style="font-size:8px;color:var(--gray)">GOOGLE MAPS DENTRO</small></div></div><div style="display:flex;gap:6px;align-items:center"><div id="userLabel" style="display:none;background:var(--black);color:#fff;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:800"></div><button style="height:26px;padding:0 8px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:9px;font-weight:700;cursor:pointer" onclick="cerrarSesion()">Salir</button></div></div>
 <div id="lockScreen" class="lock"><div class="lock-card"><h2 style="font-size:18px;font-weight:800">KIGO XPRESS</h2><p style="font-size:10px;color:var(--gray);margin:4px 0 12px">Ingresa tu PIN</p><input type="password" id="pinInput" maxlength="4" placeholder="••••"><button class="lock-btn" onclick="validarPin()">Entrar</button><div id="pinError" style="display:none;margin-top:8px;color:var(--red);font-size:10px;font-weight:700">PIN incorrecto</div></div></div>
 
 <div id="view-inicio" class="view active"><div class="card"><div class="group"><div class="label-row"><label>Fecha</label></div><div class="wrap"><input type="date" id="fecha"></div></div><div class="group"><div class="label-row"><label>Cliente <span id="cliCountInfo" style="color:#16a34a;font-size:9px"></span></label></div><div class="wrap" id="wrapCliente" style="overflow:visible"><input type="text" id="cliente" placeholder="Cliente" oninput="auto()" onfocus="auto()" autocomplete="off"><div id="list"></div></div></div><div class="group"><div class="label-row"><label>Tipo</label></div><div class="wrap"><select id="tipo"><option value="Moto Mandado">Moto Mandado</option><option value="Moto Transporte">Moto Transporte</option></select></div></div><div class="group"><div class="label-row"><label>Valor</label></div><div style="display:flex;gap:6px"><div class="wrap" style="flex:1"><input type="number" id="valor" placeholder="0"><input type="text" id="valorPromo" value="PROMOCION" style="display:none;background:#f3e8ff;color:#6b21a8;font-weight:800;text-align:center" disabled></div><button id="btnPromo" style="height:44px;width:44px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer" onclick="togglePromo()">🎁</button></div></div><div class="group"><div class="label-row"><label>Repartidor</label></div><div class="wrap"><select id="repa"></select></div></div><button class="btn" onclick="guardar()"><span id="btnT">Confirmar</span></button><button id="btnC" onclick="cancelar()" style="display:none;width:100%;height:32px;background:none;border:none;font-size:10px;color:#6b7280;cursor:pointer;margin-top:6px">Cancelar</button></div></div>
@@ -51,7 +52,7 @@
 
 <div id="view-repartidor" class="view">
 <div class="card" style="margin-bottom:8px;padding:10px">
-<div style="display:flex;gap:8px;align-items:center"><div style="position:relative"><img id="repAvatar" src="" style="width:44px;height:44px;border-radius:50%;background:#e5e7eb;object-fit:cover;display:none;border:2px solid var(--black)"><div id="repAvatarLetra" style="width:44px;height:44px;border-radius:50%;background:var(--black);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">J</div><button onclick="document.getElementById('inputFotoRepa').click()" style="position:absolute;bottom:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px">+</button></div><div><div style="font-weight:800;font-size:12px">PANEL REPARTIDOR</div><div id="repNombreFijo" style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:800;display:none;margin-top:4px"></div></div></div>
+<div style="display:flex;gap:8px;align-items:center"><div style="position:relative"><img id="repAvatar" src="" style="width:44px;height:44px;border-radius:50%;background:#e5e7eb;object-fit:cover;display:none;border:2px solid var(--black)"><div id="repAvatarLetra" style="width:44px;height:44px;border-radius:50%;background:var(--black);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">J</div><button onclick="document.getElementById('inputFotoRepa').click()" style="position:absolute;bottom:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px">+</button></div><div><div style="font-weight:800;font-size:12px">PANEL REPARTIDOR - GOOGLE MAPS</div><div id="repNombreFijo" style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:800;display:none;margin-top:4px"></div></div></div>
 <input type="file" id="inputFotoRepa" accept="image/*" style="display:none" onchange="subirFotoRepa(this)">
 <div class="group" id="groupRepSelector" style="margin-top:10px"><div class="label-row"><label>Repartidor (admin)</label></div><div class="wrap"><select id="repView" onchange="renderRepartidor()"></select></div></div>
 <div style="margin-top:10px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:12px;padding:10px">
@@ -68,17 +69,17 @@
   <div class="card" style="padding:6px;margin-bottom:10px; position:relative">
     <div id="mapRepa"></div>
     <div style="position:absolute; top:12px; right:12px; z-index:500; display:flex; flex-direction:column; gap:8px">
-      <button onclick="KigoNav.centerMyLocation()" style="width:40px;height:40px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;cursor:pointer">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <button onclick="centrarEnRepaGoogle()" style="width:44px;height:44px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       </button>
-      <button onclick="KigoNav.resetBearing()" id="btnBrujula" style="width:40px;height:40px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform.3s">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8l-4 8-4-8 4 2z" fill="#0a0a0a"/></svg>
+      <button onclick="resetBearingGoogle()" id="btnBrujula" style="width:44px;height:44px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8l-4 8-4-8 4 2z" fill="#0a0a0a"/></svg>
       </button>
     </div>
-    <div style="position:absolute; bottom:12px; left:12px; z-index:400; background:rgba(0,0,0,.75); color:#fff; padding:5px 10px; border-radius:20px; font-size:8px; font-weight:700">GIRA CON 2 DEDOS • SIGUE TU MOVIMIENTO</div>
+    <div style="position:absolute; bottom:12px; left:12px; z-index:400; background:rgba(0,0,0,.85); color:#fff; padding:6px 10px; border-radius:20px; font-size:9px; font-weight:700">GOOGLE MAPS DENTRO • TODO AQUI MISMO</div>
   </div>
 
-  <div id="cardPedidoModerna" style="display:none; background:#fff; border-radius:22px; padding:18px; box-shadow:0 12px 32px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04); border:1px solid #f0f0f0; margin-bottom:14px;">
+  <div id="cardPedidoModerna" style="display:none; background:#fff; border-radius:22px; padding:18px; box-shadow:0 12px 32px rgba(0,0,0,.08); border:1px solid #f0f0f0; margin-bottom:14px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px">
       <div style="font-size:14px; font-weight:800; display:flex; align-items:center; gap:8px"><span style="width:28px;height:28px;background:#f3f4f6;border-radius:8px;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg></span> Pedido #<span id="txtNumPedido">--</span></div>
       <div id="txtEstadoPedido" style="background:#fef3c7; color:#92400e; padding:6px 12px; border-radius:20px; font-size:10px; font-weight:800;">Nuevo pedido</div>
@@ -105,7 +106,7 @@
       <button id="btnRecogido" onclick="accionYaRecogi()" style="display:none" class="btn-pro btn-pro-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg> Pedido recogido</button>
       <button id="btnVoyEntregar" onclick="accionVoyEntregar()" style="display:none" class="btn-pro btn-pro-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M5.5 17.5V8h8l4 4v5.5"/></svg> Voy a entregar pedido</button>
       <button id="btnEntregado" onclick="accionEntregado()" style="display:none" class="btn-pro btn-pro-red"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Pedido entregado</button>
-      <div id="estadoFinal" style="display:none; text-align:center; padding:16px; background:#f0fdf4; border-radius:14px; color:#166534; font-weight:800; font-size:13px; border:1px solid #bbf7d0">Pedido completado correctamente</div>
+      <div id="estadoFinal" style="display:none; text-align:center; padding:16px; background:#f0fdf4; border-radius:14px; color:#166534; font-weight:800; font-size:13px; border:1px solid #bbf7d0">Pedido completado</div>
     </div>
   </div>
   <div id="listaCardsPedidos" style="display:flex;gap:12px;overflow:auto;padding:4px 2px 12px 2px;scroll-snap-type:x mandatory"></div>
@@ -140,87 +141,11 @@ import { getDatabase, ref, onValue, set, push, update, remove } from "https://ww
 const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", authDomain: "historial-kigo-xpress.firebaseapp.com", databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com", projectId: "historial-kigo-xpress", storageBucket: "historial-kigo-xpress.firebasestorage.app", messagingSenderId: "571399920545", appId: "1:571399920545:web:aa16407753b43cbe2e89e0" };
 const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
-/* ====== KIGO NAVIGATION MODULE - NO MODIFICA TU MAPA EXISTENTE ====== */
-const KigoNav = (() => {
-  let map=null, isTracking=false, watchId=null, myMarker=null, lastPos=null;
-  let lastHeading=0, targetHeading=0, currentBearing=0, lastMoveTime=0, autoFollowTimeout=null, compassHeading=null, speedFilter=0;
-  const MIN_SPEED_FOR_ROTATION=1.2, MIN_DISTANCE_UPDATE=2, HEADING_SMOOTHING=0.15, FOLLOW_DELAY_AFTER_DRAG=4000;
-
-  function init(mapInstance){ map=mapInstance; if(!map) return; enableTwoFingerRotation(); enableManualInteractionDetection(); enableCompass(); }
-  function getAngle(touches){ const dx=touches[1].clientX-touches[0].clientX; const dy=touches[1].clientY-touches[0].clientY; return Math.atan2(dy,dx)*180/Math.PI; }
-  function enableTwoFingerRotation(){
-    const container=map.getContainer(); let startAngle=0, startBearing=0, rotating=false;
-    container.addEventListener('touchstart', e=>{ if(e.touches.length===2){ rotating=true; startAngle=getAngle(e.touches); startBearing=currentBearing; lastMoveTime=Date.now(); } }, {passive:false});
-    container.addEventListener('touchmove', e=>{ if(e.touches.length===2&&rotating){ e.preventDefault(); const angle=getAngle(e.touches); const diff=angle-startAngle; setMapBearing(startBearing+diff,false); lastMoveTime=Date.now(); } }, {passive:false});
-    container.addEventListener('touchend', ()=>{ if(rotating){ rotating=false; pauseAutoFollow(); } });
-  }
-  function shortestAngleDiff(from,to){ let diff=to-from; while(diff<-180) diff+=360; while(diff>180) diff-=360; return diff; }
-  function setMapBearing(deg,animate=true){
-    currentBearing=deg;
-    const tilePane=map.getPane('tilePane'); const mapPane=map.getPane('mapPane'); const markerPane=map.getPane('markerPane');
-    const tf=`rotate(${deg}deg)`;
-    if(tilePane){ tilePane.style.transformOrigin='center center'; tilePane.style.transform=tf; tilePane.style.transition=animate?'transform 0.3s ease-out':'none'; }
-    if(mapPane){ mapPane.style.transformOrigin='center center'; mapPane.style.transform=tf; }
-    if(markerPane){ markerPane.style.transform=`rotate(${-deg}deg)`; markerPane.style.transformOrigin='center center'; }
-    const b=document.getElementById('btnBrujula'); if(b) b.style.transform=`rotate(${-deg}deg)`;
-  }
-  function smoothRotate(){
-    const diff=shortestAngleDiff(currentBearing, -targetHeading);
-    if(Math.abs(diff)<0.5) return;
-    currentBearing+=diff*HEADING_SMOOTHING;
-    setMapBearing(currentBearing,true);
-    if(Math.abs(diff)>1&&isTracking) requestAnimationFrame(smoothRotate);
-  }
-  function enableCompass(){
-    if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function') return;
-    window.addEventListener('deviceorientationabsolute', e=>handleOrientation(e), true);
-    window.addEventListener('deviceorientation', e=>handleOrientation(e), true);
-  }
-  function handleOrientation(e){ let h=null; if(e.webkitCompassHeading!=null) h=e.webkitCompassHeading; else if(e.alpha!=null) h=360-e.alpha; if(h!=null) compassHeading=h; }
-  function enableManualInteractionDetection(){ map.on('dragstart zoomstart', ()=>{ lastMoveTime=Date.now(); pauseAutoFollow(); }); }
-  function pauseAutoFollow(){ if(autoFollowTimeout) clearTimeout(autoFollowTimeout); autoFollowTimeout=setTimeout(()=>{ if(isTracking) isTracking=true; }, FOLLOW_DELAY_AFTER_DRAG); }
-  function shouldAutoFollow(){ return isTracking && (Date.now()-lastMoveTime>1000); }
-  function updateMyMarker(pos){
-    if(myMarker) map.removeLayer(myMarker);
-    const icon=L.divIcon({ html:`<div style="transform:rotate(${targetHeading}deg);width:32px;height:32px;display:flex;align-items:center;justify-content:center"><div style="width:18px;height:18px;background:#0a0a0a;border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 6px rgba(0,0,0,.15)"></div><div style="position:absolute;top:-2px;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #0a0a0a"></div></div>`, iconSize:[32,32], iconAnchor:[16,16], className:'' });
-    myMarker=L.marker([pos.lat,pos.lng],{icon,zIndexOffset:1000}).addTo(map);
-  }
-  function startTracking(){
-    if(watchId) navigator.geolocation.clearWatch(watchId);
-    isTracking=true;
-    watchId=navigator.geolocation.watchPosition(pos=>{
-      const {latitude,longitude,heading,speed}=pos.coords;
-      const newPos={lat:latitude,lng:longitude,heading,speed};
-      if(lastPos){ const d=map.distance([lastPos.lat,lastPos.lng],[newPos.lat,newPos.lng]); if(d<MIN_DISTANCE_UPDATE && speed<0.5) return; }
-      lastPos=newPos;
-      updateMyMarker(newPos);
-      if(isTracking && shouldAutoFollow()) map.panTo([newPos.lat,newPos.lng],{animate:true,duration:0.8});
-      let newHeading=null;
-      if(heading!=null &&!isNaN(heading) && speed>MIN_SPEED_FOR_ROTATION){ newHeading=heading; speedFilter=speedFilter*0.8+speed*0.2; }
-      else if(compassHeading!=null && speedFilter>0.8){ newHeading=compassHeading; }
-      if(newHeading!=null){ targetHeading=newHeading; smoothRotate(); }
-    }, err=>console.warn(err), {enableHighAccuracy:true, maximumAge:500, timeout:10000});
-  }
-  function stopTracking(){ if(watchId) navigator.geolocation.clearWatch(watchId); watchId=null; isTracking=false; }
-  function centerMyLocation(){
-    if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function'){
-      DeviceOrientationEvent.requestPermission().then(r=>{ if(r==='granted'){ enableCompass(); window.addEventListener('deviceorientation', e=>handleOrientation(e), true); } }).catch(()=>{});
-    }
-    if(lastPos){ map.setView([lastPos.lat,lastPos.lng],18,{animate:true}); setMapBearing(0,true); isTracking=true; lastMoveTime=0; if(!watchId) startTracking(); }
-    else { navigator.geolocation.getCurrentPosition(pos=>{ const p={lat:pos.coords.latitude,lng:pos.coords.longitude}; lastPos=p; map.setView([p.lat,p.lng],18,{animate:true}); startTracking(); }, null, {enableHighAccuracy:true}); }
-  }
-  function resetBearing(){ setMapBearing(0,true); }
-  return {init,startTracking,stopTracking,centerMyLocation,resetBearing,setMapBearing};
-})();
-window.KigoNav = KigoNav;
-
-// ===== FIN MODULO NAVEGACION =====
-
 let ventas=[],filtroFecha=null,filtroHoy='todos',filtroHistTipo='todos',filtroRepa='todos',filtroMesRepa=null,editId=null,fechasCobro=[],esPromo=false,rol=null,repartidorLogueado=null;
 let pinsData={admin:'0831',repas:{'Jose':'1111','Diego Gómez':'2222','Diego':'3333','Carlos':'4444'}};
 let tarifas={mandado:5,transporte:10}; let tarifasRepas={}; let fotosRepas={}; let clientesDirecciones={};
 let map=null, pinClienteLayer=null, routeLayer=null, entregaMarker=null, clientePedidoSeleccionado=null, ultimaCotizacion=null, entregaCoordsTemp=null;
-let mapRepa=null, routeLayerRepa=null, markersRepa=[], pedidosLive={}, statusRepas={}, prevLiveCount=0, ubicacionRepa=null, pedidoSeleccionadoKey=null;
+let mapRepa=null, googleMapRepa=null, directionsService=null, directionsRenderer=null, googleMarkers=[], pedidosLive={}, statusRepas={}, prevLiveCount=0, ubicacionRepa=null, pedidoSeleccionadoKey=null, watchIdGoogle=null, googleMyMarker=null;
 
 onValue(ref(db,'kigoPins'), s=>{ if(s.exists()) pinsData=s.val(); actualizarSelects(); renderAjustes(); });
 onValue(ref(db,'kigoTarifas'), s=>{ if(s.exists()) tarifas=s.val(); });
@@ -239,14 +164,91 @@ onValue(ref(db,'kigoStatusRepas'), s=>{ statusRepas=s.val()||{}; actualizarSelec
 function playRappiSound(){ try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); let start=ctx.currentTime; for(let i=0;i<6;i++){ let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sine'; o.frequency.setValueAtTime(880,start+i*0.7); o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(1,start+i*0.7); g.gain.exponentialRampToValueAtTime(0.01,start+i*0.7+0.4); o.start(start+i*0.7); o.stop(start+i*0.7+0.4); } if(navigator.vibrate) navigator.vibrate([300,100,300,100,300,100,500]); }catch(e){} }
 function obtenerUbicacionRepa(cb){ if(navigator.geolocation){ navigator.geolocation.getCurrentPosition(pos=>{ ubicacionRepa={lat:pos.coords.latitude,lng:pos.coords.longitude}; if(cb) cb(ubicacionRepa); },()=>{ if(cb) cb(null); }, {enableHighAccuracy:true}); } else { if(cb) cb(null); } }
 function initMap(){ if(map) return; map=L.map('map').setView([21.1556,-100.9343],14); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map); }
+
+// GOOGLE MAPS DENTRO DEL PANEL REPARTIDOR - TODO AQUI MISMO
 function initMapRepa(){
- if(mapRepa) return;
- mapRepa=L.map('mapRepa',{zoomControl:false}).setView([21.1556,-100.9343],16);
- L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(mapRepa);
- L.control.zoom({position:'bottomright'}).addTo(mapRepa);
- // INTEGRACIÓN NAVEGACIÓN - NO REEMPLAZA NADA
- KigoNav.init(mapRepa);
+ if(googleMapRepa) return;
+ if(typeof google==='undefined'){ setTimeout(initMapRepa,500); return; }
+ const mapDiv=document.getElementById('mapRepa');
+ googleMapRepa=new google.maps.Map(mapDiv, {
+   center: {lat:21.1556, lng:-100.9343},
+   zoom: 16,
+   disableDefaultUI: true,
+   zoomControl: false,
+   mapTypeControl: false,
+   streetViewControl: false,
+   fullscreenControl: false,
+   gestureHandling: 'greedy',
+   heading: 0,
+   tilt: 0,
+   mapId: 'kigo_map'
+ });
+ directionsService=new google.maps.DirectionsService();
+ directionsRenderer=new google.maps.DirectionsRenderer({
+   map: googleMapRepa,
+   suppressMarkers: true,
+   polylineOptions: { strokeColor:'#0a0a0a', strokeWeight:6 }
+ });
+ mapRepa=googleMapRepa; // compatibilidad
 }
+
+function trazarRutaGoogle(origen, destino, color='#0a0a0a'){
+ return new Promise((resolve)=>{
+   if(!directionsService) return resolve(null);
+   directionsRenderer.setOptions({ polylineOptions:{ strokeColor:color, strokeWeight:7 } });
+   directionsService.route({
+     origin: origen,
+     destination: destino,
+     travelMode: google.maps.TravelMode.DRIVING
+   }, (result,status)=>{
+     if(status==='OK'){
+       directionsRenderer.setDirections(result);
+       const leg=result.routes[0].legs[0];
+       resolve({ km:(leg.distance.value/1000).toFixed(1), min:Math.round(leg.duration.value/60) });
+     } else { resolve(null); }
+   });
+ });
+}
+
+function limpiarGoogleMarkers(){ googleMarkers.forEach(m=>m.setMap(null)); googleMarkers=[]; if(directionsRenderer) directionsRenderer.setDirections({routes:[]}); }
+
+function iniciarSeguimientoGoogle(){
+ if(watchIdGoogle) navigator.geolocation.clearWatch(watchIdGoogle);
+ watchIdGoogle=navigator.geolocation.watchPosition(pos=>{
+   const lat=pos.coords.latitude, lng=pos.coords.longitude, heading=pos.coords.heading, speed=pos.coords.speed||0;
+   ubicacionRepa={lat,lng};
+   if(googleMyMarker) googleMyMarker.setMap(null);
+   googleMyMarker=new google.maps.Marker({
+     position:{lat,lng},
+     map: googleMapRepa,
+     icon: { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW, scale:6, fillColor:'#0a0a0a', fillOpacity:1, strokeWeight:2, strokeColor:'#fff', rotation: heading||0 },
+     zIndex: 999
+   });
+   googleMapRepa.panTo({lat,lng});
+   if(heading!=null && speed>1.5){
+     googleMapRepa.setHeading(heading);
+   }
+ }, null, {enableHighAccuracy:true, maximumAge:500});
+}
+
+window.centrarEnRepaGoogle=function(){
+ if(typeof google==='undefined') return;
+ if(ubicacionRepa && googleMapRepa){
+   googleMapRepa.setCenter(ubicacionRepa);
+   googleMapRepa.setZoom(18);
+   if(!watchIdGoogle) iniciarSeguimientoGoogle();
+ } else {
+   navigator.geolocation.getCurrentPosition(pos=>{
+     const p={lat:pos.coords.latitude,lng:pos.coords.longitude};
+     ubicacionRepa=p;
+     googleMapRepa.setCenter(p);
+     googleMapRepa.setZoom(18);
+     iniciarSeguimientoGoogle();
+   }, null, {enableHighAccuracy:true});
+ }
+}
+window.resetBearingGoogle=function(){ if(googleMapRepa) googleMapRepa.setHeading(0); }
+
 async function fetchClima(){ try{ let r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=21.1556&longitude=-100.9343&current=temperature_2m,weather_code,wind_speed_10m,is_day&timezone=auto'); let j=await r.json(); let cur=j.current; document.getElementById('climaTemp').innerText=Math.round(cur.temperature_2m)+'°C'; document.getElementById('climaDesc').innerText=cur.weather_code<=3?'Nublado':'Soleado'; document.getElementById('climaViento').innerText=Math.round(cur.wind_speed_10m)+' km/h'; }catch(e){} }
 
 window.mostrarTarjetaModerna=function(key){
@@ -260,7 +262,7 @@ window.mostrarTarjetaModerna=function(key){
   document.getElementById('txtClienteDir').innerText=p.entrega;
   document.getElementById('txtDistancia').innerText=`${p.km} km • ${p.min} min`;
   actualizarEstadoVisual(p.etapa||'pendiente');
-  if(p.etapa==='pendiente' ||!p.etapa){ verRutaLive(key); }
+  verRutaGoogle(key);
 }
 window.actualizarEstadoVisual=function(etapa){
   const bAceptar=document.getElementById('btnAceptar'); const bCamino=document.getElementById('btnEnCamino'); const bRecogido=document.getElementById('btnRecogido'); const bVoyEntregar=document.getElementById('btnVoyEntregar'); const bEntregado=document.getElementById('btnEntregado'); const fin=document.getElementById('estadoFinal'); const estadoTxt=document.getElementById('txtEstadoPedido');
@@ -276,46 +278,47 @@ window.accionAceptar=async function(){
  if(!pedidoSeleccionadoKey) return;
  let p=pedidosLive[pedidoSeleccionadoKey];
  await update(ref(db,'kigoPedidosLive/'+pedidoSeleccionadoKey),{etapa:'aceptado'});
- initMapRepa(); if(routeLayerRepa) mapRepa.removeLayer(routeLayerRepa); markersRepa.forEach(m=>mapRepa.removeLayer(m)); markersRepa=[];
- try{ let url=`https://router.project-osrm.org/route/v1/driving/${p.lng1},${p.lat1};${p.lng2},${p.lat2}?overview=full&geometries=geojson`; let res=await fetch(url); let data=await res.json(); if(data.routes&&data.routes[0]){ let coords=data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]); routeLayerRepa=L.polyline(coords,{color:'#0a0a0a',weight:6, dashArray:'8,10'}).addTo(mapRepa); mapRepa.fitBounds(routeLayerRepa.getBounds(),{padding:[40,40]}); let greenIcon=L.divIcon({html:'<div style="background:#16a34a;width:16px;height:16px;border-radius:50%;border:3px solid #fff"></div>',iconSize:[16,16],className:''}); let redIcon=L.divIcon({html:'<div style="background:#dc2626;width:16px;height:16px;border-radius:50%;border:3px solid #fff"></div>',iconSize:[16,16],className:''}); let m1=L.marker([p.lat1,p.lng1],{icon:greenIcon}).addTo(mapRepa); let m2=L.marker([p.lat2,p.lng2],{icon:redIcon}).addTo(mapRepa); markersRepa=[m1,m2]; } }catch(e){}
+ limpiarGoogleMarkers();
+ await trazarRutaGoogle({lat:p.lat1,lng:p.lng1},{lat:p.lat2,lng:p.lng2},'#0a0a0a');
  actualizarEstadoVisual('aceptado');
- KigoNav.startTracking();
+ iniciarSeguimientoGoogle();
 }
 window.accionEnCamino=function(){
  if(!pedidoSeleccionadoKey) return;
- KigoNav.startTracking();
  obtenerUbicacionRepa(async (ub)=>{
    let p=pedidosLive[pedidoSeleccionadoKey];
    await update(ref(db,'kigoPedidosLive/'+pedidoSeleccionadoKey),{etapa:'en_camino_recoger', horaInicio:Date.now()});
-   let origen=ub||{lat:21.1556,lng:-100.9343};
-   initMapRepa(); if(routeLayerRepa) mapRepa.removeLayer(routeLayerRepa); markersRepa.forEach(m=>mapRepa.removeLayer(m)); markersRepa=[];
-   try{ let url=`https://router.project-osrm.org/route/v1/driving/${origen.lng},${origen.lat};${p.lng1},${p.lat1}?overview=full&geometries=geojson`; let res=await fetch(url); let data=await res.json(); if(data.routes&&data.routes[0]){ let coords=data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]); routeLayerRepa=L.polyline(coords,{color:'#0a0a0a',weight:7}).addTo(mapRepa); mapRepa.fitBounds(routeLayerRepa.getBounds(),{padding:[30,30]}); } }catch(e){}
+   let origen=ub?{lat:ub.lat,lng:ub.lng}:{lat:21.1556,lng:-100.9343};
+   limpiarGoogleMarkers();
+   await trazarRutaGoogle(origen,{lat:p.lat1,lng:p.lng1},'#0a0a0a');
+   iniciarSeguimientoGoogle();
    actualizarEstadoVisual('en_camino_recoger');
  });
 }
 window.accionYaRecogi=function(){ if(!pedidoSeleccionadoKey) return; obtenerUbicacionRepa(async (ub)=>{ await update(ref(db,'kigoPedidosLive/'+pedidoSeleccionadoKey),{etapa:'recogido', horaRecogido:Date.now()}); actualizarEstadoVisual('recogido'); }); }
 window.accionVoyEntregar=function(){
  if(!pedidoSeleccionadoKey) return;
- KigoNav.startTracking();
  obtenerUbicacionRepa(async (ub)=>{
    let p=pedidosLive[pedidoSeleccionadoKey];
    await update(ref(db,'kigoPedidosLive/'+pedidoSeleccionadoKey),{etapa:'en_camino_entrega'});
-   let origen=ub||{lat:p.lat1,lng:p.lng1};
-   initMapRepa(); if(routeLayerRepa) mapRepa.removeLayer(routeLayerRepa); markersRepa.forEach(m=>mapRepa.removeLayer(m)); markersRepa=[];
-   try{ let url=`https://router.project-osrm.org/route/v1/driving/${origen.lng},${origen.lat};${p.lng2},${p.lat2}?overview=full&geometries=geojson`; let res=await fetch(url); let data=await res.json(); if(data.routes&&data.routes[0]){ let coords=data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]); routeLayerRepa=L.polyline(coords,{color:'#16a34a',weight:7}).addTo(mapRepa); mapRepa.fitBounds(routeLayerRepa.getBounds(),{padding:[30,30]}); } }catch(e){}
+   let origen=ub?{lat:ub.lat,lng:ub.lng}:{lat:p.lat1,lng:p.lng1};
+   limpiarGoogleMarkers();
+   await trazarRutaGoogle(origen,{lat:p.lat2,lng:p.lng2},'#16a34a');
+   iniciarSeguimientoGoogle();
    actualizarEstadoVisual('en_camino_entrega');
  });
 }
 window.accionEntregado=async function(){
  if(!pedidoSeleccionadoKey) return; if(!confirm('¿Confirmar entrega?')) return;
  await update(ref(db,'kigoPedidosLive/'+pedidoSeleccionadoKey),{etapa:'finalizado', estado:'finalizado', horaFin:Date.now()});
- KigoNav.stopTracking(); KigoNav.resetBearing();
+ if(watchIdGoogle) navigator.geolocation.clearWatch(watchIdGoogle); watchIdGoogle=null;
+ limpiarGoogleMarkers();
  alert('Pedido entregado'); document.getElementById('cardPedidoModerna').style.display='none'; pedidoSeleccionadoKey=null;
 }
 window.accionMensajeCliente=function(){ let p=pedidosLive[pedidoSeleccionadoKey]; if(!p) return; let texto=`Hola ${p.cliente}, soy tu repartidor de Kigo xpress, estoy en camino con tu pedido #${pedidoSeleccionadoKey.slice(-4).toUpperCase()}.`; window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank'); }
 window.accionLlamarCliente=function(){ let p=pedidosLive[pedidoSeleccionadoKey]; if(!p) return; if(p.telefono) window.open(`tel:${p.telefono}`,'_self'); else window.open(`https://wa.me/?text=${encodeURIComponent('Hola '+p.cliente)}`,'_blank'); }
 
-window.showTabRepa=function(t){ document.getElementById('tabRepaLive').classList.toggle('active',t==='live'); document.getElementById('tabRepaHist').classList.toggle('active',t==='hist'); document.getElementById('panelRepaLive').style.display=t==='live'?'block':'none'; document.getElementById('panelRepaHist').style.display=t==='hist'?'block':'none'; if(t==='live'){ setTimeout(()=>{ initMapRepa(); if(mapRepa) mapRepa.invalidateSize(); KigoNav.init(mapRepa); },100); } if(t==='hist'){ renderRepartidor(); } };
+window.showTabRepa=function(t){ document.getElementById('tabRepaLive').classList.toggle('active',t==='live'); document.getElementById('tabRepaHist').classList.toggle('active',t==='hist'); document.getElementById('panelRepaLive').style.display=t==='live'?'block':'none'; document.getElementById('panelRepaHist').style.display=t==='hist'?'block':'none'; if(t==='live'){ setTimeout(()=>{ initMapRepa(); },100); } if(t==='hist'){ renderRepartidor(); } };
 window.setTabPedido=function(t){ document.getElementById('tabRecoger').classList.toggle('active',t==='recoger'); document.getElementById('tabComprar').classList.toggle('active',t==='comprar'); document.getElementById('panelRecoger').style.display=t==='recoger'?'block':'none'; document.getElementById('panelComprar').style.display=t==='comprar'?'block':'none'; };
 window.buscarClientePedido=function(){ let input=document.getElementById('buscadorClientePedido'); let val=input.value.toLowerCase().trim(); let list=document.getElementById('listClientePedido'); let todos=getClientesData(); let filtrados=val?todos.filter(c=>c.nombre.toLowerCase().includes(val)).sort((a,b)=>b.total-a.total).slice(0,15):todos.sort((a,b)=>b.total-a.total).slice(0,10); if(!filtrados.length){ list.style.display='none'; return; } list.innerHTML=filtrados.map(c=>{ let dir=clientesDirecciones[c.nombre]; let dirTxt=dir?`${dir.direccion.slice(0,30)}`:'Sin dir'; return `<div onclick="seleccionarClientePedido('${c.nombre.replace(/'/g,"\\'")}')" style="padding:8px 10px;border-bottom:1px solid #f3f4f6;cursor:pointer"><b>${c.nombre}</b><br><small style="color:#6b7280">${dirTxt}</small></div>`; }).join(''); list.style.display='block'; };
 window.seleccionarClientePedido=function(nombre){ clientePedidoSeleccionado=nombre; document.getElementById('buscadorClientePedido').value=nombre; document.getElementById('listClientePedido').style.display='none'; let dir=clientesDirecciones[nombre]; let box=document.getElementById('clienteSeleccionadoPedido'); box.style.display='block'; box.innerHTML=`<b>${nombre}</b><br>${dir?`${dir.direccion}`:'Sin dir'}`; };
@@ -369,7 +372,6 @@ window.confirmarPedido=async function(){
  restaurarCotizacion();
 };
 window.renderPedidosLiveRepa=function(){
- initMapRepa();
  let cont=document.getElementById('listaCardsPedidos'); let count=document.getElementById('countLive'); let empty=document.getElementById('emptyLive'); if(!cont) return;
  let arr=Object.entries(pedidosLive).map(([k,v])=>({...v,_key:k})).filter(p=>p.estado!=='finalizado' && p.etapa!=='finalizado').sort((a,b)=>a.ts-b.ts);
  let repaFiltro=repartidorLogueado || document.getElementById('repView')?.value;
@@ -380,11 +382,15 @@ window.renderPedidosLiveRepa=function(){
  cont.innerHTML=arr.map((p,idx)=>{
    let horaLlegada=new Date(p.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
    let minutosTrans=Math.floor((Date.now()-p.ts)/60000);
-   return `<div class="rappi-card" onclick="mostrarTarjetaModerna('${p._key}')"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:800">#${String(idx+1).padStart(3,'0')} • ${horaLlegada}</div><div style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800">${minutosTrans} min</div></div><div style="font-size:13px;font-weight:800">${p.cliente}</div><div style="font-size:10px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.dirRecogida} → ${p.entrega}</div><div style="margin-top:8px; background:#0a0a0a; color:#fff; padding:8px; border-radius:10px; text-align:center; font-size:10px; font-weight:800">VER EN MAPA</div></div>`;
+   return `<div class="rappi-card" onclick="mostrarTarjetaModerna('${p._key}')"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:800">#${String(idx+1).padStart(3,'0')} • ${horaLlegada}</div><div style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800">${minutosTrans} min</div></div><div style="font-size:13px;font-weight:800">${p.cliente}</div><div style="font-size:10px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.dirRecogida} → ${p.entrega}</div><div style="margin-top:8px; background:#0a0a0a; color:#fff; padding:8px; border-radius:10px; text-align:center; font-size:10px; font-weight:800">VER EN MAPA GOOGLE</div></div>`;
  }).join('');
  if(!pedidoSeleccionadoKey && arr.length>0){ mostrarTarjetaModerna(arr[0]._key); }
 };
-window.verRutaLive=async function(key){ let p=pedidosLive[key]; if(!p) return; initMapRepa(); if(routeLayerRepa) mapRepa.removeLayer(routeLayerRepa); markersRepa.forEach(m=>mapRepa.removeLayer(m)); markersRepa=[]; try{ let url=`https://router.project-osrm.org/route/v1/driving/${p.lng1},${p.lat1};${p.lng2},${p.lat2}?overview=full&geometries=geojson`; let res=await fetch(url); let data=await res.json(); if(data.routes&&data.routes[0]){ let coords=data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]); routeLayerRepa=L.polyline(coords,{color:'#0a0a0a',weight:6, dashArray:'8,10'}).addTo(mapRepa); let greenIcon = L.divIcon({html:'<div style="background:#16a34a;width:16px;height:16px;border-radius:50%;border:3px solid #fff"></div>',iconSize:[16,16],className:''}); let redIcon = L.divIcon({html:'<div style="background:#dc2626;width:16px;height:16px;border-radius:50%;border:3px solid #fff"></div>',iconSize:[16,16],className:''}); let m1=L.marker([p.lat1,p.lng1],{icon:greenIcon}).addTo(mapRepa); let m2=L.marker([p.lat2,p.lng2],{icon:redIcon}).addTo(mapRepa); markersRepa=[m1,m2]; mapRepa.fitBounds(routeLayerRepa.getBounds(),{padding:[30,30]}); } }catch(e){} };
+window.verRutaGoogle=async function(key){
+ let p=pedidosLive[key]; if(!p ||!googleMapRepa) return;
+ limpiarGoogleMarkers();
+ await trazarRutaGoogle({lat:p.lat1,lng:p.lng1},{lat:p.lat2,lng:p.lng2},'#0a0a0a');
+}
 window.editarDireccionCliente=async function(nombre){ let actualDir=clientesDirecciones[nombre]?.direccion||''; let dir=prompt(`Dirección para ${nombre}`, actualDir); if(dir===null) return; let obj={direccion:dir.trim()}; if(clientesDirecciones[nombre]?.lat){ obj.lat=clientesDirecciones[nombre].lat; obj.lng=clientesDirecciones[nombre].lng; } let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await set(ref(db,'kigoClientesDir/'+key), obj); clientesDirecciones[nombre]=obj; renderClientes(); };
 function getRepartidores(){return Object.keys(pinsData.repas);}
 function actualizarSelects(){let reps=getRepartidores();let html=reps.map(r=>`<option>${r}</option>`).join('');['repa','cobroRepa','histRepa','repView'].forEach(id=>{let el=document.getElementById(id);if(!el)return;let isTodos=id!=='repa'&&id!=='repView';el.innerHTML=(isTodos?'<option value="todos">Todos</option>':'')+html;}); actualizarSelectRepaDestino();}
@@ -395,8 +401,8 @@ function deudaItems(arr){return arr.reduce((a,v)=>a+(v.feeKigo!=null?v.feeKigo:g
 function fmt(n){return (n||0).toLocaleString('es-CO');}
 function todayISO(){let d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 window.validarPin=function(){ let pin=document.getElementById('pinInput').value.trim(); if(pin===pinsData.admin){rol='admin';repartidorLogueado=null;document.getElementById('lockScreen').style.display='none';document.getElementById('userLabel').style.display='block';document.getElementById('userLabel').innerText='ADMIN';document.getElementById('b-ajustes').style.display='flex';document.getElementById('b-pedidos').style.display='flex';document.getElementById('groupRepSelector').style.display='block';document.getElementById('repNombreFijo').style.display='none';showView('inicio');} else if(Object.values(pinsData.repas).includes(pin)){let nombre=Object.keys(pinsData.repas).find(k=>pinsData.repas[k]===pin);rol='repa';repartidorLogueado=nombre;document.getElementById('lockScreen').style.display='none';document.getElementById('userLabel').style.display='block';document.getElementById('userLabel').innerText=nombre.toUpperCase();document.getElementById('b-ajustes').style.display='none';document.getElementById('b-pedidos').style.display='none';document.querySelectorAll('.bottom button').forEach(b=>{if(b.id!=='b-repartidor')b.style.display='none';});document.getElementById('b-repartidor').style.display='flex';showView('repartidor'); showTabRepa('live'); obtenerUbicacionRepa();} else{document.getElementById('pinError').style.display='block';} };
-window.cerrarSesion=function(){ KigoNav.stopTracking(); document.getElementById('lockScreen').style.display='flex'; document.getElementById('pinInput').value=''; document.getElementById('pinError').style.display='none'; rol=null;repartidorLogueado=null; pedidoSeleccionadoKey=null; document.querySelectorAll('.bottom button').forEach(b=>b.style.display='flex'); document.getElementById('b-ajustes').style.display='none'; document.getElementById('b-pedidos').style.display='none'; document.getElementById('userLabel').style.display='none'; if(map){ map.remove(); map=null; } if(mapRepa){ mapRepa.remove(); mapRepa=null; routeLayerRepa=null; markersRepa=[]; } pinClienteLayer=null; routeLayer=null; entregaMarker=null; let card=document.getElementById('cardPedidoModerna'); if(card) card.style.display='none'; };
-window.showView=function(v){if(rol==='repa'&&v!=='repartidor')return;document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById('view-'+v).classList.add('active');document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active'));let btn=document.getElementById('b-'+v);if(btn)btn.classList.add('active');if(v==='pedidos'){setTimeout(()=>{initMap(); if(map) map.invalidateSize(); fetchClima();},150);}if(v==='repartidor'){setTimeout(()=>{initMapRepa(); if(mapRepa) mapRepa.invalidateSize(); KigoNav.init(mapRepa);},200);}if(v==='hoy')renderHoy();if(v==='historial')render();if(v==='cobros'){renderCobros();renderHistMes();}if(v==='clientes')renderClientes();if(v==='estadisticas')renderEstadisticas();if(v==='repartidor')renderRepartidor();if(v==='ajustes')renderAjustes();};
+window.cerrarSesion=function(){ if(watchIdGoogle) navigator.geolocation.clearWatch(watchIdGoogle); watchIdGoogle=null; document.getElementById('lockScreen').style.display='flex'; document.getElementById('pinInput').value=''; document.getElementById('pinError').style.display='none'; rol=null;repartidorLogueado=null; pedidoSeleccionadoKey=null; document.querySelectorAll('.bottom button').forEach(b=>b.style.display='flex'); document.getElementById('b-ajustes').style.display='none'; document.getElementById('b-pedidos').style.display='none'; document.getElementById('userLabel').style.display='none'; if(map){ map.remove(); map=null; } if(googleMapRepa){ googleMapRepa=null; directionsRenderer=null; directionsService=null; } pinClienteLayer=null; routeLayer=null; entregaMarker=null; let card=document.getElementById('cardPedidoModerna'); if(card) card.style.display='none'; };
+window.showView=function(v){if(rol==='repa'&&v!=='repartidor')return;document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById('view-'+v).classList.add('active');document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active'));let btn=document.getElementById('b-'+v);if(btn)btn.classList.add('active');if(v==='pedidos'){setTimeout(()=>{initMap(); if(map) map.invalidateSize(); fetchClima();},150);}if(v==='repartidor'){setTimeout(()=>{initMapRepa();},200);}if(v==='hoy')renderHoy();if(v==='historial')render();if(v==='cobros'){renderCobros();renderHistMes();}if(v==='clientes')renderClientes();if(v==='estadisticas')renderEstadisticas();if(v==='repartidor')renderRepartidor();if(v==='ajustes')renderAjustes();};
 window.showTabCobros=function(t){document.getElementById('tabEnvio').classList.toggle('active',t==='envio');document.getElementById('tabHist').classList.toggle('active',t==='hist');document.getElementById('panelEnvio').style.display=t==='envio'?'block':'none';document.getElementById('panelHist').style.display=t==='hist'?'block':'none';};
 window.showTabClientes=function(t){document.getElementById('tabCliList').classList.toggle('active',t==='lista');document.getElementById('tabCliRank').classList.toggle('active',t==='ranking');document.getElementById('panelCliLista').style.display=t==='lista'?'block':'none';document.getElementById('panelCliRanking').style.display=t==='ranking'?'block':'none';};
 window.showTabEst=function(t){document.getElementById('tabEstMes').classList.toggle('active',t==='mes');document.getElementById('tabEstCal').classList.toggle('active',t==='cal');document.getElementById('panelEstMes').style.display=t==='mes'?'block':'none';document.getElementById('panelEstCal').style.display=t==='cal'?'block':'none';};
