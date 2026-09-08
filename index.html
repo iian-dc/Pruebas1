@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Kigo xpress - Tarjeta Moderna</title>
+<title>Kigo xpress - Mapa Interno</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -29,15 +29,13 @@
 .lock-card input{width:100%;height:48px;border-radius:12px;border:1.5px solid var(--border);text-align:center;font-size:20px;font-weight:800;letter-spacing:.3em}
 .lock-btn{width:100%;height:48px;background:var(--black);color:#fff;border:none;border-radius:12px;font-weight:800;margin-top:10px;cursor:pointer}
 #map{width:100%;height:260px;border-radius:14px;border:1px solid var(--border);z-index:1}
-#mapRepa{width:100%;height:240px;border-radius:12px;border:1px solid var(--border);z-index:1}
+#mapRepa{width:100%;height:260px;border-radius:14px;border:1px solid var(--border);z-index:1}
 .clima-card{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0a0a0a 0%,#334155 100%);color:#fff;border-radius:12px;padding:8px 10px;margin-bottom:8px}
-.rappi-card{background:#fff;border-radius:16px;padding:12px;min-width:285px;max-width:300px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,.06);scroll-snap-align:start;position:relative}
-.rappi-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-.rappi-line{width:1px;height:16px;background:#e5e7eb;margin:4px 0 4px 3px}
+.rappi-card{background:#fff;border-radius:16px;padding:12px;min-width:285px;max-width:300px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,.06);scroll-snap-align:start;position:relative;cursor:pointer}
 </style>
 </head>
 <body>
-<div class="top"><div class="top-left"><div class="logo">K</div><div><h1 style="font-size:12px;font-weight:800">Kigo xpress</h1><small style="font-size:8px;color:var(--gray)">FLUJO RAPPI</small></div></div><div style="display:flex;gap:6px;align-items:center"><div id="userLabel" style="display:none;background:var(--black);color:#fff;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:800"></div><button style="height:26px;padding:0 8px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:9px;font-weight:700;cursor:pointer" onclick="cerrarSesion()">Salir</button></div></div>
+<div class="top"><div class="top-left"><div class="logo">K</div><div><h1 style="font-size:12px;font-weight:800">Kigo xpress</h1><small style="font-size:8px;color:var(--gray)">MAPA INTERNO</small></div></div><div style="display:flex;gap:6px;align-items:center"><div id="userLabel" style="display:none;background:var(--black);color:#fff;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:800"></div><button style="height:26px;padding:0 8px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:9px;font-weight:700;cursor:pointer" onclick="cerrarSesion()">Salir</button></div></div>
 <div id="lockScreen" class="lock"><div class="lock-card"><h2 style="font-size:18px;font-weight:800">KIGO XPRESS</h2><p style="font-size:10px;color:var(--gray);margin:4px 0 12px">Ingresa tu PIN</p><input type="password" id="pinInput" maxlength="4" placeholder="••••"><button class="lock-btn" onclick="validarPin()">Entrar</button><div id="pinError" style="display:none;margin-top:8px;color:var(--red);font-size:10px;font-weight:700">PIN incorrecto</div></div></div>
 
 <div id="view-inicio" class="view active"><div class="card"><div class="group"><div class="label-row"><label>Fecha</label></div><div class="wrap"><input type="date" id="fecha"></div></div><div class="group"><div class="label-row"><label>Cliente <span id="cliCountInfo" style="color:#16a34a;font-size:9px"></span></label></div><div class="wrap" id="wrapCliente" style="overflow:visible"><input type="text" id="cliente" placeholder="Cliente" oninput="auto()" onfocus="auto()" autocomplete="off"><div id="list"></div></div></div><div class="group"><div class="label-row"><label>Tipo</label></div><div class="wrap"><select id="tipo"><option value="Moto Mandado">Moto Mandado</option><option value="Moto Transporte">Moto Transporte</option></select></div></div><div class="group"><div class="label-row"><label>Valor</label></div><div style="display:flex;gap:6px"><div class="wrap" style="flex:1"><input type="number" id="valor" placeholder="0"><input type="text" id="valorPromo" value="PROMOCION" style="display:none;background:#f3e8ff;color:#6b21a8;font-weight:800;text-align:center" disabled></div><button id="btnPromo" style="height:44px;width:44px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer" onclick="togglePromo()">🎁</button></div></div><div class="group"><div class="label-row"><label>Repartidor</label></div><div class="wrap"><select id="repa"></select></div></div><button class="btn" onclick="guardar()"><span id="btnT">Confirmar</span></button><button id="btnC" onclick="cancelar()" style="display:none;width:100%;height:32px;background:none;border:none;font-size:10px;color:#6b7280;cursor:pointer;margin-top:6px">Cancelar</button></div></div>
@@ -86,52 +84,56 @@
 </div>
 
 <div id="panelRepaLive">
-  <!-- MAPA - NO SE TOCA -->
   <div class="card" style="padding:6px;margin-bottom:10px"><div id="mapRepa"></div></div>
 
-  <!-- ===== NUEVA TARJETA MODERNA DEBAJO DEL MAPA - SOLO ESTO ES NUEVO ===== -->
+  <!-- TARJETA MODERNA DEBAJO DEL MAPA -->
   <div id="cardPedidoModerna" style="display:none; background:#fff; border-radius:20px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08); border:1px solid #f0f0f0; margin-bottom:12px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
-      <div style="font-size:14px; font-weight:800; color:#0a0a0a;">📦 Pedido #<span id="txtNumPedido">--</span></div>
+      <div style="font-size:14px; font-weight:800;">📦 Pedido #<span id="txtNumPedido">--</span></div>
       <div id="txtEstadoPedido" style="background:#fef3c7; color:#92400e; padding:5px 10px; border-radius:20px; font-size:10px; font-weight:800;">🟡 En camino a recoger</div>
     </div>
     <div style="display:flex; gap:10px;">
       <div style="display:flex; flex-direction:column; align-items:center; padding-top:2px">
-        <div style="width:28px;height:28px; border-radius:8px; background:#dcfce7; display:flex; align-items:center; justify-content:center; font-size:14px">📍</div>
+        <div style="width:28px;height:28px; border-radius:8px; background:#dcfce7; display:flex; align-items:center; justify-content:center;">📍</div>
         <div style="width:2px; height:28px; background:#e5e7eb; margin:4px 0;"></div>
-        <div style="width:28px;height:28px; border-radius:8px; background:#fee2e2; display:flex; align-items:center; justify-content:center; font-size:14px">🏠</div>
+        <div style="width:28px;height:28px; border-radius:8px; background:#fee2e2; display:flex; align-items:center; justify-content:center;">🏠</div>
       </div>
       <div style="flex:1">
         <div style="margin-bottom:12px">
-          <div style="font-size:9px; font-weight:700; letter-spacing:.08em; color:#6b7280; text-transform:uppercase">RECOGER EN</div>
-          <div id="txtNegocioNombre" style="font-size:13px; font-weight:800; color:#0a0a0a; margin-top:2px">--</div>
+          <div style="font-size:9px; font-weight:700; color:#6b7280;">RECOGER EN</div>
+          <div id="txtNegocioNombre" style="font-size:13px; font-weight:800; margin-top:2px">--</div>
           <div id="txtNegocioDir" style="font-size:11px; color:#4b5563; margin-top:2px">--</div>
         </div>
         <div>
-          <div style="font-size:9px; font-weight:700; letter-spacing:.08em; color:#6b7280; text-transform:uppercase">ENTREGAR EN</div>
-          <div id="txtClienteNombre" style="font-size:13px; font-weight:800; color:#0a0a0a; margin-top:2px">--</div>
+          <div style="font-size:9px; font-weight:700; color:#6b7280;">ENTREGAR EN</div>
+          <div id="txtClienteNombre" style="font-size:13px; font-weight:800; margin-top:2px">--</div>
           <div id="txtClienteDir" style="font-size:11px; color:#4b5563; margin-top:2px">--</div>
         </div>
-        <div style="margin-top:10px; display:flex; gap:6px;">
-          <span id="txtDistancia" style="background:#f9fafb; border:1px solid #e5e7eb; padding:4px 8px; border-radius:20px; font-size:10px; font-weight:700">-- km • -- min</span>
-        </div>
+        <div style="margin-top:10px;"><span id="txtDistancia" style="background:#f9fafb; border:1px solid #e5e7eb; padding:4px 8px; border-radius:20px; font-size:10px; font-weight:700">--</span></div>
       </div>
     </div>
+
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:16px">
-      <button onclick="accionMensajeCliente()" style="height:44px; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; font-weight:700; font-size:11px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer"><span style="font-size:16px">💬</span> Mensaje al cliente</button>
-      <button onclick="accionLlamarCliente()" style="height:44px; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; font-weight:700; font-size:11px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer"><span style="font-size:16px">📞</span> Llamar al cliente</button>
+      <button onclick="accionMensajeCliente()" style="height:44px; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; font-weight:700; font-size:11px; cursor:pointer">💬 Mensaje al cliente</button>
+      <button onclick="accionLlamarCliente()" style="height:44px; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; font-weight:700; font-size:11px; cursor:pointer">📞 Llamar al cliente</button>
     </div>
+
+    <!-- Botones opcionales Google Maps -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:8px">
+      <button onclick="abrirRutaGoogle(pedidoSeleccionadoKey,'recoger')" style="height:32px; background:#fff; border:1px dashed #0a0a0a; border-radius:10px; font-weight:700; font-size:9px; cursor:pointer">🗺️ Maps Recoger</button>
+      <button onclick="abrirRutaGoogle(pedidoSeleccionadoKey,'entregar')" style="height:32px; background:#fff; border:1px dashed #dc2626; border-radius:10px; font-weight:700; font-size:9px; cursor:pointer">🗺️ Maps Entrega</button>
+    </div>
+
     <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px">
-      <button id="btnEstado1" onclick="accionYaRecogi()" style="width:100%; height:52px; background:#0a0a0a; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer"><span style="font-size:18px">📦</span> Ya recogí el pedido</button>
-      <button id="btnEstado2" onclick="accionVoyEntregar()" style="display:none; width:100%; height:52px; background:#16a34a; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer"><span style="font-size:18px">🛵</span> Voy a entregar el pedido</button>
-      <button id="btnEstado3" onclick="accionEntregado()" style="display:none; width:100%; height:52px; background:#dc2626; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer"><span style="font-size:18px">✅</span> Pedido entregado</button>
+      <button id="btnEstado1" onclick="accionYaRecogi()" style="width:100%; height:52px; background:#0a0a0a; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; cursor:pointer">📦 Ya recogí el pedido</button>
+      <button id="btnEstado2" onclick="accionVoyEntregar()" style="display:none; width:100%; height:52px; background:#16a34a; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; cursor:pointer">🛵 Voy a entregar el pedido</button>
+      <button id="btnEstado3" onclick="accionEntregado()" style="display:none; width:100%; height:52px; background:#dc2626; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; cursor:pointer">✅ Pedido entregado</button>
       <div id="estadoFinal" style="display:none; text-align:center; padding:14px; background:#f0fdf4; border-radius:12px; color:#166534; font-weight:800; font-size:13px">✅ Pedido completado</div>
     </div>
   </div>
-  <!-- ===== FIN NUEVA TARJETA ===== -->
 
   <div id="listaCardsPedidos" style="display:flex;gap:12px;overflow:auto;padding:4px 2px 12px 2px;scroll-snap-type:x mandatory"></div>
-  <div id="emptyLive" style="display:none;text-align:center;padding:30px 10px;color:#6b7280"><div style="font-size:11px;font-weight:700">Sin pedidos</div></div>
+  <div id="emptyLive" style="display:none;text-align:center;padding:30px 10px;color:#6b7280">Sin pedidos</div>
 </div>
 
 <div id="panelRepaHist" style="display:none">
@@ -219,7 +221,7 @@ function initMap(){ if(map) return; map=L.map('map').setView([21.1556,-100.9343]
 function initMapRepa(){ if(mapRepa) return; mapRepa=L.map('mapRepa').setView([21.1556,-100.9343],14); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(mapRepa); }
 async function fetchClima(){ try{ let r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=21.1556&longitude=-100.9343&current=temperature_2m,weather_code,wind_speed_10m,is_day&timezone=auto'); let j=await r.json(); let cur=j.current; document.getElementById('climaTemp').innerText=Math.round(cur.temperature_2m)+'°C'; document.getElementById('climaDesc').innerText=cur.weather_code<=3?'Nublado':'Soleado'; document.getElementById('climaViento').innerText=Math.round(cur.wind_speed_10m)+' km/h'; }catch(e){} }
 
-// ===== FUNCIONES NUEVA TARJETA - REUTILIZAN TUS EXISTENTES =====
+// TARJETA MODERNA
 window.mostrarTarjetaModerna=function(key){
   let p=pedidosLive[key];
   if(!p) return;
@@ -232,6 +234,7 @@ window.mostrarTarjetaModerna=function(key){
   document.getElementById('txtClienteDir').innerText=p.entrega;
   document.getElementById('txtDistancia').innerText=`${p.km} km • ${p.min} min`;
   actualizarEstadoVisual(p.etapa || p.estado || 'pendiente');
+  // Traza ruta general inicial
   verRutaLive(key);
 }
 window.actualizarEstadoVisual=function(etapa){
@@ -258,23 +261,30 @@ window.accionYaRecogi=function(){
 }
 window.accionVoyEntregar=function(){
   if(!pedidoSeleccionadoKey) return;
-  abrirRutaGoogle(pedidoSeleccionadoKey,'entregar');
-  update(ref(db,'kigoPedidosLive/'+pedidoSeleccionadoKey),{etapa:'en_camino_entrega'});
+  obtenerUbicacionRepa(async (ub)=>{
+    let p=pedidosLive[pedidoSeleccionadoKey];
+    await update(ref(db,'kigoPedidosLive/'+pedidoSeleccionadoKey),{etapa:'en_camino_entrega'});
+    initMapRepa(); if(routeLayerRepa) mapRepa.removeLayer(routeLayerRepa); markersRepa.forEach(m=>mapRepa.removeLayer(m)); markersRepa=[];
+    let origen=ub||{lat:p.lat1,lng:p.lng1};
+    try{
+      let url=`https://router.project-osrm.org/route/v1/driving/${origen.lng},${origen.lat};${p.lng2},${p.lat2}?overview=full&geometries=geojson`;
+      let res=await fetch(url); let data=await res.json();
+      if(data.routes&&data.routes[0]){
+        let coords=data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
+        routeLayerRepa=L.polyline(coords,{color:'#16a34a',weight:6}).addTo(mapRepa);
+        mapRepa.fitBounds(routeLayerRepa.getBounds(),{padding:[30,30]});
+        let myIcon = L.divIcon({html:'<div style="background:#0a0a0a;width:14px;height:14px;border-radius:50%;border:2px solid #fff"></div>',iconSize:[14,14],className:''});
+        let redIcon = L.divIcon({html:'<div style="background:#dc2626;width:16px;height:16px;border-radius:50%;border:2px solid #fff"></div>',iconSize:[16,16],className:''});
+        let m1=L.marker([origen.lat,origen.lng],{icon:myIcon}).addTo(mapRepa);
+        let m2=L.marker([p.lat2,p.lng2],{icon:redIcon}).addTo(mapRepa);
+        markersRepa=[m1,m2];
+      }
+    }catch(e){}
+  });
 }
-window.accionEntregado=function(){
-  if(!pedidoSeleccionadoKey) return;
-  finalizarPedido(pedidoSeleccionadoKey);
-}
-window.accionMensajeCliente=function(){
-  let p=pedidosLive[pedidoSeleccionadoKey]; if(!p) return;
-  let texto=`Hola ${p.cliente}, soy tu repartidor de Kigo xpress, estoy en camino con tu pedido #${pedidoSeleccionadoKey.slice(-4).toUpperCase()}.`;
-  window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank');
-}
-window.accionLlamarCliente=function(){
-  let p=pedidosLive[pedidoSeleccionadoKey]; if(!p) return;
-  if(p.telefono) window.open(`tel:${p.telefono}`,'_self');
-  else { let texto=`Hola ${p.cliente}, soy tu repartidor de Kigo.`; window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank'); }
-}
+window.accionEntregado=function(){ if(!pedidoSeleccionadoKey) return; finalizarPedido(pedidoSeleccionadoKey); }
+window.accionMensajeCliente=function(){ let p=pedidosLive[pedidoSeleccionadoKey]; if(!p) return; let texto=`Hola ${p.cliente}, soy tu repartidor de Kigo xpress, estoy en camino con tu pedido #${pedidoSeleccionadoKey.slice(-4).toUpperCase()}.`; window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank'); }
+window.accionLlamarCliente=function(){ let p=pedidosLive[pedidoSeleccionadoKey]; if(!p) return; if(p.telefono) window.open(`tel:${p.telefono}`,'_self'); else { let texto=`Hola ${p.cliente}, soy tu repartidor de Kigo.`; window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank'); } }
 
 window.showTabRepa=function(t){ document.getElementById('tabRepaLive').classList.toggle('active',t==='live'); document.getElementById('tabRepaHist').classList.toggle('active',t==='hist'); document.getElementById('panelRepaLive').style.display=t==='live'?'block':'none'; document.getElementById('panelRepaHist').style.display=t==='hist'?'block':'none'; if(t==='live'){ setTimeout(()=>{ initMapRepa(); if(mapRepa) mapRepa.invalidateSize(); },100); } if(t==='hist'){ renderRepartidor(); } };
 window.setTabPedido=function(t){ document.getElementById('tabRecoger').classList.toggle('active',t==='recoger'); document.getElementById('tabComprar').classList.toggle('active',t==='comprar'); document.getElementById('panelRecoger').style.display=t==='recoger'?'block':'none'; document.getElementById('panelComprar').style.display=t==='comprar'?'block':'none'; };
@@ -343,23 +353,27 @@ window.abrirRutaGoogle=function(key, modo){
  window.open(url,'_blank');
 };
 
+// CAMBIO CLAVE: YA NO ABRE GOOGLE MAPS SOLO, TODO EN EL MISMO MAPA
 window.iniciarRuta=async function(key){
  obtenerUbicacionRepa(async (ub)=>{
    let p=pedidosLive[key]; if(!p) return;
    await update(ref(db,'kigoPedidosLive/'+key),{etapa:'en_camino_recoger', estado:'en_camino', horaInicio:Date.now()});
    initMapRepa(); if(routeLayerRepa) mapRepa.removeLayer(routeLayerRepa); markersRepa.forEach(m=>mapRepa.removeLayer(m)); markersRepa=[];
-   if(ub){
-     try{
-       let url=`https://router.project-osrm.org/route/v1/driving/${ub.lng},${ub.lat};${p.lng1},${p.lat1}?overview=full&geometries=geojson`;
-       let res=await fetch(url); let data=await res.json();
-       if(data.routes&&data.routes[0]){
-         let coords=data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
-         routeLayerRepa=L.polyline(coords,{color:'#0a0a0a',weight:6}).addTo(mapRepa);
-         mapRepa.fitBounds(routeLayerRepa.getBounds(),{padding:[30,30]});
-       }
-     }catch(e){}
-   }
-   abrirRutaGoogle(key,'recoger');
+   let origen=ub||{lat:21.1556,lng:-100.9343};
+   try{
+     let url=`https://router.project-osrm.org/route/v1/driving/${origen.lng},${origen.lat};${p.lng1},${p.lat1}?overview=full&geometries=geojson`;
+     let res=await fetch(url); let data=await res.json();
+     if(data.routes&&data.routes[0]){
+       let coords=data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
+       routeLayerRepa=L.polyline(coords,{color:'#0a0a0a',weight:6}).addTo(mapRepa);
+       mapRepa.fitBounds(routeLayerRepa.getBounds(),{padding:[30,30]});
+       let myIcon=L.divIcon({html:'<div style="background:#0a0a0a;width:14px;height:14px;border-radius:50%;border:2px solid #fff"></div>',iconSize:[14,14],className:''});
+       let greenIcon=L.divIcon({html:'<div style="background:#16a34a;width:16px;height:16px;border-radius:50%;border:3px solid #fff"></div>',iconSize:[16,16],className:''});
+       let m1=L.marker([origen.lat,origen.lng],{icon:myIcon}).addTo(mapRepa);
+       let m2=L.marker([p.lat1,p.lng1],{icon:greenIcon}).addTo(mapRepa);
+       markersRepa=[m1,m2];
+     }
+   }catch(e){}
  });
 };
 window.marcarRecogido=async function(key){
@@ -374,16 +388,21 @@ window.marcarRecogido=async function(key){
        let coords=data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);
        routeLayerRepa=L.polyline(coords,{color:'#16a34a',weight:6}).addTo(mapRepa);
        mapRepa.fitBounds(routeLayerRepa.getBounds(),{padding:[30,30]});
+       let myIcon=L.divIcon({html:'<div style="background:#0a0a0a;width:14px;height:14px;border-radius:50%;border:2px solid #fff"></div>',iconSize:[14,14],className:''});
+       let redIcon=L.divIcon({html:'<div style="background:#dc2626;width:16px;height:16px;border-radius:50%;border:2px solid #fff"></div>',iconSize:[16,16],className:''});
+       let m1=L.marker([origen.lat,origen.lng],{icon:myIcon}).addTo(mapRepa);
+       let m2=L.marker([p.lat2,p.lng2],{icon:redIcon}).addTo(mapRepa);
+       markersRepa=[m1,m2];
      }
    }catch(e){}
-   abrirRutaGoogle(key,'entregar');
  });
 };
 window.finalizarPedido=async function(key){
  if(!confirm('¿Finalizar pedido?')) return;
  await update(ref(db,'kigoPedidosLive/'+key),{etapa:'finalizado', estado:'finalizado', horaFin:Date.now()});
  alert('Pedido finalizado');
- document.getElementById('cardPedidoModerna').style.display='none';
+ let card=document.getElementById('cardPedidoModerna'); if(card) card.style.display='none';
+ pedidoSeleccionadoKey=null;
 };
 
 window.renderPedidosLiveRepa=function(){
@@ -393,14 +412,13 @@ window.renderPedidosLiveRepa=function(){
  let repaFiltro=repartidorLogueado || document.getElementById('repView')?.value;
  if(repaFiltro){ arr=arr.filter(p=>p.repaAsignado===repaFiltro); }
  if(count) count.innerText=arr.length;
- if(!arr.length){ cont.innerHTML=''; if(empty) empty.style.display='block'; return; }
+ if(!arr.length){ cont.innerHTML=''; if(empty) empty.style.display='block'; let card=document.getElementById('cardPedidoModerna'); if(card) card.style.display='none'; return; }
  if(empty) empty.style.display='none';
- // Cards horizontales siguen funcionando y al hacer click abren la tarjeta moderna
  cont.innerHTML=arr.map((p,idx)=>{
    let horaLlegada=new Date(p.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
    let minutosTrans=Math.floor((Date.now()-p.ts)/60000);
    let borde = minutosTrans>10? 'border:2px solid #f59e0b;' : 'border:1px solid #e5e7eb;';
-   return `<div class="rappi-card" style="${borde}; cursor:pointer" onclick="mostrarTarjetaModerna('${p._key}')">
+   return `<div class="rappi-card" style="${borde}" onclick="mostrarTarjetaModerna('${p._key}')">
      <div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:800">#${String(idx+1).padStart(3,'0')} PEDIDO - ${horaLlegada}</div><div style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800">PRIORIDAD #${idx+1}</div></div>
      <div style="margin-bottom:8px"><div style="font-size:13px;font-weight:800">${p.cliente}</div><div style="font-size:9px;color:#6b7280">Hace ${minutosTrans} min • ${p.km} km</div></div>
      <div style="font-size:10px; color:#111827; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">${p.dirRecogida} → ${p.entrega}</div>
@@ -408,7 +426,6 @@ window.renderPedidosLiveRepa=function(){
    </div>`;
  }).join('');
  if(!pedidoSeleccionadoKey && arr.length>0){
-   // Auto-selecciona el primero para mostrar la tarjeta moderna
    mostrarTarjetaModerna(arr[0]._key);
  }
 };
