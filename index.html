@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Kigo xpress - Mapa Navegación</title>
+<title>Kigo xpress - Navegación Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -15,7 +15,7 @@
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .group{margin-bottom:10px}.label-row{display:flex;justify-content:space-between;margin-bottom:4px}.label-row label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}
 .wrap{position:relative;border:1.5px solid var(--border);border-radius:12px;background:#fff;overflow:hidden}.wrap input,.wrap select{width:100%;height:44px;border:none;outline:none;padding:0 12px;font-size:13px}
-.btn{width:100%;height:48px;background:var(--black);color:#fff;border:none;border-radius:12px;font-weight:800;font-size:12px;cursor:pointer}
+.btn{width:100%;height:48px;background:var(--black);color:#fff;border:none;border-radius:12px;font-weight:800;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
 #list{position:absolute;left:0;right:0;top:100%;z-index:20;background:#fff;border:1.5px solid var(--black);border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none}
 .filtros-tipo{display:flex;gap:6px;margin-bottom:10px;overflow:auto}.filtros-tipo button{height:30px;padding:0 10px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:10px;font-weight:700;white-space:nowrap;cursor:pointer}.filtros-tipo button.active{background:var(--black);color:#fff}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}.stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center}.stat.dark{background:var(--black);color:#fff}.stat.red{background:var(--red);color:#fff}.stat span{display:block;font-size:8px;font-weight:700;opacity:.8}.stat strong{display:block;font-size:12px;font-weight:800}
@@ -27,16 +27,23 @@
 .bottom{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;overflow:auto;padding:4px}.bottom button{flex:1;min-width:58px;height:54px;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:7px;font-weight:800;cursor:pointer;color:var(--gray);border-radius:10px}.bottom button.active{background:var(--black);color:#fff}.bottom button span.ico{font-size:18px;line-height:1}
 .lock{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}.lock-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:20px;width:100%;max-width:360px;text-align:center}
 .lock-card input{width:100%;height:48px;border-radius:12px;border:1.5px solid var(--border);text-align:center;font-size:20px;font-weight:800;letter-spacing:.3em}
-.lock-btn{width:100%;height:48px;background:var(--black);color:#fff;border:none;border-radius:12px;font-weight:800;margin-top:10px;cursor:pointer}
+.lock-btn{width:100%;height:48px;background:var(--black);color:#fff;border:none;border-radius:12px;font-weight:800;margin-top:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
 #map{width:100%;height:260px;border-radius:14px;border:1px solid var(--border);z-index:1}
-#mapRepa{width:100%;height:300px;border-radius:14px;border:1px solid var(--border);z-index:1;touch-action:none}
+#mapRepa{width:100%;height:320px;border-radius:16px;border:1px solid var(--border);z-index:1;overflow:hidden}
 .clima-card{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0a0a0a 0%,#334155 100%);color:#fff;border-radius:12px;padding:8px 10px;margin-bottom:8px}
 .rappi-card{background:#fff;border-radius:16px;padding:12px;min-width:285px;max-width:300px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,.06);scroll-snap-align:start;cursor:pointer}
-.leaflet-map-pane{transition: transform 0.2s ease-out;}
+/* Botones pro */
+.btn-pro{width:100%;height:56px;border:none;border-radius:16px;font-weight:800;font-size:13px;letter-spacing:.02em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 20px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);transition:all.15s ease}
+.btn-pro:active{transform:scale(.98);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.btn-pro-dark{background:#0a0a0a;color:#fff}
+.btn-pro-green{background:#16a34a;color:#fff;box-shadow:0 8px 20px rgba(22,163,74,.25), 0 2px 6px rgba(0,0,0,.08)}
+.btn-pro-red{background:#dc2626;color:#fff;box-shadow:0 8px 20px rgba(220,38,38,.25), 0 2px 6px rgba(0,0,0,.08)}
+.btn-contact{background:#fff;border:1.5px solid #e5e7eb;border-radius:14px;height:48px;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+#mapRepa.leaflet-map-pane{transform-origin:center center}
 </style>
 </head>
 <body>
-<div class="top"><div class="top-left"><div class="logo">K</div><div><h1 style="font-size:12px;font-weight:800">Kigo xpress</h1><small style="font-size:8px;color:var(--gray)">NAVEGACIÓN</small></div></div><div style="display:flex;gap:6px;align-items:center"><div id="userLabel" style="display:none;background:var(--black);color:#fff;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:800"></div><button style="height:26px;padding:0 8px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:9px;font-weight:700;cursor:pointer" onclick="cerrarSesion()">Salir</button></div></div>
+<div class="top"><div class="top-left"><div class="logo">K</div><div><h1 style="font-size:12px;font-weight:800">Kigo xpress</h1><small style="font-size:8px;color:var(--gray)">NAVEGACIÓN PRO</small></div></div><div style="display:flex;gap:6px;align-items:center"><div id="userLabel" style="display:none;background:var(--black);color:#fff;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:800"></div><button style="height:26px;padding:0 8px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:9px;font-weight:700;cursor:pointer" onclick="cerrarSesion()">Salir</button></div></div>
 <div id="lockScreen" class="lock"><div class="lock-card"><h2 style="font-size:18px;font-weight:800">KIGO XPRESS</h2><p style="font-size:10px;color:var(--gray);margin:4px 0 12px">Ingresa tu PIN</p><input type="password" id="pinInput" maxlength="4" placeholder="••••"><button class="lock-btn" onclick="validarPin()">Entrar</button><div id="pinError" style="display:none;margin-top:8px;color:var(--red);font-size:10px;font-weight:700">PIN incorrecto</div></div></div>
 
 <div id="view-inicio" class="view active"><div class="card"><div class="group"><div class="label-row"><label>Fecha</label></div><div class="wrap"><input type="date" id="fecha"></div></div><div class="group"><div class="label-row"><label>Cliente <span id="cliCountInfo" style="color:#16a34a;font-size:9px"></span></label></div><div class="wrap" id="wrapCliente" style="overflow:visible"><input type="text" id="cliente" placeholder="Cliente" oninput="auto()" onfocus="auto()" autocomplete="off"><div id="list"></div></div></div><div class="group"><div class="label-row"><label>Tipo</label></div><div class="wrap"><select id="tipo"><option value="Moto Mandado">Moto Mandado</option><option value="Moto Transporte">Moto Transporte</option></select></div></div><div class="group"><div class="label-row"><label>Valor</label></div><div style="display:flex;gap:6px"><div class="wrap" style="flex:1"><input type="number" id="valor" placeholder="0"><input type="text" id="valorPromo" value="PROMOCION" style="display:none;background:#f3e8ff;color:#6b21a8;font-weight:800;text-align:center" disabled></div><button id="btnPromo" style="height:44px;width:44px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer" onclick="togglePromo()">🎁</button></div></div><div class="group"><div class="label-row"><label>Repartidor</label></div><div class="wrap"><select id="repa"></select></div></div><button class="btn" onclick="guardar()"><span id="btnT">Confirmar</span></button><button id="btnC" onclick="cancelar()" style="display:none;width:100%;height:32px;background:none;border:none;font-size:10px;color:#6b7280;cursor:pointer;margin-top:6px">Cancelar</button></div></div>
@@ -65,41 +72,45 @@
 <div id="panelRepaLive">
   <div class="card" style="padding:6px;margin-bottom:10px; position:relative">
     <div id="mapRepa"></div>
-    <div style="position:absolute; top:12px; right:12px; z-index:400; display:flex; flex-direction:column; gap:6px">
-      <button onclick="centrarEnRepa()" style="width:36px;height:36px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:14px;cursor:pointer">📍</button>
-      <button onclick="resetBearing()" id="btnBrujula" style="width:36px;height:36px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:14px;cursor:pointer">🧭</button>
+    <div style="position:absolute; top:12px; right:12px; z-index:500; display:flex; flex-direction:column; gap:8px">
+      <button onclick="centrarEnRepa()" style="width:40px;height:40px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button onclick="resetBearing()" id="btnBrujula" style="width:40px;height:40px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform.3s">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8l-4 8-4-8 4 2z" fill="#0a0a0a"/></svg>
+      </button>
     </div>
-    <div style="position:absolute; bottom:12px; left:12px; z-index:400; background:rgba(0,0,0,.75); color:#fff; padding:4px 8px; border-radius:20px; font-size:8px; font-weight:700">Gira con 2 dedos • Zoom con pellizco</div>
+    <div style="position:absolute; bottom:12px; left:12px; z-index:400; background:rgba(0,0,0,.75); color:#fff; padding:5px 10px; border-radius:20px; font-size:8px; font-weight:700; letter-spacing:.04em">GIRA CON 2 DEDOS • EL MAPA SIGUE TU MOVIMIENTO</div>
   </div>
 
-  <div id="cardPedidoModerna" style="display:none; background:#fff; border-radius:20px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.08); border:1px solid #f0f0f0; margin-bottom:12px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px">
-      <div style="font-size:14px; font-weight:800;">📦 Pedido #<span id="txtNumPedido">--</span></div>
-      <div id="txtEstadoPedido" style="background:#fef3c7; color:#92400e; padding:5px 10px; border-radius:20px; font-size:10px; font-weight:800;">🟡 Nuevo pedido</div>
+  <div id="cardPedidoModerna" style="display:none; background:#fff; border-radius:22px; padding:18px; box-shadow:0 12px 32px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04); border:1px solid #f0f0f0; margin-bottom:14px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px">
+      <div style="font-size:14px; font-weight:800; display:flex; align-items:center; gap:8px"><span style="width:28px;height:28px;background:#f3f4f6;border-radius:8px;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg></span> Pedido #<span id="txtNumPedido">--</span></div>
+      <div id="txtEstadoPedido" style="background:#fef3c7; color:#92400e; padding:6px 12px; border-radius:20px; font-size:10px; font-weight:800;">Nuevo pedido</div>
     </div>
-    <div style="display:flex; gap:10px;">
+    <div style="display:flex; gap:12px;">
       <div style="display:flex; flex-direction:column; align-items:center; padding-top:2px">
-        <div style="width:28px;height:28px; border-radius:8px; background:#dcfce7; display:flex; align-items:center; justify-content:center;">📍</div>
-        <div style="width:2px; height:28px; background:#e5e7eb; margin:4px 0;"></div>
-        <div style="width:28px;height:28px; border-radius:8px; background:#fee2e2; display:flex; align-items:center; justify-content:center;">🏠</div>
+        <div style="width:32px;height:32px; border-radius:10px; background:#dcfce7; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div style="width:2px; height:30px; background:#e5e7eb; margin:6px 0;"></div>
+        <div style="width:32px;height:32px; border-radius:10px; background:#fee2e2; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
       </div>
       <div style="flex:1">
-        <div style="margin-bottom:12px"><div style="font-size:9px; font-weight:700; color:#6b7280;">RECOGER EN</div><div id="txtNegocioNombre" style="font-size:13px; font-weight:800; margin-top:2px">--</div><div id="txtNegocioDir" style="font-size:11px; color:#4b5563; margin-top:2px">--</div></div>
-        <div><div style="font-size:9px; font-weight:700; color:#6b7280;">ENTREGAR EN</div><div id="txtClienteNombre" style="font-size:13px; font-weight:800; margin-top:2px">--</div><div id="txtClienteDir" style="font-size:11px; color:#4b5563; margin-top:2px">--</div></div>
-        <div style="margin-top:10px;"><span id="txtDistancia" style="background:#f9fafb; border:1px solid #e5e7eb; padding:4px 8px; border-radius:20px; font-size:10px; font-weight:700">--</span></div>
+        <div style="margin-bottom:14px"><div style="font-size:9px; font-weight:700; letter-spacing:.08em; color:#9ca3af;">RECOGER EN</div><div id="txtNegocioNombre" style="font-size:13px; font-weight:800; margin-top:3px">--</div><div id="txtNegocioDir" style="font-size:11px; color:#6b7280; margin-top:2px;line-height:1.3">--</div></div>
+        <div><div style="font-size:9px; font-weight:700; letter-spacing:.08em; color:#9ca3af;">ENTREGAR EN</div><div id="txtClienteNombre" style="font-size:13px; font-weight:800; margin-top:3px">--</div><div id="txtClienteDir" style="font-size:11px; color:#6b7280; margin-top:2px;line-height:1.3">--</div></div>
+        <div style="margin-top:12px;"><span id="txtDistancia" style="background:#f9fafb; border:1px solid #e5e7eb; padding:5px 10px; border-radius:20px; font-size:10px; font-weight:700">--</span></div>
       </div>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:16px">
-      <button onclick="accionMensajeCliente()" style="height:44px; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; font-weight:700; font-size:11px; cursor:pointer">💬 Mensaje al cliente</button>
-      <button onclick="accionLlamarCliente()" style="height:44px; background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; font-weight:700; font-size:11px; cursor:pointer">📞 Llamar al cliente</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px">
+      <button onclick="accionMensajeCliente()" class="btn-contact"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> Mensaje</button>
+      <button onclick="accionLlamarCliente()" class="btn-contact"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.81 19.79 19.79 0 01-.08 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg> Llamar</button>
     </div>
-    <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px">
-      <button id="btnAceptar" onclick="accionAceptar()" style="width:100%; height:52px; background:#0a0a0a; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; cursor:pointer">✅ Aceptar pedido</button>
-      <button id="btnEnCamino" onclick="accionEnCamino()" style="display:none; width:100%; height:52px; background:#0a0a0a; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; cursor:pointer">🛵 Voy en camino a recoger</button>
-      <button id="btnRecogido" onclick="accionYaRecogi()" style="display:none; width:100%; height:52px; background:#16a34a; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; cursor:pointer">📦 Recogido</button>
-      <button id="btnVoyEntregar" onclick="accionVoyEntregar()" style="display:none; width:100%; height:52px; background:#16a34a; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; cursor:pointer">🛵 Voy a entregar</button>
-      <button id="btnEntregado" onclick="accionEntregado()" style="display:none; width:100%; height:52px; background:#dc2626; color:#fff; border:none; border-radius:14px; font-weight:800; font-size:13px; cursor:pointer">✅ Pedido entregado</button>
-      <div id="estadoFinal" style="display:none; text-align:center; padding:14px; background:#f0fdf4; border-radius:12px; color:#166534; font-weight:800; font-size:13px">✅ Pedido completado</div>
+    <div style="margin-top:14px; display:flex; flex-direction:column; gap:10px">
+      <button id="btnAceptar" onclick="accionAceptar()" class="btn-pro btn-pro-dark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Aceptar pedido</button>
+      <button id="btnEnCamino" onclick="accionEnCamino()" style="display:none" class="btn-pro btn-pro-dark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M5.5 17.5V8h8l4 4v5.5"/><path d="M13 8V4h4l2 2v2"/></svg> Voy en camino a recoger</button>
+      <button id="btnRecogido" onclick="accionYaRecogi()" style="display:none" class="btn-pro btn-pro-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg> Pedido recogido</button>
+      <button id="btnVoyEntregar" onclick="accionVoyEntregar()" style="display:none" class="btn-pro btn-pro-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M5.5 17.5V8h8l4 4v5.5"/></svg> Voy a entregar pedido</button>
+      <button id="btnEntregado" onclick="accionEntregado()" style="display:none" class="btn-pro btn-pro-red"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Pedido entregado</button>
+      <div id="estadoFinal" style="display:none; text-align:center; padding:16px; background:#f0fdf4; border-radius:14px; color:#166534; font-weight:800; font-size:13px; border:1px solid #bbf7d0">Pedido completado correctamente</div>
     </div>
   </div>
 
@@ -139,7 +150,7 @@ let pinsData={admin:'0831',repas:{'Jose':'1111','Diego Gómez':'2222','Diego':'3
 let tarifas={mandado:5,transporte:10}; let tarifasRepas={}; let fotosRepas={}; let clientesDirecciones={};
 let map=null, pinClienteLayer=null, routeLayer=null, entregaMarker=null, clientePedidoSeleccionado=null, ultimaCotizacion=null, entregaCoordsTemp=null;
 let mapRepa=null, routeLayerRepa=null, markersRepa=[], pedidosLive={}, statusRepas={}, prevLiveCount=0, ubicacionRepa=null, pedidoSeleccionadoKey=null;
-let mapBearing=0, watchId=null, siguiendoRepa=false, myLocationMarker=null;
+let mapBearing=0, watchId=null, siguiendoRepa=false, myLocationMarker=null, compassHeading=null;
 
 onValue(ref(db,'kigoPins'), s=>{ if(s.exists()) pinsData=s.val(); actualizarSelects(); renderAjustes(); });
 onValue(ref(db,'kigoTarifas'), s=>{ if(s.exists()) tarifas=s.val(); });
@@ -193,56 +204,94 @@ function obtenerUbicacionRepa(cb){
 function actualizarMyMarker(){
  if(!mapRepa ||!ubicacionRepa) return;
  if(myLocationMarker) mapRepa.removeLayer(myLocationMarker);
- let icon = L.divIcon({html:'<div style="background:#0a0a0a;width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 4px rgba(0,0,0,.2)"></div>',iconSize:[16,16],className:''});
+ let icon = L.divIcon({html:'<div style="background:#0a0a0a;width:18px;height:18px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 6px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center"><div style="width:6px;height:6px;background:#fff;border-radius:50%"></div></div>',iconSize:[18,18],className:''});
  myLocationMarker = L.marker([ubicacionRepa.lat, ubicacionRepa.lng], {icon:icon, zIndexOffset:1000}).addTo(mapRepa);
 }
 function initMap(){ if(map) return; map=L.map('map').setView([21.1556,-100.9343],14); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map); }
 function initMapRepa(){
  if(mapRepa) return;
- mapRepa=L.map('mapRepa',{zoomControl:false}).setView([21.1556,-100.9343],15);
+ mapRepa=L.map('mapRepa',{zoomControl:false}).setView([21.1556,-100.9343],16);
  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(mapRepa);
  L.control.zoom({position:'bottomright'}).addTo(mapRepa);
  habilitarRotacionMapa();
+ pedirPermisoBrujula();
+}
+function pedirPermisoBrujula(){
+ if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function'){
+   // iOS
+   DeviceOrientationEvent.requestPermission().then(r=>{ if(r==='granted'){ iniciarBrujula(); } }).catch(()=>{});
+ } else {
+   iniciarBrujula();
+ }
+}
+function iniciarBrujula(){
+ window.addEventListener('deviceorientation', e=>{
+   let heading=null;
+   if(e.webkitCompassHeading!=null){ heading=e.webkitCompassHeading; }
+   else if(e.alpha!=null){ heading=360-e.alpha; }
+   if(heading!=null){
+     compassHeading=heading;
+     if(siguiendoRepa){
+       rotarMapaReal(-heading);
+     }
+   }
+ }, true);
 }
 function habilitarRotacionMapa(){
- let mapDiv = document.getElementById('mapRepa');
- let lastAngle=0, startAngle=0, isRotating=false;
+ let mapDiv=document.getElementById('mapRepa');
+ let startAngle=0, lastDiff=0, rotating=false;
+ function getAngle(touches){
+   let dx=touches[1].clientX-touches[0].clientX;
+   let dy=touches[1].clientY-touches[0].clientY;
+   return Math.atan2(dy,dx)*180/Math.PI;
+ }
  mapDiv.addEventListener('touchstart', e=>{
-   if(e.touches.length==2){
-     isRotating=true;
-     let dx=e.touches[1].clientX-e.touches[0].clientX;
-     let dy=e.touches[1].clientY-e.touches[0].clientY;
-     startAngle=Math.atan2(dy,dx)*180/Math.PI;
-   }
- },{passive:false});
+   if(e.touches.length==2){ rotating=true; startAngle=getAngle(e.touches); lastDiff=0; }
+ }, {passive:false});
  mapDiv.addEventListener('touchmove', e=>{
-   if(e.touches.length==2 && isRotating){
+   if(e.touches.length==2 && rotating){
      e.preventDefault();
-     let dx=e.touches[1].clientX-e.touches[0].clientX;
-     let dy=e.touches[1].clientY-e.touches[0].clientY;
-     let angle=Math.atan2(dy,dx)*180/Math.PI;
+     let angle=getAngle(e.touches);
      let diff=angle-startAngle;
-     rotarMapa(mapBearing+diff);
-     lastAngle=diff;
+     rotarMapaReal(mapBearing+diff);
+     lastDiff=diff;
    }
- },{passive:false});
+ }, {passive:false});
  mapDiv.addEventListener('touchend', e=>{
-   if(isRotating){ mapBearing+=lastAngle; lastAngle=0; isRotating=false; }
+   if(rotating){ mapBearing+=lastDiff; rotating=false; lastDiff=0; }
  });
+ // Mouse rotate con Shift
+ let mouseDown=false, mouseStartX=0;
+ mapDiv.addEventListener('mousedown', e=>{ if(e.shiftKey){ mouseDown=true; mouseStartX=e.clientX; } });
+ mapDiv.addEventListener('mousemove', e=>{ if(mouseDown){ let diff=(e.clientX-mouseStartX)*0.5; rotarMapaReal(mapBearing+diff); } });
+ mapDiv.addEventListener('mouseup', e=>{ if(mouseDown){ mapBearing+= (e.clientX-mouseStartX)*0.5; mouseDown=false; } });
 }
-function rotarMapa(grados){
+function rotarMapaReal(grados){
  mapBearing=grados;
- let pane=document.querySelector('#mapRepa.leaflet-map-pane');
- if(pane) pane.style.transform = `rotate(${grados}deg)`;
+ let mapPane=mapRepa.getPane('mapPane');
+ let tilePane=mapRepa.getPane('tilePane');
+ let markerPane=mapRepa.getPane('markerPane');
+ [mapPane, tilePane].forEach(pane=>{
+   if(pane){
+     pane.style.transformOrigin='center center';
+     pane.style.transform=`rotate(${grados}deg)`;
+   }
+ });
+ if(markerPane){
+   // contrarrotar marcadores para que no se giren
+   markerPane.style.transform=`rotate(${-grados}deg)`;
+ }
  let brujula=document.getElementById('btnBrujula');
  if(brujula) brujula.style.transform=`rotate(${-grados}deg)`;
 }
-window.resetBearing=function(){ rotarMapa(0); siguiendoRepa=false; }
+window.resetBearing=function(){ rotarMapaReal(0); siguiendoRepa=false; if(mapRepa && ubicacionRepa){ mapRepa.setView([ubicacionRepa.lat,ubicacionRepa.lng], mapRepa.getZoom()); } }
 window.centrarEnRepa=function(){
  if(ubicacionRepa && mapRepa){
-   mapRepa.setView([ubicacionRepa.lat,ubicacionRepa.lng],17);
+   mapRepa.setView([ubicacionRepa.lat,ubicacionRepa.lng],18, {animate:true});
    siguiendoRepa=true;
+   if(compassHeading!=null){ rotarMapaReal(-compassHeading); }
  }
+ pedirPermisoBrujula();
 }
 function iniciarSeguimiento(){
  if(watchId) navigator.geolocation.clearWatch(watchId);
@@ -250,17 +299,18 @@ function iniciarSeguimiento(){
    ubicacionRepa={lat:pos.coords.latitude,lng:pos.coords.longitude};
    actualizarMyMarker();
    if(siguiendoRepa && mapRepa){
-     mapRepa.setView([ubicacionRepa.lat,ubicacionRepa.lng], mapRepa.getZoom(), {animate:true});
-     let heading=pos.coords.heading;
-     if(heading!=null &&!isNaN(heading)){
-       rotarMapa(-heading);
+     mapRepa.panTo([ubicacionRepa.lat,ubicacionRepa.lng], {animate:true});
+     let h=pos.coords.heading;
+     if(h!=null &&!isNaN(h)){
+       rotarMapaReal(-h);
+     } else if(compassHeading!=null){
+       rotarMapaReal(-compassHeading);
      }
    }
- },()=>{}, {enableHighAccuracy:true, maximumAge:1000, timeout:10000});
+ },()=>{}, {enableHighAccuracy:true, maximumAge:500, timeout:10000});
 }
 async function fetchClima(){ try{ let r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=21.1556&longitude=-100.9343&current=temperature_2m,weather_code,wind_speed_10m,is_day&timezone=auto'); let j=await r.json(); let cur=j.current; document.getElementById('climaTemp').innerText=Math.round(cur.temperature_2m)+'°C'; document.getElementById('climaDesc').innerText=cur.weather_code<=3?'Nublado':'Soleado'; document.getElementById('climaViento').innerText=Math.round(cur.wind_speed_10m)+' km/h'; }catch(e){} }
 
-// FLUJO MODERNO
 window.mostrarTarjetaModerna=function(key){
   let p=pedidosLive[key]; if(!p) return;
   pedidoSeleccionadoKey=key;
@@ -272,10 +322,7 @@ window.mostrarTarjetaModerna=function(key){
   document.getElementById('txtClienteDir').innerText=p.entrega;
   document.getElementById('txtDistancia').innerText=`${p.km} km • ${p.min} min`;
   actualizarEstadoVisual(p.etapa||'pendiente');
-  if(p.etapa==='pendiente' ||!p.etapa){
-    // primera vista, muestra ruta completa negocio->cliente
-    verRutaLive(key);
-  }
+  if(p.etapa==='pendiente' ||!p.etapa){ verRutaLive(key); }
 }
 window.actualizarEstadoVisual=function(etapa){
   const bAceptar=document.getElementById('btnAceptar');
@@ -288,17 +335,17 @@ window.actualizarEstadoVisual=function(etapa){
   if(!bAceptar) return;
   bAceptar.style.display='none'; bCamino.style.display='none'; bRecogido.style.display='none'; bVoyEntregar.style.display='none'; bEntregado.style.display='none'; fin.style.display='none';
   if(etapa==='pendiente'){
-    estadoTxt.innerHTML='🟡 Nuevo pedido - Aceptar'; estadoTxt.style.background='#fef3c7'; estadoTxt.style.color='#92400e'; bAceptar.style.display='flex';
+    estadoTxt.innerHTML='Nuevo pedido'; estadoTxt.style.background='#fef3c7'; estadoTxt.style.color='#92400e'; bAceptar.style.display='flex';
   } else if(etapa==='aceptado'){
-    estadoTxt.innerHTML='✅ Pedido aceptado'; estadoTxt.style.background='#dcfce7'; estadoTxt.style.color='#166534'; bCamino.style.display='flex';
+    estadoTxt.innerHTML='Pedido aceptado'; estadoTxt.style.background='#dcfce7'; estadoTxt.style.color='#166534'; bCamino.style.display='flex';
   } else if(etapa==='en_camino_recoger'){
-    estadoTxt.innerHTML='🟡 En camino a recoger'; estadoTxt.style.background='#fef3c7'; estadoTxt.style.color='#92400e'; bRecogido.style.display='flex';
+    estadoTxt.innerHTML='En camino a recoger'; estadoTxt.style.background='#fef3c7'; estadoTxt.style.color='#92400e'; bRecogido.style.display='flex';
   } else if(etapa==='recogido'){
-    estadoTxt.innerHTML='🟢 Recogido - Voy a entregar'; estadoTxt.style.background='#dcfce7'; estadoTxt.style.color='#166534'; bVoyEntregar.style.display='flex';
+    estadoTxt.innerHTML='Recogido'; estadoTxt.style.background='#dcfce7'; estadoTxt.style.color='#166534'; bVoyEntregar.style.display='flex';
   } else if(etapa==='en_camino_entrega'){
-    estadoTxt.innerHTML='🟢 En camino a entregar'; estadoTxt.style.background='#dcfce7'; estadoTxt.style.color='#166534'; bEntregado.style.display='flex';
+    estadoTxt.innerHTML='En camino a entregar'; estadoTxt.style.background='#dcfce7'; estadoTxt.style.color='#166534'; bEntregado.style.display='flex';
   } else if(etapa==='finalizado'){
-    estadoTxt.innerHTML='✅ Entregado'; estadoTxt.style.background='#f0fdf4'; estadoTxt.style.color='#166534'; fin.style.display='block';
+    estadoTxt.innerHTML='Entregado'; estadoTxt.style.background='#f0fdf4'; estadoTxt.style.color='#166534'; fin.style.display='block';
   }
 }
 window.accionAceptar=async function(){
@@ -324,7 +371,7 @@ window.accionAceptar=async function(){
 }
 window.accionEnCamino=function(){
  if(!pedidoSeleccionadoKey) return;
- siguiendoRepa=true; iniciarSeguimiento();
+ siguiendoRepa=true; iniciarSeguimiento(); pedirPermisoBrujula();
  obtenerUbicacionRepa(async (ub)=>{
    let p=pedidosLive[pedidoSeleccionadoKey];
    await update(ref(db,'kigoPedidosLive/'+pedidoSeleccionadoKey),{etapa:'en_camino_recoger', horaInicio:Date.now()});
@@ -375,7 +422,8 @@ window.accionEntregado=async function(){
  await update(ref(db,'kigoPedidosLive/'+pedidoSeleccionadoKey),{etapa:'finalizado', estado:'finalizado', horaFin:Date.now()});
  if(watchId) navigator.geolocation.clearWatch(watchId);
  siguiendoRepa=false;
- alert('Pedido entregado ✅');
+ rotarMapaReal(0);
+ alert('Pedido entregado');
  document.getElementById('cardPedidoModerna').style.display='none';
  pedidoSeleccionadoKey=null;
 }
@@ -435,7 +483,6 @@ window.confirmarPedido=async function(){
  alert(`Pedido enviado a ${repaDestino}`);
  restaurarCotizacion();
 };
-window.abrirRutaGoogle=function(key, modo){ let p=pedidosLive[key]; if(!p) return; let origen, destino; if(modo==='recoger' && ubicacionRepa){ origen=`${ubicacionRepa.lat},${ubicacionRepa.lng}`; destino=`${p.lat1},${p.lng1}`; } else if(modo==='entregar' && ubicacionRepa){ origen=`${ubicacionRepa.lat},${ubicacionRepa.lng}`; destino=`${p.lat2},${p.lng2}`; } else { origen=`${p.lat1},${p.lng1}`; destino=`${p.lat2},${p.lng2}`; } let url=`https://www.google.com/maps/dir/?api=1&origin=${origen}&destination=${destino}&travelmode=driving`; window.open(url,'_blank'); };
 window.renderPedidosLiveRepa=function(){
  initMapRepa();
  let cont=document.getElementById('listaCardsPedidos'); let count=document.getElementById('countLive'); let empty=document.getElementById('emptyLive'); if(!cont) return;
@@ -462,7 +509,7 @@ function getCurrentFee(tipo, nombreRepa){ let rep=nombreRepa || document.getElem
 function deudaItems(arr){return arr.reduce((a,v)=>a+(v.feeKigo!=null?v.feeKigo:getFeeForItem(v)),0);}
 function fmt(n){return (n||0).toLocaleString('es-CO');}
 function todayISO(){let d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-window.validarPin=function(){ let pin=document.getElementById('pinInput').value.trim(); if(pin===pinsData.admin){rol='admin';repartidorLogueado=null;document.getElementById('lockScreen').style.display='none';document.getElementById('userLabel').style.display='block';document.getElementById('userLabel').innerText='ADMIN';document.getElementById('b-ajustes').style.display='flex';document.getElementById('b-pedidos').style.display='flex';document.getElementById('groupRepSelector').style.display='block';document.getElementById('repNombreFijo').style.display='none';showView('inicio');} else if(Object.values(pinsData.repas).includes(pin)){let nombre=Object.keys(pinsData.repas).find(k=>pinsData.repas[k]===pin);rol='repa';repartidorLogueado=nombre;document.getElementById('lockScreen').style.display='none';document.getElementById('userLabel').style.display='block';document.getElementById('userLabel').innerText=nombre.toUpperCase();document.getElementById('b-ajustes').style.display='none';document.getElementById('b-pedidos').style.display='none';document.querySelectorAll('.bottom button').forEach(b=>{if(b.id!=='b-repartidor')b.style.display='none';});document.getElementById('b-repartidor').style.display='flex';showView('repartidor'); showTabRepa('live'); obtenerUbicacionRepa();} else{document.getElementById('pinError').style.display='block';} };
+window.validarPin=function(){ let pin=document.getElementById('pinInput').value.trim(); if(pin===pinsData.admin){rol='admin';repartidorLogueado=null;document.getElementById('lockScreen').style.display='none';document.getElementById('userLabel').style.display='block';document.getElementById('userLabel').innerText='ADMIN';document.getElementById('b-ajustes').style.display='flex';document.getElementById('b-pedidos').style.display='flex';document.getElementById('groupRepSelector').style.display='block';document.getElementById('repNombreFijo').style.display='none';showView('inicio');} else if(Object.values(pinsData.repas).includes(pin)){let nombre=Object.keys(pinsData.repas).find(k=>pinsData.repas[k]===pin);rol='repa';repartidorLogueado=nombre;document.getElementById('lockScreen').style.display='none';document.getElementById('userLabel').style.display='block';document.getElementById('userLabel').innerText=nombre.toUpperCase();document.getElementById('b-ajustes').style.display='none';document.getElementById('b-pedidos').style.display='none';document.querySelectorAll('.bottom button').forEach(b=>{if(b.id!=='b-repartidor')b.style.display='none';});document.getElementById('b-repartidor').style.display='flex';showView('repartidor'); showTabRepa('live'); obtenerUbicacionRepa(); pedirPermisoBrujula();} else{document.getElementById('pinError').style.display='block';} };
 window.cerrarSesion=function(){ if(watchId) navigator.geolocation.clearWatch(watchId); document.getElementById('lockScreen').style.display='flex'; document.getElementById('pinInput').value=''; document.getElementById('pinError').style.display='none'; rol=null;repartidorLogueado=null; pedidoSeleccionadoKey=null; siguiendoRepa=false; document.querySelectorAll('.bottom button').forEach(b=>b.style.display='flex'); document.getElementById('b-ajustes').style.display='none'; document.getElementById('b-pedidos').style.display='none'; document.getElementById('userLabel').style.display='none'; if(map){ map.remove(); map=null; } if(mapRepa){ mapRepa.remove(); mapRepa=null; routeLayerRepa=null; markersRepa=[]; } pinClienteLayer=null; routeLayer=null; entregaMarker=null; let card=document.getElementById('cardPedidoModerna'); if(card) card.style.display='none'; };
 window.showView=function(v){if(rol==='repa'&&v!=='repartidor')return;document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById('view-'+v).classList.add('active');document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active'));let btn=document.getElementById('b-'+v);if(btn)btn.classList.add('active');if(v==='pedidos'){setTimeout(()=>{initMap(); if(map) map.invalidateSize(); fetchClima();},150);}if(v==='repartidor'){setTimeout(()=>{initMapRepa(); if(mapRepa) mapRepa.invalidateSize();},200);}if(v==='hoy')renderHoy();if(v==='historial')render();if(v==='cobros'){renderCobros();renderHistMes();}if(v==='clientes')renderClientes();if(v==='estadisticas')renderEstadisticas();if(v==='repartidor')renderRepartidor();if(v==='ajustes')renderAjustes();};
 window.showTabCobros=function(t){document.getElementById('tabEnvio').classList.toggle('active',t==='envio');document.getElementById('tabHist').classList.toggle('active',t==='hist');document.getElementById('panelEnvio').style.display=t==='envio'?'block':'none';document.getElementById('panelHist').style.display=t==='hist'?'block':'none';};
