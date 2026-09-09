@@ -2,131 +2,103 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Kigo Pedidos</title>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kigo</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTV1sm6McEIkv-cheaVFCD_svp_a--6wg&libraries=places"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Manrope,sans-serif;background:#fafafa;padding-bottom:80px;max-width:640px;margin:0 auto;color:#0a0a0a}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Manrope,sans-serif;background:#fafafa;padding-bottom:80px;max-width:640px;margin:0 auto}
 .card{background:#fff;border:1.5px solid #e5e7eb;border-radius:20px;padding:14px;margin:10px}
-#map{width:100%;height:380px;border-radius:18px;background:#e5e7eb}
-.label{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#6b7280;margin-bottom:5px;display:block}
+#map{width:100%;height:380px;border-radius:18px}
+.label{font-size:9px;font-weight:800;color:#6b7280;text-transform:uppercase;margin-bottom:5px;display:block}
 .wrap{border:1.5px solid #e5e7eb;border-radius:14px;background:#fff;overflow:hidden;display:flex;align-items:center}
 .wrap input,.wrap select{flex:1;height:48px;border:none;outline:none;padding:0 12px;font-size:13px;font-weight:600;background:transparent}
-.wrap.icon{width:40px;display:flex;justify-content:center;opacity:.6}
-.btn{width:100%;height:54px;background:#0a0a0a;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:12px;cursor:pointer;letter-spacing:.02em}
-.btn-green{width:100%;height:54px;background:#10b981;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:12px;cursor:pointer;margin-top:10px}
 .view{display:none}.view.active{display:block}
 #listCli{position:absolute;left:0;right:0;top:100%;z-index:50;background:#fff;border:1.5px solid #0a0a0a;border-top:none;border-radius:0 0 14px 14px;max-height:300px;overflow:auto;display:none}
-
-/* ==================== CODIGO DE NAVEGACION ABAJO TIPO APP ==================== */
 .bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1.5px solid #e5e7eb;display:flex;justify-content:space-around;padding:8px 0 12px;z-index:100;max-width:640px;margin:0 auto}
-.bottom button{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:800;color:#9ca3af;cursor:pointer;letter-spacing:.06em}
+.bottom button{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:800;color:#9ca3af;cursor:pointer}
 .bottom button.active{color:#0a0a0a}
 .bottom button svg{width:22px;height:22px;stroke-width:2}
-.dot-red{width:12px;height:12px;background:#ef4444;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 2px #ef4444}
+.btn{width:100%;height:54px;background:#0a0a0a;color:#fff;border:none;border-radius:14px;font-weight:800;cursor:pointer}
+.btn-green{width:100%;height:54px;background:#10b981;color:#fff;border:none;border-radius:14px;font-weight:800;cursor:pointer;margin-top:10px}
+.dot{width:10px;height:10px;border-radius:50%}
 </style>
 </head>
 <body>
 
-<!-- ==================== CODIGO DEL MAPA - VISTA PEDIDOS ==================== -->
+<!-- ==================== VISTA PEDIDOS - MAPA ==================== -->
 <div id="view-pedidos" class="view active">
 <div class="card" style="padding:8px">
 <div id="map"></div>
-<div id="infoRuta" style="display:none;margin-top:10px;background:#0a0a0a;color:#fff;border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:center">
-<div><div id="txtRutaKm" style="font-size:13px;font-weight:800"></div><div id="txtRutaDir" style="font-size:9px;opacity:.7;margin-top:2px;line-height:1.3"></div></div>
-<div id="txtRutaCosto" style="font-size:18px;font-weight:800"></div>
+<div id="infoRuta" style="display:none;margin-top:10px;background:#0a0a0a;color:#fff;border-radius:14px;padding:12px">
+<div style="display:flex;justify-content:space-between"><div id="txtKm" style="font-weight:800"></div><div id="txtCosto" style="font-weight:800;font-size:18px"></div></div>
+<div id="txtDir" style="font-size:9px;opacity:.7;margin-top:4px"></div>
 </div>
 </div>
-
 <div class="card">
-<span class="label">Cliente registrado - Selecciona y trae datos</span>
+<span class="label">Buscar cliente - letra por letra trae datos</span>
 <div class="wrap" style="overflow:visible;position:relative">
-<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-<input type="text" id="buscCli" placeholder="Buscar cliente..." oninput="buscarCliente()" onfocus="buscarCliente()" autocomplete="off">
+<input type="text" id="buscCli" placeholder="Escribe letra por letra..." oninput="buscarCliente()" onfocus="buscarCliente()" autocomplete="off">
 <div id="listCli"></div>
 </div>
 
-<!-- CAJA DONDE APARECE CLIENTE SELECCIONADO CON DIRECCION Y TELEFONO -->
-<div id="boxClienteSel" style="display:none;margin-top:10px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:14px;padding:12px;position:relative">
+<!-- AQUI APARECE TELEFONO Y DIRECCION AL SELECCIONAR -->
+<div id="boxSel" style="display:none;margin-top:10px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:14px;padding:12px">
 <div style="display:flex;gap:8px;align-items:center">
-<div class="dot-red"></div>
+<div class="dot" style="background:#ef4444"></div>
 <div style="flex:1">
-<div id="txtClienteSel" style="font-size:12px;font-weight:800"></div>
-<div id="txtDirSel" style="font-size:10px;color:#374151;margin-top:2px"></div>
-<div id="txtTelSel" style="font-size:10px;color:#10b981;font-weight:800;margin-top:2px"></div>
+<div id="txtNom" style="font-size:12px;font-weight:800"></div>
+<div id="txtDirSel" style="font-size:10px;color:#374151"></div>
+<div id="txtTelSel" style="font-size:10px;color:#10b981;font-weight:800"></div>
 </div>
-<button onclick="limpiarCliente()" style="background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;padding:6px 10px;font-size:9px;font-weight:800">X</button>
-</div>
-</div>
-
-<div style="margin-top:12px">
-<span class="label">Telefono de recogida - vinculado al cliente</span>
-<div class="wrap">
-<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
-<input type="tel" id="telRecogida" placeholder="Se llena automatico">
+<button onclick="limpiarSel()" style="background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;padding:6px 10px;font-size:9px;font-weight:800">X</button>
 </div>
 </div>
 
-<div style="margin-top:14px;background:#fff;border:1.5px solid #0a0a0a;border-radius:16px;padding:12px">
-<span class="label">Direccion de entrega - prioridad Dolores Hidalgo</span>
-<div class="wrap">
-<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-<input type="text" id="dirEntrega" placeholder="Ej. Hidalgo 12, Dolores Hidalgo">
-</div>
+<span class="label" style="margin-top:10px">Telefono recogida vinculado al cliente</span>
+<div class="wrap"><input type="tel" id="telRecogida" placeholder="Se llena automatico"></div>
+
+<span class="label" style="margin-top:12px">Direccion entrega - Dolores Hidalgo</span>
+<div class="wrap"><input type="text" id="dirEntrega" placeholder="Ej. Hidalgo 12"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-<div><span class="label">Telefono entrega</span><div class="wrap"><input type="tel" id="telEntrega" placeholder="Opcional"></div></div>
-<div><span class="label">Referencia</span><div class="wrap"><input type="text" id="refEntrega" placeholder="Casa azul"></div></div>
-</div>
-</div>
-
-<div style="margin-top:12px">
-<span class="label">Enviar a repartidor</span>
-<div class="wrap"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg></span><select id="selRepa"></select></div>
+<div><span class="label">Tel entrega</span><div class="wrap"><input type="tel" id="telEntrega"></div></div>
+<div><span class="label">Referencia</span><div class="wrap"><input type="text" id="refEntrega"></div></div>
 </div>
 
-<button class="btn" style="margin-top:14px" onclick="cotizarRuta()">
-<svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-COTIZAR RUTA
-</button>
+<span class="label" style="margin-top:10px">Repartidor</span>
+<div class="wrap"><select id="selRepa"></select></div>
+
+<button class="btn" style="margin-top:14px" onclick="cotizarRuta()">COTIZAR RUTA</button>
 <button class="btn-green" onclick="confirmarEnvio()">CONFIRMAR ENVIO</button>
 </div>
 </div>
 
-<!-- ==================== CODIGO DE CLIENTES - REGISTRO Y LISTADO ==================== -->
+<!-- ==================== VISTA CLIENTES - LISTA FUNCIONAL ==================== -->
 <div id="view-clientes" class="view">
 <div class="card">
-<h3 style="font-size:12px;font-weight:800;margin-bottom:12px;letter-spacing:.04em">REGISTRAR CLIENTE</h3>
-<span class="label">Nombre cliente</span><div class="wrap"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input type="text" id="cliNombre" placeholder="Ej. Papeleria La Central"></div>
-<span class="label" style="margin-top:10px">Direccion - prioridad Dolores Hidalgo</span><div class="wrap"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/></svg></span><input type="text" id="cliDir" placeholder="Ej. Nayarit 31, Dolores Hidalgo"></div>
-<span class="label" style="margin-top:10px">Telefono recogida vinculado</span><div class="wrap"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><input type="tel" id="cliTel" placeholder="418..."></div>
-<button class="btn" style="margin-top:14px" onclick="guardarCliente()">GUARDAR CLIENTE</button>
+<h3 style="font-size:12px;font-weight:800;margin-bottom:12px">REGISTRAR CLIENTE</h3>
+<span class="label">Nombre</span><div class="wrap"><input type="text" id="cliNombre" placeholder="Ej. Papeleria Central"></div>
+<span class="label" style="margin-top:8px">Direccion</span><div class="wrap"><input type="text" id="cliDir" placeholder="Ej. Nayarit 31, Dolores Hidalgo"></div>
+<span class="label" style="margin-top:8px">Telefono recogida</span><div class="wrap"><input type="tel" id="cliTel" placeholder="418..."></div>
+<button class="btn" style="margin-top:12px" onclick="guardarCliente()">GUARDAR CLIENTE</button>
+<small style="display:block;text-align:center;margin-top:6px;color:#6b7280;font-size:9px">Al guardar aparece automaticamente en la lista de abajo</small>
 </div>
 
 <div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<span class="label" style="margin:0">Lista de clientes guardados</span>
+<div style="display:flex;justify-content:space-between;align-items:center">
+<span class="label" style="margin:0">LISTA DE CLIENTES - FUNCIONAL</span>
 <span id="countCli" style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:800">0</span>
 </div>
-<div class="wrap" style="margin-bottom:10px"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span><input type="text" id="filtroCliList" placeholder="Filtrar clientes..." oninput="renderClientes()"></div>
+<div class="wrap" style="margin:10px 0"><input type="text" id="filtroCli" placeholder="Filtrar..." oninput="renderClientes()"></div>
 <div id="listaClientes"></div>
 </div>
 </div>
 
-<!-- ==================== CODIGO DE BOTTOM NAV - TIPO APP ==================== -->
 <div class="bottom">
-<button id="btnPedidos" class="active" onclick="showView('pedidos')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z"/><path d="M7 3v15M13 6v15"/></svg>
-PEDIDOS
-</button>
-<button id="btnClientes" onclick="showView('clientes')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-CLIENTES
-</button>
+<button id="bPed" class="active" onclick="showView('pedidos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z"/><path d="M7 3v15M13 6v15"/></svg>PEDIDOS</button>
+<button id="bCli" onclick="showView('clientes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>CLIENTES</button>
 </div>
 
-<!-- ==================== CODIGO DE LOGICA ==================== -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getDatabase, ref, onValue, set, remove, push } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
@@ -134,212 +106,211 @@ import { getDatabase, ref, onValue, set, remove, push } from 'https://www.gstati
 const cfg={apiKey:"AIzaSyCTV1sm6McEIkv-cheaVFCD_svp_a--6wg",authDomain:"kigo-67dd3.firebaseapp.com",projectId:"kigo-67dd3",storageBucket:"kigo-67dd3.firebasestorage.app",messagingSenderId:"1070993147798",appId:"1:1070993147798:web:2d3d4ac9c3b5a5c9e7b5a5",databaseURL:"https://kigo-67dd3-default-rtdb.firebaseio.com"};
 const app=initializeApp(cfg); const db=getDatabase(app);
 
-// ----- CONFIG DOLORES HIDALGO -----
 const DOLORES={lat:21.1576,lng:-100.9345};
 const BOUNDS={north:21.30,south:21.00,east:-100.75,west:-101.10};
 let map, dirServ, dirRend, markers=[];
-let clientes={};
+let clientes={}; // Objeto funcional de clientes
 let clienteSeleccionado=null;
 let pedidoCotizado=null;
 let tarifas={mandado:35};
 
 function todayISO(){let d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
-// ----- CARGAR CLIENTES -----
+// ==================== CODIGO CLIENTES - CARGA FUNCIONAL ====================
 onValue(ref(db,'kigoClientesDir'),snap=>{
-let v=snap.val()||{}; let m={};
-Object.entries(v).forEach(([k,data])=>{
-let nombre=k.replace(/_/g,' ');
-if(data&&data.direccion) m[nombre]=data;
+let v=snap.val()||{};
+let m={};
+Object.entries(v).forEach(([key,data])=>{
+// key puede ser nombre con _, data trae direccion, telefono, lat, lng
+if(!data||!data.direccion) return;
+let nombre = data.nombreOriginal || key.replace(/_/g,' ');
+m[nombre]=data;
 });
 clientes=m;
+console.log('Clientes cargados',Object.keys(clientes).length);
 renderClientes();
 });
 
 onValue(ref(db,'kigoPins'),snap=>{
 let v=snap.val();
-if(v&&v.repas){
-document.getElementById('selRepa').innerHTML=Object.keys(v.repas).map(r=>`<option value="${r}">${r}</option>`).join('');
-}
+if(v&&v.repas) document.getElementById('selRepa').innerHTML=Object.keys(v.repas).map(r=>`<option value="${r}">${r}</option>`).join('');
 });
 onValue(ref(db,'kigoTarifas'),s=>{if(s.val()) tarifas=s.val();});
 
-// ----- NAVEGACION -----
 window.showView=function(v){
 document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
 document.getElementById('view-'+v).classList.add('active');
-document.getElementById('btnPedidos').classList.toggle('active',v==='pedidos');
-document.getElementById('btnClientes').classList.toggle('active',v==='clientes');
+document.getElementById('bPed').classList.toggle('active',v==='pedidos');
+document.getElementById('bCli').classList.toggle('active',v==='clientes');
 if(v==='pedidos') setTimeout(()=>{google.maps.event.trigger(map,'resize');map.setCenter(DOLORES);},100);
 }
 
-// ----- INICIALIZAR MAPA CON PRIORIDAD DOLORES HIDALGO -----
 function initMapa(){
-map=new google.maps.Map(document.getElementById('map'),{center:DOLORES,zoom:14,restriction:{latLngBounds:BOUNDS,strictBounds:false}});
+map=new google.maps.Map(document.getElementById('map'),{center:DOLORES,zoom:14});
 dirServ=new google.maps.DirectionsService();
-dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:6,strokeOpacity:0.9}});
-
-let opts={bounds:BOUNDS,strictBounds:false,componentRestrictions:{country:'mx'},fields:['geometry','formatted_address']};
-let autE=new google.maps.places.Autocomplete(document.getElementById('dirEntrega'),opts);
-autE.setOptions({location:DOLORES,radius:20000});
-autE.addListener('place_changed',()=>{autoCotizar();});
-
-let autC=new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts);
-autC.setOptions({location:DOLORES,radius:20000});
+dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:6}});
+let opts={bounds:BOUNDS,componentRestrictions:{country:'mx'}};
+new google.maps.places.Autocomplete(document.getElementById('dirEntrega'),opts).addListener('place_changed',()=>autoCotizar());
+new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts);
 }
 initMapa();
-
 function clearMarkers(){markers.forEach(m=>m.setMap(null));markers=[];}
 function addMarker(pos,color){
 let m=new google.maps.Marker({position:pos,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});
 markers.push(m);
 }
 
-// ----- BUSCAR CLIENTE Y TRAER TODOS LOS DATOS + PUNTO ROJO -----
+// ==================== CODIGO PEDIDOS - BUSCAR LETRA POR LETRA Y TRAER DATOS ====================
 window.buscarCliente=function(){
 let q=document.getElementById('buscCli').value.toLowerCase().trim();
 let list=document.getElementById('listCli');
 let todos=Object.keys(clientes);
 if(!q){list.style.display='none';return;}
-let fil=todos.filter(n=>n.toLowerCase().includes(q)).slice(0,12);
-if(!fil.length){list.innerHTML='<div style="padding:12px;font-size:10px;color:#6b7280">No hay clientes - registralo en CLIENTES</div>';list.style.display='block';return;}
+// Filtra letra por letra
+let fil=todos.filter(n=>n.toLowerCase().includes(q)).slice(0,15);
+if(!fil.length){
+list.innerHTML='<div style="padding:12px;font-size:10px;color:#6b7280">No encontrado - registralo en CLIENTES</div>';
+list.style.display='block';
+return;
+}
 list.innerHTML=fil.map(n=>{
 let d=clientes[n];
-return `<div onclick="seleccionarCliente('${n.replace(/'/g,"\\'")}')" style="padding:10px 12px;border-bottom:1px solid #f3f4f6;cursor:pointer"><b style="font-size:11px">${n}</b><br><small style="color:#6b7280">${d.direccion}</small><br><small style="color:#10b981;font-weight:700">${d.telefono||'Sin tel'}</small></div>`;
+return `<div onclick="seleccionarCliente('${n.replace(/'/g,"\\'")}')" style="padding:10px 12px;border-bottom:1px solid #f3f4f6;cursor:pointer">
+<b style="font-size:11px">${n}</b><br>
+<small style="color:#6b7280">${d.direccion}</small><br>
+<small style="color:#10b981;font-weight:700">${d.telefono||'Sin telefono'}</small>
+</div>`;
 }).join('');
 list.style.display='block';
+
+// Si escribe exacto y coincide con uno, autoselecciona y trae telefono y direccion
+let exact=todos.find(n=>n.toLowerCase()===q);
+if(exact){seleccionarCliente(exact);list.style.display='none';}
 }
 
 window.seleccionarCliente=function(nombre){
 let d=clientes[nombre];
+if(!d) return;
 clienteSeleccionado={nombre,direccion:d.direccion,lat:d.lat||null,lng:d.lng||null,telefono:d.telefono||''};
 document.getElementById('buscCli').value=nombre;
 document.getElementById('listCli').style.display='none';
-document.getElementById('boxClienteSel').style.display='block';
-document.getElementById('txtClienteSel').innerText=nombre;
+document.getElementById('boxSel').style.display='block';
+document.getElementById('txtNom').innerText=nombre;
 document.getElementById('txtDirSel').innerText=d.direccion;
-document.getElementById('txtTelSel').innerText=d.telefono?`Tel recogida: ${d.telefono}`:'Sin telefono';
+document.getElementById('txtTelSel').innerText=d.telefono?`Tel: ${d.telefono}`:'Sin telefono';
 document.getElementById('telRecogida').value=d.telefono||'';
 
-// PUNTO ROJO DONDE HAY QUE RECOGER
+// Senala punto rojo en mapa donde recoger
 clearMarkers();
-if(d.lat&&d.lng){
-let pos={lat:d.lat,lng:d.lng};
-map.setCenter(pos);map.setZoom(15);
-addMarker(pos,'#ef4444');
+let pos = d.lat&&d.lng?{lat:d.lat,lng:d.lng}:null;
+if(pos){
+map.setCenter(pos);map.setZoom(15);addMarker(pos,'#ef4444');
 }else{
 geocodificar(d.direccion).then(p=>{if(p){map.setCenter(p);map.setZoom(15);addMarker(p,'#ef4444');}});
 }
 autoCotizar();
 }
 
-window.limpiarCliente=function(){
+window.limpiarSel=function(){
 clienteSeleccionado=null;
 document.getElementById('buscCli').value='';
-document.getElementById('boxClienteSel').style.display='none';
+document.getElementById('boxSel').style.display='none';
 document.getElementById('telRecogida').value='';
 document.getElementById('infoRuta').style.display='none';
-clearMarkers(); dirRend.setDirections({routes:[]});
+clearMarkers();dirRend.setDirections({routes:[]});
 pedidoCotizado=null;
 }
 
-// ----- GEOCODIFICAR CON PRIORIDAD DOLORES -----
 function geocodificar(dir){
 return new Promise(res=>{
 let g=new google.maps.Geocoder();
-g.geocode({address:dir+', Dolores Hidalgo, Guanajuato, Mexico',bounds:BOUNDS},(r,s)=>{if(s==='OK'&&r[0]){let l=r[0].geometry.location;res({lat:l.lat(),lng:l.lng()});}else res(null);});
+g.geocode({address:dir+', Dolores Hidalgo, Mexico',bounds:BOUNDS},(r,s)=>{if(s==='OK'&&r[0]){let l=r[0].geometry.location;res({lat:l.lat(),lng:l.lng()});}else res(null);});
 });
 }
 
-// ----- AUTO RUTA CUANDO LLENAS ENTREGA -----
 let tAuto=null;
-function autoCotizar(){
-clearTimeout(tAuto);
-tAuto=setTimeout(()=>{if(clienteSeleccionado && document.getElementById('dirEntrega').value.trim().length>=6) cotizarRuta();},900);
-}
+function autoCotizar(){clearTimeout(tAuto);tAuto=setTimeout(()=>{if(clienteSeleccionado && document.getElementById('dirEntrega').value.trim().length>=6) cotizarRuta();},800);}
 document.getElementById('dirEntrega').addEventListener('input',autoCotizar);
-
 function calcCosto(km){return Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6);}
 
-// ----- COTIZAR RUTA DE RECOGIDA A ENTREGA + COSTO KM TIEMPO VALOR -----
 window.cotizarRuta=async function(){
-let entregaDir=document.getElementById('dirEntrega').value.trim();
-if(!clienteSeleccionado) return alert('Selecciona cliente primero');
-if(!entregaDir) return alert('Escribe direccion entrega');
+let entrega=document.getElementById('dirEntrega').value.trim();
+if(!clienteSeleccionado) return alert('Selecciona cliente');
+if(!entrega) return alert('Falta entrega');
 try{
 let origen=clienteSeleccionado.lat&&clienteSeleccionado.lng?{lat:clienteSeleccionado.lat,lng:clienteSeleccionado.lng}:await geocodificar(clienteSeleccionado.direccion);
-let destino=await geocodificar(entregaDir);
+let destino=await geocodificar(entrega);
 if(!origen||!destino) throw new Error('Direccion no encontrada en Dolores Hidalgo');
-
 let ruta=await new Promise((res,rej)=>{
 dirServ.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{
-if(s==='OK'){
-let leg=r.routes[0].legs[0];
-dirRend.setDirections(r);
-clearMarkers();
-addMarker(origen,'#ef4444');
-addMarker(destino,'#0a0a0a');
-res({km:(leg.distance.value/1000).toFixed(1),min:Math.round(leg.duration.value/60)});
-}else rej('Ruta no disponible');
+if(s==='OK'){let leg=r.routes[0].legs[0];dirRend.setDirections(r);clearMarkers();addMarker(origen,'#ef4444');addMarker(destino,'#0a0a0a');res({km:(leg.distance.value/1000).toFixed(1),min:Math.round(leg.duration.value/60)});}else rej('No hay ruta');
 });
 });
 let costo=calcCosto(parseFloat(ruta.km));
-pedidoCotizado={recogida:clienteSeleccionado,entrega:{direccion:entregaDir,lat:destino.lat,lng:destino.lng,telefono:document.getElementById('telEntrega').value.trim(),referencia:document.getElementById('refEntrega').value.trim()},km:ruta.km,min:ruta.min,costo,iso:todayISO(),telRecogida:document.getElementById('telRecogida').value.trim()};
-
-document.getElementById('infoRuta').style.display='flex';
-document.getElementById('txtRutaKm').innerText=`${ruta.km} km • ${ruta.min} min`;
-document.getElementById('txtRutaDir').innerText=`De: ${clienteSeleccionado.direccion} → ${entregaDir}`;
-document.getElementById('txtRutaCosto').innerText=`$${costo}`;
+pedidoCotizado={recogida:clienteSeleccionado,entrega:{direccion:entrega,lat:destino.lat,lng:destino.lng,telefono:document.getElementById('telEntrega').value.trim(),referencia:document.getElementById('refEntrega').value.trim()},km:ruta.km,min:ruta.min,costo,iso:todayISO(),telRecogida:document.getElementById('telRecogida').value.trim()};
+document.getElementById('infoRuta').style.display='block';
+document.getElementById('txtKm').innerText=`${ruta.km} km • ${ruta.min} min`;
+document.getElementById('txtCosto').innerText=`$${costo}`;
+document.getElementById('txtDir').innerText=`De ${clienteSeleccionado.direccion} → ${entrega}`;
 }catch(e){alert(e.message);}
 }
 
-// ----- CONFIRMAR ENVIO -----
 window.confirmarEnvio=async function(){
-if(!pedidoCotizado) return alert('Primero cotiza la ruta');
+if(!pedidoCotizado) return alert('Cotiza primero');
 let repa=document.getElementById('selRepa').value;
-if(!repa) return alert('Selecciona repartidor');
 let p=pedidoCotizado;
-let payload={iso:p.iso,cliente:p.recogida.nombre,dirRecogida:p.recogida.direccion,entrega:p.entrega.direccion,referencia:p.entrega.referencia,telefono:p.entrega.telefono,telefonoRecogida:p.telRecogida,lat1:p.recogida.lat||null,lng1:p.recogida.lng||null,lat2:p.entrega.lat,lng2:p.entrega.lng,km:p.km,min:p.min,costoSugerido:p.costo,repaAsignado:repa,etapa:'pendiente',ts:Date.now()};
+let payload={iso:p.iso,cliente:p.recogida.nombre,dirRecogida:p.recogida.direccion,entrega:p.entrega.direccion,referencia:p.entrega.referencia,telefono:p.entrega.telefono,telefonoRecogida:p.telRecogida,lat1:p.recogida.lat,lng1:p.recogida.lng,lat2:p.entrega.lat,lng2:p.entrega.lng,km:p.km,min:p.min,costoSugerido:p.costo,repaAsignado:repa,etapa:'pendiente',ts:Date.now()};
 let nr=push(ref(db,'kigoPedidosLive')); await set(nr,payload);
-alert('Pedido enviado a '+repa+' $'+p.costo);
-document.getElementById('dirEntrega').value='';document.getElementById('telEntrega').value='';document.getElementById('refEntrega').value='';
-document.getElementById('infoRuta').style.display='none';pedidoCotizado=null;
+alert('Enviado a '+repa);
+document.getElementById('dirEntrega').value='';document.getElementById('infoRuta').style.display='none';pedidoCotizado=null;
 }
 
-// ----- CODIGO CLIENTES - GUARDAR Y LISTA AUTOMATICA -----
+// ==================== CODIGO CLIENTES - GUARDAR Y LISTA FUNCIONAL ====================
 window.guardarCliente=async function(){
 let nombre=document.getElementById('cliNombre').value.trim();
 let dir=document.getElementById('cliDir').value.trim();
 let tel=document.getElementById('cliTel').value.trim();
 if(!nombre||!dir) return alert('Falta nombre y direccion');
 let geo=await geocodificar(dir);
+// Guarda con nombre original para que aparezca en lista funcional
 let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
-await set(ref(db,'kigoClientesDir/'+key),{direccion:dir,lat:geo?geo.lat:null,lng:geo?geo.lng:null,telefono:tel});
-// Se guarda automatico y aparece en la lista abajo por el onValue
+let data={direccion:dir,lat:geo?geo.lat:null,lng:geo?geo.lng:null,telefono:tel,nombreOriginal:nombre};
+await set(ref(db,'kigoClientesDir/'+key),data);
 document.getElementById('cliNombre').value='';document.getElementById('cliDir').value='';document.getElementById('cliTel').value='';
-alert('Guardado: '+nombre);
+alert('Cliente guardado: '+nombre+' - ya aparece en lista y en pedidos');
 }
 
 window.renderClientes=function(){
-let q=(document.getElementById('filtroCliList')?.value||'').toLowerCase();
+let q=(document.getElementById('filtroCli')?.value||'').toLowerCase();
 let cont=document.getElementById('listaClientes');
 let lista=Object.entries(clientes).filter(([n])=>n.toLowerCase().includes(q));
 document.getElementById('countCli').innerText=lista.length;
-cont.innerHTML=lista.map(([n,d])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6"><div style="flex:1"><b style="font-size:11px">${n}</b><br><small style="font-size:9px;color:#6b7280">${d.direccion}</small><br><small style="font-size:9px;color:#10b981;font-weight:700">${d.telefono||''}</small></div><div style="display:flex;gap:6px"><button onclick="usarClienteDesdeLista('${n.replace(/'/g,"\\'")}')" style="background:#0a0a0a;color:#fff;border:none;border-radius:10px;padding:8px 10px;font-size:9px;font-weight:800">USAR</button><button onclick="borrarCliente('${n.replace(/'/g,"\\'")}')" style="background:#fee2e2;border:none;border-radius:10px;padding:8px 10px;font-size:9px">X</button></div></div>`).join('')||'<div style="text-align:center;padding:20px;color:#9ca3af;font-size:10px">Sin clientes - agrega uno arriba</div>';
+cont.innerHTML=lista.map(([n,d])=>`
+<div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
+<div style="flex:1">
+<b style="font-size:11px">${n}</b><br>
+<small style="font-size:9px;color:#6b7280">${d.direccion}</small><br>
+<small style="font-size:9px;color:#10b981;font-weight:700">${d.telefono||''}</small>
+</div>
+<div style="display:flex;gap:6px">
+<button onclick="usarDesdeLista('${n.replace(/'/g,"\\'")}')" style="background:#0a0a0a;color:#fff;border:none;border-radius:10px;padding:8px 10px;font-size:9px;font-weight:800">USAR</button>
+<button onclick="borrarCli('${n.replace(/'/g,"\\'")}')" style="background:#fee2e2;border:none;border-radius:10px;padding:8px 10px;font-size:9px">X</button>
+</div>
+</div>`).join('')||'<div style="text-align:center;padding:20px;color:#9ca3af;font-size:10px">Sin clientes - guarda uno arriba</div>';
 }
-window.usarClienteDesdeLista=function(nombre){
-showView('pedidos');
-setTimeout(()=>{seleccionarCliente(nombre);},200);
-}
-window.borrarCliente=async function(nombre){
+window.usarDesdeLista=function(n){showView('pedidos');setTimeout(()=>seleccionarCliente(n),200);}
+window.borrarCli=async function(nombre){
 if(!confirm('Borrar '+nombre+'?')) return;
 let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
+// Borra por key y tambien busca por nombreOriginal
 await remove(ref(db,'kigoClientesDir/'+key));
+let entry=Object.entries(clientes).find(([k,v])=>k===nombre);
+if(entry){
+let k2=entry[0].replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
+if(k2!==key) await remove(ref(db,'kigoClientesDir/'+k2));
 }
-
-document.addEventListener('click',e=>{
-if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')) document.getElementById('listCli').style.display='none';
-});
+}
+document.addEventListener('click',e=>{if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')) document.getElementById('listCli').style.display='none';});
 </script>
 </body>
 </html>
