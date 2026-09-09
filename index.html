@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kigo Xpress - Completo</title>
+<title>Kigo Xpress</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -11,61 +11,53 @@ body{font-family:Manrope,sans-serif;background:#fafafa;max-width:640px;margin:0 
 .card{background:#fff;border:1.5px solid #e5e7eb;border-radius:20px;padding:14px;margin-bottom:10px}
 .label{font-size:9px;font-weight:800;color:#6b7280;text-transform:uppercase;margin-bottom:4px;display:block}
 .wrap{border:1.5px solid #e5e7eb;border-radius:14px;background:#fff;overflow:hidden;display:flex;align-items:center}
-.wrap input,.wrap select{flex:1;height:48px;border:none;outline:none;padding:0 12px;font-size:13px;font-weight:600;background:transparent}
-.btn{width:100%;height:54px;background:#0a0a0a;color:#fff;border:none;border-radius:14px;font-weight:800;cursor:pointer}
+.wrap input,.wrap select{flex:1;height:44px;border:none;outline:none;padding:0 12px;font-size:13px;font-weight:600;background:transparent}
+.btn{width:100%;height:50px;background:#0a0a0a;color:#fff;border:none;border-radius:14px;font-weight:800;cursor:pointer}
 .view{display:none}.view.active{display:block}
-#map{width:100%;height:380px;border-radius:18px;background:#eee}
-#listCli{position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid #000;border-top:none;border-radius:0 0 14px 14px;max-height:250px;overflow:auto;display:none;z-index:50}
+#map{width:100%;height:340px;border-radius:16px;background:#eee}
+#listCli{position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid #0a0a0a;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none;z-index:50}
 .bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1.5px solid #e5e7eb;display:flex;padding:10px;max-width:640px;margin:0 auto;gap:8px;z-index:100}
-.bottom button{flex:1;height:44px;border-radius:12px;border:1.5px solid #e5e7eb;background:#fff;font-weight:800;font-size:11px}
+.bottom button{flex:1;height:42px;border-radius:12px;border:1.5px solid #e5e7eb;background:#fff;font-weight:800;font-size:11px}
 .bottom button.active{background:#0a0a0a;color:#fff}
-.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
-.dot.on{background:#10b981;box-shadow:0 0 0 3px #d1fae5}
-.dot.off{background:#ef4444;box-shadow:0 0 0 3px #fee2e2}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.dot.on{background:#10b981;box-shadow:0 0 0 2px #d1fae5}
+.dot.off{background:#ef4444;box-shadow:0 0 0 2px #fee2e2}
 .kigo-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:200}
 .kigo-overlay.show{display:flex}
 .kigo-modal{background:#fff;border-radius:20px;padding:20px;max-width:320px;width:90%;text-align:center}
-.kigo-btn{display:flex;align-items:center;justify-content:center;height:44px;border-radius:12px;border:none;font-weight:800;flex:1;cursor:pointer}
+.kigo-btn{flex:1;height:42px;border-radius:12px;border:none;font-weight:800;cursor:pointer}
 .kigo-btn-confirm{background:#0a0a0a;color:#fff}
 </style>
 </head>
 <body>
 
-<!-- ==================== PEDIDOS ==================== -->
 <div id="view-pedidos" class="view active">
 <div class="card" style="padding:8px">
 <div id="map"></div>
 
-<!-- DOS PARTES ABAJO DEL MAPA -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-<!-- IZQUIERDA KM Y PRECIO -->
-<div style="background:#0a0a0a;color:#fff;border-radius:14px;padding:12px">
-<span class="label" style="color:#9ca3af">Distancia y costo</span>
-<div id="txtKm" style="font-size:12px;font-weight:800;margin-top:6px">-- km • -- min</div>
-<div id="txtCosto" style="font-size:22px;font-weight:800;margin-top:4px">$0</div>
-<div id="txtDirCorta" style="font-size:8px;opacity:.6;margin-top:4px;line-height:1.2"></div>
+<!-- ABAJO MAPA REDUCIDO Y CENTRADO -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+<div style="background:#0a0a0a;color:#fff;border-radius:12px;padding:8px 10px;text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:68px">
+<span style="font-size:8px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px">Distancia / Costo</span>
+<div id="txtKm" style="font-size:11px;font-weight:700;margin-top:4px">-- km • -- min</div>
+<div id="txtCosto" style="font-size:16px;font-weight:800;margin-top:2px">$0</div>
 </div>
-<!-- DERECHA REPARTIDORES VERDE ROJO -->
-<div style="background:#fff;border:1.5px solid #0a0a0a;border-radius:14px;padding:12px">
-<span class="label">Repartidor</span>
-<div class="wrap" style="margin-top:6px;border:1.5px solid #0a0a0a">
-<select id="selRepa" onchange="mostrarEstadoRepa()" style="height:40px;font-weight:800"></select>
-</div>
-<div id="estadoRepa" style="margin-top:8px;font-size:10px;font-weight:800;display:flex;align-items:center">
-<span class="dot off" id="dotEstado"></span><span id="txtEstado">Selecciona repa</span>
-</div>
+<div style="background:#fff;border:1.5px solid #0a0a0a;border-radius:12px;padding:8px 10px;text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:68px">
+<span style="font-size:8px;font-weight:800;color:#6b7280;text-transform:uppercase">Repartidor</span>
+<div class="wrap" style="margin-top:4px;border:1px solid #0a0a0a;height:34px"><select id="selRepa" onchange="mostrarEstadoRepa()" style="height:32px;font-weight:800;font-size:11px;text-align:center"></select></div>
+<div style="margin-top:5px;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center"><span class="dot off" id="dotEstado"></span><span id="txtEstado">--</span></div>
 </div>
 </div>
 </div>
 
 <div class="card">
-<span class="label">Buscar cliente - letra por letra</span>
-<div class="wrap" style="position:relative;overflow:visible"><input type="text" id="buscCli" placeholder="Escribe nombre..." oninput="buscarCliente()" onfocus="buscarCliente()"><div id="listCli"></div></div>
+<span class="label">Buscar cliente de base de datos</span>
+<div class="wrap" style="position:relative;overflow:visible"><input type="text" id="buscCli" placeholder="Escribe nombre del cliente..." autocomplete="off" oninput="buscarCliente()"><div id="listCli"></div></div>
 <div id="boxSel" style="display:none;margin-top:10px;background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:10px">
 <div id="txtNom" style="font-weight:800;font-size:12px"></div><div id="txtDirSel" style="font-size:10px"></div><div id="txtTelSel" style="font-size:10px;color:#10b981;font-weight:800"></div>
 </div>
-<span class="label" style="margin-top:10px">Telefono recogida vinculado</span><div class="wrap"><input type="text" id="telRecogida"></div>
-<span class="label" style="margin-top:10px">Direccion entrega</span><div class="wrap"><input type="text" id="dirEntrega" placeholder="Ej. Hidalgo 12"></div>
+<span class="label" style="margin-top:10px">Telefono recogida</span><div class="wrap"><input type="text" id="telRecogida"></div>
+<span class="label" style="margin-top:10px">Direccion entrega - escribe y selecciona</span><div class="wrap"><input type="text" id="dirEntrega" placeholder="Ej. Hidalgo 12, Dolores"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
 <div><span class="label">Tel entrega</span><div class="wrap"><input type="text" id="telEntrega"></div></div>
 <div><span class="label">Referencia</span><div class="wrap"><input type="text" id="refEntrega"></div></div>
@@ -75,58 +67,61 @@ body{font-family:Manrope,sans-serif;background:#fafafa;max-width:640px;margin:0 
 </div>
 </div>
 
-<!-- ==================== CLIENTES - BASE DE DATOS PERMANENTE ==================== -->
 <div id="view-clientes" class="view">
 <div class="card">
-<h3 style="font-size:13px;font-weight:800">REGISTRAR CLIENTE - BASE PERMANENTE</h3>
-<span class="label" style="margin-top:10px">Nombre del cliente</span><div class="wrap"><input type="text" id="cliNombre" placeholder="Ej. Papeleria Central"></div>
-<span class="label" style="margin-top:8px">Direccion - Dolores Hidalgo</span><div class="wrap"><input type="text" id="cliDir" placeholder="Ej. Nayarit 31"></div>
-<span class="label" style="margin-top:8px">Telefono</span><div class="wrap"><input type="tel" id="cliTel" placeholder="418..."></div>
+<h3 style="font-size:12px;font-weight:800">REGISTRAR CLIENTE</h3>
+<span class="label" style="margin-top:10px">Nombre</span><div class="wrap"><input type="text" id="cliNombre"></div>
+<span class="label" style="margin-top:8px">Direccion</span><div class="wrap"><input type="text" id="cliDir"></div>
+<span class="label" style="margin-top:8px">Telefono</span><div class="wrap"><input type="tel" id="cliTel"></div>
 <button class="btn" style="margin-top:12px" onclick="guardarClienteReal()">GUARDAR CLIENTE</button>
-<small style="display:block;text-align:center;margin-top:6px;color:#10b981;font-size:9px;font-weight:800">Queda guardado aunque actualices - Firebase historial-kigo-xpress</small>
 </div>
-
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<span class="label" style="margin:0">BASE DE DATOS CLIENTES</span><span id="countCli" style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:800">0</span>
+<span class="label" style="margin:0">BASE DE DATOS CLIENTES</span><span id="countCli" style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800">0</span>
 </div>
 <div class="wrap" style="margin-bottom:10px"><input type="text" id="filtroCli" placeholder="Filtrar..." oninput="renderClientes()"></div>
 <div id="listaClientes"></div>
 </div>
 </div>
 
-<div class="bottom">
-<button id="bP" class="active" onclick="showView('pedidos')">PEDIDOS</button>
-<button id="bC" onclick="showView('clientes')">CLIENTES</button>
-</div>
-
-<div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><h3 id="modalTitle" style="font-size:14px;font-weight:800"></h3><p id="modalText" style="font-size:11px;margin:10px 0"></p><div style="display:flex;gap:8px"><button id="modalCancel" class="kigo-btn" style="background:#f3f4f6" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">Confirmar</button></div></div></div>
+<div class="bottom"><button id="bP" class="active" onclick="showView('pedidos')">PEDIDOS</button><button id="bC" onclick="showView('clientes')">CLIENTES</button></div>
+<div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><h3 id="modalTitle" style="font-size:14px;font-weight:800"></h3><p id="modalText" style="font-size:11px;margin:10px 0"></p><div style="display:flex;gap:8px"><button id="modalCancel" class="kigo-btn" style="background:#f3f4f6" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">OK</button></div></div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
 const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", authDomain: "historial-kigo-xpress.firebaseapp.com", databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com", projectId: "historial-kigo-xpress", storageBucket: "historial-kigo-xpress.firebasestorage.app", messagingSenderId: "571399920545", appId: "1:571399920545:web:aa16407753b43cbe2e89e0" };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35};
 let map, dirServ, dirRend, markers=[], clienteSel=null;
+let autoEntrega=null, autoCliDir=null;
 
 window.cerrarModal=function(){ document.getElementById('kigoOverlay').classList.remove('show'); }
-window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText='Cancelar', confirmText='Confirmar', confirmClass='', showCancel=true, onConfirm=null}){
+window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText='Cancelar', confirmText='Confirmar', showCancel=true, onConfirm=null}){
  document.getElementById('modalTitle').innerText=title; document.getElementById('modalText').innerText=text;
  document.getElementById('modalCancel').innerText=cancelText; document.getElementById('modalConfirm').innerText=confirmText;
  document.getElementById('modalCancel').style.display=showCancel?'flex':'none';
- document.getElementById('modalConfirm').className='kigo-btn kigo-btn-confirm '+(confirmClass||'');
  document.getElementById('kigoOverlay').classList.add('show');
  document.getElementById('modalConfirm').onclick=()=>{ cerrarModal(); if(onConfirm) onConfirm(); };
 }
 
+// LEE TODOS LOS CLIENTES - CORREGIDO PARA QUE SALGAN TODOS
 onValue(ref(db,'kigoClientesDir'),snap=>{
 let v=snap.val()||{}; let m={};
-Object.entries(v).forEach(([k,d])=>{ if(d&&d.direccion){ let nombre=d.nombreOriginal||k.replace(/_/g,' '); m[nombre]=d; } });
-clientesDB=m; renderClientes();
+Object.entries(v).forEach(([k,d])=>{
+if(!d) return;
+// acepta cualquier formato que hayas guardado antes
+let dir = d.direccion || d.dir || d.domicilio || d.address || '';
+let tel = d.telefono || d.tel || d.phone || '';
+let nombre = d.nombreOriginal || d.nombre || k.replace(/_/g,' ');
+if(!dir &&!tel) return;
+m[nombre]={ direccion: dir, telefono: tel, nombreOriginal: nombre, ts: d.ts||0 };
+});
+clientesDB=m;
+renderClientes();
+console.log('Clientes cargados:', Object.keys(m).length);
 });
 onValue(ref(db,'kigoTarifas'),s=>{ if(s.val()) tarifas=s.val(); });
 onValue(ref(db,'kigoPins'),snap=>{
@@ -142,17 +137,15 @@ return `<option value="${n}">${online?'🟢':'🔴'} ${n}</option>`;
 }).join('');
 mostrarEstadoRepa();
 });
-
 window.mostrarEstadoRepa=function(){
 let sel=document.getElementById('selRepa'); if(!sel) return;
 let nombre=sel.value; let d=repasData[nombre]; let online=false;
 if(typeof d==='object') online=d.online===true||d.conectado===true||d.activo===true||d.enLinea===true||d.status==='online'; else online=true;
 let dot=document.getElementById('dotEstado'); let txt=document.getElementById('txtEstado');
 if(!dot||!txt) return;
-if(online){ dot.className='dot on'; txt.innerText=nombre+' • EN LINEA'; txt.style.color='#10b981'; }
-else{ dot.className='dot off'; txt.innerText=nombre+' • DESACTIVADO'; txt.style.color='#ef4444'; }
+if(online){ dot.className='dot on'; txt.innerText='EN LINEA'; txt.style.color='#10b981'; }
+else{ dot.className='dot off'; txt.innerText='DESACTIVADO'; txt.style.color='#ef4444'; }
 }
-
 window.showView=function(v){
 document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
 document.getElementById('view-'+v).classList.add('active');
@@ -165,15 +158,15 @@ window.initMapReal=function(){
 map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1576,lng:-100.9345},zoom:14});
 dirServ=new google.maps.DirectionsService();
 dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:6}});
-let opts={bounds:{north:21.30,south:21.00,east:-100.75,west:-101.10},componentRestrictions:{country:'mx'}};
-if(document.getElementById('dirEntrega')) new google.maps.places.Autocomplete(document.getElementById('dirEntrega'),opts);
-if(document.getElementById('cliDir')) new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts);
+let opts={bounds:{north:21.30,south:21.00,east:-100.75,west:-101.10},componentRestrictions:{country:'mx'},fields:["formatted_address","geometry","name"]};
+autoEntrega=new google.maps.places.Autocomplete(document.getElementById('dirEntrega'),opts);
+autoCliDir=new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts);
 }
+
 function clearM(){markers.forEach(m=>m.setMap(null));markers=[];}
 function addM(p,c){let m=new google.maps.Marker({position:p,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:c,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});markers.push(m);}
 function geo(dir){return new Promise(r=>{new google.maps.Geocoder().geocode({address:dir+', Dolores Hidalgo, Mexico'},(re,s)=>{if(s==='OK'&&re[0]){let l=re[0].geometry.location;r({lat:l.lat(),lng:l.lng()});}else r(null);});});}
 
-// ========= CLIENTES =========
 window.guardarClienteReal=async function(){
 let nombre=document.getElementById('cliNombre')?.value.trim();
 let dir=document.getElementById('cliDir')?.value.trim();
@@ -184,35 +177,34 @@ let data={direccion:dir,telefono:tel,nombreOriginal:nombre,ts:Date.now()};
 try{
 await set(ref(db,'kigoClientesDir/'+key), data);
 document.getElementById('cliNombre').value=''; document.getElementById('cliDir').value=''; document.getElementById('cliTel').value='';
-mostrarModalElegante({title:'Guardado',text:'Cliente '+nombre+' guardado permanente en base de datos',showCancel:false});
-}catch(e){ mostrarModalElegante({title:'Error Firebase',text:e.message,showCancel:false}); }
+mostrarModalElegante({title:'Guardado',text:'Guardado permanente',showCancel:false});
+}catch(e){ mostrarModalElegante({title:'Error',text:e.message,showCancel:false}); }
 }
+
+// SIN BOTON USAR - SOLO LISTA CON BORRAR
 window.renderClientes=function(){
 let lista=document.getElementById('listaClientes'); let filtro=document.getElementById('filtroCli')?.value.toLowerCase()||'';
 if(!lista) return;
 let entries=Object.entries(clientesDB).filter(([n])=>n.toLowerCase().includes(filtro));
 document.getElementById('countCli')&&(document.getElementById('countCli').innerText=entries.length);
-if(!entries.length){ lista.innerHTML='<div style="text-align:center;padding:20px;color:#999;font-size:11px">No hay clientes - registra arriba</div>'; return; }
-lista.innerHTML=entries.map(([n,d])=>`<div style="padding:12px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:12px">${n}</b><br><small style="color:#666">${d.direccion}</small><br><small style="color:#10b981;font-weight:800">${d.telefono||''}</small></div><div style="display:flex;gap:6px"><button onclick="usarCliente('${n.replace(/'/g,"\\'")}')" style="background:#0a0a0a;color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:10px;font-weight:800">USAR</button><button onclick="borrarClienteDB('${n.replace(/'/g,"\\'")}')" style="background:#fee2e2;border:none;border-radius:10px;padding:8px 10px">X</button></div></div>`).join('');
+if(!entries.length){ lista.innerHTML='<div style="text-align:center;padding:20px;color:#999;font-size:11px">No hay clientes</div>'; return; }
+lista.innerHTML=entries.map(([n,d])=>`<div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:11px">${n}</b><br><small style="color:#666;font-size:10px">${d.direccion}</small><br><small style="color:#10b981;font-weight:800;font-size:10px">${d.telefono||''}</small></div><button onclick="borrarClienteDB('${n.replace(/'/g,"\\'")}')" style="background:#fee2e2;border:none;border-radius:10px;padding:6px 10px;font-size:10px">X</button></div>`).join('');
 }
 window.borrarClienteDB=async function(n){
-mostrarModalElegante({title:'Borrar',text:'Borrar '+n+'?',confirmText:'Borrar',confirmClass:'',onConfirm:async ()=>{
+mostrarModalElegante({title:'Borrar',text:'Borrar '+n+'?',confirmText:'Borrar',onConfirm:async ()=>{
 let key=n.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await remove(ref(db,'kigoClientesDir/'+key));
 }});
 }
-window.usarCliente=function(n){
-let d=clientesDB[n]; if(!d) return;
-showView('pedidos');
-setTimeout(()=>seleccionar(n),200);
-}
+
+// EN PEDIDOS - BUSCA DE BASE DE DATOS AL ESCRIBIR
 window.buscarCliente=function(){
 let q=document.getElementById('buscCli').value.toLowerCase().trim();
 let list=document.getElementById('listCli');
 let todos=Object.keys(clientesDB);
 if(!q){list.style.display='none';return;}
-let fil=todos.filter(n=>n.toLowerCase().includes(q)).slice(0,10);
-if(!fil.length){list.innerHTML='<div style="padding:10px;font-size:10px">No hay</div>';list.style.display='block';return;}
-list.innerHTML=fil.map(n=>{let d=clientesDB[n];return `<div onclick="seleccionar('${n.replace(/'/g,"\\'")}')" style="padding:10px;border-bottom:1px solid #eee;cursor:pointer"><b>${n}</b><br><small>${d.direccion}</small><br><small style="color:#10b981">${d.telefono||''}</small></div>`;}).join('');
+let fil=todos.filter(n=>n.toLowerCase().includes(q)).slice(0,12);
+if(!fil.length){list.innerHTML='<div style="padding:10px;font-size:10px">No encontrado en base de datos</div>';list.style.display='block';return;}
+list.innerHTML=fil.map(n=>{let d=clientesDB[n];return `<div onclick="seleccionar('${n.replace(/'/g,"\\'")}')" style="padding:9px;border-bottom:1px solid #eee;cursor:pointer"><b style="font-size:11px">${n}</b><br><small style="font-size:9px">${d.direccion}</small><br><small style="color:#10b981;font-size:9px">${d.telefono||''}</small></div>`;}).join('');
 list.style.display='block';
 }
 window.seleccionar=function(n){
@@ -227,11 +219,11 @@ document.getElementById('telRecogida').value=d.telefono||'';
 geo(d.direccion).then(p=>{if(p&&map){map.setCenter(p);map.setZoom(15);clearM();addM(p,'#ef4444');}});
 }
 window.cotizar=async function(){
-if(!clienteSel){ mostrarModalElegante({title:'Falta cliente',text:'Busca y selecciona un cliente',showCancel:false}); return; }
+if(!clienteSel){ mostrarModalElegante({title:'Falta cliente',text:'Busca cliente en base de datos',showCancel:false}); return; }
 let entrega=document.getElementById('dirEntrega').value.trim();
-if(!entrega){ mostrarModalElegante({title:'Falta entrega',text:'Escribe direccion de entrega',showCancel:false}); return; }
+if(!entrega){ mostrarModalElegante({title:'Falta entrega',text:'Escribe direccion entrega',showCancel:false}); return; }
 let o=await geo(clienteSel.direccion);let de=await geo(entrega);
-if(!o||!de){ mostrarModalElegante({title:'No encontrada',text:'Direccion no encontrada en Dolores Hidalgo',showCancel:false}); return; }
+if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
 dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{
 if(s==='OK'){
 let leg=r.routes[0].legs[0];dirRend.setDirections(r);clearM();addM(o,'#ef4444');addM(de,'#0a0a0a');
@@ -239,16 +231,15 @@ let km=(leg.distance.value/1000).toFixed(1);let min=Math.round(leg.duration.valu
 pedido={clienteSel,entrega,de,o,km,min,costo};
 document.getElementById('txtKm').innerText=`${km} km • ${min} min`;
 document.getElementById('txtCosto').innerText=`$${costo}`;
-document.getElementById('txtDirCorta').innerText=`${clienteSel.direccion} → ${entrega}`;
 }
 });
 }
 window.confirmar=async function(){
-if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Primero cotiza la ruta',showCancel:false}); return; }
+if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
 let repa=document.getElementById('selRepa')?.value||'sin asignar';
 let nr=push(ref(db,'kigoPedidosLive'));
 await set(nr,{cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:document.getElementById('telRecogida').value,telefono:document.getElementById('telEntrega').value,referencia:document.getElementById('refEntrega').value,km:pedido.km,costoSugerido:pedido.costo,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
-mostrarModalElegante({title:'Enviado',text:'Pedido asignado a '+repa+' por $'+pedido.costo,showCancel:false});
+mostrarModalElegante({title:'Enviado',text:'Asignado a '+repa+' $'+pedido.costo,showCancel:false});
 }
 document.addEventListener('click',e=>{if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')){let l=document.getElementById('listCli'); if(l) l.style.display='none';}});
 </script>
