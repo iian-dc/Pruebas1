@@ -21,12 +21,11 @@
 .bottom button svg{width:22px;height:22px;stroke-width:2}
 .btn{width:100%;height:54px;background:#0a0a0a;color:#fff;border:none;border-radius:14px;font-weight:800;cursor:pointer}
 .btn-green{width:100%;height:54px;background:#10b981;color:#fff;border:none;border-radius:14px;font-weight:800;cursor:pointer;margin-top:10px}
-.dot{width:10px;height:10px;border-radius:50%}
 </style>
 </head>
 <body>
 
-<!-- ==================== VISTA PEDIDOS - MAPA ==================== -->
+<!-- ==================== VISTA PEDIDOS ==================== -->
 <div id="view-pedidos" class="view active">
 <div class="card" style="padding:8px">
 <div id="map"></div>
@@ -36,54 +35,38 @@
 </div>
 </div>
 <div class="card">
-<span class="label">Buscar cliente - letra por letra trae datos</span>
+<span class="label">Buscar cliente - letra por letra</span>
 <div class="wrap" style="overflow:visible;position:relative">
-<input type="text" id="buscCli" placeholder="Escribe letra por letra..." oninput="buscarCliente()" onfocus="buscarCliente()" autocomplete="off">
+<input type="text" id="buscCli" placeholder="Escribe..." oninput="buscarCliente()" onfocus="buscarCliente()">
 <div id="listCli"></div>
 </div>
-
-<!-- AQUI APARECE TELEFONO Y DIRECCION AL SELECCIONAR -->
 <div id="boxSel" style="display:none;margin-top:10px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:14px;padding:12px">
-<div style="display:flex;gap:8px;align-items:center">
-<div class="dot" style="background:#ef4444"></div>
-<div style="flex:1">
-<div id="txtNom" style="font-size:12px;font-weight:800"></div>
-<div id="txtDirSel" style="font-size:10px;color:#374151"></div>
-<div id="txtTelSel" style="font-size:10px;color:#10b981;font-weight:800"></div>
-</div>
-<button onclick="limpiarSel()" style="background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;padding:6px 10px;font-size:9px;font-weight:800">X</button>
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div><div id="txtNom" style="font-size:12px;font-weight:800"></div><div id="txtDirSel" style="font-size:10px;color:#374151"></div><div id="txtTelSel" style="font-size:10px;color:#10b981;font-weight:800"></div></div>
+<button onclick="limpiarSel()" style="background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;padding:6px 10px;font-size:9px">X</button>
 </div>
 </div>
-
-<span class="label" style="margin-top:10px">Telefono recogida vinculado al cliente</span>
-<div class="wrap"><input type="tel" id="telRecogida" placeholder="Se llena automatico"></div>
-
-<span class="label" style="margin-top:12px">Direccion entrega - Dolores Hidalgo</span>
-<div class="wrap"><input type="text" id="dirEntrega" placeholder="Ej. Hidalgo 12"></div>
+<span class="label" style="margin-top:10px">Telefono recogida vinculado</span><div class="wrap"><input type="tel" id="telRecogida"></div>
+<span class="label" style="margin-top:10px">Entrega - Dolores Hidalgo</span><div class="wrap"><input type="text" id="dirEntrega"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
 <div><span class="label">Tel entrega</span><div class="wrap"><input type="tel" id="telEntrega"></div></div>
 <div><span class="label">Referencia</span><div class="wrap"><input type="text" id="refEntrega"></div></div>
 </div>
-
-<span class="label" style="margin-top:10px">Repartidor</span>
-<div class="wrap"><select id="selRepa"></select></div>
-
+<span class="label" style="margin-top:10px">Repartidor</span><div class="wrap"><select id="selRepa"></select></div>
 <button class="btn" style="margin-top:14px" onclick="cotizarRuta()">COTIZAR RUTA</button>
 <button class="btn-green" onclick="confirmarEnvio()">CONFIRMAR ENVIO</button>
 </div>
 </div>
 
-<!-- ==================== VISTA CLIENTES - LISTA FUNCIONAL ==================== -->
+<!-- ==================== VISTA CLIENTES ==================== -->
 <div id="view-clientes" class="view">
 <div class="card">
-<h3 style="font-size:12px;font-weight:800;margin-bottom:12px">REGISTRAR CLIENTE</h3>
+<h3 style="font-size:12px;font-weight:800;margin-bottom:10px">REGISTRAR CLIENTE</h3>
 <span class="label">Nombre</span><div class="wrap"><input type="text" id="cliNombre" placeholder="Ej. Papeleria Central"></div>
-<span class="label" style="margin-top:8px">Direccion</span><div class="wrap"><input type="text" id="cliDir" placeholder="Ej. Nayarit 31, Dolores Hidalgo"></div>
+<span class="label" style="margin-top:8px">Direccion - Dolores Hidalgo</span><div class="wrap"><input type="text" id="cliDir" placeholder="Ej. Nayarit 31, Dolores Hidalgo"></div>
 <span class="label" style="margin-top:8px">Telefono recogida</span><div class="wrap"><input type="tel" id="cliTel" placeholder="418..."></div>
-<button class="btn" style="margin-top:12px" onclick="guardarCliente()">GUARDAR CLIENTE</button>
-<small style="display:block;text-align:center;margin-top:6px;color:#6b7280;font-size:9px">Al guardar aparece automaticamente en la lista de abajo</small>
+<button id="btnGuardar" class="btn" style="margin-top:12px" onclick="guardarCliente()">GUARDAR CLIENTE</button>
 </div>
-
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center">
 <span class="label" style="margin:0">LISTA DE CLIENTES - FUNCIONAL</span>
@@ -95,13 +78,13 @@
 </div>
 
 <div class="bottom">
-<button id="bPed" class="active" onclick="showView('pedidos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z"/><path d="M7 3v15M13 6v15"/></svg>PEDIDOS</button>
+<button id="bPed" class="active" onclick="showView('pedidos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z"/></svg>PEDIDOS</button>
 <button id="bCli" onclick="showView('clientes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>CLIENTES</button>
 </div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getDatabase, ref, onValue, set, remove, push } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+import { getDatabase, ref, onValue, set, remove, push, update } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 const cfg={apiKey:"AIzaSyCTV1sm6McEIkv-cheaVFCD_svp_a--6wg",authDomain:"kigo-67dd3.firebaseapp.com",projectId:"kigo-67dd3",storageBucket:"kigo-67dd3.firebasestorage.app",messagingSenderId:"1070993147798",appId:"1:1070993147798:web:2d3d4ac9c3b5a5c9e7b5a5",databaseURL:"https://kigo-67dd3-default-rtdb.firebaseio.com"};
 const app=initializeApp(cfg); const db=getDatabase(app);
@@ -109,25 +92,22 @@ const app=initializeApp(cfg); const db=getDatabase(app);
 const DOLORES={lat:21.1576,lng:-100.9345};
 const BOUNDS={north:21.30,south:21.00,east:-100.75,west:-101.10};
 let map, dirServ, dirRend, markers=[];
-let clientes={}; // Objeto funcional de clientes
+let clientes={};
 let clienteSeleccionado=null;
 let pedidoCotizado=null;
 let tarifas={mandado:35};
 
 function todayISO(){let d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
-// ==================== CODIGO CLIENTES - CARGA FUNCIONAL ====================
+// ==================== CODIGO CLIENTES - CARGA ====================
 onValue(ref(db,'kigoClientesDir'),snap=>{
-let v=snap.val()||{};
-let m={};
+let v=snap.val()||{}; let m={};
 Object.entries(v).forEach(([key,data])=>{
-// key puede ser nombre con _, data trae direccion, telefono, lat, lng
 if(!data||!data.direccion) return;
-let nombre = data.nombreOriginal || key.replace(/_/g,' ');
+let nombre=data.nombreOriginal||key.replace(/_/g,' ');
 m[nombre]=data;
 });
 clientes=m;
-console.log('Clientes cargados',Object.keys(clientes).length);
 renderClientes();
 });
 
@@ -155,42 +135,32 @@ new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts);
 }
 initMapa();
 function clearMarkers(){markers.forEach(m=>m.setMap(null));markers=[];}
-function addMarker(pos,color){
-let m=new google.maps.Marker({position:pos,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});
-markers.push(m);
+function addMarker(pos,color){let m=new google.maps.Marker({position:pos,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});markers.push(m);}
+function geocodificar(dir){
+return new Promise(res=>{
+let g=new google.maps.Geocoder();
+g.geocode({address:dir+', Dolores Hidalgo, Mexico',bounds:BOUNDS},(r,s)=>{if(s==='OK'&&r[0]){let l=r[0].geometry.location;res({lat:l.lat(),lng:l.lng()});}else res(null);});
+});
 }
 
-// ==================== CODIGO PEDIDOS - BUSCAR LETRA POR LETRA Y TRAER DATOS ====================
+// ==================== CODIGO PEDIDOS - BUSCAR ====================
 window.buscarCliente=function(){
 let q=document.getElementById('buscCli').value.toLowerCase().trim();
 let list=document.getElementById('listCli');
 let todos=Object.keys(clientes);
 if(!q){list.style.display='none';return;}
-// Filtra letra por letra
 let fil=todos.filter(n=>n.toLowerCase().includes(q)).slice(0,15);
-if(!fil.length){
-list.innerHTML='<div style="padding:12px;font-size:10px;color:#6b7280">No encontrado - registralo en CLIENTES</div>';
-list.style.display='block';
-return;
-}
+if(!fil.length){list.innerHTML='<div style="padding:12px;font-size:10px">No encontrado</div>';list.style.display='block';return;}
 list.innerHTML=fil.map(n=>{
 let d=clientes[n];
-return `<div onclick="seleccionarCliente('${n.replace(/'/g,"\\'")}')" style="padding:10px 12px;border-bottom:1px solid #f3f4f6;cursor:pointer">
-<b style="font-size:11px">${n}</b><br>
-<small style="color:#6b7280">${d.direccion}</small><br>
-<small style="color:#10b981;font-weight:700">${d.telefono||'Sin telefono'}</small>
-</div>`;
+return `<div onclick="seleccionarCliente('${n.replace(/'/g,"\\'")}')" style="padding:10px 12px;border-bottom:1px solid #f3f4f6;cursor:pointer"><b style="font-size:11px">${n}</b><br><small style="color:#6b7280">${d.direccion}</small><br><small style="color:#10b981;font-weight:700">${d.telefono||''}</small></div>`;
 }).join('');
 list.style.display='block';
-
-// Si escribe exacto y coincide con uno, autoselecciona y trae telefono y direccion
 let exact=todos.find(n=>n.toLowerCase()===q);
 if(exact){seleccionarCliente(exact);list.style.display='none';}
 }
-
 window.seleccionarCliente=function(nombre){
-let d=clientes[nombre];
-if(!d) return;
+let d=clientes[nombre]; if(!d) return;
 clienteSeleccionado={nombre,direccion:d.direccion,lat:d.lat||null,lng:d.lng||null,telefono:d.telefono||''};
 document.getElementById('buscCli').value=nombre;
 document.getElementById('listCli').style.display='none';
@@ -199,40 +169,16 @@ document.getElementById('txtNom').innerText=nombre;
 document.getElementById('txtDirSel').innerText=d.direccion;
 document.getElementById('txtTelSel').innerText=d.telefono?`Tel: ${d.telefono}`:'Sin telefono';
 document.getElementById('telRecogida').value=d.telefono||'';
-
-// Senala punto rojo en mapa donde recoger
 clearMarkers();
-let pos = d.lat&&d.lng?{lat:d.lat,lng:d.lng}:null;
-if(pos){
-map.setCenter(pos);map.setZoom(15);addMarker(pos,'#ef4444');
-}else{
-geocodificar(d.direccion).then(p=>{if(p){map.setCenter(p);map.setZoom(15);addMarker(p,'#ef4444');}});
-}
+let pos=d.lat&&d.lng?{lat:d.lat,lng:d.lng}:null;
+if(pos){map.setCenter(pos);map.setZoom(15);addMarker(pos,'#ef4444');}
+else{geocodificar(d.direccion).then(p=>{if(p){map.setCenter(p);map.setZoom(15);addMarker(p,'#ef4444');}});}
 autoCotizar();
 }
-
-window.limpiarSel=function(){
-clienteSeleccionado=null;
-document.getElementById('buscCli').value='';
-document.getElementById('boxSel').style.display='none';
-document.getElementById('telRecogida').value='';
-document.getElementById('infoRuta').style.display='none';
-clearMarkers();dirRend.setDirections({routes:[]});
-pedidoCotizado=null;
-}
-
-function geocodificar(dir){
-return new Promise(res=>{
-let g=new google.maps.Geocoder();
-g.geocode({address:dir+', Dolores Hidalgo, Mexico',bounds:BOUNDS},(r,s)=>{if(s==='OK'&&r[0]){let l=r[0].geometry.location;res({lat:l.lat(),lng:l.lng()});}else res(null);});
-});
-}
-
-let tAuto=null;
-function autoCotizar(){clearTimeout(tAuto);tAuto=setTimeout(()=>{if(clienteSeleccionado && document.getElementById('dirEntrega').value.trim().length>=6) cotizarRuta();},800);}
+window.limpiarSel=function(){clienteSeleccionado=null;document.getElementById('buscCli').value='';document.getElementById('boxSel').style.display='none';document.getElementById('telRecogida').value='';document.getElementById('infoRuta').style.display='none';clearMarkers();dirRend.setDirections({routes:[]});pedidoCotizado=null;}
+let tAuto=null; function autoCotizar(){clearTimeout(tAuto);tAuto=setTimeout(()=>{if(clienteSeleccionado && document.getElementById('dirEntrega').value.trim().length>=6) cotizarRuta();},800);}
 document.getElementById('dirEntrega').addEventListener('input',autoCotizar);
 function calcCosto(km){return Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6);}
-
 window.cotizarRuta=async function(){
 let entrega=document.getElementById('dirEntrega').value.trim();
 if(!clienteSeleccionado) return alert('Selecciona cliente');
@@ -240,11 +186,9 @@ if(!entrega) return alert('Falta entrega');
 try{
 let origen=clienteSeleccionado.lat&&clienteSeleccionado.lng?{lat:clienteSeleccionado.lat,lng:clienteSeleccionado.lng}:await geocodificar(clienteSeleccionado.direccion);
 let destino=await geocodificar(entrega);
-if(!origen||!destino) throw new Error('Direccion no encontrada en Dolores Hidalgo');
+if(!origen||!destino) throw new Error('Direccion no encontrada');
 let ruta=await new Promise((res,rej)=>{
-dirServ.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{
-if(s==='OK'){let leg=r.routes[0].legs[0];dirRend.setDirections(r);clearMarkers();addMarker(origen,'#ef4444');addMarker(destino,'#0a0a0a');res({km:(leg.distance.value/1000).toFixed(1),min:Math.round(leg.duration.value/60)});}else rej('No hay ruta');
-});
+dirServ.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{if(s==='OK'){let leg=r.routes[0].legs[0];dirRend.setDirections(r);clearMarkers();addMarker(origen,'#ef4444');addMarker(destino,'#0a0a0a');res({km:(leg.distance.value/1000).toFixed(1),min:Math.round(leg.duration.value/60)});}else rej('No hay ruta');});
 });
 let costo=calcCosto(parseFloat(ruta.km));
 pedidoCotizado={recogida:clienteSeleccionado,entrega:{direccion:entrega,lat:destino.lat,lng:destino.lng,telefono:document.getElementById('telEntrega').value.trim(),referencia:document.getElementById('refEntrega').value.trim()},km:ruta.km,min:ruta.min,costo,iso:todayISO(),telRecogida:document.getElementById('telRecogida').value.trim()};
@@ -254,7 +198,6 @@ document.getElementById('txtCosto').innerText=`$${costo}`;
 document.getElementById('txtDir').innerText=`De ${clienteSeleccionado.direccion} → ${entrega}`;
 }catch(e){alert(e.message);}
 }
-
 window.confirmarEnvio=async function(){
 if(!pedidoCotizado) return alert('Cotiza primero');
 let repa=document.getElementById('selRepa').value;
@@ -265,19 +208,42 @@ alert('Enviado a '+repa);
 document.getElementById('dirEntrega').value='';document.getElementById('infoRuta').style.display='none';pedidoCotizado=null;
 }
 
-// ==================== CODIGO CLIENTES - GUARDAR Y LISTA FUNCIONAL ====================
+// ==================== CODIGO CLIENTES - GUARDAR CORREGIDO - INSTANTANEO ====================
 window.guardarCliente=async function(){
+let btn=document.getElementById('btnGuardar');
 let nombre=document.getElementById('cliNombre').value.trim();
 let dir=document.getElementById('cliDir').value.trim();
 let tel=document.getElementById('cliTel').value.trim();
-if(!nombre||!dir) return alert('Falta nombre y direccion');
-let geo=await geocodificar(dir);
-// Guarda con nombre original para que aparezca en lista funcional
+if(!nombre||!dir){alert('Falta nombre y direccion');return;}
+btn.disabled=true; btn.innerText='GUARDANDO...';
+
+try{
+// 1. GUARDA INSTANTANEO SIN ESPERAR GOOGLE - esto hace que baje a la lista abajo al instante
 let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
-let data={direccion:dir,lat:geo?geo.lat:null,lng:geo?geo.lng:null,telefono:tel,nombreOriginal:nombre};
-await set(ref(db,'kigoClientesDir/'+key),data);
-document.getElementById('cliNombre').value='';document.getElementById('cliDir').value='';document.getElementById('cliTel').value='';
-alert('Cliente guardado: '+nombre+' - ya aparece en lista y en pedidos');
+let dataInstantanea={direccion:dir,telefono:tel,lat:null,lng:null,nombreOriginal:nombre,ts:Date.now()};
+await set(ref(db,'kigoClientesDir/'+key),dataInstantanea);
+
+// 2. LIMPIA Y MUESTRA EN LISTA AL INSTANTE - sin esperar onValue
+clientes[nombre]=dataInstantanea;
+renderClientes();
+document.getElementById('cliNombre').value='';
+document.getElementById('cliDir').value='';
+document.getElementById('cliTel').value='';
+alert('Cliente guardado: '+nombre+' - ya esta en la lista abajo');
+
+ // 3. EN SEGUNDO PLANO SACA LAT LNG Y ACTUALIZA - sin bloquear
+geocodificar(dir).then(async geo=>{
+if(geo){
+await update(ref(db,'kigoClientesDir/'+key),{lat:geo.lat,lng:geo.lng});
+}
+});
+
+}catch(e){
+alert('Error: '+e.message);
+console.error(e);
+}finally{
+btn.disabled=false; btn.innerText='GUARDAR CLIENTE';
+}
 }
 
 window.renderClientes=function(){
@@ -287,28 +253,18 @@ let lista=Object.entries(clientes).filter(([n])=>n.toLowerCase().includes(q));
 document.getElementById('countCli').innerText=lista.length;
 cont.innerHTML=lista.map(([n,d])=>`
 <div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
-<div style="flex:1">
-<b style="font-size:11px">${n}</b><br>
-<small style="font-size:9px;color:#6b7280">${d.direccion}</small><br>
-<small style="font-size:9px;color:#10b981;font-weight:700">${d.telefono||''}</small>
-</div>
+<div style="flex:1"><b style="font-size:11px">${n}</b><br><small style="font-size:9px;color:#6b7280">${d.direccion}</small><br><small style="font-size:9px;color:#10b981;font-weight:700">${d.telefono||''}</small></div>
 <div style="display:flex;gap:6px">
 <button onclick="usarDesdeLista('${n.replace(/'/g,"\\'")}')" style="background:#0a0a0a;color:#fff;border:none;border-radius:10px;padding:8px 10px;font-size:9px;font-weight:800">USAR</button>
 <button onclick="borrarCli('${n.replace(/'/g,"\\'")}')" style="background:#fee2e2;border:none;border-radius:10px;padding:8px 10px;font-size:9px">X</button>
 </div>
-</div>`).join('')||'<div style="text-align:center;padding:20px;color:#9ca3af;font-size:10px">Sin clientes - guarda uno arriba</div>';
+</div>`).join('')||'<div style="text-align:center;padding:20px;color:#9ca3af;font-size:10px">Sin clientes</div>';
 }
 window.usarDesdeLista=function(n){showView('pedidos');setTimeout(()=>seleccionarCliente(n),200);}
 window.borrarCli=async function(nombre){
 if(!confirm('Borrar '+nombre+'?')) return;
 let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
-// Borra por key y tambien busca por nombreOriginal
 await remove(ref(db,'kigoClientesDir/'+key));
-let entry=Object.entries(clientes).find(([k,v])=>k===nombre);
-if(entry){
-let k2=entry[0].replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
-if(k2!==key) await remove(ref(db,'kigoClientesDir/'+k2));
-}
 }
 document.addEventListener('click',e=>{if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')) document.getElementById('listCli').style.display='none';});
 </script>
