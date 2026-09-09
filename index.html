@@ -6,9 +6,6 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0a0a0a">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Kigo xpress">
-<link rel="apple-touch-icon" id="appleIcon" href="">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -102,7 +99,6 @@
 <div class="group" style="margin-top:12px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:14px;padding:12px"><div class="label-row"><label>Enviar pedido a repartidor</label><span id="estadoRepaInfo"></span></div><div class="wrap"><select id="pedidoRepaDestino" onchange="actualizarEstadoRepaInfo()"></select></div></div>
 <button onclick="cotizarRuta()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> COTIZAR SERVICIO - VER RUTA</button>
 <button onclick="confirmarPedido()" style="width:100%;height:54px;margin-top:10px;background:#ef4444;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> CONFIRMAR PEDIDO</button></div>
-
 <div id="panelComprar" style="display:none"><div class="group"><div class="wrap"><input type="text" id="queComprar" placeholder="Que comprar? Ej. Oxxo"></div></div><div class="group"><div class="wrap"><input type="text" id="entregaDirComprar" placeholder="Direccion cliente"></div></div><button onclick="cotizarRutaComprar()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px">COTIZAR RUTA</button></div>
 </div></div>
 <div id="view-hoy" class="view"><div class="filtros-tipo"><button id="fHoyTodos" class="active" onclick="setFiltroHoy('todos')">Todos</button><button id="fHoyMandado" onclick="setFiltroHoy('Moto Mandado')">Mandados</button><button id="fHoyTransporte" onclick="setFiltroHoy('Moto Transporte')">Transporte</button></div><div class="card" style="margin-bottom:8px"><div style="font-size:10px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> HOY - <span id="hoyFecha"></span></div><div class="stats"><div class="stat"><span>Pedidos</span><strong id="hCount">0</strong></div><div class="stat"><span>Bruto</span><strong id="hBruto">$0</strong></div><div class="stat dark"><span>Repartidor</span><strong id="hRep">$0</strong></div><div class="stat red"><span>KIGO</span><strong id="hKigo">$0</strong></div></div></div><div class="table-wrap"><table><thead><tr><th>Hora</th><th>Cliente</th><th>Tipo</th><th>Bruto</th><th></th></tr></thead><tbody id="tbodyHoy"></tbody></table></div></div>
@@ -111,7 +107,6 @@
 
 <div id="view-seguimiento" class="view">
 <div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="16 12 12 8 8 12"/><line x1="12" y1="16" x2="12" y2="8"/></svg> SEGUIMIENTO EDITABLE</div><div style="font-size:9px;color:#6b7280;font-weight:600;margin-top:2px">Edita telefono y costo en tiempo real</div></div><div id="countSeguimiento" style="background:#0a0a0a;color:#fff;padding:6px 12px;border-radius:20px;font-size:10px;font-weight:800">0 activos</div></div><div style="display:flex;gap:6px;margin-top:10px"><button onclick="filtrarSeguimiento('todos')" id="fSegTodos" class="tab-cobro active">Todos</button><button onclick="filtrarSeguimiento('pendiente')" id="fSegPend" class="tab-cobro">Pendientes</button><button onclick="filtrarSeguimiento('en_camino')" id="fSegCamino" class="tab-cobro">En camino</button><button onclick="filtrarSeguimiento('finalizado')" id="fSegFin" class="tab-cobro">Finalizados</button></div></div>
-
 <div id="cardDetalleSeguimiento" class="detalle-edit-card" style="display:none">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> DETALLE PEDIDO <span id="detalleKey">#--</span></div><button onclick="cerrarDetalleSeguimiento()" style="width:28px;height:28px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;font-weight:800;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
 <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:14px;padding:10px;margin-bottom:10px"><div style="font-size:8px;font-weight:800;color:#6b7280;display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> CLIENTE / RECOGER DE:</div><div id="detalleCliente" style="font-size:12px;font-weight:800;margin-top:2px">--</div><div id="detalleRecoge" style="font-size:10px;color:#374151;margin-top:2px;line-height:1.3">--</div></div>
@@ -136,14 +131,21 @@
 <div style="display:flex;gap:8px;margin-bottom:12px"><button id="tabRepaLive" class="tab-cobro active" onclick="showTabRepa('live')" style="flex:1;height:40px;display:flex;align-items:center;justify-content:center;gap:6px">PEDIDOS <span id="countLive" style="background:#10b981;color:#fff;padding:3px 8px;border-radius:10px;margin-left:6px;font-size:9px;font-weight:800">0</span></button><button id="tabRepaHist" class="tab-cobro" onclick="showTabRepa('hist')" style="flex:1;height:40px">HISTORIAL</button></div>
 <div id="panelRepaLive">
   <div class="card" style="padding:8px;margin-bottom:14px; position:relative"><div id="mapRepa"></div><div style="position:absolute; top:12px; right:12px; z-index:500"><button onclick="centerMyLocationSimple()" style="width:42px;height:42px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></button></div><div style="position:absolute; top:12px; left:12px; z-index:500"><button onclick="recuperarRuta()" style="height:36px;padding:0 14px;background:#0a0a0a;color:#fff;border:none;border-radius:20px;font-size:9px;font-weight:800">Recuperar ruta</button></div></div>
-  <div id="cardPedidoModerna" style="display:none; background:#fff; border-radius:24px; padding:20px; box-shadow:0 12px 32px rgba(0,0,0,.10); border:1px solid #f0f0f0; margin-bottom:18px; position:sticky; top:66px; z-index:20">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px"><div style="font-size:14px; font-weight:800;display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg> Pedido #<span id="txtNumPedido">--</span></div><div id="txtEstadoPedido" style="background:#fef3c7; color:#92400e; padding:6px 12px; border-radius:20px; font-size:10px; font-weight:800;">Nuevo pedido</div></div>
-    <div style="display:flex; gap:12px;"><div style="display:flex; flex-direction:column; align-items:center;"><div style="width:34px;height:34px; border-radius:12px; background:#dcfce7; display:flex; align-items:center; justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div style="width:2px; height:30px; background:#e5e7eb; margin:6px 0;"></div><div style="width:34px;height:34px; border-radius:12px; background:#fee2e2; display:flex; align-items:center; justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div></div><div style="flex:1">
-      <div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:9px; font-weight:800; color:#9ca3af;display:flex;align-items:center;gap:6px">RECOGER EN <span id="badgeRecogerTipo" style="background:#dcfce7;color:#166534;padding:2px 6px;border-radius:8px;font-size:7px"></span></div><button onclick="abrirMapsRecogida()" class="btn-maps-elegante"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> Ruta Google Maps</button></div><div id="txtNegocioNombre" style="font-size:13px; font-weight:800; margin-top:6px">--</div><div id="txtNegocioDir" style="font-size:11px; color:#6b7280; margin-top:2px;line-height:1.3">--</div></div>
-      <div><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:9px; font-weight:800; color:#9ca3af;display:flex;align-items:center;gap:6px">ENTREGAR EN <span id="badgeEntregaTipo" style="background:#fee2e2;color:#991b1b;padding:2px 6px;border-radius:8px;font-size:7px"></span></div><button onclick="abrirMapsEntrega()" class="btn-maps-elegante red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Ruta Google Maps</button></div><div id="txtClienteDir" style="font-size:12px; color:#0a0a0a; margin-top:6px; font-weight:700; line-height:1.3">--</div><div id="txtTelefonoCliente" style="font-size:11px; color:#10b981; font-weight:800; margin-top:4px; display:none"></div></div><div style="margin-top:14px;"><span id="txtDistancia" style="background:#f9fafb; border:1px solid #e5e7eb; padding:6px 10px; border-radius:20px; font-size:10px; font-weight:700">--</span> <span id="txtCostoSugerido" style="background:#0a0a0a; color:#fff; padding:6px 10px; border-radius:20px; font-size:10px; font-weight:800; margin-left:6px"></span></div></div></div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px"><button onclick="accionMensajeCliente()" class="btn-contact"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> <span id="txtBtnMensaje">Mensaje</span></button><button onclick="accionLlamarCliente()" class="btn-contact"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> <span id="txtBtnLlamar">Llamar</span></button></div>
-    <div style="margin-top:14px; display:flex; flex-direction:column; gap:10px"><button id="btnAceptar" onclick="accionAceptar()" class="btn-pro btn-pro-dark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Aceptar pedido</button><button id="btnEnCamino" onclick="accionEnCamino()" style="display:none" class="btn-pro btn-pro-dark">Voy en camino a recoger</button><button id="btnRecogido" onclick="accionYaRecogi()" style="display:none" class="btn-pro btn-pro-green">Pedido recogido</button><button id="btnVoyEntregar" onclick="accionVoyEntregar()" style="display:none" class="btn-pro btn-pro-green">Voy a entregar pedido</button><button id="btnEntregado" onclick="accionEntregado()" style="display:none" class="btn-pro btn-pro-red">Pedido entregado</button><div id="estadoFinal" style="display:none; text-align:center; padding:16px; background:#f0fdf4; border-radius:16px; color:#166534; font-weight:800; font-size:13px; border:1px solid #bbf7d0">Pedido completado</div></div>
+
+  <!-- TARJETA REPARTIDOR ORGANIZADA - NUEVA VERSION -->
+  <div id="cardPedidoModerna" style="display:none; background:#fff; border-radius:24px; padding:18px; box-shadow:0 12px 32px rgba(0,0,0,.10); border:1px solid #f0f0f0; margin-bottom:18px; position:sticky; top:66px; z-index:20">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px"><div style="font-size:13px; font-weight:800;display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg> Pedido #<span id="txtNumPedido">--</span></div><div id="txtEstadoPedido" style="background:#fef3c7; color:#92400e; padding:6px 12px; border-radius:20px; font-size:9px; font-weight:800;">Nuevo pedido</div></div>
+    <div style="display:flex; gap:8px; margin-bottom:14px"><span id="txtDistancia" style="background:#f9fafb; border:1px solid #e5e7eb; padding:7px 12px; border-radius:20px; font-size:10px; font-weight:700">--</span><span id="txtCostoSugerido" style="background:#0a0a0a; color:#fff; padding:7px 12px; border-radius:20px; font-size:11px; font-weight:800"></span></div>
+    <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:16px; padding:12px; margin-bottom:10px">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><div style="font-size:9px; font-weight:800; color:#166534; letter-spacing:.06em; display:flex; align-items:center; gap:6px">RECOGER EN <span id="badgeRecogerTipo" style="background:#fff; border:1px solid #86efac; color:#166534; padding:2px 6px; border-radius:8px; font-size:7px; margin-left:4px"></span></div><button onclick="abrirMapsRecogida()" class="btn-maps-elegante" style="height:32px; padding:0 10px; font-size:8px">Ruta</button></div>
+      <div id="txtNegocioNombre" style="font-size:14px; font-weight:800; color:#0a0a0a; line-height:1.2">--</div>
+      <div id="txtNegocioDir" style="font-size:11px; font-weight:600; color:#374151; margin-top:6px; line-height:1.4; background:#fff; border:1px solid #dcfce7; border-radius:10px; padding:8px 10px">--</div>
+    </div>
+    <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:16px; padding:12px"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><div style="font-size:9px; font-weight:800; color:#991b1b; letter-spacing:.06em; display:flex; align-items:center; gap:6px">ENTREGAR EN <span id="badgeEntregaTipo" style="background:#fff; border:1px solid #fecaca; color:#991b1b; padding:2px 6px; border-radius:8px; font-size:7px; margin-left:4px"></span></div><button onclick="abrirMapsEntrega()" class="btn-maps-elegante red" style="height:32px; padding:0 10px; font-size:8px">Ruta</button></div><div id="txtClienteDir" style="font-size:12px; font-weight:700; color:#0a0a0a; line-height:1.4; background:#fff; border:1px solid #fecaca; border-radius:10px; padding:8px 10px">--</div><div id="txtTelefonoCliente" style="font-size:11px; font-weight:800; margin-top:8px; background:#fff; border:1px dashed #e5e7eb; border-radius:10px; padding:6px 10px; display:none"></div></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px"><button onclick="accionMensajeCliente()" class="btn-contact"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> <span id="txtBtnMensaje">Mensaje</span></button><button onclick="accionLlamarCliente()" class="btn-contact"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> <span id="txtBtnLlamar">Llamar</span></button></div>
+    <div style="margin-top:14px; display:flex; flex-direction:column; gap:10px"><button id="btnAceptar" onclick="accionAceptar()" class="btn-pro btn-pro-dark">Aceptar pedido</button><button id="btnEnCamino" onclick="accionEnCamino()" style="display:none" class="btn-pro btn-pro-dark">Voy en camino a recoger</button><button id="btnRecogido" onclick="accionYaRecogi()" style="display:none" class="btn-pro btn-pro-green">Pedido recogido</button><button id="btnVoyEntregar" onclick="accionVoyEntregar()" style="display:none" class="btn-pro btn-pro-green">Voy a entregar pedido</button><button id="btnEntregado" onclick="accionEntregado()" style="display:none" class="btn-pro btn-pro-red">Pedido entregado</button><div id="estadoFinal" style="display:none; text-align:center; padding:16px; background:#f0fdf4; border-radius:16px; color:#166534; font-weight:800; font-size:13px; border:1px solid #bbf7d0">Pedido completado</div></div>
   </div>
+
   <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center; padding:0 4px"><div style="font-size:11px; font-weight:800">PEDIDOS EN ESPERA</div><div id="countEsperaTxt" style="font-size:9px; color:#6b7280; font-weight:700"></div></div>
   <div id="listaCardsPedidos" style="display:flex;flex-direction:column;gap:10px;margin-top:10px"></div>
   <div id="emptyLive" style="display:none;text-align:center;padding:32px 10px;color:#6b7280;font-size:11px;font-weight:600" class="card">Sin pedidos en espera</div>
@@ -194,9 +196,7 @@ let pinsData={admin:'0831',repas:{'Jose':'1111','Diego Gómez':'2222','Diego':'3
 let tarifas={mandado:5,transporte:10}; let tarifasRepas={}; let fotosRepas={}; let clientesDirecciones={};
 let map=null, pinClienteLayer=null, routeLayer=null, entregaMarker=null, clientePedidoSeleccionado=null, ultimaCotizacion=null, entregaCoordsTemp=null, recogidaManualData=null;
 let mapRepa=null, routeLayerRepa=null, markersRepa=[], pedidosLive={}, statusRepas={}, prevLiveCount=0, ubicacionRepa=null, pedidoSeleccionadoKey=null, detalleActualKey=null;
-let lastRouteCoords=null;
-let calDate=new Date();
-let geocodeCache={};
+let lastRouteCoords=null; let calDate=new Date(); let geocodeCache={};
 onValue(ref(db,'kigoPins'), s=>{ if(s.exists()) pinsData=s.val(); actualizarSelects(); renderAjustes(); });
 onValue(ref(db,'kigoTarifas'), s=>{ if(s.exists()) tarifas=s.val(); });
 onValue(ref(db,'kigoTarifasRepas'), s=>{ if(s.exists()) tarifasRepas=s.val(); });
@@ -212,7 +212,6 @@ onValue(ref(db,'kigoPedidosLive'), s=>{
  let saved = localStorage.getItem('kigo_pedido_activo'); if(saved && pedidosLive[saved]){ if(!pedidoSeleccionadoKey){ mostrarTarjetaModerna(saved); } }
 });
 onValue(ref(db,'kigoStatusRepas'), s=>{ statusRepas=s.val()||{}; actualizarSelectRepaDestino(); renderAjustes(); renderBotonOnline(); });
-
 window.setOpcionRecoger=function(tipo){
  opcionRecoger=tipo;
  document.getElementById('btnOpcionCliente').classList.toggle('active',tipo==='cliente');
@@ -239,7 +238,6 @@ window.limpiarOpcionClienteSiEscribe=function(){
   opcionRecoger='direccion';
  }
 }
-
 window.cambiarCal=function(dir){ calDate.setMonth(calDate.getMonth()+dir); renderCalendario(); }
 window.renderCalendario=function(){
  let grid=document.getElementById('gridCal'); let titulo=document.getElementById('tituloCal'); if(!grid) return;
@@ -261,7 +259,6 @@ window.verDetalleCal=function(dia){
  document.getElementById('detalleCalDia').innerText=`Dia ${dia} - ${items.length} pedidos - $${fmt(items.reduce((a,b)=>a+(b.valor||0),0))}`;
  document.getElementById('tbodyCalDia').innerHTML=items.map(v=>`<tr><td><b>${v.cliente}</b></td><td>${badge(v.tipo,v.promo)}</td><td>$${fmt(v.valor)}</td></tr>`).join('') || '<tr><td colspan="3" style="text-align:center;color:#6b7280">Sin pedidos</td></tr>';
 }
-
 window.filtrarSeguimiento=function(tipo){ filtroSeguimiento=tipo; document.getElementById('fSegTodos').classList.toggle('active',tipo==='todos'); document.getElementById('fSegPend').classList.toggle('active',tipo==='pendiente'); document.getElementById('fSegCamino').classList.toggle('active',tipo==='en_camino'); document.getElementById('fSegFin').classList.toggle('active',tipo==='finalizado'); renderSeguimientoAdmin(); }
 function getEstadoInfo(etapa){ let e=(etapa||'pendiente').toLowerCase(); if(e==='pendiente') return {txt:'PENDIENTE', cls:'estado-pendiente'}; if(e==='aceptado') return {txt:'ACEPTADO', cls:'estado-aceptado'}; if(e==='en_camino_recoger') return {txt:'EN CAMINO A RECOGER', cls:'estado-recoger'}; if(e==='recogido') return {txt:'RECOGIDO', cls:'estado-recogido'}; if(e==='en_camino_entrega') return {txt:'EN CAMINO A ENTREGAR', cls:'estado-entrega'}; if(e==='finalizado') return {txt:'FINALIZADO', cls:'estado-finalizado'}; return {txt:e.toUpperCase(), cls:'estado-pendiente'}; }
 window.renderSeguimientoAdmin=function(){
@@ -370,7 +367,6 @@ function initMap(){ if(map) return; map=L.map('map',{dragging:true}).setView([21
 function initMapRepa(){ if(mapRepa) return; mapRepa=L.map('mapRepa',{zoomControl:false, dragging:true, scrollWheelZoom:true, doubleClickZoom:true}).setView([21.1556,-100.9343],16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(mapRepa); L.control.zoom({position:'bottomright'}).addTo(mapRepa); }
 async function fetchClima(){ try{ let r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=21.1556&longitude=-100.9343&current=temperature_2m,weather_code,wind_speed_10m,is_day&timezone=auto'); let j=await r.json(); let cur=j.current; let temp=Math.round(cur.temperature_2m); let wind=Math.round(cur.wind_speed_10m); let code=cur.weather_code; let estado='Soleado'; if(code>=1 && code<=3){ estado='Parcial nublado'; } if(code>=4 && code<=48){ estado='Nublado'; } if(code>=51){ estado='Lluvioso'; } let hora=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); document.getElementById('climaEstadoTxt').innerText=`${estado} • Dolores Hidalgo`; document.getElementById('climaTemp').innerText=`${temp}C`; document.getElementById('climaViento').innerText=`${wind} km/h`; document.getElementById('climaHora').innerText=hora; document.getElementById('climaDesc').innerText=`${estado} • ${temp}C`; }catch(e){ document.getElementById('climaDesc').innerText='Clima no disponible'; } }
 window.recuperarRuta=function(){ if(!pedidoSeleccionadoKey) return mostrarAviso('No hay pedido activo','Sin pedido'); let p=pedidosLive[pedidoSeleccionadoKey]; if(!p) return; verRutaLive(pedidoSeleccionadoKey); if(lastRouteCoords && mapRepa){ if(routeLayerRepa) mapRepa.removeLayer(routeLayerRepa); routeLayerRepa=L.polyline(lastRouteCoords,{color:'#0a0a0a',weight:6}).addTo(mapRepa); mapRepa.fitBounds(routeLayerRepa.getBounds(),{padding:[40,40]}); mostrarAviso('Ruta recuperada','Ruta'); } }
-
 window.abrirMapsRecogida=function(){
  let p=pedidosLive[pedidoSeleccionadoKey]; if(!p) return;
  if(p.lat1 && p.lng1) window.open(`https://www.google.com/maps/dir/?api=1&destination=${p.lat1},${p.lng1}`,'_blank');
@@ -382,20 +378,24 @@ window.abrirMapsEntrega=function(){
  else window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.entrega)}`,'_blank');
 }
 
+// TARJETA ORGANIZADA - NUEVA VERSION
 window.mostrarTarjetaModerna=function(key){
  let p=pedidosLive[key]; if(!p) return; pedidoSeleccionadoKey=key; localStorage.setItem('kigo_pedido_activo', key);
- document.getElementById('cardPedidoModerna').style.display='block'; document.getElementById('txtNumPedido').innerText=key.slice(-4).toUpperCase();
- document.getElementById('txtNegocioNombre').innerText=p.cliente;
- document.getElementById('txtNegocioDir').innerHTML=`${p.dirRecogida} <button onclick="abrirMapsRecogida()" style="margin-left:6px;width:32px;height:32px;background:#0a0a0a;color:#fff;border:none;border-radius:8px;font-size:12px;display:inline-flex;align-items:center;justify-content:center">🗺️</button>${p.sinRuta?'<span style="margin-left:6px;background:#fef3c7;color:#92400e;padding:3px 6px;border-radius:10px;font-size:8px;font-weight:800">TEXTO</span>':''}`;
- document.getElementById('txtClienteDir').innerHTML=`${p.entrega} <button onclick="abrirMapsEntrega()" style="margin-left:6px;width:28px;height:28px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:12px;display:inline-flex;align-items:center;justify-content:center">🗺️</button>${p.sinRuta?'<span style="margin-left:6px;background:#fef3c7;color:#92400e;padding:3px 6px;border-radius:10px;font-size:8px;font-weight:800">TEXTO</span>':''}`;
+ document.getElementById('cardPedidoModerna').style.display='block';
+ document.getElementById('txtNumPedido').innerText=key.slice(-4).toUpperCase();
+ document.getElementById('txtNegocioNombre').innerText=p.cliente || 'Cliente';
+ document.getElementById('txtNegocioDir').innerHTML=`${p.dirRecogida || '--'} ${p.sinRuta?'<span style="margin-left:6px;background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:8px;font-size:7px;font-weight:800">TEXTO</span>':''}`;
+ document.getElementById('txtClienteDir').innerHTML=`${p.entrega || '--'} ${p.sinRuta?'<span style="margin-left:6px;background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:8px;font-size:7px;font-weight:800">TEXTO</span>':''}`;
  let telEl=document.getElementById('txtTelefonoCliente');
  let etapa = p.etapa||'pendiente';
  let esRecogida = ['pendiente','aceptado','en_camino_recoger'].includes(etapa);
  let telMostrar = esRecogida? (p.telefonoRecogida||'') : (p.telefono||'');
- if(telMostrar){ telEl.style.display='block'; telEl.innerText=`Tel ${esRecogida?'recogida':'entrega'}: ${telMostrar}`; } else { telEl.style.display='block'; telEl.innerText=`Sin telefono ${esRecogida?'recogida':'entrega'} - guiate por texto`; telEl.style.color='#6b7280'; }
+ if(telMostrar){ telEl.style.display='block'; telEl.style.color='#065f46'; telEl.innerText=`📞 Tel ${esRecogida?'recogida':'entrega'}: ${telMostrar}`; } else { telEl.style.display='block'; telEl.style.color='#6b7280'; telEl.innerText=`Sin telefono ${esRecogida?'recogida':'entrega'} - Guiate por la direccion de ${esRecogida?'RECOGER':'ENTREGAR'}`; }
  document.getElementById('txtBtnMensaje').innerText = esRecogida? 'Mensaje recogida' : 'Mensaje entrega';
  document.getElementById('txtBtnLlamar').innerText = esRecogida? 'Llamar recogida' : 'Llamar entrega';
  let costo = p.costoSugerido || calcularCostoPorKm(p.km); document.getElementById('txtDistancia').innerText=`${p.km} km • ${p.min} min`; document.getElementById('txtCostoSugerido').innerText=`$${costo}`;
+ let badgeRec=document.getElementById('badgeRecogerTipo'); if(badgeRec) badgeRec.innerText = p.cliente? 'ALIADO' : 'CLIENTE';
+ let badgeEnt=document.getElementById('badgeEntregaTipo'); if(badgeEnt) badgeEnt.innerText = 'CLIENTE FINAL';
  actualizarEstadoVisual(p.etapa||'pendiente'); if(p.etapa==='pendiente' ||!p.etapa){ verRutaLive(key); }
 }
 window.actualizarEstadoVisual=function(etapa){
@@ -448,7 +448,6 @@ window.accionLlamarCliente=function(){
 }
 window.showTabRepa=function(t){ document.getElementById('tabRepaLive').classList.toggle('active',t==='live'); document.getElementById('tabRepaHist').classList.toggle('active',t==='hist'); document.getElementById('panelRepaLive').style.display=t==='live'?'block':'none'; document.getElementById('panelRepaHist').style.display=t==='hist'?'block':'none'; if(t==='live'){ setTimeout(()=>{ initMapRepa(); if(mapRepa) mapRepa.invalidateSize(); },100); } if(t==='hist'){ renderRepartidor(); } };
 window.setTabPedido=function(t){ document.getElementById('tabRecoger').classList.toggle('active',t==='recoger'); document.getElementById('tabComprar').classList.toggle('active',t==='comprar'); document.getElementById('panelRecoger').style.display=t==='recoger'?'block':'none'; document.getElementById('panelComprar').style.display=t==='comprar'?'block':'none'; };
-
 window.buscarClientePedido=function(){
  let input=document.getElementById('buscadorClientePedido');
  let val=input.value.toLowerCase().trim();
@@ -476,13 +475,12 @@ window.seleccionarClientePedido=function(nombre){
  let dir=clientesDirecciones[nombre];
  let box=document.getElementById('clienteSeleccionadoPedido');
  box.style.display='block';
- box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div><b>${nombre}</b><br><span style="font-size:10px;color:#374151">${dir?`${dir.direccion}`:'Sin direccion'}</span></div><button onclick="limpiarClienteSeleccionado()" style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:4px 8px;font-size:8px;font-weight:800">X Limpiar</button></div>`;
+ box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div><b>${nombre}</b><br><span style="font-size:10px;color:#374151">${dir?`${dir.direccion}`:'Sin direccion - se enviara nombre en texto'}</span></div><button onclick="limpiarClienteSeleccionado()" style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:4px 8px;font-size:8px;font-weight:800">X Limpiar</button></div>`;
  opcionRecoger='cliente';
  document.getElementById('btnOpcionCliente').classList.add('active');
  document.getElementById('btnOpcionDireccion').classList.remove('active');
  document.getElementById('panelOpcionCliente').style.display='block';
  document.getElementById('panelOpcionDireccion').style.display='none';
- document.getElementById('buscadorClientePedido').value=nombre;
 };
 window.limpiarClienteSeleccionado=function(){
  clientePedidoSeleccionado=null;
@@ -490,7 +488,6 @@ window.limpiarClienteSeleccionado=function(){
  document.getElementById('clienteSeleccionadoPedido').style.display='none';
  document.getElementById('listClientePedido').style.display='none';
 };
-
 document.addEventListener('click', e=>{ let w=document.getElementById('wrapBuscadorPedido'); let l=document.getElementById('listClientePedido'); if(w&&!w.contains(e.target)) l.style.display='none'; });
 function parseLinkUbicacion(text){ if(!text) return null; try{ let t=text.trim(); let m; m=t.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/); if(m) return {lat:parseFloat(m[1]),lng:parseFloat(m[2])}; m=t.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/); if(m) return {lat:parseFloat(m[1]),lng:parseFloat(m[2])}; m=t.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/); if(m) return {lat:parseFloat(m[1]),lng:parseFloat(m[2])}; m=t.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/); if(m) return {lat:parseFloat(m[1]),lng:parseFloat(m[2])}; }catch(e){} return null; }
 window.usarLinkEntrega=function(){ let link=document.getElementById('linkUbicacionEntrega').value.trim(); if(!link) return mostrarAviso('Pega link','Vacio'); let coords=parseLinkUbicacion(link); if(!coords) return mostrarAviso('Link no valido','Error'); entregaCoordsTemp=coords; document.getElementById('entregaDirRecoger').value=`Ubicacion ${coords.lat.toFixed(5)},${coords.lng.toFixed(5)}`; mostrarAviso('Ubicacion guardada','OK'); };
@@ -515,38 +512,21 @@ window.actualizarEstadoRepaInfo=function(){ let sel=document.getElementById('ped
 window.toggleOnline=async function(){ let repa=repartidorLogueado || document.getElementById('repView')?.value; if(!repa) return; let actual=statusRepas[repa]?.online||false; await set(ref(db,'kigoStatusRepas/'+repa), {online:!actual, lastSeen:Date.now()}); };
 window.renderBotonOnline=function(){ let repa=repartidorLogueado || document.getElementById('repView')?.value; if(!repa) return; let btn=document.getElementById('btnToggleOnline'); let txt=document.getElementById('estadoOnlineTxt'); if(!btn) return; let online=statusRepas[repa]?.online||false; if(online){ btn.style.background='linear-gradient(135deg,#10b981,#059669)'; btn.style.color='#fff'; btn.innerText='EN LINEA - Desactivar'; if(txt) txt.innerText='Visible'; } else { btn.style.background='#fee2e2'; btn.style.color='#991b1b'; btn.innerText='DESACTIVADO - Activar'; if(txt) txt.innerText='No recibes'; } };
 
-// --- FUNCION MODIFICADA - PERMITE RECOGIDA EN TEXTO AUNQUE NO HAYA COORDENADAS ---
+// --- FUNCION COTIZAR CON FIX DE RECOGIDA EN TEXTO ---
 window.cotizarRuta=async function(){
- let dirRecogida=null;
- let nombreClienteFinal='';
- let dirRecogidaTxt='';
- let telRecogida = document.getElementById('telefonoRecogidaPedido')?.value.trim()||'';
+ let dirRecogida=null; let nombreClienteFinal=''; let dirRecogidaTxt=''; let telRecogida = document.getElementById('telefonoRecogidaPedido')?.value.trim()||'';
  if(opcionRecoger==='cliente'){
   if(!clientePedidoSeleccionado) return mostrarAviso('Selecciona cliente registrado o usa direccion manual','Falta cliente');
   let dirData=clientesDirecciones[clientePedidoSeleccionado];
-  // FIX: si no hay datos o no hay lat/lng, igual dejamos pasar en modo texto
-  if(!dirData){
-   dirData={direccion:clientePedidoSeleccionado, lat:null, lng:null, sinRuta:true};
-  }
-  if(!dirData.lat ||!dirData.lng){
-   dirRecogida={direccion: dirData.direccion || clientePedidoSeleccionado, lat:null, lng:null, sinRuta:true};
-  } else {
-   dirRecogida=dirData;
-  }
-  nombreClienteFinal=clientePedidoSeleccionado;
-  dirRecogidaTxt=dirRecogida.direccion;
+  if(!dirData){ dirData={direccion:clientePedidoSeleccionado, lat:null, lng:null, sinRuta:true}; }
+  if(!dirData.lat ||!dirData.lng){ dirRecogida={direccion: dirData.direccion || clientePedidoSeleccionado, lat:null, lng:null, sinRuta:true}; } else { dirRecogida=dirData; }
+  nombreClienteFinal=clientePedidoSeleccionado; dirRecogidaTxt=dirRecogida.direccion;
  } else {
-  let nombreNuevo=document.getElementById('nombreClienteNuevo').value.trim();
-  let dirManual=document.getElementById('direccionRecogidaManual').value.trim();
+  let nombreNuevo=document.getElementById('nombreClienteNuevo').value.trim(); let dirManual=document.getElementById('direccionRecogidaManual').value.trim();
   if(!dirManual) return mostrarAviso('Escribe direccion manual','Falta direccion');
-  nombreClienteFinal=nombreNuevo || 'Cliente nuevo';
-  dirRecogidaTxt=dirManual;
+  nombreClienteFinal=nombreNuevo || 'Cliente nuevo'; dirRecogidaTxt=dirManual;
   let coords = await geocodeDireccion(dirManual);
-  if(!coords){
-   dirRecogida={direccion:dirManual, lat:null, lng:null, sinRuta:true};
-  } else {
-   dirRecogida={direccion:dirManual, lat:coords.lat, lng:coords.lng, sinRuta:false};
-  }
+  if(!coords){ dirRecogida={direccion:dirManual, lat:null, lng:null, sinRuta:true}; } else { dirRecogida={direccion:dirManual, lat:coords.lat, lng:coords.lng, sinRuta:false}; }
   recogidaManualData=dirRecogida;
  }
  let entregaTxt=document.getElementById('entregaDirRecoger').value.trim();
@@ -557,14 +537,12 @@ window.cotizarRuta=async function(){
  if(!dest){
   info.innerHTML=`⚠️ Entrega "${entregaTxt.slice(0,40)}" no encontrada.<br><small>Se enviara solo texto al repartidor, sin ruta. Puedes enviar igual.</small>`;
   ultimaCotizacion={cliente:nombreClienteFinal, dirRecogida:dirRecogidaTxt, dirRecogidaObj:dirRecogida, entrega:entregaTxt, km:'--', min:'--', lat1:dirRecogida.lat, lng1:dirRecogida.lng, lat2:null, lng2:null, costoSugerido:tarifasKmConfig.centroTarifa, sinRuta:true, telefonoRecogida:telRecogida};
-  document.getElementById('botonesDespuesCotizar').style.display='flex';
-  return;
+  document.getElementById('botonesDespuesCotizar').style.display='flex'; return;
  }
  if(dirRecogida.sinRuta ||!dirRecogida.lat ||!dirRecogida.lng){
   info.innerHTML=`⚠️ Recogida "${dirRecogidaTxt.slice(0,40)}" sin coordenadas - Se enviara en texto.<br><small>Entrega: ${entregaTxt.slice(0,30)} - Costo base $${tarifasKmConfig.centroTarifa}</small>`;
   ultimaCotizacion={cliente:nombreClienteFinal, dirRecogida:dirRecogidaTxt, dirRecogidaObj:dirRecogida, entrega:entregaTxt, km:'--', min:'--', lat1:null, lng1:null, lat2:dest.lat, lng2:dest.lng, costoSugerido:tarifasKmConfig.centroTarifa, sinRuta:true, telefonoRecogida:telRecogida};
-  document.getElementById('botonesDespuesCotizar').style.display='flex';
-  return;
+  document.getElementById('botonesDespuesCotizar').style.display='flex'; return;
  }
  try{
   let url=`https://router.project-osrm.org/route/v1/driving/${dirRecogida.lng},${dirRecogida.lat};${dest.lng},${dest.lat}?overview=full&geometries=geojson`;
@@ -593,11 +571,9 @@ window.cotizarRuta=async function(){
   document.getElementById('botonesDespuesCotizar').style.display='flex';
  }
 };
-
 window.cotizarRutaComprar=async function(){ let que=document.getElementById('queComprar').value.trim(); let ent=document.getElementById('entregaDirComprar').value.trim(); if(!que||!ent) return mostrarAviso('Faltan datos','Error'); let dest=await geocodeDireccion(ent); if(!dest){ mostrarAviso('Entrega no encontrada, se enviara texto','Aviso'); dest={lat:21.1556,lng:-100.9343}; } try{ let url=`https://router.project-osrm.org/route/v1/driving/-100.9343,21.1556;${dest.lng},${dest.lat}?overview=full&geometries=geojson`; let res=await fetch(url); let data=await res.json(); if(data.routes&&data.routes[0]){ let distance=(data.routes[0].distance/1000).toFixed(1); let duration=Math.round(data.routes[0].duration/60); let costo=calcularCostoPorKm(distance); let coords=data.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]); if(routeLayer) map.removeLayer(routeLayer); routeLayer=L.polyline(coords,{color:'#10b981',weight:6}).addTo(map); map.fitBounds(routeLayer.getBounds(),{padding:[40,40]}); document.getElementById('infoRuta').style.display='block'; document.getElementById('infoRuta').innerHTML=`${distance}km ${duration}min - $${costo}`; ultimaCotizacion={cliente:que,dirRecogida:que, dirRecogidaObj:{direccion:que,lat:21.1556,lng:-100.9343}, entrega:ent,km:distance,min:duration,lat1:21.1556,lng1:-100.9343,lat2:dest.lat,lng2:dest.lng,costoSugerido:costo, sinRuta:false}; } }catch(e){} };
 window.enviarCotizacionCliente=function(){ if(!ultimaCotizacion) return mostrarAviso('Cotiza primero','Error'); let c=ultimaCotizacion; let texto=`KIGO - COTIZACION Recoger: ${c.dirRecogida} Entregar: ${c.entrega} ${c.km} km - ${c.min} min Costo: $${c.costoSugerido}`; window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank'); };
 window.restaurarCotizacion=function(){ if(routeLayer) map.removeLayer(routeLayer); routeLayer=null; if(pinClienteLayer) map.removeLayer(pinClienteLayer); pinClienteLayer=null; if(entregaMarker) map.removeLayer(entregaMarker); entregaMarker=null; document.getElementById('infoRuta').style.display='none'; document.getElementById('botonesDespuesCotizar').style.display='none'; document.getElementById('entregaDirRecoger').value=''; document.getElementById('linkUbicacionEntrega').value=''; document.getElementById('telefonoEntregaPedido').value=''; let telR=document.getElementById('telefonoRecogidaPedido'); if(telR) telR.value=''; document.getElementById('buscadorClientePedido').value=''; document.getElementById('nombreClienteNuevo').value=''; document.getElementById('direccionRecogidaManual').value=''; let box=document.getElementById('clienteSeleccionadoPedido'); if(box) box.style.display='none'; clientePedidoSeleccionado=null; ultimaCotizacion=null; entregaCoordsTemp=null; recogidaManualData=null; if(map) map.setView([21.1556,-100.9343],14); };
-
 window.confirmarPedido=async function(){
  if(!ultimaCotizacion) return mostrarAviso('Cotiza primero','Falta');
  let entTxt=document.getElementById('entregaDirRecoger').value || ultimaCotizacion.entrega;
