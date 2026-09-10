@@ -42,6 +42,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .cardPedido{border:1px solid #eee;border-radius:16px;padding:12px;margin-bottom:10px;background:#fff}
 .estadoPend{color:#f59e0b;background:#fef3c7;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
 .estadoCamino{color:#3b82f6;background:#dbeafe;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
+.estadoRecogido{color:#8b5cf6;background:#ede9fe;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
+.estadoEntrega{color:#f59e0b;background:#ffedd5;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
 .estadoFin{color:#10b981;background:#d1fae5;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
 .xclose{position:absolute;right:12px;top:12px;width:28px;height:28px;border-radius:50%;border:none;background:#f3f4f6;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .repaCard{border:1.5px solid #111;border-radius:16px;padding:12px;background:#fff;min-width:280px;max-width:300px;flex-shrink:0}
@@ -189,7 +191,6 @@ CLIENTE NUEVO</button>
 <div id="listaSeguimiento"></div>
 </div>
 
-<!-- PANEL REPARTIDOR CORREGIDO -->
 <div id="view-repartidor" class="view">
 <div class="card" style="padding:8px">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
@@ -216,7 +217,6 @@ CLIENTE NUEVO</button>
 </div>
 </div>
 </div>
-
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
 <span style="font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px">
@@ -227,7 +227,6 @@ PEDIDO ACTIVO
 </div>
 <div id="listaActivos"></div>
 </div>
-
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
 <span style="font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px">
@@ -307,6 +306,7 @@ let modoActual='lista', servicioActual='recoger';
 let pedidosLive={}, filtroSeg='todos', pedidoEditId=null, pedidoEditData=null;
 let repaPanelActual='José';
 let joseOnline=true;
+let repaUbicacion=null;
 
 window.cerrarModal=function(){ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
 window.cerrarDetalle=function(){ document.getElementById('overlayDetalle').classList.remove('show'); pedidoEditId=null; pedidoEditData=null; }
@@ -390,7 +390,6 @@ onValue(ref(db,'kigoTarifas'),s=>{ if(s.val()) tarifas=s.val(); });
 onValue(ref(db,'kigoPins'),snap=>{
 let v=snap.val()||{};
 repasData=v.repas||v||{};
-// ASEGURAR JOSÉ
 if(!repasData['José']){
  set(ref(db,'kigoPins/repas/José'),{online:true,nombre:'José',ts:Date.now()});
 }
@@ -427,6 +426,15 @@ let m=parseInt(minutos);
 let fecha=new Date(ts + m*60000);
 let hora=fecha.toLocaleTimeString('es-MX',{hour:'numeric',minute:'2-digit',hour12:true});
 return `Recoger a las ${hora}`;
+}
+function getUbicacionRepa(){
+return new Promise((resolve)=>{
+ if(!navigator.geolocation){ resolve(null); return; }
+ navigator.geolocation.getCurrentPosition(pos=>{
+  repaUbicacion={lat:pos.coords.latitude,lng:pos.coords.longitude};
+  resolve(repaUbicacion);
+ },()=>{ resolve(null); },{enableHighAccuracy:true,timeout:5000});
+});
 }
 window.filtrarSeg=function(f){
 filtroSeg=f;
@@ -466,9 +474,15 @@ let fecha=new Date(p.ts||Date.now());
 let hora=fecha.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
 let codigo=id.substring(1,7).toUpperCase();
 let estado=p.etapa||'pendiente';
-let estadoClass=estado==='pendiente'?'estadoPend':(estado==='finalizado'?'estadoFin':'estadoCamino');
+let estadoClass='estadoPend';
+if(estado==='pendiente') estadoClass='estadoPend';
+else if(estado==='camino' || estado==='en camino') estadoClass='estadoCamino';
+else if(estado==='recogido') estadoClass='estadoRecogido';
+else if(estado==='entrega') estadoClass='estadoEntrega';
+else if(estado==='finalizado') estadoClass='estadoFin';
 let horaRecogida=calcularHoraRecogida(p.ts||Date.now(), p.tiempoRecogida);
-return `<div class="cardPedido">
+let esFinalizado=estado==='finalizado';
+return `<div class="cardPedido" style="${esFinalizado?'border:2px solid #10b981;background:#f0fdf4':''}">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
 <span style="font-size:10px;font-weight:800;background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:6px">#${codigo}</span>
 <span style="font-size:9px;color:#888">${hora} ${fecha.toLocaleDateString()}</span>
@@ -483,28 +497,25 @@ return `<div class="cardPedido">
 <div style="display:flex;gap:8px;margin-top:6px;font-size:9px;color:#666">
 <span>${p.km||0} km</span><span>•</span><span>$${p.costoSugerido||0} ${(p.costoExtra?`+ $${p.costoExtra} = $${(p.costoSugerido||0)+(p.costoExtra||0)}`:'')}</span><span>•</span><span>${p.repaAsignado||''}</span>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+${esFinalizado?`<div style="margin-top:10px"><button class="btn" style="height:38px;background:#10b981;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="registrarHistorial('${id}')"><svg style="width:14px;height:14px;stroke:#fff" viewBox="0 0 24 24"><path d="M5 12l5 5l10-10"/></svg> REGISTRAR EN HISTORIAL</button></div>`:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
 <button class="btn-outline" style="height:36px;font-size:9px" onclick="verDetalles('${id}')">VER DETALLES</button>
 <button class="btn-outline" style="height:36px;font-size:9px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="cancelarDirecto('${id}')">CANCELAR</button>
-</div>
+</div>`}
 </div>`;
 }).join('');
 }
 
-// PANEL REPARTIDOR CORREGIDO - ACTIVO ARRIBA, ESPERA DESLIZABLE
 function renderRepaPanel(){
 let listaEspera=document.getElementById('listaEspera');
 let listaActivos=document.getElementById('listaActivos');
 if(!listaEspera ||!listaActivos) return;
 let entries=Object.entries(pedidosLive).sort((a,b)=> (b[1].ts||0)-(a[1].ts||0));
-// TODOS LOS PENDIENTES VAN A JOSÉ EN TIEMPO REAL
 let enEspera=entries.filter(([k,p])=> (p.etapa||'pendiente')==='pendiente');
-let misActivos=entries.filter(([k,p])=> p.repaAsignado===repaPanelActual && ['camino','en camino','recogido','entrega'].includes(p.etapa||''));
+let misActivos=entries.filter(([k,p])=> p.repaAsignado===repaPanelActual && ['camino','en camino','recogido','entrega','finalizado'].includes(p.etapa||''));
 
 document.getElementById('countEspera').innerText=enEspera.length;
 document.getElementById('countActivos').innerText=misActivos.length;
 
-// ACTIVO ARRIBA
 if(!misActivos.length){
  listaActivos.innerHTML='<div style="text-align:center;padding:16px;color:#999;font-size:10px;border:1.5px dashed #e5e7eb;border-radius:12px">Sin pedido activo - Acepta uno de abajo</div>';
 }else{
@@ -514,23 +525,25 @@ if(!misActivos.length){
   let btns='';
   if(etapa==='camino' || etapa==='en camino'){
    btns=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
-    <button class="btn-outline" style="height:42px;background:#dbeafe;border-color:#3b82f6;color:#3b82f6" onclick="cambiarEtapa('${id}','recogido')">
+    <button class="btn-outline" style="height:42px;background:#dbeafe;border-color:#3b82f6;color:#3b82f6" onclick="cambiarEtapaConRuta('${id}','recogido','recogida')">
      <svg class="ico" style="stroke:#3b82f6" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
      EN CAMINO A RECOGER</button>
-    <button class="btn" style="height:42px;background:#3b82f6" onclick="cambiarEtapa('${id}','recogido')">RECOGIDO</button>
+    <button class="btn" style="height:42px;background:#3b82f6" onclick="cambiarEtapaConRuta('${id}','recogido','recogida')">RECOGIDO</button>
    </div>`;
   }else if(etapa==='recogido'){
-   btns=`<button class="btn" style="height:42px;margin-top:10px;background:#f59e0b;display:flex;align-items:center;justify-content:center;gap:6px" onclick="cambiarEtapa('${id}','entrega')">
+   btns=`<button class="btn" style="height:42px;margin-top:10px;background:#f59e0b;display:flex;align-items:center;justify-content:center;gap:6px" onclick="cambiarEtapaConRuta('${id}','entrega','entrega')">
     <svg style="width:14px;height:14px;stroke:#fff" viewBox="0 0 24 24"><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
     EN CAMINO A ENTREGA</button>`;
   }else if(etapa==='entrega'){
-   btns=`<button class="btn" style="height:42px;margin-top:10px;background:#10b981;display:flex;align-items:center;justify-content:center;gap:6px" onclick="cambiarEtapa('${id}','finalizado')">
+   btns=`<button class="btn" style="height:42px;margin-top:10px;background:#10b981;display:flex;align-items:center;justify-content:center;gap:6px" onclick="cambiarEtapaConRuta('${id}','finalizado','entrega')">
     <svg style="width:14px;height:14px;stroke:#fff" viewBox="0 0 24 24"><path d="M5 12l5 5l10-10"/></svg>
     ENTREGADO - FINALIZAR</button>`;
+  }else if(etapa==='finalizado'){
+   btns=`<div style="background:#d1fae5;color:#10b981;padding:10px;border-radius:10px;text-align:center;font-weight:800;font-size:10px;margin-top:10px">ENTREGADO - ESPERANDO REGISTRO EN HISTORIAL</div>`;
   }
-  return `<div class="repaCardActiva">
+  return `<div class="repaCardActiva" style="${etapa==='finalizado'?'border-color:#10b981;background:#f0fdf4':''}">
    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-    <span style="font-size:9px;font-weight:800;background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:6px">#${codigo} ${etapa.toUpperCase()}</span>
+    <span style="font-size:9px;font-weight:800;background:${etapa==='finalizado'?'#10b981':'#0a0a0a'};color:#fff;padding:4px 8px;border-radius:6px">#${codigo} ${etapa.toUpperCase()}</span>
     <span style="font-size:11px;font-weight:800;color:#10b981">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span>
    </div>
    <div style="font-size:13px;font-weight:800">${p.cliente} ${p.servicio==='comprar'?' - COMPRA':''}</div>
@@ -538,7 +551,6 @@ if(!misActivos.length){
     <div style="font-size:10px;color:#111"><b>Recoge:</b> ${p.dirRecogida}</div>
     <div style="font-size:10px;color:#111;margin-top:4px"><b>Entrega:</b> ${p.entrega}</div>
     <div style="font-size:9px;color:#666;margin-top:4px">Tel: ${p.telefono||''} • Ref: ${p.referencia||''}</div>
-    ${p.tipoProd?`<div style="font-size:10px;margin-top:4px;font-weight:700">Producto: ${p.tipoProd} - ${p.referenciaCompra||''}</div>`:''}
     ${p.tiempoRecogida?`<div style="font-size:10px;color:#0a0a0a;font-weight:800;margin-top:6px;background:#fef3c7;padding:4px 8px;border-radius:6px;display:inline-block">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div>`:''}
    </div>
    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
@@ -552,9 +564,8 @@ if(!misActivos.length){
  }).join('');
 }
 
-// ESPERA DESLIZABLE ABAJO
 if(!enEspera.length){
- listaEspera.innerHTML='<div style="text-align:center;padding:12px;color:#999;font-size:10px">No hay pedidos en espera</div>';
+ listaEspera.innerHTML='<div style="text-align:center;padding:12px;color:#999;font-size:10px">No hay pedidos en espera - Todo en tiempo real</div>';
 }else{
  listaEspera.innerHTML=enEspera.map(([id,p])=>{
   let codigo=id.substring(1,7).toUpperCase();
@@ -587,18 +598,61 @@ if(!joseOnline){
  return;
 }
 await update(ref(db,'kigoPedidosLive/'+id),{repaAsignado:'José',etapa:'camino'});
-verRutaRepa(id);
+// Ruta desde ubicación real del repa hacia recogida
+let pos=await getUbicacionRepa();
+let p=pedidosLive[id];
+if(pos){
+ trazarRutaRepa(pos, await geo(p.dirRecogida), p);
+}else{
+ verRutaRepa(id);
 }
-window.cambiarEtapa=async function(id, nuevaEtapa){
+}
+window.cambiarEtapaConRuta=async function(id, nuevaEtapa, tipoRuta){
+let pos=await getUbicacionRepa();
+let p=pedidosLive[id];
 if(nuevaEtapa==='finalizado'){
- let p=pedidosLive[id];
  let histRef=push(ref(db,'kigoHistorial'));
  await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()});
- await remove(ref(db,'kigoPedidosLive/'+id));
- mostrarModalElegante({title:'Finalizado',text:'Pedido enviado a historial',showCancel:false});
+ // No borramos aún, lo dejamos en verde para que en seguimiento se pueda registrar
+ await update(ref(db,'kigoPedidosLive/'+id),{etapa:'finalizado'});
+ mostrarModalElegante({title:'Entregado',text:'Ahora en seguimiento aparece en verde para registrar en historial',showCancel:false});
 }else{
  await update(ref(db,'kigoPedidosLive/'+id),{etapa:nuevaEtapa});
+ // Trazar nueva ruta
+ if(tipoRuta==='recogida'){
+  if(pos) trazarRutaRepa(pos, await geo(p.dirRecogida), p);
+ }else if(tipoRuta==='entrega'){
+  if(pos) trazarRutaRepa(pos, await geo(p.entrega), p);
+  else {
+   let o=await geo(p.dirRecogida);
+   let d=await geo(p.entrega);
+   if(o&&d) trazarRutaRepa(o,d,p);
+  }
+ }
 }
+}
+function trazarRutaRepa(origen, destino, p){
+if(!origen||!destino||!mapRepa) return;
+let dirServRepa=new google.maps.DirectionsService();
+dirServRepa.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{
+ if(s==='OK'){
+  if(!dirRendRepa){
+   dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
+  }
+  dirRendRepa.setMap(mapRepa);
+  dirRendRepa.setDirections(r);
+  clearMRepa();
+  addMRepa(origen,'#3b82f6');
+  addMRepa(destino,'#ef4444');
+  let leg=r.routes[0].legs[0];
+  document.getElementById('txtKmRepa').innerText=leg.distance.text;
+  document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0));
+  document.getElementById('txtTiempoRepa').innerText=leg.duration.text + (p.tiempoRecogida?' • '+calcularHoraRecogida(p.ts,p.tiempoRecogida):'');
+ }
+});
+}
+window.cambiarEtapa=async function(id, nuevaEtapa){
+ await cambiarEtapaConRuta(id, nuevaEtapa, nuevaEtapa==='recogido'?'entrega':'recogida');
 }
 window.verRutaRepa=async function(id){
 let p=pedidosLive[id];
@@ -607,8 +661,14 @@ let o=await geo(p.dirRecogida);
 let d=await geo(p.entrega);
 if(!o||!d) return;
 if(!mapRepa) return;
+let etapa=p.etapa||'pendiente';
+let origen=o;
+if(['camino','en camino'].includes(etapa)){
+ let pos=await getUbicacionRepa();
+ if(pos) origen=pos;
+}
 let dirServRepa=new google.maps.DirectionsService();
-dirServRepa.route({origin:o,destination:d,travelMode:'DRIVING'},(r,s)=>{
+dirServRepa.route({origin:origen,destination:etapa==='camino'||etapa==='en camino'?o:d,travelMode:'DRIVING'},(r,s)=>{
  if(s==='OK'){
   if(!dirRendRepa){
    dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
@@ -616,13 +676,21 @@ dirServRepa.route({origin:o,destination:d,travelMode:'DRIVING'},(r,s)=>{
   dirRendRepa.setMap(mapRepa);
   dirRendRepa.setDirections(r);
   clearMRepa();
-  addMRepa(o,'#ef4444'); addMRepa(d,'#0a0a0a');
+  addMRepa(origen,'#3b82f6'); addMRepa(etapa==='camino'||etapa==='en camino'?o:d,'#ef4444');
   let leg=r.routes[0].legs[0];
   document.getElementById('txtKmRepa').innerText=leg.distance.text;
   document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0));
   document.getElementById('txtTiempoRepa').innerText=leg.duration.text + (p.tiempoRecogida?' • '+calcularHoraRecogida(p.ts,p.tiempoRecogida):'');
  }
 });
+}
+window.registrarHistorial=async function(id){
+let p=pedidosLive[id];
+if(!p) return;
+let histRef=push(ref(db,'kigoHistorial'));
+await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()});
+await remove(ref(db,'kigoPedidosLive/'+id));
+mostrarModalElegante({title:'Historial',text:'Registrado en historial correctamente',showCancel:false});
 }
 
 window.verDetalles=function(id){
@@ -633,7 +701,7 @@ let horaRec=calcularHoraRecogida(p.ts, p.tiempoRecogida);
 document.getElementById('detalleContent').innerHTML=`
 <div style="font-size:10px;color:#666;background:#f7f7f7;border-radius:10px;padding:10px">
 <div><b>Código:</b> ${id.substring(1,7).toUpperCase()} | <b>Hora pedido:</b> ${new Date(p.ts).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:true})}</div>
-<div style="margin-top:4px;color:#0a0a0a;font-weight:800">${horaRec}</div>
+<div style="margin-top:4px;color:#0a0a0a;font-weight:800">${horaRec} - Estado: ${p.etapa}</div>
 <div><b>Cliente:</b> ${p.cliente}</div>
 <div><b>Servicio:</b> ${p.servicio}</div>
 <div><b>Tel:</b> ${p.telefono||''} | <b>Ref:</b> ${p.referencia||''}</div>
