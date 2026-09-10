@@ -32,7 +32,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .dot.off{background:#ef4444;box-shadow:0 0 0 2px #fee2e2}
 .kigo-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:200;padding:12px}
 .kigo-overlay.show{display:flex}
-.kigo-modal{background:#fff;border-radius:20px;padding:20px;max-width:380px;width:95%;max-height:90vh;overflow:auto}
+.kigo-modal{background:#fff;border-radius:20px;padding:20px;max-width:380px;width:95%;max-height:90vh;overflow:auto;position:relative}
 .kigo-btn{flex:1;height:42px;border-radius:12px;border:none;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
 .kigo-btn-confirm{background:#0a0a0a;color:#fff}
 .icon-btn{width:32px;height:32px;border-radius:9px;border:1px solid #e5e7eb;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
@@ -40,11 +40,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .tabSeg{height:34px;padding:0 12px;border-radius:20px;border:1px solid #e5e7eb;background:#fff;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .tabSeg.active{background:#0a0a0a;color:#fff;border-color:#0a0a0a}
 .badgeCount{background:#f3f4f6;color:#111;padding:2px 6px;border-radius:10px;font-size:9px;font-weight:800}
-.tabSeg.active.badgeCount{background:#fff;color:#0a0a0a}
 .cardPedido{border:1px solid #eee;border-radius:16px;padding:12px;margin-bottom:10px;background:#fff}
 .estadoPend{color:#f59e0b;background:#fef3c7;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
 .estadoCamino{color:#3b82f6;background:#dbeafe;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
 .estadoFin{color:#10b981;background:#d1fae5;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
+.xclose{position:absolute;right:12px;top:12px;width:28px;height:28px;border-radius:50%;border:none;background:#f3f4f6;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -138,7 +138,7 @@ CLIENTE NUEVO</button>
 <div><span class="label">Tel entrega</span><div class="wrap wrap-clear"><input type="text" id="nuevoTelEntrega" oninput="toggleClear('nuevoTelEntrega','clearNuevoTelEnt')"><button id="clearNuevoTelEnt" class="btn-clear" onclick="limpiarCampo('nuevoTelEntrega','clearNuevoTelEnt')">✕</button></div></div>
 <div><span class="label">Referencia entrega</span><div class="wrap wrap-clear"><input type="text" id="nuevoRefEntrega" oninput="toggleClear('nuevoRefEntrega','clearNuevoRef')"><button id="clearNuevoRef" class="btn-clear" onclick="limpiarCampo('nuevoRefEntrega','clearNuevoRef')">✕</button></div></div>
 </div>
-<button style="width:100%;height:42px;margin-top:12px;background:#fff;border:1.5px dashed #10b981;color:#10b981;border-radius:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" onclick="guardarDesdePedidoNuevo()"><svg class="ico" style="stroke:#10b981" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21V13H7v8"/><path d="M7 3v5h8"/></svg> GUARDAR EN CLIENTES</button>
+<button style="width:100%;height:42px;margin-top:12px;background:#fff;border:1.5px dashed #10b981;color:#10b981;border-radius:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" onclick="guardarDesdePedidoNuevo()">GUARDAR EN CLIENTES</button>
 <button class="btn" style="margin-top:10px" onclick="cotizar()">COTIZAR RUTA</button>
 <button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
 </div>
@@ -170,7 +170,6 @@ CLIENTE NUEVO</button>
 </div>
 </div>
 
-<!-- NUEVA CATEGORIA SEGUIMIENTO -->
 <div id="view-seguimiento" class="view">
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center">
@@ -210,40 +209,38 @@ CLIENTE NUEVO</button>
 <button id="bC" onclick="showView('clientes')">CLIENTES</button>
 </div>
 
-<!-- MODALES -->
 <div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><h3 id="modalTitle" style="font-size:13px;font-weight:800;text-align:center"></h3><p id="modalText" style="font-size:11px;margin:10px 0;color:#6b7280;text-align:center"></p><div id="editBox" style="display:none"><span class="label">Nombre</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editNombre"></div><span class="label">Direccion</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editDir"></div><span class="label">Telefono</span><div class="wrap" style="margin-bottom:12px"><input type="text" id="editTel"></div></div><div style="display:flex;gap:8px"><button id="modalCancel" class="kigo-btn" style="background:#f3f4f6" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">OK</button></div></div></div>
 
+<!-- DETALLE PEDIDO - CORREGIDO CON X Y SIN CANCELAR ABAJO -->
 <div class="kigo-overlay" id="overlayDetalle"><div class="kigo-modal">
-<h3 style="font-size:12px;font-weight:800;text-align:center">DETALLES DEL PEDIDO</h3>
+<button class="xclose" onclick="cerrarDetalle()">✕</button>
+<h3 style="font-size:12px;font-weight:800;text-align:center;margin-top:8px">DETALLES DEL PEDIDO</h3>
 <div id="detalleContent" style="margin-top:12px"></div>
 <div style="margin-top:12px">
 <span class="label">Editar dirección recogida</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editRecogida"></div>
 <span class="label">Editar dirección entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editEntrega"></div>
 <span class="label">Editar teléfono entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editTelEnt"></div>
+<span class="label">Editar referencia entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editRefEnt"></div>
 <span class="label">Añadir costo extra envío</span>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
 <button class="btn-outline" style="height:36px" onclick="addCosto(5)">+$5</button>
 <button class="btn-outline" style="height:36px" onclick="addCosto(10)">+$10</button>
 <button class="btn-outline" style="height:36px" onclick="addCosto(15)">+$15</button>
 </div>
-<div class="wrap" style="margin-bottom:12px"><input type="number" id="editCostoExtra" placeholder="Costo extra manual" oninput="calcTotalEdit()"></div>
+<div class="wrap" style="margin-bottom:12px"><input type="number" id="editCostoExtra" placeholder="Costo extra" oninput="calcTotalEdit()"></div>
 <div style="background:#f7f7f7;border-radius:10px;padding:8px;display:flex;justify-content:space-between;margin-bottom:12px">
 <span style="font-size:10px;font-weight:800">TOTAL</span><span id="txtTotalEdit" style="font-size:12px;font-weight:800">$0</span>
 </div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<button class="kigo-btn" style="background:#f3f4f6" onclick="cerrarDetalle()">Cerrar</button>
-<button class="kigo-btn kigo-btn-confirm" onclick="guardarEdicion()">Guardar cambios</button>
-</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-<button class="kigo-btn" style="background:#fee2e2;color:#ef4444" onclick="cancelarPedido()">Cancelar servicio</button>
-<button class="kigo-btn" style="background:#d1fae5;color:#10b981" onclick="finalizarPedido()">Finalizar - Historial</button>
+<button class="kigo-btn" style="background:#0a0a0a;color:#fff" onclick="guardarEdicion()">GUARDAR CAMBIOS</button>
+<button class="kigo-btn" style="background:#10b981;color:#fff" onclick="finalizarPedido()">FINALIZAR - HISTORIAL</button>
 </div>
 </div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, set, push, remove, update, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", authDomain: "historial-kigo-xpress.firebaseapp.com", databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com", projectId: "historial-kigo-xpress", storageBucket: "historial-kigo-xpress.firebasestorage.app", messagingSenderId: "571399920545", appId: "1:571399920545:web:aa16407753b43cbe2e89e0" };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -269,7 +266,6 @@ window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText=
  document.getElementById('kigoOverlay').classList.add('show');
  document.getElementById('modalConfirm').onclick=()=>{ if(onConfirm) onConfirm(); else cerrarModal(); };
 }
-
 window.setServicio=function(s){
 servicioActual=s;
 document.getElementById('btnRecoger').classList.toggle('active',s==='recoger');
@@ -303,7 +299,6 @@ if(dirRend) dirRend.setDirections({routes:[]});
 clearM();
 }
 
-// FIREBASE CLIENTES Y REPAS
 onValue(ref(db,'kigoClientesDir'),snap=>{
 let v=snap.val()||{}; let m={};
 Object.entries(v).forEach(([k,d])=>{
@@ -322,12 +317,7 @@ let v=snap.val()||{}; repasData=v.repas||v||{};
 let sel=document.getElementById('selRepa'); if(!sel) return;
 let keys=Object.keys(repasData);
 if(!keys.length){ sel.innerHTML='<option>Sin repas</option>'; return; }
-sel.innerHTML=keys.map(n=>{
-let d=repasData[n]; let online=false;
-if(typeof d==='object') online=d.online===true||d.conectado===true||d.activo===true||d.enLinea===true||d.status==='online';
-else online=true;
-return `<option value="${n}">${online?'•':'•'} ${n}</option>`;
-}).join('');
+sel.innerHTML=keys.map(n=>`<option value="${n}">${n}</option>`).join('');
 mostrarEstadoRepa();
 });
 window.mostrarEstadoRepa=function(){
@@ -340,7 +330,6 @@ if(online){ dot.className='dot on'; txt.innerText='EN LINEA'; txt.style.color='#
 else{ dot.className='dot off'; txt.innerText='OFFLINE'; txt.style.color='#ef4444'; txt.style.background='#fee2e2'; }
 }
 
-// SEGUIMIENTO TIEMPO REAL
 onValue(ref(db,'kigoPedidosLive'),snap=>{
 pedidosLive=snap.val()||{};
 renderSeguimiento();
@@ -356,6 +345,14 @@ if(f==='finalizado') document.getElementById('tabFin').classList.add('active');
 renderSeguimiento();
 }
 
+function calcularHoraRecogida(ts, minutos){
+if(!minutos) return '';
+let m=parseInt(minutos);
+let fecha=new Date(ts + m*60000);
+let hora=fecha.toLocaleTimeString('es-MX',{hour:'numeric',minute:'2-digit',hour12:true});
+return `Recoger a las ${hora}`;
+}
+
 function renderSeguimiento(){
 let lista=document.getElementById('listaSeguimiento');
 let entries=Object.entries(pedidosLive).sort((a,b)=> (b[1].ts||0)-(a[1].ts||0));
@@ -368,7 +365,6 @@ document.getElementById('cPend').innerText=cPend;
 document.getElementById('cCam').innerText=cCam;
 document.getElementById('cFin').innerText=cFin;
 document.getElementById('totalPedidosBadge').innerText=cTodos+' PEDIDOS';
-
 let filtrados=entries.filter(([k,v])=>{
 if(filtroSeg==='todos') return true;
 if(filtroSeg==='pendiente') return (v.etapa||'pendiente')==='pendiente';
@@ -376,12 +372,10 @@ if(filtroSeg==='camino') return v.etapa==='camino' || v.etapa==='en camino';
 if(filtroSeg==='finalizado') return v.etapa==='finalizado';
 return true;
 });
-
 if(!filtrados.length){
 lista.innerHTML='<div style="text-align:center;padding:30px;color:#999;font-size:11px">No hay pedidos en esta categoría</div>';
 return;
 }
-
 lista.innerHTML=filtrados.map(([id,p])=>{
 let fecha=new Date(p.ts||Date.now());
 let hora=fecha.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
@@ -389,7 +383,7 @@ let codigo=id.substring(1,7).toUpperCase();
 let estado=p.etapa||'pendiente';
 let estadoClass=estado==='pendiente'?'estadoPend':(estado==='finalizado'?'estadoFin':'estadoCamino');
 let estadoTxt=estado==='pendiente'?'PENDIENTE':(estado==='finalizado'?'FINALIZADO':'EN CAMINO');
-let tiempoRec=p.tiempoRecogida?`Recoger en ${p.tiempoRecogida} min`:'';
+let horaRecogida=calcularHoraRecogida(p.ts||Date.now(), p.tiempoRecogida);
 return `<div class="cardPedido">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
 <span style="font-size:10px;font-weight:800;background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:6px">#${codigo}</span>
@@ -397,9 +391,9 @@ return `<div class="cardPedido">
 </div>
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
 <span class="${estadoClass}">${estadoTxt}</span>
-<span style="font-size:9px;color:#666">${tiempoRec}</span>
+<span style="font-size:9px;color:#0a0a0a;font-weight:800">${horaRecogida}</span>
 </div>
-<div style="font-size:11px;font-weight:700;margin-bottom:4px">${p.cliente||'--'} ${p.servicio==='comprar'?'🛒 COMPRA':'📦 RECOGER'}</div>
+<div style="font-size:11px;font-weight:700;margin-bottom:4px">${p.cliente||'--'} ${p.servicio==='comprar'?'COMPRA':'RECOGER'}</div>
 <div style="font-size:9px;color:#555;margin-bottom:2px"><b>Recoge:</b> ${p.dirRecogida||''}</div>
 <div style="font-size:9px;color:#555;margin-bottom:2px"><b>Entrega:</b> ${p.entrega||''}</div>
 <div style="display:flex;gap:8px;margin-top:6px;font-size:9px;color:#666">
@@ -408,7 +402,7 @@ return `<div class="cardPedido">
 ${p.tipoProd?`<div style="font-size:9px;color:#333;margin-top:4px"><b>Producto:</b> ${p.tipoProd} - ${p.referenciaCompra||''}</div>`:''}
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
 <button class="btn-outline" style="height:36px;font-size:9px" onclick="verDetalles('${id}')">VER DETALLES</button>
-<button class="btn-outline" style="height:36px;font-size:9px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="cancelarDirecto('${id}')">CANCELAR</button>
+<button class="btn-outline" style="height:36px;font-size:9px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="cancelarDirecto('${id}')">CANCELAR SERVICIO</button>
 </div>
 </div>`;
 }).join('');
@@ -418,19 +412,20 @@ window.verDetalles=function(id){
 let p=pedidosLive[id];
 if(!p) return;
 pedidoEditId=id; pedidoEditData=p;
+let horaRec=calcularHoraRecogida(p.ts, p.tiempoRecogida);
 document.getElementById('detalleContent').innerHTML=`
-<div style="font-size:10px;color:#666">
-<div><b>Código:</b> ${id}</div>
-<div><b>Hora:</b> ${new Date(p.ts).toLocaleString()}</div>
-<div><b>Estado:</b> ${p.etapa}</div>
+<div style="font-size:10px;color:#666;background:#f7f7f7;border-radius:10px;padding:10px">
+<div><b>Código:</b> ${id.substring(1,7).toUpperCase()} | <b>Hora pedido:</b> ${new Date(p.ts).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:true})}</div>
+<div style="margin-top:4px;color:#0a0a0a;font-weight:800">${horaRec}</div>
 <div><b>Cliente:</b> ${p.cliente}</div>
 <div><b>Servicio:</b> ${p.servicio}</div>
-${p.tiempoRecogida?`<div><b>Recoger en:</b> ${p.tiempoRecogida} min</div>`:''}
+<div><b>Tel:</b> ${p.telefono||''} | <b>Ref:</b> ${p.referencia||''}</div>
 <div><b>Repartidor:</b> ${p.repaAsignado}</div>
 </div>`;
 document.getElementById('editRecogida').value=p.dirRecogida||'';
 document.getElementById('editEntrega').value=p.entrega||'';
 document.getElementById('editTelEnt').value=p.telefono||'';
+document.getElementById('editRefEnt').value=p.referencia||'';
 document.getElementById('editCostoExtra').value=p.costoExtra||0;
 calcTotalEdit();
 document.getElementById('overlayDetalle').classList.add('show');
@@ -453,21 +448,18 @@ await update(ref(db,'kigoPedidosLive/'+pedidoEditId),{
 dirRecogida:document.getElementById('editRecogida').value,
 entrega:document.getElementById('editEntrega').value,
 telefono:document.getElementById('editTelEnt').value,
+referencia:document.getElementById('editRefEnt').value,
 costoExtra:extra
 });
 mostrarModalElegante({title:'Actualizado',text:'Pedido actualizado en tiempo real',showCancel:false});
 cerrarDetalle();
 }
-window.cancelarPedido=async function(){
-if(!pedidoEditId) return;
+window.cancelarDirecto=function(id){
+pedidoEditId=id;
 mostrarModalElegante({title:'Cancelar',text:'¿Cancelar este servicio?',confirmText:'Sí, cancelar',onConfirm:async()=>{
 await remove(ref(db,'kigoPedidosLive/'+pedidoEditId));
-cerrarDetalle(); cerrarModal();
+cerrarModal();
 }});
-}
-window.cancelarDirecto=function(id){
-pedidoEditId=id; pedidoEditData=pedidosLive[id];
-cancelarPedido();
 }
 window.finalizarPedido=async function(){
 if(!pedidoEditId) return;
@@ -531,6 +523,19 @@ document.getElementById('txtCosto').innerText='$0';
 clearM();
 if(dirRend) dirRend.setDirections({routes:[]});
 }
+}
+window.limpiarTodoPedido=function(){
+clienteSel=null; pedido=null;
+['buscCli','dirEntrega','tiempoRecogida','telEntrega','refEntrega','nuevoNombre','nuevoDirRecoge','nuevoTel','nuevoDirEntrega','nuevoTiempoRecogida','nuevoTelEntrega','nuevoRefEntrega','compTipo','compReferencia','compAlmacen','compDirEntrega','compNombreRecibe','compTel','compRefEntrega','compTiempo'].forEach(id=>{
+let el=document.getElementById(id); if(el) el.value='';
+});
+document.getElementById('boxSel').style.display='none';
+document.getElementById('listCli').style.display='none';
+document.getElementById('txtKm').innerText='-- km • -- min';
+document.getElementById('txtCosto').innerText='$0';
+document.querySelectorAll('.btn-clear').forEach(b=>b.classList.remove('show'));
+clearM();
+if(dirRend) dirRend.setDirections({routes:[]});
 }
 window.guardarClienteReal=async function(){
 let nombre=document.getElementById('cliNombre')?.value.trim();
@@ -678,7 +683,7 @@ if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCanc
 let repa=document.getElementById('selRepa')?.value||'sin asignar';
 let nr=push(ref(db,'kigoPedidosLive'));
 await set(nr,{servicio:pedido.servicio||'recoger',cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:pedido.clienteSel.telefono||'',telefono:pedido.telEntrega||'',referencia:pedido.refEntrega||'',tiempoRecogida:pedido.tiempoRecogida||'',tipoProd:pedido.tipoProd||'',referenciaCompra:pedido.referenciaCompra||'',km:pedido.km,costoSugerido:pedido.costo,costoExtra:0,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
-mostrarModalElegante({title:'Enviado',text:(pedido.servicio==='comprar'?'Compra':'Recogida')+' asignada a '+repa+' - '+(pedido.tiempoRecogida||'0')+' min - $'+pedido.costo,showCancel:false, onConfirm:()=>{ cerrarModal(); showView('seguimiento'); }});
+mostrarModalElegante({title:'Enviado',text:(pedido.servicio==='comprar'?'Compra':'Recogida')+' asignada a '+repa+' - '+(pedido.tiempoRecogida||'0')+' min - $'+pedido.costo,showCancel:false, onConfirm:()=>{ cerrarModal(); limpiarTodoPedido(); showView('seguimiento'); }});
 }
 document.addEventListener('click',e=>{if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')){let l=document.getElementById('listCli'); if(l) l.style.display='none';}});
 </script>
