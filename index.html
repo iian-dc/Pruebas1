@@ -24,8 +24,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .view{display:none}.view.active{display:block}
 #map,#mapRepa{width:100%;height:360px;border-radius:14px;background:#e5e7eb;display:block}
 #listCli{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #0a0a0a;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none;z-index:50}
-.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;display:flex;padding:6px;max-width:640px;margin:0 auto;gap:4px;z-index:100}
-.bottom button{flex:1;height:38px;border-radius:12px;border:1px solid #eee;background:#fff;font-weight:800;font-size:8px}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;display:flex;padding:6px;max-width:640px;margin:0 auto;gap:3px;z-index:100}
+.bottom button{flex:1;height:38px;border-radius:12px;border:1px solid #eee;background:#fff;font-weight:800;font-size:7px}
 .bottom button.active{background:#0a0a0a;color:#fff}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .dot.on{background:#10b981;box-shadow:0 0 0 2px #d1fae5}
@@ -52,9 +52,17 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .sliderEspera::-webkit-scrollbar{display:none}
 .btnAccion{width:100%;height:52px;border-radius:16px;border:none;font-weight:800;font-size:11px;letter-spacing:.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
 .btnCall{width:100%;height:44px;border-radius:12px;border:1.5px solid #111;background:#fff;font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;margin-top:8px}
+.chatBubble{max-width:78%;padding:10px 12px;border-radius:16px;font-size:11px;margin-bottom:8px;line-height:1.3}
+.chatBase{background:#0a0a0a;color:#fff;border-bottom-left-radius:4px;align-self:flex-end}
+.chatJose{background:#fff;border:1px solid #111;color:#111;border-bottom-right-radius:4px;align-self:flex-start;box-shadow:0 2px 8px rgba(255,0,80,.15)}
+.chatJose b{color:#ff0040;text-shadow:0 0 8px rgba(255,0,64,.6)}
 </style>
 </head>
 <body>
+
+<audio id="audioRappi" preload="auto">
+<source src="https://cdn.pixabay.com/audio/2022/03/24/audio_3f7c9a6d66.mp3" type="audio/mpeg">
+</audio>
 
 <div id="view-pedidos" class="view active">
 <div class="card" style="padding:8px">
@@ -203,12 +211,17 @@ CLIENTE NUEVO</button>
 <div style="display:flex;align-items:center;gap:4px"><span class="dot on" id="dotJose"></span><span id="txtEstadoJose" style="font-size:9px;font-weight:800;color:#10b981">EN LÍNEA</span></div>
 </div>
 </div>
+<div style="display:flex;gap:6px">
+<button class="btn-outline" style="width:auto;padding:0 12px;height:36px;font-size:8px;background:#0a0a0a;color:#fff" onclick="showView('chat')">
+<svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+CHAT
+</button>
 <button id="btnToggleJose" class="btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:9px;background:#10b981;color:#fff;border-color:#10b981" onclick="toggleJose()">DESACTIVAR</button>
+</div>
 </div>
 <div id="mapRepa"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
 <div style="background:#0a0a0a;color:#fff;border-radius:12px;height:48px;display:flex;align-items:center;justify-content:center;gap:6px">
-<svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.8" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
 <span id="txtKmRepa" style="font-size:11px;font-weight:700">-- km</span>
 <span style="width:1px;height:16px;background:#333"></span>
 <span id="txtCostoRepa" style="font-size:18px;font-weight:800;letter-spacing:.3px">$0</span>
@@ -221,23 +234,38 @@ CLIENTE NUEVO</button>
 </div>
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-<span style="font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px">
-<svg class="ico" viewBox="0 0 24 24"><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 10h6M2 14h6M18 10h4M18 14h4"/></svg>
-PEDIDO ACTIVO
-</span>
+<span style="font-size:11px;font-weight:800">PEDIDO ACTIVO</span>
 <span id="countActivos" style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800">0</span>
 </div>
 <div id="listaActivos"></div>
 </div>
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-<span style="font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px">
-<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-PEDIDOS EN ESPERA - DESLIZA
-</span>
+<span style="font-size:11px;font-weight:800">PEDIDOS EN ESPERA - DESLIZA</span>
 <span id="countEspera" style="background:#f59e0b;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800">0</span>
 </div>
 <div class="sliderEspera" id="listaEspera"></div>
+</div>
+</div>
+
+<div id="view-chat" class="view">
+<div class="card" style="padding:12px">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h3 style="font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px">
+<svg style="width:16px;height:16px;stroke:#111" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+CHAT BASE ↔ JOSÉ
+</h3>
+<span id="chatCount" style="background:#ff0040;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800;box-shadow:0 0 12px rgba(255,0,64,.6)">0</span>
+</div>
+<div id="chatBox" style="height:380px;overflow:auto;display:flex;flex-direction:column;padding:10px;margin-top:10px;background:#f8fafc;border-radius:14px;border:1px solid #eee"></div>
+<div style="display:flex;gap:6px;margin-top:10px">
+<div style="display:flex;gap:4px">
+<button class="btn-outline" style="width:48px;height:42px;padding:0;font-size:9px" onclick="setChatSender('BASE')">BASE</button>
+<button class="btn-outline" style="width:48px;height:42px;padding:0;font-size:9px;background:#ff0040;color:#fff;border-color:#ff0040" id="btnJoseChat" onclick="setChatSender('José')">JOSÉ</button>
+</div>
+<div class="wrap" style="flex:1"><input type="text" id="chatInput" placeholder="Escribe mensaje..." onkeypress="if(event.key==='Enter') enviarChat()"></div>
+<button class="btn" style="width:56px;height:42px" onclick="enviarChat()">ENVIAR</button>
+</div>
 </div>
 </div>
 
@@ -273,9 +301,21 @@ PEDIDOS EN ESPERA - DESLIZA
 <button id="bP" class="active" onclick="showView('pedidos')">PEDIDOS</button>
 <button id="bS" onclick="showView('seguimiento')">SEGUIMIENTO</button>
 <button id="bR" onclick="showView('repartidor')">REPARTIDOR</button>
+<button id="bCH" onclick="showView('chat')">CHAT</button>
 <button id="bH" onclick="showView('historial')">HISTORIAL</button>
 <button id="bC" onclick="showView('clientes')">CLIENTES</button>
 </div>
+
+<div class="kigo-overlay" id="overlayCancel"><div class="kigo-modal" style="background:#fee2e2;border:2px solid #ef4444">
+<div style="text-align:center">
+<div style="width:56px;height:56px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+<svg style="width:28px;height:28px;stroke:#fff;stroke-width:2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+</div>
+<h3 style="font-size:14px;font-weight:800;color:#ef4444">PEDIDO CANCELADO</h3>
+<p id="txtCancel" style="font-size:11px;color:#7f1d1d;margin-top:8px;font-weight:600"></p>
+<button class="btn" style="margin-top:14px;background:#ef4444" onclick="cerrarCancel()">ENTENDIDO</button>
+</div>
+</div></div>
 
 <div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><h3 id="modalTitle" style="font-size:13px;font-weight:800;text-align:center"></h3><p id="modalText" style="font-size:11px;margin:10px 0;color:#6b7280;text-align:center"></p><div id="editBox" style="display:none"><span class="label">Nombre</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editNombre"></div><span class="label">Direccion</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editDir"></div><span class="label">Telefono</span><div class="wrap" style="margin-bottom:12px"><input type="text" id="editTel"></div></div><div style="display:flex;gap:8px"><button id="modalCancel" class="kigo-btn" style="background:#f3f4f6" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">OK</button></div></div></div>
 
@@ -285,18 +325,18 @@ PEDIDOS EN ESPERA - DESLIZA
 <div id="detalleContent" style="margin-top:12px"></div>
 <div style="margin-top:12px">
 <span class="label">Cambiar repartidor</span>
-<div class="wrap" style="margin-bottom:8px"><select id="editRepa" style="flex:1;height:42px;border:none;outline:none;padding:0 12px;font-size:13px;font-weight:600;background:transparent"></select></div>
+<div class="wrap" style="margin-bottom:8px"><select id="editRepa"></select></div>
 <span class="label">Editar dirección recogida</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editRecogida"></div>
 <span class="label">Editar dirección entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editEntrega"></div>
 <span class="label">Editar teléfono entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editTelEnt"></div>
 <span class="label">Editar referencia entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editRefEnt"></div>
-<span class="label">Añadir costo extra envío</span>
+<span class="label">Añadir costo extra</span>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
 <button class="btn-outline" style="height:36px" onclick="addCosto(5)">+$5</button>
 <button class="btn-outline" style="height:36px" onclick="addCosto(10)">+$10</button>
 <button class="btn-outline" style="height:36px" onclick="addCosto(15)">+$15</button>
 </div>
-<div class="wrap" style="margin-bottom:12px"><input type="number" id="editCostoExtra" placeholder="Costo extra" oninput="calcTotalEdit()"></div>
+<div class="wrap" style="margin-bottom:12px"><input type="number" id="editCostoExtra" oninput="calcTotalEdit()"></div>
 <div style="background:#f7f7f7;border-radius:10px;padding:8px;display:flex;justify-content:space-between;margin-bottom:12px">
 <span style="font-size:10px;font-weight:800">TOTAL</span><span id="txtTotalEdit" style="font-size:12px;font-weight:800">$0</span>
 </div>
@@ -326,14 +366,43 @@ const db = getDatabase(app);
 let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35};
 let map, mapRepa, dirServ, dirRend, dirRendRepa, markers=[], markersRepa=[], clienteSel=null;
 let modoActual='lista', servicioActual='recoger';
-let pedidosLive={}, historialLive={}, filtroSeg='todos', pedidoEditId=null, pedidoEditData=null;
-let repaPanelActual='José';
-let joseOnline=true;
-let repaUbicacion=null;
+let pedidosLive={}, historialLive={}, chatLive={}, filtroSeg='todos', pedidoEditId=null, pedidoEditData=null;
+let repaPanelActual='José', joseOnline=true, repaUbicacion=null;
+let chatSender='José';
+let lastPedidosCount=0;
 
 window.cerrarModal=function(){ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
-window.cerrarDetalle=function(){ document.getElementById('overlayDetalle').classList.remove('show'); pedidoEditId=null; pedidoEditData=null; }
+window.cerrarDetalle=function(){ document.getElementById('overlayDetalle').classList.remove('show'); }
 window.cerrarHist=function(){ document.getElementById('overlayHist').classList.remove('show'); }
+window.cerrarCancel=function(){ document.getElementById('overlayCancel').classList.remove('show'); }
+
+function sonidoRappi(){
+ try{
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  let t=ctx.currentTime;
+  for(let i=0;i<10;i++){
+   let o=ctx.createOscillator(); let g=ctx.createGain();
+   o.type='sine'; o.frequency.value=i%2===0?880:1200;
+   o.connect(g); g.connect(ctx.destination);
+   g.gain.setValueAtTime(0.3, t+i*0.5); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.5+0.3);
+   o.start(t+i*0.5); o.stop(t+i*0.5+0.3);
+  }
+ }catch(e){}
+ let audio=document.getElementById('audioRappi');
+ if(audio){ audio.currentTime=0; audio.play().catch(()=>{}); }
+ if(navigator.vibrate){ navigator.vibrate([300,100,300,100,300,100,300,100,500,200,500]); }
+}
+function sonidoCancel(){
+ try{
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  let o=ctx.createOscillator(); let g=ctx.createGain();
+  o.type='sawtooth'; o.frequency.value=220; o.connect(g); g.connect(ctx.destination);
+  g.gain.setValueAtTime(0.5, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+1.5);
+  o.start(); o.stop(ctx.currentTime+1.5);
+ }catch(e){}
+ if(navigator.vibrate){ navigator.vibrate([600,200,600,200,600]); }
+}
+
 window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText='Cancelar', confirmText='OK', showCancel=true, onConfirm=null, showEdit=false, editData=null}){
  document.getElementById('modalTitle').innerText=title; document.getElementById('modalText').innerText=text;
  document.getElementById('modalCancel').innerText=cancelText; document.getElementById('modalConfirm').innerText=confirmText;
@@ -354,36 +423,54 @@ await set(ref(db,'kigoPins/repas/José'),{online:joseOnline, nombre:'José', ts:
 actualizarUIJose();
 }
 function actualizarUIJose(){
-let dot=document.getElementById('dotJose');
-let txt=document.getElementById('txtEstadoJose');
-let btn=document.getElementById('btnToggleJose');
-if(!dot||!txt||!btn) return;
-if(joseOnline){
- dot.className='dot on'; txt.innerText='EN LÍNEA'; txt.style.color='#10b981';
- btn.innerText='DESACTIVAR'; btn.style.background='#10b981'; btn.style.borderColor='#10b981';
-}else{
- dot.className='dot off'; txt.innerText='DESACTIVADO'; txt.style.color='#ef4444';
- btn.innerText='ACTIVAR'; btn.style.background='#ef4444'; btn.style.borderColor='#ef4444';
+let dot=document.getElementById('dotJose'); let txt=document.getElementById('txtEstadoJose'); let btn=document.getElementById('btnToggleJose');
+if(!dot) return;
+if(joseOnline){ dot.className='dot on'; txt.innerText='EN LÍNEA'; txt.style.color='#10b981'; btn.innerText='DESACTIVAR'; btn.style.background='#10b981'; }
+else{ dot.className='dot off'; txt.innerText='DESACTIVADO'; txt.style.color='#ef4444'; btn.innerText='ACTIVAR'; btn.style.background='#ef4444'; }
 }
+window.setChatSender=function(s){
+chatSender=s;
+document.querySelectorAll('#view-chat.btn-outline').forEach(b=>{
+ if(b.innerText===s){ b.style.background=s==='José'?'#ff0040':'#0a0a0a'; b.style.color='#fff'; }
+ else { b.style.background='#fff'; b.style.color='#111'; }
+});
 }
+window.enviarChat=async function(){
+let txt=document.getElementById('chatInput').value.trim();
+if(!txt) return;
+let r=push(ref(db,'kigoChat'));
+await set(r,{sender:chatSender,text:txt,ts:Date.now()});
+document.getElementById('chatInput').value='';
+}
+onValue(ref(db,'kigoChat'),snap=>{
+chatLive=snap.val()||{};
+let box=document.getElementById('chatBox');
+let count=document.getElementById('chatCount');
+if(!box) return;
+let entries=Object.entries(chatLive).sort((a,b)=>a[1].ts-b[1].ts);
+count.innerText=entries.length;
+box.innerHTML=entries.map(([k,m])=>{
+ let isBase=m.sender==='BASE';
+ return `<div style="display:flex;flex-direction:${isBase?'row-reverse':'row'};width:100%">
+ <div class="chatBubble ${isBase?'chatBase':'chatJose'}"><b>${m.sender}:</b> ${m.text}<div style="font-size:8px;opacity:.6;margin-top:4px">${new Date(m.ts).toLocaleTimeString()}</div></div>
+ </div>`;
+}).join('');
+box.scrollTop=box.scrollHeight;
+// sonido suave al nuevo mensaje si es para José
+if(entries.length>0 && entries[entries.length-1][1].sender==='BASE' && document.getElementById('view-repartidor').classList.contains('active')){
+ if(navigator.vibrate) navigator.vibrate(200);
+}
+});
+
 window.setServicio=function(s){
 servicioActual=s;
 document.getElementById('btnRecoger').classList.toggle('active',s==='recoger');
 document.getElementById('btnComprar').classList.toggle('active',s==='comprar');
 document.getElementById('wrapModoCliente').style.display=s==='recoger'?'grid':'none';
-if(s==='recoger'){
- setModo(modoActual);
- document.getElementById('modoComprar').style.display='none';
-}else{
- document.getElementById('modoLista').style.display='none';
- document.getElementById('modoNuevo').style.display='none';
- document.getElementById('modoComprar').style.display='block';
-}
-pedido=null;
-document.getElementById('txtKm').innerText='-- km • -- min';
-document.getElementById('txtCosto').innerText='$0';
-if(dirRend) dirRend.setDirections({routes:[]});
-clearM();
+if(s==='recoger'){ setModo(modoActual); document.getElementById('modoComprar').style.display='none'; }
+else{ document.getElementById('modoLista').style.display='none'; document.getElementById('modoNuevo').style.display='none'; document.getElementById('modoComprar').style.display='block'; }
+pedido=null; document.getElementById('txtKm').innerText='-- km • -- min'; document.getElementById('txtCosto').innerText='$0';
+if(dirRend) dirRend.setDirections({routes:[]}); clearM();
 }
 window.setModo=function(m){
 if(servicioActual!=='recoger') return;
@@ -392,83 +479,79 @@ document.getElementById('modoLista').style.display=m==='lista'?'block':'none';
 document.getElementById('modoNuevo').style.display=m==='nuevo'?'block':'none';
 document.getElementById('btnLista').classList.toggle('active',m==='lista');
 document.getElementById('btnNuevo').classList.toggle('active',m==='nuevo');
-pedido=null;
-document.getElementById('txtKm').innerText='-- km • -- min';
-document.getElementById('txtCosto').innerText='$0';
-if(dirRend) dirRend.setDirections({routes:[]});
-clearM();
+pedido=null; document.getElementById('txtKm').innerText='-- km • -- min'; document.getElementById('txtCosto').innerText='$0';
+if(dirRend) dirRend.setDirections({routes:[]}); clearM();
 }
-
 onValue(ref(db,'kigoClientesDir'),snap=>{
 let v=snap.val()||{}; let m={};
 Object.entries(v).forEach(([k,d])=>{
 if(!d) return;
-let dir = d.direccion || d.dir || d.domicilio || '';
-let tel = d.telefono || d.tel || '';
-let nombre = d.nombreOriginal || d.nombre || k.replace(/_/g,' ');
-if(!dir &&!tel) return;
-m[nombre]={ direccion: dir, telefono: tel, nombreOriginal: nombre, ts: d.ts||0, _key:k };
+let dir=d.direccion||''; let tel=d.telefono||''; let nombre=d.nombreOriginal||k.replace(/_/g,' ');
+if(!dir&&!tel) return;
+m[nombre]={direccion:dir,telefono:tel,nombreOriginal:nombre,ts:d.ts||0,_key:k};
 });
 clientesDB=m; renderClientes();
 });
 onValue(ref(db,'kigoTarifas'),s=>{ if(s.val()) tarifas=s.val(); });
 onValue(ref(db,'kigoPins'),snap=>{
-let v=snap.val()||{};
-repasData=v.repas||v||{};
-if(!repasData['José']){
- set(ref(db,'kigoPins/repas/José'),{online:true,nombre:'José',ts:Date.now()});
-}
-if(repasData['José']){
- joseOnline=repasData['José'].online!==false;
- actualizarUIJose();
-}
-let keys=Object.keys(repasData);
-if(!keys.length) keys=['José'];
-let sel=document.getElementById('selRepa');
-let selEdit=document.getElementById('editRepa');
+let v=snap.val()||{}; repasData=v.repas||v||{};
+if(!repasData['José']) set(ref(db,'kigoPins/repas/José'),{online:true,nombre:'José',ts:Date.now()});
+if(repasData['José']){ joseOnline=repasData['José'].online!==false; actualizarUIJose(); }
+let keys=Object.keys(repasData); if(!keys.length) keys=['José'];
 let html=keys.map(n=>`<option value="${n}">${n}</option>`).join('');
-if(sel){ sel.innerHTML=html; if(!sel.value) sel.value='José'; }
-if(selEdit) selEdit.innerHTML=html;
+let sel=document.getElementById('selRepa'); if(sel){ sel.innerHTML=html; if(!sel.value) sel.value='José'; }
+let selEdit=document.getElementById('editRepa'); if(selEdit) selEdit.innerHTML=html;
 mostrarEstadoRepa();
 });
 window.mostrarEstadoRepa=function(){
 let sel=document.getElementById('selRepa'); if(!sel) return;
-let nombre=sel.value; let d=repasData[nombre]; let online=false;
-if(typeof d==='object') online=d.online===true||d.conectado===true||d.activo===true||d.enLinea===true||d.status==='online'; else online=true;
+let d=repasData[sel.value]; let online=d&&typeof d==='object'?d.online!==false:true;
 let dot=document.getElementById('dotEstado'); let txt=document.getElementById('txtEstado');
-if(!dot||!txt) return;
+if(!dot) return;
 if(online){ dot.className='dot on'; txt.innerText='EN LINEA'; txt.style.color='#10b981'; txt.style.background='#d1fae5'; }
 else{ dot.className='dot off'; txt.innerText='OFFLINE'; txt.style.color='#ef4444'; txt.style.background='#fee2e2'; }
 }
 onValue(ref(db,'kigoPedidosLive'),snap=>{
-pedidosLive=snap.val()||{};
+let newVal=snap.val()||{};
+let newCount=Object.keys(newVal).length;
+if(newCount>lastPedidosCount && lastPedidosCount!==0){
+ // Nuevo pedido llegó a José
+ sonidoRappi();
+}
+lastPedidosCount=newCount;
+pedidosLive=newVal;
 renderSeguimiento();
 renderRepaPanel();
 });
-onValue(ref(db,'kigoHistorial'),snap=>{
-historialLive=snap.val()||{};
-renderHistorial();
+onValue(ref(db,'kigoNotificaciones'),snap=>{
+let v=snap.val()||{};
+let entries=Object.entries(v).sort((a,b)=>b[1].ts-a[1].ts);
+if(entries.length && entries[0][1].tipo==='cancelado' && Date.now()-entries[0][1].ts<10000){
+ let p=entries[0][1];
+ document.getElementById('txtCancel').innerText=`El pedido #${p.codigo} de ${p.cliente} ha sido CANCELADO. No te desplaces.`;
+ document.getElementById('overlayCancel').classList.add('show');
+ sonidoCancel();
+ // limpiar activos de José si era suyo
+ if(pedidosLive[p.id]){ /* ya borrado */ }
+}
 });
+onValue(ref(db,'kigoHistorial'),snap=>{ historialLive=snap.val()||{}; renderHistorial(); });
 
 function calcularHoraRecogida(ts, minutos){
 if(!minutos) return '';
-let m=parseInt(minutos);
-let fecha=new Date(ts + m*60000);
-let hora=fecha.toLocaleTimeString('es-MX',{hour:'numeric',minute:'2-digit',hour12:true});
-return `Recoger a las ${hora}`;
+let m=parseInt(minutos); let fecha=new Date(ts + m*60000);
+return `Recoger a las ${fecha.toLocaleTimeString('es-MX',{hour:'numeric',minute:'2-digit',hour12:true})}`;
 }
 function getUbicacionRepa(){
 return new Promise((resolve)=>{
  if(!navigator.geolocation){ resolve(null); return; }
- navigator.geolocation.getCurrentPosition(pos=>{
-  repaUbicacion={lat:pos.coords.latitude,lng:pos.coords.longitude};
-  resolve(repaUbicacion);
- },()=>{ resolve(null); },{enableHighAccuracy:true,timeout:5000});
+ navigator.geolocation.getCurrentPosition(pos=>{ resolve({lat:pos.coords.latitude,lng:pos.coords.longitude}); },()=>{ resolve(null); },{enableHighAccuracy:true,timeout:5000});
 });
 }
 window.filtrarSeg=function(f){
 filtroSeg=f;
 document.querySelectorAll('.tabSeg').forEach(b=>b.classList.remove('active'));
+document.getElementById('tabTodos').classList.add('active');
 if(f==='todos') document.getElementById('tabTodos').classList.add('active');
 if(f==='pendiente') document.getElementById('tabPend').classList.add('active');
 if(f==='camino') document.getElementById('tabCam').classList.add('active');
@@ -478,15 +561,12 @@ renderSeguimiento();
 function renderSeguimiento(){
 let lista=document.getElementById('listaSeguimiento');
 if(!lista) return;
-let entries=Object.entries(pedidosLive).sort((a,b)=> (b[1].ts||0)-(a[1].ts||0));
+let entries=Object.entries(pedidosLive).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
 let cTodos=entries.length;
-let cPend=entries.filter(([k,v])=> (v.etapa||'pendiente')==='pendiente').length;
-let cCam=entries.filter(([k,v])=> ['camino','en camino','recogido','entrega'].includes(v.etapa)).length;
-let cFin=entries.filter(([k,v])=> v.etapa==='finalizado').length;
-document.getElementById('cTodos').innerText=cTodos;
-document.getElementById('cPend').innerText=cPend;
-document.getElementById('cCam').innerText=cCam;
-document.getElementById('cFin').innerText=cFin;
+let cPend=entries.filter(([k,v])=>(v.etapa||'pendiente')==='pendiente').length;
+let cCam=entries.filter(([k,v])=>['camino','en camino','recogido','entrega'].includes(v.etapa)).length;
+let cFin=entries.filter(([k,v])=>v.etapa==='finalizado').length;
+document.getElementById('cTodos').innerText=cTodos; document.getElementById('cPend').innerText=cPend; document.getElementById('cCam').innerText=cCam; document.getElementById('cFin').innerText=cFin;
 document.getElementById('totalPedidosBadge').innerText=cTodos+' PEDIDOS';
 let filtrados=entries.filter(([k,v])=>{
 if(filtroSeg==='todos') return true;
@@ -495,376 +575,170 @@ if(filtroSeg==='camino') return ['camino','en camino','recogido','entrega'].incl
 if(filtroSeg==='finalizado') return v.etapa==='finalizado';
 return true;
 });
-if(!filtrados.length){
-lista.innerHTML='<div style="text-align:center;padding:30px;color:#999;font-size:11px">No hay pedidos en esta categoría</div>';
-return;
-}
+if(!filtrados.length){ lista.innerHTML='<div style="text-align:center;padding:30px;color:#999;font-size:11px">No hay pedidos</div>'; return; }
 lista.innerHTML=filtrados.map(([id,p])=>{
-let fecha=new Date(p.ts||Date.now());
-let hora=fecha.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
-let codigo=id.substring(1,7).toUpperCase();
+let fecha=new Date(p.ts||Date.now()); let codigo=id.substring(1,7).toUpperCase();
 let estado=p.etapa||'pendiente';
-let estadoClass='estadoPend';
-if(estado==='pendiente') estadoClass='estadoPend';
-else if(estado==='camino' || estado==='en camino') estadoClass='estadoCamino';
-else if(estado==='recogido') estadoClass='estadoRecogido';
-else if(estado==='entrega') estadoClass='estadoEntrega';
-else if(estado==='finalizado') estadoClass='estadoFin';
-let horaRecogida=calcularHoraRecogida(p.ts||Date.now(), p.tiempoRecogida);
-let esFinalizado=estado==='finalizado';
-return `<div class="cardPedido" style="${esFinalizado?'border:2px solid #10b981;background:#f0fdf4':''}">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<span style="font-size:10px;font-weight:800;background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:6px">#${codigo}</span>
-<span style="font-size:9px;color:#888">${hora} ${fecha.toLocaleDateString()}</span>
-</div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<span class="${estadoClass}">${estado.toUpperCase()}</span>
-<span style="font-size:9px;color:#0a0a0a;font-weight:800">${horaRecogida}</span>
-</div>
-<div style="font-size:11px;font-weight:700;margin-bottom:4px">${p.cliente||'--'} ${p.servicio==='comprar'?'COMPRA':'RECOGER'}</div>
-<div style="font-size:9px;color:#555;margin-bottom:2px"><b>Recoge:</b> ${p.dirRecogida||''}</div>
-<div style="font-size:9px;color:#555;margin-bottom:2px"><b>Entrega:</b> ${p.entrega||''}</div>
-<div style="display:flex;gap:8px;margin-top:6px;font-size:9px;color:#666">
-<span>${p.km||0} km</span><span>•</span><span>$${p.costoSugerido||0} ${(p.costoExtra?`+ $${p.costoExtra} = $${(p.costoSugerido||0)+(p.costoExtra||0)}`:'')}</span><span>•</span><span>${p.repaAsignado||''}</span>
-</div>
-${esFinalizado?`<div style="margin-top:10px"><button class="btn" style="height:42px;background:#10b981;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="registrarHistorial('${id}')"><svg style="width:14px;height:14px;stroke:#fff" viewBox="0 0 24 24"><path d="M5 12l5 5l10-10"/></svg> ENVIAR A HISTORIAL</button></div>`:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-<button class="btn-outline" style="height:36px;font-size:9px" onclick="verDetalles('${id}')">VER DETALLES</button>
-<button class="btn-outline" style="height:36px;font-size:9px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="cancelarDirecto('${id}')">CANCELAR</button>
-</div>`}
+let clase=estado==='pendiente'?'estadoPend':estado==='finalizado'?'estadoFin':estado==='recogido'?'estadoRecogido':estado==='entrega'?'estadoEntrega':'estadoCamino';
+let esFin=estado==='finalizado';
+return `<div class="cardPedido" style="${esFin?'border:2px solid #10b981;background:#f0fdf4':''}">
+<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:10px;font-weight:800;background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:6px">#${codigo}</span><span style="font-size:9px;color:#888">${fecha.toLocaleTimeString()}</span></div>
+<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span class="${clase}">${estado.toUpperCase()}</span><span style="font-size:9px;font-weight:800">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</span></div>
+<div style="font-size:11px;font-weight:700">${p.cliente} ${p.servicio==='comprar'?'COMPRA':''}</div>
+<div style="font-size:9px;color:#555"><b>Recoge:</b> ${p.dirRecogida}</div>
+<div style="font-size:9px;color:#555"><b>Entrega:</b> ${p.entrega}</div>
+${esFin?`<button class="btn" style="height:42px;background:#10b981;margin-top:10px;font-size:10px" onclick="registrarHistorial('${id}')">ENVIAR A HISTORIAL</button>`:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="btn-outline" style="height:36px;font-size:9px" onclick="verDetalles('${id}')">VER DETALLES</button><button class="btn-outline" style="height:36px;font-size:9px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="cancelarDirecto('${id}')">CANCELAR</button></div>`}
 </div>`;
 }).join('');
 }
-
 function renderRepaPanel(){
-let listaEspera=document.getElementById('listaEspera');
-let listaActivos=document.getElementById('listaActivos');
-if(!listaEspera ||!listaActivos) return;
-let entries=Object.entries(pedidosLive).sort((a,b)=> (b[1].ts||0)-(a[1].ts||0));
-let enEspera=entries.filter(([k,p])=> (p.etapa||'pendiente')==='pendiente');
-// ACTIVO SIN FINALIZADO - cuando finaliza se quita del panel de repartidor pero queda en seguimiento
-let misActivos=entries.filter(([k,p])=> p.repaAsignado===repaPanelActual && ['camino','en camino','recogido','entrega'].includes(p.etapa||''));
-
-document.getElementById('countEspera').innerText=enEspera.length;
-document.getElementById('countActivos').innerText=misActivos.length;
-
-if(!misActivos.length){
- listaActivos.innerHTML='<div style="text-align:center;padding:16px;color:#999;font-size:10px;border:1.5px dashed #e5e7eb;border-radius:12px">Sin pedido activo - Acepta uno de abajo</div>';
-}else{
+let listaEspera=document.getElementById('listaEspera'); let listaActivos=document.getElementById('listaActivos');
+if(!listaEspera) return;
+let entries=Object.entries(pedidosLive).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
+let enEspera=entries.filter(([k,p])=>(p.etapa||'pendiente')==='pendiente');
+let misActivos=entries.filter(([k,p])=>p.repaAsignado===repaPanelActual && ['camino','en camino','recogido','entrega'].includes(p.etapa||''));
+document.getElementById('countEspera').innerText=enEspera.length; document.getElementById('countActivos').innerText=misActivos.length;
+if(!misActivos.length){ listaActivos.innerHTML='<div style="text-align:center;padding:16px;color:#999;font-size:10px;border:1.5px dashed #e5e7eb;border-radius:12px">Sin activo - Acepta uno</div>'; }
+else{
  listaActivos.innerHTML=misActivos.map(([id,p])=>{
-  let codigo=id.substring(1,7).toUpperCase();
-  let etapa=p.etapa;
-  let precioTotal=(p.costoSugerido||0)+(p.costoExtra||0);
-  let config={};
-  if(etapa==='camino' || etapa==='en camino'){
-   config={label:'VOY EN CAMINO A RECOGER',bg:'rgba(59,130,246,0.12)',color:'#3b82f6',border:'#3b82f6',next:'recogido'};
-  }else if(etapa==='recogido'){
-   config={label:'RECOGIDO',bg:'rgba(139,92,246,0.12)',color:'#8b5cf6',border:'#8b5cf6',next:'entrega'};
-  }else if(etapa==='entrega'){
-   config={label:'VOY EN CAMINO A ENTREGAR',bg:'rgba(245,158,11,0.12)',color:'#f59e0b',border:'#f59e0b',next:'finalizado'};
-  }
-  let llamarBtn='';
-  if(etapa==='camino' || etapa==='en camino'){
-   llamarBtn=`<button class="btnCall" onclick="llamarCliente('${p.telefonoRecogida||p.telefono}')">
-    <svg class="ico" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0.7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.03 12.03 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-    LLAMAR A QUIEN RECOGE ${p.telefonoRecogida?'- '+p.telefonoRecogida:''}
-   </button>`;
-  }else if(etapa==='entrega' || etapa==='recogido'){
-   llamarBtn=`<button class="btnCall" onclick="llamarCliente('${p.telefono}')">
-    <svg class="ico" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0.7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.03 12.03 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-    LLAMAR A QUIEN RECIBE ${p.telefono?'- '+p.telefono:''}
-   </button>`;
-  }
-
+  let codigo=id.substring(1,7).toUpperCase(); let etapa=p.etapa; let total=(p.costoSugerido||0)+(p.costoExtra||0);
+  let cfg=etapa==='camino'||etapa==='en camino'?{l:'VOY EN CAMINO A RECOGER',bg:'rgba(59,130,246,.12)',c:'#3b82f6',n:'recogido'}:etapa==='recogido'?{l:'RECOGIDO',bg:'rgba(139,92,246,.12)',c:'#8b5cf6',n:'entrega'}:{l:'VOY EN CAMINO A ENTREGAR',bg:'rgba(245,158,11,.12)',c:'#f59e0b',n:'finalizado'};
+  let call=etapa==='camino'||etapa==='en camino'?`LLAMAR A QUIEN RECOGE ${p.telefonoRecogida||''}`:`LLAMAR A QUIEN RECIBE ${p.telefono||''}`;
+  let tel=etapa==='camino'||etapa==='en camino'?p.telefonoRecogida:p.telefono;
   return `<div class="repaCardActiva">
-   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <span style="font-size:9px;font-weight:800;background:#0a0a0a;color:#fff;padding:5px 10px;border-radius:8px">#${codigo} • ${etapa.toUpperCase()}</span>
-    <div style="text-align:right">
-     <div style="font-size:10px;color:#888;font-weight:700">COBRAR</div>
-     <div style="font-size:22px;font-weight:800;letter-spacing:-.5px;color:#0a0a0a">$${precioTotal}</div>
-    </div>
-   </div>
-   <div style="font-size:14px;font-weight:800">${p.cliente} ${p.servicio==='comprar'?' - COMPRA':''}</div>
-   <div style="background:#f8fafc;border-radius:12px;padding:10px;margin-top:10px;border:1px solid #f1f5f9">
-    <div style="display:flex;gap:8px"><div style="width:8px;height:8px;background:#ef4444;border-radius:50%;margin-top:4px;flex-shrink:0"></div><div style="font-size:10px;color:#111"><b>Recoge:</b> ${p.dirRecogida}</div></div>
-    <div style="display:flex;gap:8px;margin-top:6px"><div style="width:8px;height:8px;background:#0a0a0a;border-radius:50%;margin-top:4px;flex-shrink:0"></div><div style="font-size:10px;color:#111"><b>Entrega:</b> ${p.entrega}</div></div>
-    ${p.tiempoRecogida?`<div style="font-size:10px;color:#0a0a0a;font-weight:800;margin-top:8px;background:#fef3c7;padding:6px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:6px">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div>`:''}
-   </div>
-   ${llamarBtn}
-   <button class="btnAccion" style="margin-top:12px;background:${config.bg};color:${config.color};border:1.5px solid ${config.border}" onclick="cambiarEtapaConRuta('${id}','${config.next}','${etapa==='camino' || etapa==='en camino'? 'recogida' : 'entrega'}')">
-    ${config.label}
-   </button>
+   <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:9px;font-weight:800;background:#0a0a0a;color:#fff;padding:5px 10px;border-radius:8px">#${codigo} ${etapa.toUpperCase()}</span><div style="text-align:right"><div style="font-size:10px;color:#888">COBRAR</div><div style="font-size:22px;font-weight:800">$${total}</div></div></div>
+   <div style="font-size:14px;font-weight:800">${p.cliente}</div>
+   <div style="background:#f8fafc;border-radius:12px;padding:10px;margin-top:8px"><div style="font-size:10px"><b>Recoge:</b> ${p.dirRecogida}</div><div style="font-size:10px;margin-top:4px"><b>Entrega:</b> ${p.entrega}</div><div style="font-size:10px;margin-top:6px;background:#fef3c7;padding:4px 8px;border-radius:6px;display:inline-block;font-weight:800">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div></div>
+   <button class="btnCall" onclick="llamarCliente('${tel||''}')">${call}</button>
+   <button class="btnAccion" style="margin-top:12px;background:${cfg.bg};color:${cfg.c};border:1.5px solid ${cfg.c}" onclick="cambiarEtapaConRuta('${id}','${cfg.n}','${etapa==='camino'?'recogida':'entrega'}')">${cfg.l}</button>
   </div>`;
  }).join('');
 }
-
-if(!enEspera.length){
- listaEspera.innerHTML='<div style="text-align:center;padding:12px;color:#999;font-size:10px">No hay pedidos en espera</div>';
-}else{
+if(!enEspera.length){ listaEspera.innerHTML='<div style="text-align:center;padding:12px;color:#999;font-size:10px">No hay en espera</div>'; }
+else{
  listaEspera.innerHTML=enEspera.map(([id,p])=>{
   let codigo=id.substring(1,7).toUpperCase();
-  let horaRec=calcularHoraRecogida(p.ts, p.tiempoRecogida);
-  return `<div class="repaCard" style="scroll-snap-align:start">
-   <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-    <span style="font-size:8px;font-weight:800;background:#f59e0b;color:#fff;padding:3px 6px;border-radius:6px">#${codigo} ${p.servicio==='comprar'?'COMPRA':'RECOGER'}</span>
-    <span style="font-size:8px;color:#888">${new Date(p.ts).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</span>
-   </div>
-   <div style="font-size:11px;font-weight:800">${p.cliente}</div>
-   <div style="font-size:8px;color:#0a0a0a;font-weight:700;margin-top:4px">${horaRec}</div>
-   <div style="display:flex;gap:6px;margin-top:8px">
-    <span style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:800">${p.km} km</span>
-    <span style="background:#d1fae5;color:#10b981;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span>
-   </div>
-   <button class="btn" style="height:38px;margin-top:10px;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="aceptarPedido('${id}')">ACEPTAR</button>
-  </div>`;
+  return `<div class="repaCard" style="scroll-snap-align:start"><div style="display:flex;justify-content:space-between"><span style="font-size:8px;font-weight:800;background:#f59e0b;color:#fff;padding:3px 6px;border-radius:6px">#${codigo}</span><span style="font-size:8px">${new Date(p.ts).toLocaleTimeString()}</span></div><div style="font-size:11px;font-weight:800;margin-top:6px">${p.cliente}</div><div style="font-size:8px;font-weight:700;margin-top:4px">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div><div style="display:flex;gap:6px;margin-top:8px"><span style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:9px">${p.km} km</span><span style="background:#d1fae5;color:#10b981;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span></div><button class="btn" style="height:38px;margin-top:10px;font-size:10px" onclick="aceptarPedido('${id}')">ACEPTAR</button></div>`;
  }).join('');
 }
 }
-
 function renderHistorial(){
-let lista=document.getElementById('listaHistorial');
-let count=document.getElementById('countHist');
-if(!lista) return;
+let lista=document.getElementById('listaHistorial'); let count=document.getElementById('countHist'); if(!lista) return;
 let filtro=document.getElementById('filtroHist')?.value.toLowerCase()||'';
-let entries=Object.entries(historialLive).sort((a,b)=> (b[1].finalizadoEn||b[1].ts||0)-(a[1].finalizadoEn||a[1].ts||0));
-let filtrados=entries.filter(([k,p])=> JSON.stringify(p).toLowerCase().includes(filtro));
-count.innerText=filtrados.length;
-if(!filtrados.length){
- lista.innerHTML='<div style="text-align:center;padding:30px;color:#999;font-size:11px">Sin historial</div>';
- return;
-}
-lista.innerHTML=filtrados.map(([id,p])=>{
- let fecha=new Date(p.finalizadoEn||p.ts||Date.now());
- let codigo=id.substring(1,7).toUpperCase();
- let horaRec=calcularHoraRecogida(p.ts, p.tiempoRecogida);
- return `<div class="cardPedido" style="border-left:4px solid #10b981;cursor:pointer" onclick="verHistorial('${id}')">
-  <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-   <span style="font-size:10px;font-weight:800;background:#10b981;color:#fff;padding:3px 8px;border-radius:6px">#${codigo} FINALIZADO</span>
-   <span style="font-size:9px;color:#888">${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</span>
-  </div>
-  <div style="font-size:11px;font-weight:800">${p.cliente} • ${p.servicio?.toUpperCase()}</div>
-  <div style="font-size:9px;color:#555;margin-top:4px"><b>Recogida:</b> ${p.dirRecogida||''} ${horaRec?'- '+horaRec:''}</div>
-  <div style="font-size:9px;color:#555"><b>Entrega:</b> ${p.entrega||''}</div>
-  <div style="display:flex;gap:6px;margin-top:6px;font-size:9px">
-   <span style="background:#0a0a0a;color:#fff;padding:2px 6px;border-radius:10px">${p.km||0} km</span>
-   <span style="background:#d1fae5;color:#10b981;padding:2px 6px;border-radius:10px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span>
-   <span style="background:#f3f4f6;padding:2px 6px;border-radius:10px">${p.repaAsignado||''}</span>
-  </div>
- </div>`;
+let entries=Object.entries(historialLive).sort((a,b)=>(b[1].finalizadoEn||0)-(a[1].finalizadoEn||0));
+let fil=entries.filter(([k,p])=>JSON.stringify(p).toLowerCase().includes(filtro));
+count.innerText=fil.length;
+if(!fil.length){ lista.innerHTML='<div style="text-align:center;padding:30px;color:#999;font-size:11px">Sin historial</div>'; return; }
+lista.innerHTML=fil.map(([id,p])=>{
+ let fecha=new Date(p.finalizadoEn||p.ts||Date.now()); let codigo=id.substring(1,7).toUpperCase();
+ return `<div class="cardPedido" style="border-left:4px solid #10b981;cursor:pointer" onclick="verHistorial('${id}')"><div style="display:flex;justify-content:space-between"><span style="font-size:10px;font-weight:800;background:#10b981;color:#fff;padding:3px 8px;border-radius:6px">#${codigo} FINALIZADO</span><span style="font-size:9px;color:#888">${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString()}</span></div><div style="font-size:11px;font-weight:800;margin-top:6px">${p.cliente} • ${p.servicio?.toUpperCase()}</div><div style="font-size:9px;color:#555;margin-top:4px"><b>Recogida:</b> ${p.dirRecogida} - ${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div><div style="font-size:9px;color:#555"><b>Entrega:</b> ${p.entrega}</div><div style="display:flex;gap:6px;margin-top:6px"><span style="background:#0a0a0a;color:#fff;padding:2px 6px;border-radius:10px;font-size:9px">${p.km} km</span><span style="background:#d1fae5;color:#10b981;padding:2px 6px;border-radius:10px;font-size:9px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span></div></div>`;
 }).join('');
 }
 window.verHistorial=function(id){
-let p=historialLive[id];
-if(!p) return;
-let fecha=new Date(p.ts||Date.now());
-let fechaFin=new Date(p.finalizadoEn||Date.now());
-let horaRec=calcularHoraRecogida(p.ts, p.tiempoRecogida);
+let p=historialLive[id]; if(!p) return;
 document.getElementById('histDetalle').innerHTML=`
 <div style="background:#f7f7f7;border-radius:12px;padding:12px">
 <div style="font-size:11px"><b>Código:</b> ${id.substring(1,7).toUpperCase()}</div>
-<div style="font-size:10px;margin-top:6px"><b>Fecha pedido:</b> ${fecha.toLocaleString()}</div>
-<div style="font-size:10px"><b>Hora finalizado:</b> ${fechaFin.toLocaleString()}</div>
-<div style="font-size:10px;margin-top:6px;background:#fef3c7;padding:6px;border-radius:8px;font-weight:800">${horaRec}</div>
-<div style="margin-top:10px;font-size:11px;font-weight:800;border-top:1px solid #e5e7eb;padding-top:8px">Cliente: ${p.cliente}</div>
-<div style="font-size:10px;margin-top:4px"><b>Servicio:</b> ${p.servicio}</div>
-<div style="font-size:10px;margin-top:4px"><b>Dirección recogida:</b> ${p.dirRecogida}</div>
+<div style="font-size:10px;margin-top:6px"><b>Fecha pedido:</b> ${new Date(p.ts).toLocaleString()}</div>
+<div style="font-size:10px"><b>Finalizado:</b> ${new Date(p.finalizadoEn).toLocaleString()}</div>
+<div style="font-size:10px;margin-top:6px;background:#fef3c7;padding:6px;border-radius:8px;font-weight:800">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div>
+<div style="margin-top:10px;font-size:11px;font-weight:800">Cliente: ${p.cliente}</div>
+<div style="font-size:10px"><b>Recogida:</b> ${p.dirRecogida}</div>
 <div style="font-size:10px"><b>Tel recogida:</b> ${p.telefonoRecogida||''}</div>
-<div style="font-size:10px;margin-top:6px"><b>Dirección entrega:</b> ${p.entrega}</div>
+<div style="font-size:10px;margin-top:6px"><b>Entrega:</b> ${p.entrega}</div>
 <div style="font-size:10px"><b>Tel entrega:</b> ${p.telefono||''}</div>
-<div style="font-size:10px"><b>Referencia:</b> ${p.referencia||''}</div>
-${p.tipoProd?`<div style="font-size:10px;margin-top:6px"><b>Producto:</b> ${p.tipoProd} - ${p.referenciaCompra||''}</div>`:''}
-<div style="display:flex;gap:8px;margin-top:10px">
-<span style="background:#0a0a0a;color:#fff;padding:6px 10px;border-radius:20px;font-size:11px;font-weight:800">${p.km} km</span>
-<span style="background:#d1fae5;color:#10b981;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)} ${p.costoExtra?'( base $'+p.costoSugerido+' + extra $'+p.costoExtra+')':''}</span>
-</div>
+<div style="font-size:10px"><b>Ref:</b> ${p.referencia||''}</div>
+<div style="display:flex;gap:8px;margin-top:10px"><span style="background:#0a0a0a;color:#fff;padding:6px 10px;border-radius:20px;font-size:11px">${p.km} km</span><span style="background:#d1fae5;color:#10b981;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span></div>
 <div style="font-size:10px;margin-top:8px"><b>Repartidor:</b> ${p.repaAsignado}</div>
-</div>
-`;
+</div>`;
 document.getElementById('overlayHist').classList.add('show');
 }
-
-window.llamarCliente=function(tel){
-if(!tel){ mostrarModalElegante({title:'Sin teléfono',text:'No hay teléfono registrado',showCancel:false}); return; }
-window.location.href='tel:'+tel;
-}
-
+window.llamarCliente=function(tel){ if(!tel){ mostrarModalElegante({title:'Sin teléfono',text:'No hay teléfono',showCancel:false}); return; } window.location.href='tel:'+tel; }
 window.aceptarPedido=async function(id){
-if(!joseOnline){
- mostrarModalElegante({title:'Desactivado',text:'Actívate en línea primero',showCancel:false});
- return;
-}
+if(!joseOnline){ mostrarModalElegante({title:'Desactivado',text:'Actívate primero',showCancel:false}); return; }
 await update(ref(db,'kigoPedidosLive/'+id),{repaAsignado:'José',etapa:'camino'});
-let pos=await getUbicacionRepa();
-let p=pedidosLive[id];
-if(pos){
- trazarRutaRepa(pos, await geo(p.dirRecogida), p);
-}else{
- verRutaRepa(id);
-}
+let pos=await getUbicacionRepa(); let p=pedidosLive[id];
+if(pos) trazarRutaRepa(pos, await geo(p.dirRecogida), p); else verRutaRepa(id);
 }
 window.cambiarEtapaConRuta=async function(id, nuevaEtapa, tipoRuta){
-let pos=await getUbicacionRepa();
-let p=pedidosLive[id];
+let pos=await getUbicacionRepa(); let p=pedidosLive[id];
 if(nuevaEtapa==='finalizado'){
- // CUANDO JOSÉ ENTREGA: SE QUITA DE SU PANEL PERO QUEDA EN SEGUIMIENTO COMO FINALIZADO
  await update(ref(db,'kigoPedidosLive/'+id),{etapa:'finalizado',finalizadoEn:Date.now()});
  mostrarModalElegante({title:'Entregado',text:'Se quitó de tu panel. Queda en seguimiento en verde para enviar a historial',showCancel:false});
 }else{
  await update(ref(db,'kigoPedidosLive/'+id),{etapa:nuevaEtapa});
- if(tipoRuta==='recogida'){
-  if(pos) trazarRutaRepa(pos, await geo(p.dirRecogida), p);
- }else if(tipoRuta==='entrega'){
-  if(pos) trazarRutaRepa(pos, await geo(p.entrega), p);
-  else {
-   let o=await geo(p.dirRecogida);
-   let d=await geo(p.entrega);
-   if(o&&d) trazarRutaRepa(o,d,p);
-  }
- }
+ if(tipoRuta==='recogida'){ if(pos) trazarRutaRepa(pos, await geo(p.dirRecogida), p); }
+ else{ if(pos) trazarRutaRepa(pos, await geo(p.entrega), p); }
 }
 }
 function trazarRutaRepa(origen, destino, p){
 if(!origen||!destino||!mapRepa) return;
-let dirServRepa=new google.maps.DirectionsService();
-dirServRepa.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{
+let dir=new google.maps.DirectionsService();
+dir.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{
  if(s==='OK'){
-  if(!dirRendRepa){
-   dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
-  }
-  dirRendRepa.setMap(mapRepa);
-  dirRendRepa.setDirections(r);
-  clearMRepa();
-  addMRepa(origen,'#3b82f6');
-  addMRepa(destino,'#ef4444');
-  let leg=r.routes[0].legs[0];
-  document.getElementById('txtKmRepa').innerText=leg.distance.text;
-  document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0));
-  document.getElementById('txtTiempoRepa').innerText=leg.duration.text + (p.tiempoRecogida?' • '+calcularHoraRecogida(p.ts,p.tiempoRecogida):'');
+  if(!dirRendRepa) dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
+  dirRendRepa.setMap(mapRepa); dirRendRepa.setDirections(r); clearMRepa(); addMRepa(origen,'#3b82f6'); addMRepa(destino,'#ef4444');
+  let leg=r.routes[0].legs[0]; document.getElementById('txtKmRepa').innerText=leg.distance.text; document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0)); document.getElementById('txtTiempoRepa').innerText=leg.duration.text+' • '+calcularHoraRecogida(p.ts,p.tiempoRecogida);
  }
 });
 }
 window.verRutaRepa=async function(id){
-let p=pedidosLive[id];
-if(!p) return;
-let o=await geo(p.dirRecogida);
-let d=await geo(p.entrega);
-if(!o||!d) return;
-if(!mapRepa) return;
-let etapa=p.etapa||'pendiente';
-let origen=o;
-let destino=d;
-if(['camino','en camino'].includes(etapa)){
- let pos=await getUbicacionRepa();
- if(pos) origen=pos;
- destino=o;
-}else if(etapa==='entrega' || etapa==='recogido'){
- let pos=await getUbicacionRepa();
- if(pos) origen=pos;
- destino=d;
-}
-let dirServRepa=new google.maps.DirectionsService();
-dirServRepa.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{
- if(s==='OK'){
-  if(!dirRendRepa){
-   dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
-  }
-  dirRendRepa.setMap(mapRepa);
-  dirRendRepa.setDirections(r);
-  clearMRepa();
-  addMRepa(origen,'#3b82f6'); addMRepa(destino,'#ef4444');
-  let leg=r.routes[0].legs[0];
-  document.getElementById('txtKmRepa').innerText=leg.distance.text;
-  document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0));
-  document.getElementById('txtTiempoRepa').innerText=leg.duration.text + (p.tiempoRecogida?' • '+calcularHoraRecogida(p.ts,p.tiempoRecogida):'');
- }
+let p=pedidosLive[id]; if(!p) return;
+let o=await geo(p.dirRecogida); let d=await geo(p.entrega); if(!o||!d) return;
+let etapa=p.etapa||'pendiente'; let origen=o; let destino=d;
+if(['camino','en camino'].includes(etapa)){ let pos=await getUbicacionRepa(); if(pos) origen=pos; destino=o; }
+else if(['entrega','recogido'].includes(etapa)){ let pos=await getUbicacionRepa(); if(pos) origen=pos; destino=d; }
+let dir=new google.maps.DirectionsService();
+dir.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{
+ if(s==='OK'){ if(!dirRendRepa) dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); dirRendRepa.setMap(mapRepa); dirRendRepa.setDirections(r); clearMRepa(); addMRepa(origen,'#3b82f6'); addMRepa(destino,'#ef4444'); let leg=r.routes[0].legs[0]; document.getElementById('txtKmRepa').innerText=leg.distance.text; document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0)); document.getElementById('txtTiempoRepa').innerText=leg.duration.text; }
 });
 }
 window.registrarHistorial=async function(id){
-let p=pedidosLive[id];
-if(!p) return;
-let histRef=push(ref(db,'kigoHistorial'));
-await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()});
-await remove(ref(db,'kigoPedidosLive/'+id));
-mostrarModalElegante({title:'Historial',text:'Registrado en historial correctamente',showCancel:false});
+let p=pedidosLive[id]; if(!p) return;
+let histRef=push(ref(db,'kigoHistorial')); await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+id));
+mostrarModalElegante({title:'Historial',text:'Registrado en historial',showCancel:false});
 }
-
 window.verDetalles=function(id){
-let p=pedidosLive[id];
-if(!p) return;
+let p=pedidosLive[id]; if(!p) return;
 pedidoEditId=id; pedidoEditData=p;
-let horaRec=calcularHoraRecogida(p.ts, p.tiempoRecogida);
-document.getElementById('detalleContent').innerHTML=`
-<div style="font-size:10px;color:#666;background:#f7f7f7;border-radius:10px;padding:10px">
-<div><b>Código:</b> ${id.substring(1,7).toUpperCase()} | <b>Hora pedido:</b> ${new Date(p.ts).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:true})}</div>
-<div style="margin-top:4px;color:#0a0a0a;font-weight:800">${horaRec} - Estado: ${p.etapa}</div>
-<div><b>Cliente:</b> ${p.cliente}</div>
-<div><b>Servicio:</b> ${p.servicio}</div>
-<div><b>Tel:</b> ${p.telefono||''} | <b>Ref:</b> ${p.referencia||''}</div>
-<div><b>Repartidor:</b> ${p.repaAsignado}</div>
-</div>`;
-document.getElementById('editRecogida').value=p.dirRecogida||'';
-document.getElementById('editEntrega').value=p.entrega||'';
-document.getElementById('editTelEnt').value=p.telefono||'';
-document.getElementById('editRefEnt').value=p.referencia||'';
-document.getElementById('editCostoExtra').value=p.costoExtra||0;
-let selEdit=document.getElementById('editRepa');
-if(selEdit) selEdit.value=p.repaAsignado||'José';
-calcTotalEdit();
-document.getElementById('overlayDetalle').classList.add('show');
+document.getElementById('detalleContent').innerHTML=`<div style="font-size:10px;color:#666;background:#f7f7f7;border-radius:10px;padding:10px"><div><b>Código:</b> ${id.substring(1,7).toUpperCase()}</div><div style="margin-top:4px;font-weight:800">${calcularHoraRecogida(p.ts,p.tiempoRecogida)} - ${p.etapa}</div><div><b>Cliente:</b> ${p.cliente}</div><div><b>Recoge:</b> ${p.dirRecogida}</div><div><b>Entrega:</b> ${p.entrega}</div></div>`;
+document.getElementById('editRecogida').value=p.dirRecogida||''; document.getElementById('editEntrega').value=p.entrega||''; document.getElementById('editTelEnt').value=p.telefono||''; document.getElementById('editRefEnt').value=p.referencia||''; document.getElementById('editCostoExtra').value=p.costoExtra||0;
+let selEdit=document.getElementById('editRepa'); if(selEdit) selEdit.value=p.repaAsignado||'José';
+calcTotalEdit(); document.getElementById('overlayDetalle').classList.add('show');
 }
-window.addCosto=function(n){
-let inp=document.getElementById('editCostoExtra');
-let cur=parseInt(inp.value||0);
-inp.value=cur+n;
-calcTotalEdit();
-}
-window.calcTotalEdit=function(){
-let base=pedidoEditData?.costoSugerido||0;
-let extra=parseInt(document.getElementById('editCostoExtra').value||0);
-document.getElementById('txtTotalEdit').innerText='$'+(base+extra);
-}
+window.addCosto=function(n){ let inp=document.getElementById('editCostoExtra'); inp.value=(parseInt(inp.value||0)+n); calcTotalEdit(); }
+window.calcTotalEdit=function(){ let base=pedidoEditData?.costoSugerido||0; let extra=parseInt(document.getElementById('editCostoExtra').value||0); document.getElementById('txtTotalEdit').innerText='$'+(base+extra); }
 window.guardarEdicion=async function(){
 if(!pedidoEditId) return;
 let extra=parseInt(document.getElementById('editCostoExtra').value||0);
-await update(ref(db,'kigoPedidosLive/'+pedidoEditId),{
-dirRecogida:document.getElementById('editRecogida').value,
-entrega:document.getElementById('editEntrega').value,
-telefono:document.getElementById('editTelEnt').value,
-referencia:document.getElementById('editRefEnt').value,
-repaAsignado:document.getElementById('editRepa').value,
-costoExtra:extra
-});
-mostrarModalElegante({title:'Actualizado',text:'Pedido actualizado y repartidor cambiado en tiempo real',showCancel:false});
-cerrarDetalle();
+await update(ref(db,'kigoPedidosLive/'+pedidoEditId),{dirRecogida:document.getElementById('editRecogida').value,entrega:document.getElementById('editEntrega').value,telefono:document.getElementById('editTelEnt').value,referencia:document.getElementById('editRefEnt').value,repaAsignado:document.getElementById('editRepa').value,costoExtra:extra});
+mostrarModalElegante({title:'Actualizado',text:'Actualizado en tiempo real',showCancel:false}); cerrarDetalle();
 }
-window.cancelarDirecto=function(id){
+window.cancelarDirecto=async function(id){
+let p=pedidosLive[id]; if(!p) return;
 pedidoEditId=id;
-mostrarModalElegante({title:'Cancelar',text:'¿Cancelar este servicio?',confirmText:'Sí, cancelar',onConfirm:async()=>{
-await remove(ref(db,'kigoPedidosLive/'+pedidoEditId));
-cerrarModal();
+mostrarModalElegante({title:'Cancelar pedido',text:`¿Cancelar pedido de ${p.cliente}? A José le sonará alerta roja`,confirmText:'Sí, cancelar',onConfirm:async()=>{
+ let codigo=id.substring(1,7).toUpperCase();
+ let notifRef=push(ref(db,'kigoNotificaciones'));
+ await set(notifRef,{tipo:'cancelado',id:id,codigo:codigo,cliente:p.cliente,ts:Date.now()});
+ await remove(ref(db,'kigoPedidosLive/'+id));
+ cerrarModal();
+ sonidoCancel();
 }});
 }
-window.finalizarPedido=async function(){
-if(!pedidoEditId) return;
-let p=pedidosLive[pedidoEditId];
-let histRef=push(ref(db,'kigoHistorial'));
-await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()});
-await remove(ref(db,'kigoPedidosLive/'+pedidoEditId));
-cerrarDetalle();
-mostrarModalElegante({title:'Historial',text:'Enviado a historial',showCancel:false});
-}
-
+window.finalizarPedido=async function(){ if(!pedidoEditId) return; let p=pedidosLive[pedidoEditId]; let histRef=push(ref(db,'kigoHistorial')); await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+pedidoEditId)); cerrarDetalle(); mostrarModalElegante({title:'Historial',text:'Enviado a historial',showCancel:false}); }
 window.showView=function(v){
 document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
 document.getElementById('view-'+v).classList.add('active');
 document.getElementById('bP').classList.toggle('active',v==='pedidos');
 document.getElementById('bS').classList.toggle('active',v==='seguimiento');
 document.getElementById('bR').classList.toggle('active',v==='repartidor');
+document.getElementById('bCH').classList.toggle('active',v==='chat');
 document.getElementById('bH').classList.toggle('active',v==='historial');
 document.getElementById('bC').classList.toggle('active',v==='clientes');
 if(v==='pedidos'&&map) setTimeout(()=>google.maps.event.trigger(map,'resize'),200);
 if(v==='repartidor'&&mapRepa) setTimeout(()=>{ google.maps.event.trigger(mapRepa,'resize'); renderRepaPanel(); },200);
-if(v==='seguimiento') renderSeguimiento();
-if(v==='historial') renderHistorial();
+if(v==='chat'){ let box=document.getElementById('chatBox'); if(box) box.scrollTop=box.scrollHeight; }
 }
 function initMapReal(){
 if(!window.google||!google.maps){ setTimeout(initMapReal,300); return; }
@@ -882,197 +756,46 @@ new google.maps.places.Autocomplete(document.getElementById('compAlmacen'),opts)
 new google.maps.places.Autocomplete(document.getElementById('compDirEntrega'),opts);
 }catch(e){}
 }
-window._initMapReal=initMapReal;
 setTimeout(initMapReal,500); setTimeout(initMapReal,1500);
-
 function clearM(){markers.forEach(m=>m.setMap(null));markers=[];}
 function clearMRepa(){markersRepa.forEach(m=>m.setMap(null));markersRepa=[];}
-window.clearM=clearM;
 function addM(p,c){let m=new google.maps.Marker({position:p,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:c,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});markers.push(m);}
 function addMRepa(p,c){let m=new google.maps.Marker({position:p,map:mapRepa,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:c,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});markersRepa.push(m);}
 function geo(dir){return new Promise(r=>{new google.maps.Geocoder().geocode({address:dir+', Dolores Hidalgo, Mexico'},(re,s)=>{if(s==='OK'&&re[0]){let l=re[0].geometry.location;r({lat:l.lat(),lng:l.lng()});}else r(null);});});}
-
-window.toggleClear=function(inputId, btnId){
-let v=document.getElementById(inputId)?.value||'';
-let b=document.getElementById(btnId);
-if(!b) return;
-if(v.length>0) b.classList.add('show'); else b.classList.remove('show');
-}
-window.limpiarCampo=function(inputId, btnId){
-let inp=document.getElementById(inputId);
-if(inp) inp.value='';
-let b=document.getElementById(btnId);
-if(b) b.classList.remove('show');
-if(inputId==='buscCli'){
-clienteSel=null;
-document.getElementById('boxSel').style.display='none';
-document.getElementById('listCli').style.display='none';
-document.getElementById('txtKm').innerText='-- km • -- min';
-document.getElementById('txtCosto').innerText='$0';
-clearM();
-if(dirRend) dirRend.setDirections({routes:[]});
-}
-}
-window.limpiarTodoPedido=function(){
-clienteSel=null; pedido=null;
-['buscCli','dirEntrega','tiempoRecogida','telEntrega','refEntrega','nuevoNombre','nuevoDirRecoge','nuevoTel','nuevoDirEntrega','nuevoTiempoRecogida','nuevoTelEntrega','nuevoRefEntrega','compTipo','compReferencia','compAlmacen','compDirEntrega','compNombreRecibe','compTel','compRefEntrega','compTiempo'].forEach(id=>{
-let el=document.getElementById(id); if(el) el.value='';
-});
-document.getElementById('boxSel').style.display='none';
-document.getElementById('listCli').style.display='none';
-document.getElementById('txtKm').innerText='-- km • -- min';
-document.getElementById('txtCosto').innerText='$0';
-document.querySelectorAll('.btn-clear').forEach(b=>b.classList.remove('show'));
-clearM();
-if(dirRend) dirRend.setDirections({routes:[]});
-}
-window.guardarClienteReal=async function(){
-let nombre=document.getElementById('cliNombre')?.value.trim();
-let dir=document.getElementById('cliDir')?.value.trim();
-let tel=document.getElementById('cliTel')?.value.trim();
-if(!nombre||!dir){ mostrarModalElegante({title:'Falta dato',text:'Escribe nombre y direccion',showCancel:false}); return; }
-let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
-await set(ref(db,'kigoClientesDir/'+key),{direccion:dir,telefono:tel,nombreOriginal:nombre,ts:Date.now()});
-document.getElementById('cliNombre').value=''; document.getElementById('cliDir').value=''; document.getElementById('cliTel').value='';
-}
-window.guardarDesdePedidoNuevo=async function(){
-let nombre=document.getElementById('nuevoNombre').value.trim();
-let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim();
-let tel=document.getElementById('nuevoTel').value.trim();
-if(!nombre||!dirRecoge){ mostrarModalElegante({title:'Falta dato',text:'Nombre y direccion recogida obligatoria',showCancel:false}); return; }
-let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
-await set(ref(db,'kigoClientesDir/'+key),{direccion:dirRecoge,telefono:tel,nombreOriginal:nombre,ts:Date.now()});
-mostrarModalElegante({title:'Guardado',text:nombre+' guardado en clientes',showCancel:false});
-}
-window.renderClientes=function(){
-let lista=document.getElementById('listaClientes'); let filtro=document.getElementById('filtroCli')?.value.toLowerCase()||'';
-if(!lista) return;
-let entries=Object.entries(clientesDB).filter(([n])=>n.toLowerCase().includes(filtro)).sort((a,b)=>a[0].localeCompare(b[0]));
-document.getElementById('countCli')&&(document.getElementById('countCli').innerText=entries.length);
-if(!entries.length){ lista.innerHTML='<div style="text-align:center;padding:20px;color:#999;font-size:11px">No hay clientes</div>'; return; }
-lista.innerHTML=entries.map(([n,d])=>`
-<div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center">
-<div style="flex:1;min-width:0"><b style="font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">${n}</b><small style="color:#666;font-size:10px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.direccion}</small><small style="color:#10b981;font-weight:800;font-size:10px">${d.telefono||''}</small></div>
-<div style="display:flex;gap:6px;margin-left:10px">
-<button class="icon-btn edit" onclick="editarCliente('${n.replace(/'/g,"\\'")}')"><svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-<button class="icon-btn del" onclick="borrarClienteDB('${n.replace(/'/g,"\\'")}')"><svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
-</div>
-</div>`).join('');
-}
-window.editarCliente=function(n){
-let d=clientesDB[n]; if(!d) return;
-mostrarModalElegante({
-title:'Editar cliente',
-text:'Modifica los datos y guarda',
-confirmText:'Guardar cambios',
-showEdit:true,
-editData:{...d, oldKey:d._key},
-onConfirm: async ()=>{
-let newNombre=document.getElementById('editNombre').value.trim();
-let newDir=document.getElementById('editDir').value.trim();
-let newTel=document.getElementById('editTel').value.trim();
-if(!newNombre||!newDir){ alert('Falta nombre o direccion'); return; }
-let oldKey=document.getElementById('editNombre').dataset.oldKey;
-let newKey=newNombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
-if(newKey!==oldKey){ await remove(ref(db,'kigoClientesDir/'+oldKey)); }
-await set(ref(db,'kigoClientesDir/'+newKey),{direccion:newDir,telefono:newTel,nombreOriginal:newNombre,ts:Date.now()});
-cerrarModal();
-}
-});
-}
-window.borrarClienteDB=async function(n){
-let d=clientesDB[n];
-mostrarModalElegante({title:'Borrar',text:'Borrar '+n+'?',confirmText:'Borrar',onConfirm:async ()=>{ await remove(ref(db,'kigoClientesDir/'+d._key)); cerrarModal(); }});
-}
-window.buscarCliente=function(){
-let q=document.getElementById('buscCli').value.toLowerCase().trim();
-let list=document.getElementById('listCli');
-let todos=Object.keys(clientesDB);
-if(!q){list.style.display='none';return;}
-let fil=todos.filter(n=>n.toLowerCase().includes(q)).slice(0,12);
-if(!fil.length){list.innerHTML='<div style="padding:10px;font-size:10px">No encontrado</div>';list.style.display='block';return;}
-list.innerHTML=fil.map(n=>{let d=clientesDB[n];return `<div onclick="seleccionar('${n.replace(/'/g,"\\'")}')" style="padding:9px;border-bottom:1px solid #eee;cursor:pointer"><b style="font-size:11px">${n}</b><br><small style="font-size:9px">${d.direccion}</small></div>`;}).join('');
-list.style.display='block';
-}
-window.seleccionar=function(n){
-let d=clientesDB[n]; if(!d) return;
-clienteSel={nombre:n,direccion:d.direccion,telefono:d.telefono};
-document.getElementById('buscCli').value=n;document.getElementById('listCli').style.display='none';
-document.getElementById('boxSel').style.display='block';
-document.getElementById('txtNom').innerText=n;
-document.getElementById('txtDirSel').innerText=d.direccion;
-let telBox=document.getElementById('txtTelSel');
-if(d.telefono && d.telefono.trim()!==''){
-telBox.innerHTML=`<span style="color:#10b981">`+d.telefono+`</span>`;
-}else{
-telBox.innerHTML=`<span style="color:#ef4444">✕ SIN NÚMERO</span>`;
-}
-toggleClear('buscCli','clearBusc');
-geo(d.direccion).then(p=>{if(p&&map){map.setCenter(p);map.setZoom(15);clearM();addM(p,'#ef4444');}});
-}
+window.toggleClear=function(inputId, btnId){ let v=document.getElementById(inputId)?.value||''; let b=document.getElementById(btnId); if(!b) return; if(v.length>0) b.classList.add('show'); else b.classList.remove('show'); }
+window.limpiarCampo=function(inputId, btnId){ let inp=document.getElementById(inputId); if(inp) inp.value=''; let b=document.getElementById(btnId); if(b) b.classList.remove('show'); if(inputId==='buscCli'){ clienteSel=null; document.getElementById('boxSel').style.display='none'; document.getElementById('listCli').style.display='none'; document.getElementById('txtKm').innerText='-- km • -- min'; document.getElementById('txtCosto').innerText='$0'; clearM(); if(dirRend) dirRend.setDirections({routes:[]}); } }
+window.limpiarTodoPedido=function(){ clienteSel=null; pedido=null; ['buscCli','dirEntrega','tiempoRecogida','telEntrega','refEntrega','nuevoNombre','nuevoDirRecoge','nuevoTel','nuevoDirEntrega','nuevoTiempoRecogida','nuevoTelEntrega','nuevoRefEntrega','compTipo','compReferencia','compAlmacen','compDirEntrega','compNombreRecibe','compTel','compRefEntrega','compTiempo'].forEach(id=>{ let el=document.getElementById(id); if(el) el.value=''; }); document.getElementById('boxSel').style.display='none'; document.getElementById('listCli').style.display='none'; document.getElementById('txtKm').innerText='-- km • -- min'; document.getElementById('txtCosto').innerText='$0'; document.querySelectorAll('.btn-clear').forEach(b=>b.classList.remove('show')); clearM(); if(dirRend) dirRend.setDirections({routes:[]}); }
+window.guardarClienteReal=async function(){ let nombre=document.getElementById('cliNombre')?.value.trim(); let dir=document.getElementById('cliDir')?.value.trim(); let tel=document.getElementById('cliTel')?.value.trim(); if(!nombre||!dir){ mostrarModalElegante({title:'Falta dato',text:'Escribe nombre y direccion',showCancel:false}); return; } let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await set(ref(db,'kigoClientesDir/'+key),{direccion:dir,telefono:tel,nombreOriginal:nombre,ts:Date.now()}); document.getElementById('cliNombre').value=''; document.getElementById('cliDir').value=''; document.getElementById('cliTel').value=''; }
+window.guardarDesdePedidoNuevo=async function(){ let nombre=document.getElementById('nuevoNombre').value.trim(); let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim(); let tel=document.getElementById('nuevoTel').value.trim(); if(!nombre||!dirRecoge){ mostrarModalElegante({title:'Falta dato',text:'Nombre y direccion recogida obligatoria',showCancel:false}); return; } let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await set(ref(db,'kigoClientesDir/'+key),{direccion:dirRecoge,telefono:tel,nombreOriginal:nombre,ts:Date.now()}); mostrarModalElegante({title:'Guardado',text:nombre+' guardado',showCancel:false}); }
+window.renderClientes=function(){ let lista=document.getElementById('listaClientes'); let filtro=document.getElementById('filtroCli')?.value.toLowerCase()||''; if(!lista) return; let entries=Object.entries(clientesDB).filter(([n])=>n.toLowerCase().includes(filtro)).sort((a,b)=>a[0].localeCompare(b[0])); document.getElementById('countCli').innerText=entries.length; if(!entries.length){ lista.innerHTML='<div style="text-align:center;padding:20px;color:#999;font-size:11px">No hay clientes</div>'; return; } lista.innerHTML=entries.map(([n,d])=>`<div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between"><div><b style="font-size:11px">${n}</b><br><small style="font-size:10px;color:#666">${d.direccion}</small></div><div style="display:flex;gap:6px"><button class="icon-btn" onclick="editarCliente('${n.replace(/'/g,"\\'")}')"><svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn" onclick="borrarClienteDB('${n.replace(/'/g,"\\'")}')"><svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></div>`).join(''); }
+window.editarCliente=function(n){ let d=clientesDB[n]; if(!d) return; mostrarModalElegante({title:'Editar cliente',text:'Modifica y guarda',confirmText:'Guardar cambios',showEdit:true,editData:{...d, oldKey:d._key},onConfirm:async()=>{ let newNombre=document.getElementById('editNombre').value.trim(); let newDir=document.getElementById('editDir').value.trim(); let newTel=document.getElementById('editTel').value.trim(); if(!newNombre||!newDir){ alert('Falta'); return; } let oldKey=document.getElementById('editNombre').dataset.oldKey; let newKey=newNombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); if(newKey!==oldKey){ await remove(ref(db,'kigoClientesDir/'+oldKey)); } await set(ref(db,'kigoClientesDir/'+newKey),{direccion:newDir,telefono:newTel,nombreOriginal:newNombre,ts:Date.now()}); cerrarModal(); }}); }
+window.borrarClienteDB=async function(n){ let d=clientesDB[n]; mostrarModalElegante({title:'Borrar',text:'Borrar '+n+'?',confirmText:'Borrar',onConfirm:async()=>{ await remove(ref(db,'kigoClientesDir/'+d._key)); cerrarModal(); }}); }
+window.buscarCliente=function(){ let q=document.getElementById('buscCli').value.toLowerCase().trim(); let list=document.getElementById('listCli'); let todos=Object.keys(clientesDB); if(!q){list.style.display='none';return;} let fil=todos.filter(n=>n.toLowerCase().includes(q)).slice(0,12); if(!fil.length){list.innerHTML='<div style="padding:10px;font-size:10px">No encontrado</div>';list.style.display='block';return;} list.innerHTML=fil.map(n=>{let d=clientesDB[n];return `<div onclick="seleccionar('${n.replace(/'/g,"\\'")}')" style="padding:9px;border-bottom:1px solid #eee;cursor:pointer"><b style="font-size:11px">${n}</b><br><small style="font-size:9px">${d.direccion}</small></div>`;}).join(''); list.style.display='block'; }
+window.seleccionar=function(n){ let d=clientesDB[n]; if(!d) return; clienteSel={nombre:n,direccion:d.direccion,telefono:d.telefono}; document.getElementById('buscCli').value=n;document.getElementById('listCli').style.display='none'; document.getElementById('boxSel').style.display='block'; document.getElementById('txtNom').innerText=n; document.getElementById('txtDirSel').innerText=d.direccion; document.getElementById('txtTelSel').innerText=d.telefono||'SIN NÚMERO'; toggleClear('buscCli','clearBusc'); geo(d.direccion).then(p=>{if(p&&map){map.setCenter(p);map.setZoom(15);clearM();addM(p,'#ef4444');}}); }
 window.cotizar=async function(){
 let o=null, de=null;
 if(servicioActual==='comprar'){
-let almacen=document.getElementById('compAlmacen').value.trim();
-let dirEnt=document.getElementById('compDirEntrega').value.trim();
-if(!almacen||!dirEnt){ mostrarModalElegante({title:'Falta dato',text:'Almacen y direccion entrega obligatorios',showCancel:false}); return; }
-o=await geo(almacen);
-de=await geo(dirEnt);
-if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
-dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{
-if(s==='OK'){
-let leg=r.routes[0].legs[0];dirRend.setDirections(r);clearM();addM(o,'#ef4444');addM(de,'#0a0a0a');
-let km=(leg.distance.value/1000).toFixed(1);let min=Math.round(leg.duration.value/60);let costo=Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6);
-pedido={servicio:'comprar',clienteSel:{nombre:document.getElementById('compNombreRecibe').value.trim()||'Compra',direccion:almacen,telefono:document.getElementById('compTel').value.trim()},entrega:dirEnt,telEntrega:document.getElementById('compTel').value.trim(),refEntrega:document.getElementById('compRefEntrega').value.trim(),tipoProd:document.getElementById('compTipo').value.trim(),referenciaCompra:document.getElementById('compReferencia').value.trim(),tiempoRecogida:document.getElementById('compTiempo').value.trim(),de,o,km,min,costo};
-document.getElementById('txtKm').innerText=`${km}km • ${min}m`;
-document.getElementById('txtCosto').innerText=`$${costo}`;
-}
-});
-return;
+let almacen=document.getElementById('compAlmacen').value.trim(); let dirEnt=document.getElementById('compDirEntrega').value.trim();
+if(!almacen||!dirEnt){ mostrarModalElegante({title:'Falta dato',text:'Almacen y entrega obligatorios',showCancel:false}); return; }
+o=await geo(almacen); de=await geo(dirEnt); if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
+dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let costo=Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6); pedido={servicio:'comprar',clienteSel:{nombre:document.getElementById('compNombreRecibe').value.trim()||'Compra',direccion:almacen,telefono:document.getElementById('compTel').value.trim()},entrega:dirEnt,telEntrega:document.getElementById('compTel').value.trim(),refEntrega:document.getElementById('compRefEntrega').value.trim(),tipoProd:document.getElementById('compTipo').value.trim(),referenciaCompra:document.getElementById('compReferencia').value.trim(),tiempoRecogida:document.getElementById('compTiempo').value.trim(),de,o,km,min,costo}; document.getElementById('txtKm').innerText=`${km}km • ${min}m`; document.getElementById('txtCosto').innerText=`$${costo}`; } }); return;
 }
 let entrega='', telEntrega='', refEntrega='', nombreCliente='', telRecogida='', tiempoRecogida='';
 if(modoActual==='lista'){
-if(!clienteSel){ mostrarModalElegante({title:'Falta cliente',text:'Busca cliente en base de datos',showCancel:false}); return; }
-entrega=document.getElementById('dirEntrega').value.trim();
-telEntrega=document.getElementById('telEntrega').value.trim();
-refEntrega=document.getElementById('refEntrega').value.trim();
-tiempoRecogida=document.getElementById('tiempoRecogida').value.trim();
-nombreCliente=clienteSel.nombre;
-telRecogida=clienteSel.telefono||'';
-o=await geo(clienteSel.direccion);
-de=await geo(entrega);
+if(!clienteSel){ mostrarModalElegante({title:'Falta cliente',text:'Busca cliente',showCancel:false}); return; }
+entrega=document.getElementById('dirEntrega').value.trim(); telEntrega=document.getElementById('telEntrega').value.trim(); refEntrega=document.getElementById('refEntrega').value.trim(); tiempoRecogida=document.getElementById('tiempoRecogida').value.trim(); nombreCliente=clienteSel.nombre; telRecogida=clienteSel.telefono||''; o=await geo(clienteSel.direccion); de=await geo(entrega);
 }else{
-let nombre=document.getElementById('nuevoNombre').value.trim();
-let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim();
-let dirEnt=document.getElementById('nuevoDirEntrega').value.trim();
-if(!nombre||!dirRecoge||!dirEnt){ mostrarModalElegante({title:'Falta dato',text:'Completa nombre, direccion recogida y entrega',showCancel:false}); return; }
-entrega=dirEnt;
-telEntrega=document.getElementById('nuevoTelEntrega').value.trim();
-refEntrega=document.getElementById('nuevoRefEntrega').value.trim();
-tiempoRecogida=document.getElementById('nuevoTiempoRecogida').value.trim();
-nombreCliente=nombre;
-telRecogida=document.getElementById('nuevoTel').value.trim();
-clienteSel={nombre:nombre,direccion:dirRecoge,telefono:telRecogida};
-o=await geo(dirRecoge);
-de=await geo(dirEnt);
+let nombre=document.getElementById('nuevoNombre').value.trim(); let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim(); let dirEnt=document.getElementById('nuevoDirEntrega').value.trim(); if(!nombre||!dirRecoge||!dirEnt){ mostrarModalElegante({title:'Falta dato',text:'Completa datos',showCancel:false}); return; } entrega=dirEnt; telEntrega=document.getElementById('nuevoTelEntrega').value.trim(); refEntrega=document.getElementById('nuevoRefEntrega').value.trim(); tiempoRecogida=document.getElementById('nuevoTiempoRecogida').value.trim(); nombreCliente=nombre; telRecogida=document.getElementById('nuevoTel').value.trim(); clienteSel={nombre:nombre,direccion:dirRecoge,telefono:telRecogida}; o=await geo(dirRecoge); de=await geo(dirEnt);
 }
 if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
-dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{
-if(s==='OK'){
-let leg=r.routes[0].legs[0];dirRend.setDirections(r);clearM();addM(o,'#ef4444');addM(de,'#0a0a0a');
-let km=(leg.distance.value/1000).toFixed(1);let min=Math.round(leg.duration.value/60);let costo=Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6);
-pedido={servicio:'recoger',clienteSel:{nombre:nombreCliente,direccion:clienteSel.direccion,telefono:telRecogida},entrega:entrega,telEntrega:telEntrega,refEntrega:refEntrega,tiempoRecogida:tiempoRecogida,de,o,km,min,costo};
-document.getElementById('txtKm').innerText=`${km}km • ${min}m`;
-document.getElementById('txtCosto').innerText=`$${costo}`;
-}
-});
+dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let costo=Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6); pedido={servicio:'recoger',clienteSel:{nombre:nombreCliente,direccion:clienteSel.direccion,telefono:telRecogida},entrega:entrega,telEntrega:telEntrega,refEntrega:refEntrega,tiempoRecogida:tiempoRecogida,de,o,km,min,costo}; document.getElementById('txtKm').innerText=`${km}km • ${min}m`; document.getElementById('txtCosto').innerText=`$${costo}`; } });
 }
 window.confirmar=async function(){
 if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
 let repa=document.getElementById('selRepa')?.value||'José';
 let nr=push(ref(db,'kigoPedidosLive'));
 await set(nr,{servicio:pedido.servicio||'recoger',cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:pedido.clienteSel.telefono||'',telefono:pedido.telEntrega||'',referencia:pedido.refEntrega||'',tiempoRecogida:pedido.tiempoRecogida||'',tipoProd:pedido.tipoProd||'',referenciaCompra:pedido.referenciaCompra||'',km:pedido.km,costoSugerido:pedido.costo,costoExtra:0,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
-mostrarModalElegante({title:'Enviado',text:(pedido.servicio==='comprar'?'Compra':'Recogida')+' asignada a '+repa+' - '+(pedido.tiempoRecogida||'0')+' min - $'+pedido.costo,showCancel:false, onConfirm:()=>{ cerrarModal(); limpiarTodoPedido(); showView('seguimiento'); }});
+mostrarModalElegante({title:'Enviado',text:'Asignada a '+repa+' - $'+pedido.costo,showCancel:false,onConfirm:()=>{ cerrarModal(); limpiarTodoPedido(); showView('seguimiento'); }});
 }
 document.addEventListener('click',e=>{if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')){let l=document.getElementById('listCli'); if(l) l.style.display='none';}});
 </script>
