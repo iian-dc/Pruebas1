@@ -2,12 +2,14 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Kigo Xpress</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640px;margin:0 auto;padding:10px;padding-bottom:90px;letter-spacing:-.2px}
+html,body{height:100%}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640px;margin:0 auto;padding:0;padding-bottom:70px;letter-spacing:-.2px;overflow-x:hidden}
+.content{padding:10px;padding-bottom:10px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .card{background:#fff;border:1px solid #eee;border-radius:18px;padding:12px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .label{font-size:8px;font-weight:800;color:#8a8a8a;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;display:block}
 .wrap{border:1.2px solid #e9e9e9;border-radius:12px;background:#fff;display:flex;align-items:center;position:relative}
@@ -23,18 +25,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .view{display:none}.view.active{display:block}
 #map,#mapRepa{width:100%;height:360px;border-radius:14px;background:#e5e7eb;display:block}
 #listCli{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #0a0a0a;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none;z-index:50}
-.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;display:flex;padding:8px;max-width:640px;margin:0 auto;gap:4px;z-index:100}
-.bottom button{flex:1;height:42px;border-radius:12px;border:1px solid #eee;background:#fff;display:flex;align-items:center;justify-content:center}
+.bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:640px;background:#fff;border-top:1px solid #eee;display:flex;padding:8px 6px;gap:4px;z-index:999;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+.bottom button{flex:1;height:44px;border-radius:12px;border:1px solid #eee;background:#fff;display:flex;align-items:center;justify-content:center;transition:.2s}
 .bottom button.active{background:#0a0a0a;border-color:#0a0a0a}
-.bottom button svg{width:18px;height:18px;stroke:#111;fill:none;stroke-width:2}
+.bottom button svg{width:18px;height:18px;stroke:#111;fill:none;stroke-width:1.8}
 .bottom button.active svg{stroke:#fff}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .dot.on{background:#10b981;box-shadow:0 0 0 2px #d1fae5}
 .dot.off{background:#ef4444;box-shadow:0 0 0 2px #fee2e2}
-.kigo-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:200;padding:12px}
+.kigo-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:2000;padding:12px}
 .kigo-overlay.show{display:flex}
 .kigo-modal{background:#fff;border-radius:20px;padding:20px;max-width:380px;width:95%;max-height:90vh;overflow:auto;position:relative}
-.kigo-btn{flex:1;height:42px;border-radius:12px;border:none;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
+.kigo-btn{flex:1;height:42px;border-radius:12px;border:none;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .kigo-btn-confirm{background:#0a0a0a;color:#fff}
 .ico{width:15px;height:15px;stroke:#111;stroke-width:1.8;fill:none}
 .tabSeg{height:34px;padding:0 12px;border-radius:20px;border:1px solid #e5e7eb;background:#fff;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap}
@@ -63,7 +65,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 </style>
 </head>
 <body>
-
+<div class="content">
 <div id="view-pedidos" class="view active">
 <div class="card" style="padding:8px">
 <div id="map"></div>
@@ -99,15 +101,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 <div id="listCli"></div>
 </div>
 <div id="boxSel" style="display:none;margin-top:10px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:12px">
-<div style="display:flex;justify-content:space-between">
-<div style="flex:1"><div id="txtNom" style="font-weight:800;font-size:12px"></div><div id="txtDirSel" style="font-size:10px;color:#555;margin-top:2px"></div><div id="txtTelSel" style="font-size:11px;font-weight:800;margin-top:4px"></div></div>
-<button onclick="limpiarCampo('buscCli','clearBusc')" style="width:22px;height:22px;border-radius:50%;border:none;background:#dcfce7;color:#16a34a;font-weight:800;cursor:pointer">✕</button>
+<div style="display:flex;justify-content:space-between"><div style="flex:1"><div id="txtNom" style="font-weight:800;font-size:12px"></div><div id="txtDirSel" style="font-size:10px;color:#555;margin-top:2px"></div><div id="txtTelSel" style="font-size:11px;font-weight:800;margin-top:4px"></div></div><button onclick="limpiarCampo('buscCli','clearBusc')" style="width:22px;height:22px;border-radius:50%;border:none;background:#dcfce7;color:#16a34a;font-weight:800;cursor:pointer">✕</button></div>
 </div>
-</div>
-<span class="label" style="margin-top:10px">Direccion entrega</span>
-<div class="wrap wrap-clear"><input type="text" id="dirEntrega" placeholder="Dirección..." oninput="toggleClear('dirEntrega','clearEnt')"><button id="clearEnt" class="btn-clear" onclick="limpiarCampo('dirEntrega','clearEnt')">✕</button></div>
-<span class="label" style="margin-top:10px">Tiempo de recogida</span>
-<div class="wrap wrap-clear"><span style="padding-left:12px;display:flex;align-items:center"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><input type="number" id="tiempoRecogida" placeholder="15" oninput="toggleClear('tiempoRecogida','clearTiempo')"><span style="font-size:10px;font-weight:800;color:#888;padding-right:32px">MINUTOS</span><button id="clearTiempo" class="btn-clear" onclick="limpiarCampo('tiempoRecogida','clearTiempo')">✕</button></div>
+<span class="label" style="margin-top:10px">Direccion entrega</span><div class="wrap wrap-clear"><input type="text" id="dirEntrega" placeholder="Dirección..." oninput="toggleClear('dirEntrega','clearEnt')"><button id="clearEnt" class="btn-clear" onclick="limpiarCampo('dirEntrega','clearEnt')">✕</button></div>
+<span class="label" style="margin-top:10px">Tiempo de recogida</span><div class="wrap wrap-clear"><span style="padding-left:12px;display:flex;align-items:center"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><input type="number" id="tiempoRecogida" placeholder="15" oninput="toggleClear('tiempoRecogida','clearTiempo')"><span style="font-size:10px;font-weight:800;color:#888;padding-right:32px">MINUTOS</span><button id="clearTiempo" class="btn-clear" onclick="limpiarCampo('tiempoRecogida','clearTiempo')">✕</button></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
 <div><span class="label">Tel entrega</span><div class="wrap wrap-clear"><input type="text" id="telEntrega" oninput="toggleClear('telEntrega','clearTelEnt')"><button id="clearTelEnt" class="btn-clear" onclick="limpiarCampo('telEntrega','clearTelEnt')">✕</button></div></div>
 <div><span class="label">Referencia</span><div class="wrap wrap-clear"><input type="text" id="refEntrega" oninput="toggleClear('refEntrega','clearRef')"><button id="clearRef" class="btn-clear" onclick="limpiarCampo('refEntrega','clearRef')">✕</button></div></div>
@@ -148,161 +145,63 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 </div>
 
 <div id="view-seguimiento" class="view">
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<h3 style="font-size:12px;font-weight:800">SEGUIMIENTO EN TIEMPO REAL</h3>
-<span id="totalPedidosBadge" style="background:#0a0a0a;color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800">0 PEDIDOS</span>
-</div>
-<div style="display:flex;gap:6px;margin-top:10px;overflow:auto;padding-bottom:4px">
-<button class="tabSeg active" onclick="filtrarSeg('todos')" id="tabTodos">TODOS <span id="cTodos">0</span></button>
-<button class="tabSeg" onclick="filtrarSeg('pendiente')" id="tabPend">PENDIENTES <span id="cPend">0</span></button>
-<button class="tabSeg" onclick="filtrarSeg('camino')" id="tabCam">EN CAMINO <span id="cCam">0</span></button>
-<button class="tabSeg" onclick="filtrarSeg('finalizado')" id="tabFin">FINALIZADOS <span id="cFin">0</span></button>
-</div>
-</div>
+<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:12px;font-weight:800">SEGUIMIENTO EN TIEMPO REAL</h3><span id="totalPedidosBadge" style="background:#0a0a0a;color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800">0 PEDIDOS</span></div><div style="display:flex;gap:6px;margin-top:10px;overflow:auto;padding-bottom:4px"><button class="tabSeg active" onclick="filtrarSeg('todos')" id="tabTodos">TODOS <span id="cTodos">0</span></button><button class="tabSeg" onclick="filtrarSeg('pendiente')" id="tabPend">PENDIENTES <span id="cPend">0</span></button><button class="tabSeg" onclick="filtrarSeg('camino')" id="tabCam">EN CAMINO <span id="cCam">0</span></button><button class="tabSeg" onclick="filtrarSeg('finalizado')" id="tabFin">FINALIZADOS <span id="cFin">0</span></button></div></div>
 <div id="listaSeguimiento"></div>
 </div>
 
 <div id="view-repartidor" class="view">
 <div class="card" style="padding:8px">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-<div style="display:flex;align-items:center;gap:8px">
-<div style="width:36px;height:36px;background:#0a0a0a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px">J</div>
-<div>
-<div style="font-size:12px;font-weight:800">José</div>
-<div style="display:flex;align-items:center;gap:4px"><span class="dot on" id="dotJose"></span><span id="txtEstadoJose" style="font-size:9px;font-weight:800;color:#10b981">EN LÍNEA</span></div>
-</div>
-</div>
-<div style="display:flex;gap:6px">
-<button class="btn-outline" style="width:auto;padding:0 12px;height:36px;font-size:8px;background:#0a0a0a;color:#fff" onclick="toggleChatRepa()">CHAT</button>
-<button id="btnToggleJose" class="btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:9px;background:#10b981;color:#fff;border-color:#10b981" onclick="toggleJose()">DESACTIVAR</button>
-</div>
+<div style="display:flex;align-items:center;gap:8px"><div style="width:36px;height:36px;background:#0a0a0a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px">J</div><div><div style="font-size:12px;font-weight:800">José</div><div style="display:flex;align-items:center;gap:4px"><span class="dot on" id="dotJose"></span><span id="txtEstadoJose" style="font-size:9px;font-weight:800;color:#10b981">EN LÍNEA</span></div></div></div>
+<div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;padding:0 12px;height:36px;font-size:8px;background:#0a0a0a;color:#fff" onclick="toggleChatRepa()"><svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> CHAT</button><button id="btnToggleJose" class="btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:9px;background:#10b981;color:#fff;border-color:#10b981" onclick="toggleJose()">DESACTIVAR</button></div>
 </div>
 <div id="chatRepaSlide" class="chatSlide">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:9px;font-weight:800">CHAT CON BASE</span><button class="btn-outline" style="width:auto;height:30px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarChatRepa()"><svg style="width:12px;height:12px;stroke:#ef4444" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> BORRAR MI CHAT</button></div>
 <div id="chatRepaBox" style="height:260px;overflow:auto;display:flex;flex-direction:column;padding:6px"></div>
-<div style="display:flex;gap:6px;margin-top:8px">
-<div class="wrap" style="flex:1"><input type="text" id="chatRepaInput" placeholder="Escribe a base..." onkeypress="if(event.key==='Enter') enviarChatRepa()"></div>
-<button class="btn" style="width:64px;height:42px;font-size:10px" onclick="enviarChatRepa()">ENVIAR</button>
-</div>
+<div style="display:flex;gap:6px;margin-top:8px"><div class="wrap" style="flex:1"><input type="text" id="chatRepaInput" placeholder="Escribe a base..." onkeypress="if(event.key==='Enter') enviarChatRepa()"></div><button class="btn" style="width:64px;height:42px;font-size:10px" onclick="enviarChatRepa()">ENVIAR</button></div>
 </div>
 <div id="mapRepa" style="margin-top:10px"></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-<div style="background:#0a0a0a;color:#fff;border-radius:12px;height:48px;display:flex;align-items:center;justify-content:center;gap:6px">
-<span id="txtKmRepa" style="font-size:11px;font-weight:700">-- km</span>
-<span style="width:1px;height:16px;background:#333"></span>
-<span id="txtCostoRepa" style="font-size:18px;font-weight:800">$0</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div style="background:#0a0a0a;color:#fff;border-radius:12px;height:48px;display:flex;align-items:center;justify-content:center;gap:6px"><span id="txtKmRepa" style="font-size:11px;font-weight:700">-- km</span><span style="width:1px;height:16px;background:#333"></span><span id="txtCostoRepa" style="font-size:18px;font-weight:800">$0</span></div><div style="background:#fff;border:1.5px solid #0a0a0a;border-radius:12px;height:48px;display:flex;align-items:center;justify-content:center;gap:6px"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="txtTiempoRepa" style="font-size:11px;font-weight:800">--</span></div></div>
 </div>
-<div style="background:#fff;border:1.5px solid #0a0a0a;border-radius:12px;height:48px;display:flex;align-items:center;justify-content:center;gap:6px">
-<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-<span id="txtTiempoRepa" style="font-size:11px;font-weight:800">--</span>
-</div>
-</div>
-</div>
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-<span style="font-size:11px;font-weight:800">PEDIDO ACTIVO</span>
-<span id="countActivos" style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800">0</span>
-</div>
-<div id="listaActivos"></div>
-</div>
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-<span style="font-size:11px;font-weight:800">PEDIDOS EN ESPERA - DESLIZA</span>
-<span id="countEspera" style="background:#f59e0b;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800">0</span>
-</div>
-<div class="sliderEspera" id="listaEspera"></div>
-</div>
+<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:11px;font-weight:800">PEDIDO ACTIVO</span><span id="countActivos" style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800">0</span></div><div id="listaActivos"></div></div>
+<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:11px;font-weight:800">PEDIDOS EN ESPERA - DESLIZA</span><span id="countEspera" style="background:#f59e0b;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800">0</span></div><div class="sliderEspera" id="listaEspera"></div></div>
 </div>
 
 <div id="view-chat" class="view">
 <div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<h3 style="font-size:12px;font-weight:800">CHAT BASE ↔ REPARTIDORES</h3>
-<span id="chatCount" style="background:#ff0040;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800">0</span>
-</div>
+<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:12px;font-weight:800">CHAT BASE ↔ REPARTIDORES</h3><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarChatBase()"><svg style="width:12px;height:12px;stroke:#ef4444" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> BORRAR CHAT</button><span id="chatCount" style="background:#ff0040;color:#fff;padding:4px 8px;border-radius:12px;font-size:9px;font-weight:800;display:flex;align-items:center">0</span></div></div>
 <div style="display:flex;gap:6px;margin-top:10px;overflow:auto;padding-bottom:4px" id="listaRepasChat"></div>
 <div id="chatBox" style="height:380px;overflow:auto;display:flex;flex-direction:column;padding:10px;margin-top:10px;background:#f8fafc;border-radius:14px;border:1px solid #eee"></div>
-<div style="display:flex;gap:6px;margin-top:10px">
-<div class="wrap" style="flex:1"><input type="text" id="chatInput" placeholder="Escribe mensaje..." onkeypress="if(event.key==='Enter') enviarChat()"></div>
-<button class="btn" style="width:64px;height:42px" onclick="enviarChat()">ENVIAR</button>
-</div>
+<div style="display:flex;gap:6px;margin-top:10px"><div class="wrap" style="flex:1"><input type="text" id="chatInput" placeholder="Escribe mensaje..." onkeypress="if(event.key==='Enter') enviarChat()"></div><button class="btn" style="width:64px;height:42px" onclick="enviarChat()">ENVIAR</button></div>
 </div>
 </div>
 
 <div id="view-historial" class="view">
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<h3 style="font-size:12px;font-weight:800">HISTORIAL</h3>
-<span id="countHist" style="background:#0a0a0a;color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800">0</span>
-</div>
-<div class="wrap" style="margin-top:10px"><input type="text" id="filtroHist" placeholder="Buscar..." oninput="renderHistorial()"></div>
-</div>
+<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:12px;font-weight:800">HISTORIAL</h3><span id="countHist" style="background:#0a0a0a;color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800">0</span></div><div class="wrap" style="margin-top:10px"><input type="text" id="filtroHist" placeholder="Buscar..." oninput="renderHistorial()"></div></div>
 <div id="listaHistorial"></div>
 </div>
 
 <div id="view-clientes" class="view">
-<div class="card">
-<h3 style="font-size:12px;font-weight:800">REGISTRAR CLIENTE</h3>
-<span class="label" style="margin-top:10px">Nombre</span><div class="wrap"><input type="text" id="cliNombre"></div>
-<span class="label" style="margin-top:8px">Direccion</span><div class="wrap"><input type="text" id="cliDir"></div>
-<span class="label" style="margin-top:8px">Telefono</span><div class="wrap"><input type="tel" id="cliTel"></div>
-<button class="btn" style="margin-top:12px" onclick="guardarClienteReal()">GUARDAR CLIENTE</button>
-</div>
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<span class="label" style="margin:0">BASE CLIENTES</span><span id="countCli" style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800">0</span>
-</div>
-<div class="wrap" style="margin-bottom:10px"><input type="text" id="filtroCli" placeholder="Filtrar..." oninput="renderClientes()"></div>
-<div id="listaClientes"></div>
-</div>
+<div class="card"><h3 style="font-size:12px;font-weight:800">REGISTRAR CLIENTE</h3><span class="label" style="margin-top:10px">Nombre</span><div class="wrap"><input type="text" id="cliNombre"></div><span class="label" style="margin-top:8px">Direccion</span><div class="wrap"><input type="text" id="cliDir"></div><span class="label" style="margin-top:8px">Telefono</span><div class="wrap"><input type="tel" id="cliTel"></div><button class="btn" style="margin-top:12px" onclick="guardarClienteReal()">GUARDAR CLIENTE</button></div>
+<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="label" style="margin:0">BASE CLIENTES</span><span id="countCli" style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800">0</span></div><div class="wrap" style="margin-bottom:10px"><input type="text" id="filtroCli" placeholder="Filtrar..." oninput="renderClientes()"></div><div id="listaClientes"></div></div>
 </div>
 
 <div id="view-ajustes" class="view">
-<div class="card">
-<h3 style="font-size:12px;font-weight:800">AJUSTES</h3>
-<div style="display:flex;gap:6px;margin-top:10px">
-<button class="tabAjuste active" id="tabPrecio" onclick="showAjuste('precio')">PRECIOS</button>
-<button class="tabAjuste" id="tabRepas" onclick="showAjuste('repas')">REPARTIDORES</button>
-<button class="tabAjuste" id="tabInterno" onclick="showAjuste('interno')">INTERNO</button>
-</div>
-</div>
-<div id="ajuste-precio" class="card">
-<h4 style="font-size:11px;font-weight:800;margin-bottom:10px">CONFIGURACIÓN DE PRECIOS</h4>
-<span class="label">Precio por cada kilómetro</span><div class="wrap"><input type="number" id="cfgPrecioKm" placeholder="6"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / KM</span></div>
-<span class="label" style="margin-top:8px">Valor zona céntrica (centro a centro)</span><div class="wrap"><input type="number" id="cfgCentro" placeholder="35"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div>
-<span class="label" style="margin-top:8px">Km base incluidos</span><div class="wrap"><input type="number" id="cfgKmBase" placeholder="2"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div>
-<span class="label" style="margin-top:12px">Precio lluvia leve</span><div class="wrap"><input type="number" id="cfgLluviaLeve" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
-<span class="label" style="margin-top:8px">Precio lluvia moderada</span><div class="wrap"><input type="number" id="cfgLluviaMod" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
-<span class="label" style="margin-top:8px">Precio lluvia fuerte</span><div class="wrap"><input type="number" id="cfgLluviaFuerte" placeholder="15"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
-<span class="label" style="margin-top:8px">Clima actual</span><div class="wrap"><select id="cfgClimaActual"><option value="normal">Normal</option><option value="leve">Lluvia leve</option><option value="moderada">Lluvia moderada</option><option value="fuerte">Lluvia fuerte</option></select></div>
-<button class="btn" style="margin-top:12px" onclick="guardarPrecios()">GUARDAR PRECIOS</button>
-</div>
-<div id="ajuste-repas" class="card" style="display:none">
-<h4 style="font-size:11px;font-weight:800;margin-bottom:10px">REPARTIDORES - AGREGAR Y EDITAR PIN</h4>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<div><span class="label">Nombre repartidor</span><div class="wrap"><input type="text" id="nuevoRepaNombre" placeholder="Ej. Carlos"></div></div>
-<div><span class="label">PIN</span><div class="wrap"><input type="text" id="nuevoRepaPin" placeholder="1234"></div></div>
-</div>
-<button class="btn" style="margin-top:10px" onclick="agregarRepa()">AGREGAR REPARTIDOR</button>
-<div style="margin-top:14px"><span class="label">LISTA DE REPARTIDORES</span><div id="listaRepasAjuste"></div></div>
-</div>
-<div id="ajuste-interno" class="card" style="display:none">
-<h4 style="font-size:11px;font-weight:800;margin-bottom:10px">AJUSTES INTERNOS</h4>
-<span class="label">Nombre empresa</span><div class="wrap"><input type="text" id="cfgNombreEmpresa" placeholder="Kigo Xpress"></div>
-<span class="label" style="margin-top:8px">Logo URL</span><div class="wrap"><input type="text" id="cfgLogo" placeholder="https://..."></div>
-<div id="previewLogo" style="margin-top:10px;text-align:center"></div>
-<button class="btn" style="margin-top:12px" onclick="guardarInterno()">GUARDAR CAMBIOS INTERNOS</button>
+<div class="card"><h3 style="font-size:12px;font-weight:800">AJUSTES</h3><div style="display:flex;gap:6px;margin-top:10px"><button class="tabAjuste active" id="tabPrecio" onclick="showAjuste('precio')">PRECIOS</button><button class="tabAjuste" id="tabRepas" onclick="showAjuste('repas')">REPARTIDORES</button><button class="tabAjuste" id="tabInterno" onclick="showAjuste('interno')">INTERNO</button></div></div>
+<div id="ajuste-precio" class="card"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">CONFIGURACIÓN DE PRECIOS</h4><span class="label">Precio por cada kilómetro</span><div class="wrap"><input type="number" id="cfgPrecioKm" placeholder="6"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / KM</span></div><span class="label" style="margin-top:8px">Valor zona céntrica</span><div class="wrap"><input type="number" id="cfgCentro" placeholder="35"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div><span class="label" style="margin-top:8px">Km base incluidos</span><div class="wrap"><input type="number" id="cfgKmBase" placeholder="2"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div><span class="label" style="margin-top:12px">Precio lluvia leve</span><div class="wrap"><input type="number" id="cfgLluviaLeve" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Precio lluvia moderada</span><div class="wrap"><input type="number" id="cfgLluviaMod" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Precio lluvia fuerte</span><div class="wrap"><input type="number" id="cfgLluviaFuerte" placeholder="15"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Clima actual</span><div class="wrap"><select id="cfgClimaActual"><option value="normal">Normal</option><option value="leve">Lluvia leve</option><option value="moderada">Lluvia moderada</option><option value="fuerte">Lluvia fuerte</option></select></div><button class="btn" style="margin-top:12px" onclick="guardarPrecios()">GUARDAR PRECIOS</button></div>
+<div id="ajuste-repas" class="card" style="display:none"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">REPARTIDORES - AGREGAR Y EDITAR PIN</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><span class="label">Nombre repartidor</span><div class="wrap"><input type="text" id="nuevoRepaNombre" placeholder="Ej. Carlos"></div></div><div><span class="label">PIN</span><div class="wrap"><input type="text" id="nuevoRepaPin" placeholder="1234"></div></div></div><button class="btn" style="margin-top:10px" onclick="agregarRepa()">AGREGAR REPARTIDOR</button><div style="margin-top:14px"><span class="label">LISTA DE REPARTIDORES</span><div id="listaRepasAjuste"></div></div></div>
+<div id="ajuste-interno" class="card" style="display:none"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">AJUSTES INTERNOS</h4><span class="label">Nombre empresa</span><div class="wrap"><input type="text" id="cfgNombreEmpresa" placeholder="Kigo Xpress"></div><span class="label" style="margin-top:8px">Subir logo desde teléfono</span><input type="file" id="inputLogoFile" accept="image/*" style="margin-top:6px"><div id="previewLogo" style="margin-top:10px;text-align:center"></div><span class="label" style="margin-top:8px">O URL logo</span><div class="wrap"><input type="text" id="cfgLogo" placeholder="https://..."></div><button class="btn" style="margin-top:12px" onclick="guardarInterno()">GUARDAR CAMBIOS INTERNOS</button></div>
 </div>
 </div>
 
 <div class="bottom">
-<button id="bP" class="active" onclick="showView('pedidos')"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></button>
+<button id="bP" class="active" onclick="showView('pedidos')"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></button>
 <button id="bS" onclick="showView('seguimiento')"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-<button id="bR" onclick="showView('repartidor')"><svg viewBox="0 0 24 24"><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 10h6M2 14h6M18 10h4M18 14h4"/></svg></button>
-<button id="bCH" onclick="showView('chat')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
-<button id="bH" onclick="showView('historial')"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg></button>
-<button id="bC" onclick="showView('clientes')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
-<button id="bA" onclick="showView('ajustes')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0.33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 9 15a1.65 1.65 0 0 0-1-1.51V13a2 2 0 0 1 4 0v.5a1.65 1.65 0 0 0 1 1.5z"/></svg></button>
+<button id="bR" onclick="showView('repartidor')"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg></button>
+<button id="bCH" onclick="showView('chat')"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.5 7.5L3 21l2-5.5A8.5 8.5 0 0 1 21 11.5z"/></svg></button>
+<button id="bH" onclick="showView('historial')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></button>
+<button id="bC" onclick="showView('clientes')"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
+<button id="bA" onclick="showView('ajustes')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0.33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 0 1 4.27 15.4a1.65 1.65 0 0 0.33-1.82A1.65 1.65 0 0 0 3.6 12a1.65 1.65 0 0 0 1-1.51V10a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51c.7.26 1.48.06 1.82-.33l.06-.06A2 2 0 0 1 15.4 8.6a1.65 1.65 0 0 0-.33 1.82V12a1.65 1.65 0 0 0 1 1.51A1.65 1.65 0 0 0 17.5 12"/></svg></button>
 </div>
 
 <div class="kigo-overlay" id="overlayCancel"><div class="kigo-modal" style="background:#fee2e2;border:2px solid #ef4444"><div style="text-align:center"><div style="width:56px;height:56px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px"><svg style="width:28px;height:28px;stroke:#fff;stroke-width:2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div><h3 style="font-size:14px;font-weight:800;color:#ef4444">PEDIDO CANCELADO</h3><p id="txtCancel" style="font-size:11px;color:#7f1d1d;margin-top:8px;font-weight:600"></p><button class="btn" style="margin-top:14px;background:#ef4444" onclick="cerrarCancel()">ENTENDIDO</button></div></div></div>
@@ -323,22 +222,29 @@ let modoActual='lista', servicioActual='recoger';
 let pedidosLive={}, historialLive={}, chatLive={}, filtroSeg='todos', pedidoEditId=null, pedidoEditData=null;
 let repaPanelActual='José', joseOnline=true, chatSenderBase='José';
 let prevKeys=new Set();
+let audioUnlocked=false;
 
 window.cerrarModal=()=>{ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
 window.cerrarDetalle=()=>{ document.getElementById('overlayDetalle').classList.remove('show'); }
 window.cerrarHist=()=>{ document.getElementById('overlayHist').classList.remove('show'); }
 window.cerrarCancel=()=>{ document.getElementById('overlayCancel').classList.remove('show'); }
 
+function unlockAudio(){ if(audioUnlocked) return; audioUnlocked=true; try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume(); }catch(e){} }
+document.addEventListener('click',unlockAudio,{once:true}); document.addEventListener('touchstart',unlockAudio,{once:true});
+
 function sonidoRappi(){
+ unlockAudio();
  try{
   const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  ctx.resume();
   let t=ctx.currentTime;
-  for(let i=0;i<10;i++){ let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sine'; o.frequency.value=i%2===0?880:1200; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.4, t+i*0.5); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.5+0.35); o.start(t+i*0.5); o.stop(t+i*0.5+0.35); }
+  for(let i=0;i<10;i++){ let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sine'; o.frequency.value=i%2===0?880:1200; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.6, t+i*0.5); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.5+0.4); o.start(t+i*0.5); o.stop(t+i*0.5+0.4); }
  }catch(e){}
- if(navigator.vibrate) navigator.vibrate([300,100,300,100,300,100,300,100,500,200,500]);
+ if(navigator.vibrate) navigator.vibrate([300,100,300,100,300,100,300,100,500,200,500,200,500]);
 }
 function sonidoCancel(){
- try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sawtooth'; o.frequency.value=220; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.5, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+1.5); o.start(); o.stop(ctx.currentTime+1.5); }catch(e){}
+ unlockAudio();
+ try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume(); let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sawtooth'; o.frequency.value=220; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.5, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+1.5); o.start(); o.stop(ctx.currentTime+1.5); }catch(e){}
  if(navigator.vibrate) navigator.vibrate([600,200,600,200,600]);
 }
 
@@ -361,15 +267,41 @@ window.agregarRepa=async()=>{
  if(!nombre){ mostrarModalElegante({title:'Falta',text:'Escribe nombre',showCancel:false}); return; }
  await set(ref(db,'kigoPins/repas/'+nombre),{nombre:nombre,pin:pin||'1234',online:true,ts:Date.now()});
  document.getElementById('nuevoRepaNombre').value=''; document.getElementById('nuevoRepaPin').value='';
+ mostrarModalElegante({title:'Agregado',text:nombre+' agregado',showCancel:false});
 }
 window.editarPinRepa=async(nombre)=>{ let nuevo=prompt('Nuevo PIN para '+nombre); if(nuevo===null) return; await update(ref(db,'kigoPins/repas/'+nombre),{pin:nuevo}); }
 window.borrarRepa=async(nombre)=>{ if(!confirm('Borrar '+nombre+'?')) return; await remove(ref(db,'kigoPins/repas/'+nombre)); }
 window.guardarInterno=async()=>{
  let nombre=document.getElementById('cfgNombreEmpresa').value.trim();
  let logo=document.getElementById('cfgLogo').value.trim();
- await set(ref(db,'kigoConfig'),{nombreEmpresa:nombre,logo:logo,ts:Date.now()});
- mostrarModalElegante({title:'Guardado',text:'Interno guardado',showCancel:false});
- if(logo) document.getElementById('previewLogo').innerHTML=`<img src="${logo}" style="max-width:120px;border-radius:12px">`;
+ let fileInput=document.getElementById('inputLogoFile');
+ if(fileInput.files[0]){
+  let reader=new FileReader();
+  reader.onload=async(e)=>{
+   let base64=e.target.result;
+   await set(ref(db,'kigoConfig'),{nombreEmpresa:nombre,logo:base64,ts:Date.now()});
+   document.getElementById('previewLogo').innerHTML=`<img src="${base64}" style="max-width:120px;border-radius:12px">`;
+   mostrarModalElegante({title:'Guardado',text:'Logo subido desde teléfono',showCancel:false});
+  };
+  reader.readAsDataURL(fileInput.files[0]);
+ }else{
+  await set(ref(db,'kigoConfig'),{nombreEmpresa:nombre,logo:logo,ts:Date.now()});
+  if(logo) document.getElementById('previewLogo').innerHTML=`<img src="${logo}" style="max-width:120px;border-radius:12px">`;
+  mostrarModalElegante({title:'Guardado',text:'Interno guardado',showCancel:false});
+ }
+}
+
+window.borrarChatBase=async()=>{
+ if(!confirm('Borrar chat de '+chatSenderBase+'?')) return;
+ let entries=Object.entries(chatLive).filter(([k,m])=> m.repa===chatSenderBase);
+ for(let [k] of entries){ await remove(ref(db,'kigoChat/'+k)); }
+ mostrarModalElegante({title:'Borrado',text:'Chat de '+chatSenderBase+' borrado',showCancel:false});
+}
+window.borrarChatRepa=async()=>{
+ if(!confirm('Borrar tu chat con base?')) return;
+ let entries=Object.entries(chatLive).filter(([k,m])=> m.repa==='José');
+ for(let [k] of entries){ await remove(ref(db,'kigoChat/'+k)); }
+ mostrarModalElegante({title:'Borrado',text:'Tu chat borrado',showCancel:false});
 }
 
 window.toggleChatRepa=()=>{ document.getElementById('chatRepaSlide').classList.toggle('open'); }
@@ -409,7 +341,7 @@ onValue(ref(db,'kigoChat'),snap=>{
  let listAjuste=document.getElementById('listaRepasAjuste');
  if(listAjuste){
   let repas=Object.entries(repasData);
-  listAjuste.innerHTML=repas.map(([k,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f3f4f6"><div><b style="font-size:11px">${v.nombre||k}</b> <span style="font-size:9px;color:#888">PIN:${v.pin||'--'}</span> <span class="${v.online!==false?'dot on':'dot off'}" style="margin-left:6px"></span></div><div style="display:flex;gap:4px"><button class="icon-btn" onclick="editarPinRepa('${k}')">✎</button><button class="icon-btn" onclick="borrarRepa('${k}')">✕</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores</div>';
+  listAjuste.innerHTML=repas.map(([k,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6"><div><div style="font-size:11px;font-weight:800">${v.nombre||k}</div><div style="font-size:9px;color:#888">PIN: ${v.pin||'--'} • ${v.online!==false?'EN LINEA':'OFFLINE'}</div></div><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px" onclick="editarPinRepa('${k}')">EDITAR PIN</button><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarRepa('${k}')">BORRAR</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores</div>';
  }
 });
 
@@ -429,7 +361,7 @@ window.mostrarModalElegante=({title='Aviso', text='Mensaje', cancelText='Cancela
 }
 window.toggleJose=async()=>{
 joseOnline=!joseOnline;
-await set(ref(db,'kigoPins/repas/José'),{online:joseOnline, nombre:'José', ts:Date.now()});
+await set(ref(db,'kigoPins/repas/José'),{online:joseOnline, nombre:'José', pin:repasData['José']?.pin||'1234', ts:Date.now()});
 actualizarUIJose();
 }
 function actualizarUIJose(){
@@ -477,7 +409,7 @@ onValue(ref(db,'kigoTarifas'),snap=>{
 onValue(ref(db,'kigoConfig'),snap=>{
  let v=snap.val(); if(!v) return;
  let n1=document.getElementById('cfgNombreEmpresa'); if(n1) n1.value=v.nombreEmpresa||'';
- let l1=document.getElementById('cfgLogo'); if(l1) l1.value=v.logo||'';
+ let l1=document.getElementById('cfgLogo'); if(l1) l1.value=v.logo?.substring(0,100)||'';
  if(v.logo){ let pv=document.getElementById('previewLogo'); if(pv) pv.innerHTML=`<img src="${v.logo}" style="max-width:120px;border-radius:12px">`; }
 });
 onValue(ref(db,'kigoPins'),snap=>{
@@ -503,10 +435,14 @@ onValue(ref(db,'kigoPedidosLive'),snap=>{
  let newKeys=new Set(Object.keys(newVal));
  let isNew=false;
  for(let k of newKeys){ if(!prevKeys.has(k)){ isNew=true; break; } }
- if(isNew && prevKeys.size>0){ sonidoRappi(); if(document.getElementById('view-repartidor').classList.contains('active')){ setTimeout(()=>{ mostrarModalElegante({title:'NUEVO PEDIDO',text:'Te llegó un pedido nuevo',showCancel:false}); setTimeout(cerrarModal,2500); },300); } }
+ if(isNew && prevKeys.size>0){
+  sonidoRappi();
+  if(document.getElementById('view-repartidor').classList.contains('active')){
+   setTimeout(()=>{ mostrarModalElegante({title:'NUEVO PEDIDO',text:'Te llegó un pedido nuevo - Revisa en espera',showCancel:false}); setTimeout(cerrarModal,3000); },200);
+  }
+ }
  prevKeys=newKeys;
  pedidosLive=newVal; renderSeguimiento(); renderRepaPanel();
- if(prevKeys.size===0 && Object.keys(newVal).length>0){ prevKeys=newKeys; }
 });
 onValue(ref(db,'kigoNotificaciones'),snap=>{
 let v=snap.val()||{}; let entries=Object.entries(v).sort((a,b)=>b[1].ts-a[1].ts);
@@ -572,10 +508,12 @@ window.showView=(v)=>{
 document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
 document.getElementById('view-'+v).classList.add('active');
 document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active'));
-document.getElementById('b'+(v==='pedidos'?'P':v==='seguimiento'?'S':v==='repartidor'?'R':v==='chat'?'CH':v==='historial'?'H':v==='clientes'?'C':'A')).classList.add('active');
+let mapId={pedidos:'P',seguimiento:'S',repartidor:'R',chat:'CH',historial:'H',clientes:'C',ajustes:'A'};
+let btn=document.getElementById('b'+mapId[v]); if(btn) btn.classList.add('active');
 if(v==='pedidos'&&map) setTimeout(()=>google.maps.event.trigger(map,'resize'),200);
 if(v==='repartidor'&&mapRepa) setTimeout(()=>{ google.maps.event.trigger(mapRepa,'resize'); renderRepaPanel(); },200);
 if(v==='chat') renderChatBase();
+window.scrollTo(0,0);
 }
 function initMapReal(){
 if(!window.google||!google.maps){ setTimeout(initMapReal,300); return; }
@@ -604,7 +542,7 @@ window.limpiarCampo=(inputId, btnId)=>{ let inp=document.getElementById(inputId)
 window.limpiarTodoPedido=()=>{ clienteSel=null; pedido=null; ['buscCli','dirEntrega','tiempoRecogida','telEntrega','refEntrega','nuevoNombre','nuevoDirRecoge','nuevoTel','nuevoDirEntrega','nuevoTiempoRecogida','nuevoTelEntrega','nuevoRefEntrega','compTipo','compReferencia','compAlmacen','compDirEntrega','compNombreRecibe','compTel','compRefEntrega','compTiempo'].forEach(id=>{ let el=document.getElementById(id); if(el) el.value=''; }); document.getElementById('boxSel').style.display='none'; document.getElementById('listCli').style.display='none'; document.getElementById('txtKm').innerText='-- km • -- min'; document.getElementById('txtCosto').innerText='$0'; document.querySelectorAll('.btn-clear').forEach(b=>b.classList.remove('show')); clearM(); if(dirRend) dirRend.setDirections({routes:[]}); }
 window.guardarClienteReal=async()=>{ let nombre=document.getElementById('cliNombre')?.value.trim(); let dir=document.getElementById('cliDir')?.value.trim(); let tel=document.getElementById('cliTel')?.value.trim(); if(!nombre||!dir){ mostrarModalElegante({title:'Falta dato',text:'Escribe nombre y direccion',showCancel:false}); return; } let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await set(ref(db,'kigoClientesDir/'+key),{direccion:dir,telefono:tel,nombreOriginal:nombre,ts:Date.now()}); document.getElementById('cliNombre').value=''; document.getElementById('cliDir').value=''; document.getElementById('cliTel').value=''; }
 window.guardarDesdePedidoNuevo=async()=>{ let nombre=document.getElementById('nuevoNombre').value.trim(); let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim(); let tel=document.getElementById('nuevoTel').value.trim(); if(!nombre||!dirRecoge){ mostrarModalElegante({title:'Falta dato',text:'Nombre y direccion obligatoria',showCancel:false}); return; } let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await set(ref(db,'kigoClientesDir/'+key),{direccion:dirRecoge,telefono:tel,nombreOriginal:nombre,ts:Date.now()}); mostrarModalElegante({title:'Guardado',text:nombre+' guardado',showCancel:false}); }
-window.renderClientes=()=>{ let lista=document.getElementById('listaClientes'); let filtro=document.getElementById('filtroCli')?.value.toLowerCase()||''; if(!lista) return; let entries=Object.entries(clientesDB).filter(([n])=>n.toLowerCase().includes(filtro)).sort((a,b)=>a[0].localeCompare(b[0])); document.getElementById('countCli').innerText=entries.length; if(!entries.length){ lista.innerHTML='<div style="text-align:center;padding:20px;color:#999;font-size:11px">No hay clientes</div>'; return; } lista.innerHTML=entries.map(([n,d])=>`<div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between"><div><b style="font-size:11px">${n}</b><br><small style="font-size:10px;color:#666">${d.direccion}</small></div><div style="display:flex;gap:6px"><button class="icon-btn" onclick="editarCliente('${n.replace(/'/g,"\\'")}')">✎</button><button class="icon-btn" onclick="borrarClienteDB('${n.replace(/'/g,"\\'")}')">🗑</button></div></div>`).join(''); }
+window.renderClientes=()=>{ let lista=document.getElementById('listaClientes'); let filtro=document.getElementById('filtroCli')?.value.toLowerCase()||''; if(!lista) return; let entries=Object.entries(clientesDB).filter(([n])=>n.toLowerCase().includes(filtro)).sort((a,b)=>a[0].localeCompare(b[0])); document.getElementById('countCli').innerText=entries.length; if(!entries.length){ lista.innerHTML='<div style="text-align:center;padding:20px;color:#999;font-size:11px">No hay clientes</div>'; return; } lista.innerHTML=entries.map(([n,d])=>`<div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between"><div><b style="font-size:11px">${n}</b><br><small style="font-size:10px;color:#666">${d.direccion}</small></div><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px" onclick="editarCliente('${n.replace(/'/g,"\\'")}')"><svg style="width:12px;height:12px;stroke:#111" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;background:#fee2e2;border-color:#fecaca" onclick="borrarClienteDB('${n.replace(/'/g,"\\'")}')"><svg style="width:12px;height:12px;stroke:#ef4444" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></div>`).join(''); }
 window.editarCliente=(n)=>{ let d=clientesDB[n]; if(!d) return; mostrarModalElegante({title:'Editar cliente',text:'Modifica y guarda',confirmText:'Guardar cambios',showEdit:true,editData:{...d, oldKey:d._key},onConfirm:async()=>{ let newNombre=document.getElementById('editNombre').value.trim(); let newDir=document.getElementById('editDir').value.trim(); let newTel=document.getElementById('editTel').value.trim(); if(!newNombre||!newDir){ alert('Falta'); return; } let oldKey=document.getElementById('editNombre').dataset.oldKey; let newKey=newNombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); if(newKey!==oldKey){ await remove(ref(db,'kigoClientesDir/'+oldKey)); } await set(ref(db,'kigoClientesDir/'+newKey),{direccion:newDir,telefono:newTel,nombreOriginal:newNombre,ts:Date.now()}); cerrarModal(); }}); }
 window.borrarClienteDB=async(n)=>{ let d=clientesDB[n]; mostrarModalElegante({title:'Borrar',text:'Borrar '+n+'?',confirmText:'Borrar',onConfirm:async()=>{ await remove(ref(db,'kigoClientesDir/'+d._key)); cerrarModal(); }}); }
 window.buscarCliente=()=>{ let q=document.getElementById('buscCli').value.toLowerCase().trim(); let list=document.getElementById('listCli'); let todos=Object.keys(clientesDB); if(!q){list.style.display='none';return;} let fil=todos.filter(n=>n.toLowerCase().includes(q)).slice(0,12); if(!fil.length){list.innerHTML='<div style="padding:10px;font-size:10px">No encontrado</div>';list.style.display='block';return;} list.innerHTML=fil.map(n=>{let d=clientesDB[n];return `<div onclick="seleccionar('${n.replace(/'/g,"\\'")}')" style="padding:9px;border-bottom:1px solid #eee;cursor:pointer"><b style="font-size:11px">${n}</b><br><small style="font-size:9px">${d.direccion}</small></div>`;}).join(''); list.style.display='block'; }
