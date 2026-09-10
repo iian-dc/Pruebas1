@@ -24,8 +24,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .view{display:none}.view.active{display:block}
 #map,#mapRepa{width:100%;height:360px;border-radius:14px;background:#e5e7eb;display:block}
 #listCli{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #0a0a0a;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none;z-index:50}
-.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;display:flex;padding:6px;max-width:640px;margin:0 auto;gap:3px;z-index:100}
-.bottom button{flex:1;height:38px;border-radius:12px;border:1px solid #eee;background:#fff;font-weight:800;font-size:7px}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;display:flex;padding:6px;max-width:640px;margin:0 auto;gap:2px;z-index:100}
+.bottom button{flex:1;height:38px;border-radius:12px;border:1px solid #eee;background:#fff;font-weight:800;font-size:6px}
 .bottom button.active{background:#0a0a0a;color:#fff}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .dot.on{background:#10b981;box-shadow:0 0 0 2px #d1fae5}
@@ -50,14 +50,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .repaCardActiva{border:2px solid #0a0a0a;border-radius:22px;padding:16px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.08)}
 .sliderEspera{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
 .sliderEspera::-webkit-scrollbar{display:none}
-.btnAccion{width:100%;height:52px;border-radius:16px;border:none;font-weight:800;font-size:11px;letter-spacing:.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
+.btnAccion{width:100%;height:52px;border-radius:16px;border:none;font-weight:800;font-size:11px;letter-spacing:.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
 .btnCall{width:100%;height:44px;border-radius:12px;border:1.5px solid #111;background:#fff;font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;margin-top:8px}
 .chatBubble{max-width:78%;padding:10px 12px;border-radius:16px;font-size:11px;margin-bottom:8px;line-height:1.3}
 .chatBase{background:#0a0a0a;color:#fff;border-bottom-left-radius:4px;align-self:flex-end}
 .chatJose{background:#fff;border:1px solid #111;color:#111;border-bottom-right-radius:4px;align-self:flex-start;box-shadow:0 2px 8px rgba(255,0,80,.15)}
 .chatJose b{color:#ff0040;text-shadow:0 0 8px rgba(255,0,64,.6)}
-.chatSlide{max-height:0;overflow:hidden;transition:max-height.3s ease; background:#f8fafc;border-radius:14px;margin-top:10px}
+.chatSlide{max-height:0;overflow:hidden;transition:max-height.3s ease;background:#f8fafc;border-radius:14px;margin-top:10px}
 .chatSlide.open{max-height:420px;border:1px solid #eee;padding:10px}
+.tabAjuste{flex:1;height:38px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;font-weight:800;font-size:9px;cursor:pointer}
+.tabAjuste.active{background:#0a0a0a;color:#fff}
 </style>
 </head>
 <body>
@@ -176,14 +178,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 </div>
 </div>
 <div style="display:flex;gap:6px">
-<button class="btn-outline" style="width:auto;padding:0 12px;height:36px;font-size:8px;background:#0a0a0a;color:#fff" onclick="toggleChatRepa()">
-<svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-CHAT
-</button>
+<button class="btn-outline" style="width:auto;padding:0 12px;height:36px;font-size:8px;background:#0a0a0a;color:#fff" onclick="toggleChatRepa()">CHAT</button>
 <button id="btnToggleJose" class="btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:9px;background:#10b981;color:#fff;border-color:#10b981" onclick="toggleJose()">DESACTIVAR</button>
 </div>
 </div>
-
 <div id="chatRepaSlide" class="chatSlide">
 <div id="chatRepaBox" style="height:260px;overflow:auto;display:flex;flex-direction:column;padding:6px"></div>
 <div style="display:flex;gap:6px;margin-top:8px">
@@ -191,7 +189,6 @@ CHAT
 <button class="btn" style="width:64px;height:42px;font-size:10px" onclick="enviarChatRepa()">ENVIAR</button>
 </div>
 </div>
-
 <div id="mapRepa" style="margin-top:10px"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
 <div style="background:#0a0a0a;color:#fff;border-radius:12px;height:48px;display:flex;align-items:center;justify-content:center;gap:6px">
@@ -230,7 +227,7 @@ CHAT
 <div style="display:flex;gap:6px;margin-top:10px;overflow:auto;padding-bottom:4px" id="listaRepasChat"></div>
 <div id="chatBox" style="height:380px;overflow:auto;display:flex;flex-direction:column;padding:10px;margin-top:10px;background:#f8fafc;border-radius:14px;border:1px solid #eee"></div>
 <div style="display:flex;gap:6px;margin-top:10px">
-<div class="wrap" style="flex:1"><input type="text" id="chatInput" placeholder="Escribe mensaje a repartidor..." onkeypress="if(event.key==='Enter') enviarChat()"></div>
+<div class="wrap" style="flex:1"><input type="text" id="chatInput" placeholder="Escribe mensaje..." onkeypress="if(event.key==='Enter') enviarChat()"></div>
 <button class="btn" style="width:64px;height:42px" onclick="enviarChat()">ENVIAR</button>
 </div>
 </div>
@@ -257,10 +254,63 @@ CHAT
 </div>
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<span class="label" style="margin:0">BASE DE DATOS CLIENTES</span><span id="countCli" style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800">0</span>
+<span class="label" style="margin:0">BASE CLIENTES</span><span id="countCli" style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800">0</span>
 </div>
 <div class="wrap" style="margin-bottom:10px"><input type="text" id="filtroCli" placeholder="Filtrar..." oninput="renderClientes()"></div>
 <div id="listaClientes"></div>
+</div>
+</div>
+
+<div id="view-ajustes" class="view">
+<div class="card">
+<h3 style="font-size:12px;font-weight:800">AJUSTES</h3>
+<div style="display:flex;gap:6px;margin-top:10px">
+<button class="tabAjuste active" id="tabPrecio" onclick="showAjuste('precio')">PRECIOS</button>
+<button class="tabAjuste" id="tabRepas" onclick="showAjuste('repas')">REPARTIDORES</button>
+<button class="tabAjuste" id="tabInterno" onclick="showAjuste('interno')">INTERNO</button>
+</div>
+</div>
+
+<div id="ajuste-precio" class="card">
+<h4 style="font-size:11px;font-weight:800;margin-bottom:10px">CONFIGURACIÓN DE PRECIOS</h4>
+<span class="label">Precio por cada kilómetro</span>
+<div class="wrap"><input type="number" id="cfgPrecioKm" placeholder="6"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / KM</span></div>
+<span class="label" style="margin-top:8px">Valor zona céntrica (centro a centro)</span>
+<div class="wrap"><input type="number" id="cfgCentro" placeholder="35"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div>
+<span class="label" style="margin-top:8px">Km base incluidos en tarifa centro</span>
+<div class="wrap"><input type="number" id="cfgKmBase" placeholder="2"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div>
+<span class="label" style="margin-top:12px">Precio lluvia leve</span>
+<div class="wrap"><input type="number" id="cfgLluviaLeve" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
+<span class="label" style="margin-top:8px">Precio lluvia moderada</span>
+<div class="wrap"><input type="number" id="cfgLluviaMod" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
+<span class="label" style="margin-top:8px">Precio lluvia fuerte</span>
+<div class="wrap"><input type="number" id="cfgLluviaFuerte" placeholder="15"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
+<span class="label" style="margin-top:8px">Clima actual</span>
+<div class="wrap"><select id="cfgClimaActual"><option value="normal">Normal</option><option value="leve">Lluvia leve</option><option value="moderada">Lluvia moderada</option><option value="fuerte">Lluvia fuerte</option></select></div>
+<button class="btn" style="margin-top:12px" onclick="guardarPrecios()">GUARDAR PRECIOS</button>
+</div>
+
+<div id="ajuste-repas" class="card" style="display:none">
+<h4 style="font-size:11px;font-weight:800;margin-bottom:10px">REPARTIDORES - AGREGAR Y EDITAR PIN</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div><span class="label">Nombre repartidor</span><div class="wrap"><input type="text" id="nuevoRepaNombre" placeholder="Ej. Carlos"></div></div>
+<div><span class="label">PIN</span><div class="wrap"><input type="text" id="nuevoRepaPin" placeholder="Ej. 1234"></div></div>
+</div>
+<button class="btn" style="margin-top:10px" onclick="agregarRepa()">AGREGAR REPARTIDOR</button>
+<div style="margin-top:14px">
+<span class="label">LISTA DE REPARTIDORES</span>
+<div id="listaRepasAjuste"></div>
+</div>
+</div>
+
+<div id="ajuste-interno" class="card" style="display:none">
+<h4 style="font-size:11px;font-weight:800;margin-bottom:10px">AJUSTES INTERNOS</h4>
+<span class="label">Nombre empresa</span>
+<div class="wrap"><input type="text" id="cfgNombreEmpresa" placeholder="Kigo Xpress"></div>
+<span class="label" style="margin-top:8px">Logo URL</span>
+<div class="wrap"><input type="text" id="cfgLogo" placeholder="https://..."></div>
+<div id="previewLogo" style="margin-top:10px;text-align:center"></div>
+<button class="btn" style="margin-top:12px" onclick="guardarInterno()">GUARDAR CAMBIOS INTERNOS</button>
 </div>
 </div>
 
@@ -271,14 +321,12 @@ CHAT
 <button id="bCH" onclick="showView('chat')">CHAT</button>
 <button id="bH" onclick="showView('historial')">HISTORIAL</button>
 <button id="bC" onclick="showView('clientes')">CLIENTES</button>
+<button id="bA" onclick="showView('ajustes')">AJUSTES</button>
 </div>
 
 <div class="kigo-overlay" id="overlayCancel"><div class="kigo-modal" style="background:#fee2e2;border:2px solid #ef4444"><div style="text-align:center"><div style="width:56px;height:56px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px"><svg style="width:28px;height:28px;stroke:#fff;stroke-width:2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div><h3 style="font-size:14px;font-weight:800;color:#ef4444">PEDIDO CANCELADO</h3><p id="txtCancel" style="font-size:11px;color:#7f1d1d;margin-top:8px;font-weight:600"></p><button class="btn" style="margin-top:14px;background:#ef4444" onclick="cerrarCancel()">ENTENDIDO</button></div></div></div>
-
 <div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><h3 id="modalTitle" style="font-size:13px;font-weight:800;text-align:center"></h3><p id="modalText" style="font-size:11px;margin:10px 0;color:#6b7280;text-align:center"></p><div id="editBox" style="display:none"><span class="label">Nombre</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editNombre"></div><span class="label">Direccion</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editDir"></div><span class="label">Telefono</span><div class="wrap" style="margin-bottom:12px"><input type="text" id="editTel"></div></div><div style="display:flex;gap:8px"><button id="modalCancel" class="kigo-btn" style="background:#f3f4f6" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">OK</button></div></div></div>
-
 <div class="kigo-overlay" id="overlayDetalle"><div class="kigo-modal"><button class="xclose" onclick="cerrarDetalle()">✕</button><h3 style="font-size:12px;font-weight:800;text-align:center;margin-top:8px">DETALLES</h3><div id="detalleContent" style="margin-top:12px"></div><div style="margin-top:12px"><span class="label">Cambiar repartidor</span><div class="wrap" style="margin-bottom:8px"><select id="editRepa"></select></div><span class="label">Editar recogida</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editRecogida"></div><span class="label">Editar entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editEntrega"></div><span class="label">Tel entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editTelEnt"></div><span class="label">Ref entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editRefEnt"></div><span class="label">Costo extra</span><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px"><button class="btn-outline" style="height:36px" onclick="addCosto(5)">+$5</button><button class="btn-outline" style="height:36px" onclick="addCosto(10)">+$10</button><button class="btn-outline" style="height:36px" onclick="addCosto(15)">+$15</button></div><div class="wrap" style="margin-bottom:12px"><input type="number" id="editCostoExtra" oninput="calcTotalEdit()"></div><div style="background:#f7f7f7;border-radius:10px;padding:8px;display:flex;justify-content:space-between;margin-bottom:12px"><span style="font-size:10px;font-weight:800">TOTAL</span><span id="txtTotalEdit" style="font-size:12px;font-weight:800">$0</span></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="kigo-btn" style="background:#0a0a0a;color:#fff" onclick="guardarEdicion()">GUARDAR</button><button class="kigo-btn" style="background:#10b981;color:#fff" onclick="finalizarPedido()">HISTORIAL</button></div></div></div>
-
 <div class="kigo-overlay" id="overlayHist"><div class="kigo-modal"><button class="xclose" onclick="cerrarHist()">✕</button><h3 style="font-size:12px;font-weight:800;text-align:center;margin-top:8px">DETALLE HISTORIAL</h3><div id="histDetalle" style="margin-top:12px"></div><button class="btn" style="margin-top:12px;background:#0a0a0a" onclick="cerrarHist()">CERRAR</button></div></div>
 
 <script type="module">
@@ -288,13 +336,12 @@ const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", auth
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35};
+let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35, precioKm:6, kmBase:2, centro:35, lluviaLeve:5, lluviaMod:10, lluviaFuerte:15, clima:'normal'};
 let map, mapRepa, dirServ, dirRend, dirRendRepa, markers=[], markersRepa=[], clienteSel=null;
 let modoActual='lista', servicioActual='recoger';
 let pedidosLive={}, historialLive={}, chatLive={}, filtroSeg='todos', pedidoEditId=null, pedidoEditData=null;
 let repaPanelActual='José', joseOnline=true, chatSenderBase='José';
-let lastPedidosCount=0;
-let chatRepaOpen=false;
+let prevPedidosKeys=new Set();
 
 window.cerrarModal=function(){ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
 window.cerrarDetalle=function(){ document.getElementById('overlayDetalle').classList.remove('show'); }
@@ -309,40 +356,73 @@ function sonidoRappi(){
    let o=ctx.createOscillator(); let g=ctx.createGain();
    o.type='sine'; o.frequency.value=i%2===0?880:1200;
    o.connect(g); g.connect(ctx.destination);
-   g.gain.setValueAtTime(0.3, t+i*0.5); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.5+0.3);
-   o.start(t+i*0.5); o.stop(t+i*0.5+0.3);
+   g.gain.setValueAtTime(0.4, t+i*0.5); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.5+0.35);
+   o.start(t+i*0.5); o.stop(t+i*0.5+0.35);
   }
  }catch(e){}
- if(navigator.vibrate) navigator.vibrate([300,100,300,100,300,100,300,100,500,200,500]);
+ if(navigator.vibrate) navigator.vibrate([300][100][300][100][300][100][300][100][500][200][500][200][500]);
 }
 function sonidoCancel(){
  try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sawtooth'; o.frequency.value=220; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.5, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+1.5); o.start(); o.stop(ctx.currentTime+1.5); }catch(e){}
- if(navigator.vibrate) navigator.vibrate([600,200,600,200,600]);
+ if(navigator.vibrate) navigator.vibrate([600][200][600][200][600]);
+}
+
+window.showAjuste=function(t){
+ document.getElementById('ajuste-precio').style.display=t==='precio'?'block':'none';
+ document.getElementById('ajuste-repas').style.display=t==='repas'?'block':'none';
+ document.getElementById('ajuste-interno').style.display=t==='interno'?'block':'none';
+ document.getElementById('tabPrecio').classList.toggle('active',t==='precio');
+ document.getElementById('tabRepas').classList.toggle('active',t==='repas');
+ document.getElementById('tabInterno').classList.toggle('active',t==='interno');
+}
+window.guardarPrecios=async function(){
+ let data={
+  mandado:parseFloat(document.getElementById('cfgCentro').value)||35,
+  centro:parseFloat(document.getElementById('cfgCentro').value)||35,
+  precioKm:parseFloat(document.getElementById('cfgPrecioKm').value)||6,
+  kmBase:parseFloat(document.getElementById('cfgKmBase').value)||2,
+  lluviaLeve:parseFloat(document.getElementById('cfgLluviaLeve').value)||5,
+  lluviaMod:parseFloat(document.getElementById('cfgLluviaMod').value)||10,
+  lluviaFuerte:parseFloat(document.getElementById('cfgLluviaFuerte').value)||15,
+  clima:document.getElementById('cfgClimaActual').value||'normal'
+ };
+ await set(ref(db,'kigoTarifas'),data);
+ mostrarModalElegante({title:'Guardado',text:'Precios guardados',showCancel:false});
+}
+window.agregarRepa=async function(){
+ let nombre=document.getElementById('nuevoRepaNombre').value.trim();
+ let pin=document.getElementById('nuevoRepaPin').value.trim();
+ if(!nombre){ mostrarModalElegante({title:'Falta',text:'Escribe nombre',showCancel:false}); return; }
+ await set(ref(db,'kigoPins/repas/'+nombre),{nombre:nombre,pin:pin||'1234',online:true,ts:Date.now()});
+ document.getElementById('nuevoRepaNombre').value=''; document.getElementById('nuevoRepaPin').value='';
+ mostrarModalElegante({title:'Agregado',text:nombre+' agregado',showCancel:false});
+}
+window.editarPinRepa=async function(nombre){
+ let nuevo=prompt('Nuevo PIN para '+nombre);
+ if(nuevo===null) return;
+ await update(ref(db,'kigoPins/repas/'+nombre),{pin:nuevo});
+}
+window.borrarRepa=async function(nombre){
+ if(!confirm('Borrar '+nombre+'?')) return;
+ await remove(ref(db,'kigoPins/repas/'+nombre));
+}
+window.guardarInterno=async function(){
+ let nombre=document.getElementById('cfgNombreEmpresa').value.trim();
+ let logo=document.getElementById('cfgLogo').value.trim();
+ await set(ref(db,'kigoConfig'),{nombreEmpresa:nombre,logo:logo,ts:Date.now()});
+ mostrarModalElegante({title:'Guardado',text:'Ajustes internos guardados',showCancel:false});
+ if(logo){ document.getElementById('previewLogo').innerHTML=`<img src="${logo}" style="max-width:120px;border-radius:12px">`; }
 }
 
 window.toggleChatRepa=function(){
- chatRepaOpen=!chatRepaOpen;
- let slide=document.getElementById('chatRepaSlide');
- if(chatRepaOpen){ slide.classList.add('open'); setTimeout(()=>{ let box=document.getElementById('chatRepaBox'); if(box) box.scrollTop=box.scrollHeight; },200); }
- else slide.classList.remove('open');
+ let slide=document.getElementById('chatRepaSlide'); slide.classList.toggle('open');
 }
 window.enviarChatRepa=async function(){
  let txt=document.getElementById('chatRepaInput').value.trim(); if(!txt) return;
- let r=push(ref(db,'kigoChat'));
- await set(r,{sender:'José',repa:'José',text:txt,ts:Date.now()});
- document.getElementById('chatRepaInput').value='';
+ let r=push(ref(db,'kigoChat')); await set(r,{sender:'José',repa:'José',text:txt,ts:Date.now()}); document.getElementById('chatRepaInput').value='';
 }
-window.setChatBaseRepa=function(repa){
- chatSenderBase=repa;
- document.querySelectorAll('.btnChatRepa').forEach(b=>{ b.classList.remove('active'); if(b.dataset.repa===repa) b.classList.add('active'); });
- renderChatBase();
-}
-window.enviarChat=async function(){
- let txt=document.getElementById('chatInput').value.trim(); if(!txt) return;
- let r=push(ref(db,'kigoChat'));
- await set(r,{sender:'BASE',repa:chatSenderBase,text:txt,ts:Date.now()});
- document.getElementById('chatInput').value='';
-}
+window.setChatBaseRepa=function(repa){ chatSenderBase=repa; document.querySelectorAll('.btnChatRepa').forEach(b=>{ b.classList.toggle('active',b.dataset.repa===repa); }); renderChatBase(); }
+window.enviarChat=async function(){ let txt=document.getElementById('chatInput').value.trim(); if(!txt) return; let r=push(ref(db,'kigoChat')); await set(r,{sender:'BASE',repa:chatSenderBase,text:txt,ts:Date.now()}); document.getElementById('chatInput').value=''; }
 function renderChatBase(){
  let box=document.getElementById('chatBox'); if(!box) return;
  let entries=Object.entries(chatLive).filter(([k,m])=> (m.repa===chatSenderBase || m.sender===chatSenderBase)).sort((a,b)=>a[1].ts-b[1].ts);
@@ -354,8 +434,8 @@ function renderChatBase(){
 }
 function renderChatRepa(){
  let box=document.getElementById('chatRepaBox'); if(!box) return;
- let entries=Object.entries(chatLive).filter(([k,m])=> m.repa==='José' || m.sender==='José').sort((a,b)=>a[1].ts-b[1].ts);
- box.innerHTML=entries.map(([k,m])=>{
+ let entries=Object.entries(chatLive).filter(([k][m])=> m.repa==='José' || m.sender==='José').sort((a,b)=>a[1].ts-b[1].ts);
+ box.innerHTML=entries.map(([k][m])=>{
   let isBase=m.sender==='BASE';
   return `<div style="display:flex;flex-direction:${isBase?'row':'row-reverse'};width:100%"><div class="chatBubble ${isBase?'chatBase':'chatJose'}" style="font-size:10px"><b>${m.sender}:</b> ${m.text}</div></div>`;
  }).join('');
@@ -364,12 +444,16 @@ function renderChatRepa(){
 onValue(ref(db,'kigoChat'),snap=>{
  chatLive=snap.val()||{};
  document.getElementById('chatCount').innerText=Object.keys(chatLive).length;
- renderChatBase();
- renderChatRepa();
+ renderChatBase(); renderChatRepa();
  let listRepas=document.getElementById('listaRepasChat');
  if(listRepas){
   let repas=Object.keys(repasData); if(!repas.length) repas=['José'];
   listRepas.innerHTML=repas.map(r=>`<button class="btnChatRepa tabSeg ${r===chatSenderBase?'active':''}" data-repa="${r}" onclick="setChatBaseRepa('${r}')">${r}</button>`).join('');
+ }
+ let listAjuste=document.getElementById('listaRepasAjuste');
+ if(listAjuste){
+  let repas=Object.entries(repasData);
+  listAjuste.innerHTML=repas.map(([k][v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f3f4f6"><div><b style="font-size:11px">${v.nombre||k}</b> <span style="font-size:9px;color:#888">PIN: ${v.pin||'--'}</span> <span class="${v.online!==false?'dot on':'dot off'}" style="margin-left:6px"></span></div><div style="display:flex;gap:4px"><button class="icon-btn" style="width:28px;height:28px;font-size:10px" onclick="editarPinRepa('${k}')">✎</button><button class="icon-btn" style="width:28px;height:28px;font-size:10px;color:#ef4444" onclick="borrarRepa('${k}')">✕</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores</div>';
  }
 });
 
@@ -423,10 +507,27 @@ let v=snap.val()||{}; let m={};
 Object.entries(v).forEach(([k,d])=>{ if(!d) return; let dir=d.direccion||''; let tel=d.telefono||''; let nombre=d.nombreOriginal||k.replace(/_/g,' '); if(!dir&&!tel) return; m[nombre]={direccion:dir,telefono:tel,nombreOriginal:nombre,ts:d.ts||0,_key:k}; });
 clientesDB=m; renderClientes();
 });
-onValue(ref(db,'kigoTarifas'),s=>{ if(s.val()) tarifas=s.val(); });
+onValue(ref(db,'kigoTarifas'),snap=>{
+ let v=snap.val();
+ if(v){ tarifas={...tarifas,...v};
+  document.getElementById('cfgPrecioKm')&&(document.getElementById('cfgPrecioKm').value=v.precioKm||6);
+  document.getElementById('cfgCentro')&&(document.getElementById('cfgCentro').value=v.centro||v.mandado||35);
+  document.getElementById('cfgKmBase')&&(document.getElementById('cfgKmBase').value=v.kmBase||2);
+  document.getElementById('cfgLluviaLeve')&&(document.getElementById('cfgLluviaLeve').value=v.lluviaLeve||5);
+  document.getElementById('cfgLluviaMod')&&(document.getElementById('cfgLluviaMod').value=v.lluviaMod||10);
+  document.getElementById('cfgLluviaFuerte')&&(document.getElementById('cfgLluviaFuerte').value=v.lluviaFuerte||15);
+  document.getElementById('cfgClimaActual')&&(document.getElementById('cfgClimaActual').value=v.clima||'normal');
+ }
+});
+onValue(ref(db,'kigoConfig'),snap=>{
+ let v=snap.val(); if(!v) return;
+ document.getElementById('cfgNombreEmpresa')&&(document.getElementById('cfgNombreEmpresa').value=v.nombreEmpresa||'');
+ document.getElementById('cfgLogo')&&(document.getElementById('cfgLogo').value=v.logo||'');
+ if(v.logo) document.getElementById('previewLogo').innerHTML=`<img src="${v.logo}" style="max-width:120px;border-radius:12px">`;
+});
 onValue(ref(db,'kigoPins'),snap=>{
 let v=snap.val()||{}; repasData=v.repas||v||{};
-if(!repasData['José']) set(ref(db,'kigoPins/repas/José'),{online:true,nombre:'José',ts:Date.now()});
+if(!repasData['José']) set(ref(db,'kigoPins/repas/José'),{online:true,nombre:'José',pin:'1234',ts:Date.now()});
 if(repasData['José']){ joseOnline=repasData['José'].online!==false; actualizarUIJose(); }
 let keys=Object.keys(repasData); if(!keys.length) keys=['José'];
 let html=keys.map(n=>`<option value="${n}">${n}</option>`).join('');
@@ -443,9 +544,21 @@ if(online){ dot.className='dot on'; txt.innerText='EN LINEA'; txt.style.color='#
 else{ dot.className='dot off'; txt.innerText='OFFLINE'; txt.style.color='#ef4444'; txt.style.background='#fee2e2'; }
 }
 onValue(ref(db,'kigoPedidosLive'),snap=>{
-let newVal=snap.val()||{}; let newCount=Object.keys(newVal).length;
-if(newCount>lastPedidosCount && lastPedidosCount!==0){ sonidoRappi(); }
-lastPedidosCount=newCount; pedidosLive=newVal; renderSeguimiento(); renderRepaPanel();
+ let newVal=snap.val()||{};
+ let newKeys=new Set(Object.keys(newVal));
+ // Detectar pedidos nuevos que no estaban antes
+ let isNew=false;
+ for(let k of newKeys){ if(!prevPedidosKeys.has(k)){ isNew=true; break; } }
+ if(isNew && prevPedidosKeys.size>0){
+  sonidoRappi();
+  // Mostrar alerta visual en repartidor si está en vista repartidor
+  if(document.getElementById('view-repartidor').classList.contains('active')){
+   mostrarModalElegante({title:'NUEVO PEDIDO',text:'Te llegó un pedido nuevo en tiempo real',showCancel:false});
+   setTimeout(cerrarModal,3000);
+  }
+ }
+ prevPedidosKeys=newKeys;
+ pedidosLive=newVal; renderSeguimiento(); renderRepaPanel();
 });
 onValue(ref(db,'kigoNotificaciones'),snap=>{
 let v=snap.val()||{}; let entries=Object.entries(v).sort((a,b)=>b[1].ts-a[1].ts);
@@ -473,12 +586,12 @@ return `<div class="cardPedido" style="${esFin?'border:2px solid #10b981;backgro
 function renderRepaPanel(){
 let listaEspera=document.getElementById('listaEspera'); let listaActivos=document.getElementById('listaActivos'); if(!listaEspera) return;
 let entries=Object.entries(pedidosLive).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
-let enEspera=entries.filter(([k,p])=>(p.etapa||'pendiente')==='pendiente');
-let misActivos=entries.filter(([k,p])=>p.repaAsignado===repaPanelActual && ['camino','en camino','recogido','entrega'].includes(p.etapa||''));
+let enEspera=entries.filter(([k][p])=>(p.etapa||'pendiente')==='pendiente');
+let misActivos=entries.filter(([k][p])=>p.repaAsignado===repaPanelActual && ['camino','en camino','recogido','entrega'].includes(p.etapa||''));
 document.getElementById('countEspera').innerText=enEspera.length; document.getElementById('countActivos').innerText=misActivos.length;
 if(!misActivos.length){ listaActivos.innerHTML='<div style="text-align:center;padding:16px;color:#999;font-size:10px;border:1.5px dashed #e5e7eb;border-radius:12px">Sin activo</div>'; }
 else{
- listaActivos.innerHTML=misActivos.map(([id,p])=>{
+ listaActivos.innerHTML=misActivos.map(([id][p])=>{
   let codigo=id.substring(1,7).toUpperCase(); let etapa=p.etapa; let total=(p.costoSugerido||0)+(p.costoExtra||0);
   let cfg=etapa==='camino'||etapa==='en camino'?{l:'VOY EN CAMINO A RECOGER',bg:'rgba(59,130,246,.12)',c:'#3b82f6',n:'recogido'}:etapa==='recogido'?{l:'RECOGIDO',bg:'rgba(139,92,246,.12)',c:'#8b5cf6',n:'entrega'}:{l:'VOY EN CAMINO A ENTREGAR',bg:'rgba(245,158,11,.12)',c:'#f59e0b',n:'finalizado'};
   let call=etapa==='camino'||etapa==='en camino'?`LLAMAR A QUIEN RECOGE ${p.telefonoRecogida||''}`:`LLAMAR A QUIEN RECIBE ${p.telefono||''}`; let tel=etapa==='camino'||etapa==='en camino'?p.telefonoRecogida:p.telefono;
@@ -516,6 +629,7 @@ document.getElementById('bR').classList.toggle('active',v==='repartidor');
 document.getElementById('bCH').classList.toggle('active',v==='chat');
 document.getElementById('bH').classList.toggle('active',v==='historial');
 document.getElementById('bC').classList.toggle('active',v==='clientes');
+document.getElementById('bA').classList.toggle('active',v==='ajustes');
 if(v==='pedidos'&&map) setTimeout(()=>google.maps.event.trigger(map,'resize'),200);
 if(v==='repartidor'&&mapRepa) setTimeout(()=>{ google.maps.event.trigger(mapRepa,'resize'); renderRepaPanel(); },200);
 if(v==='chat') renderChatBase();
@@ -558,7 +672,7 @@ if(servicioActual==='comprar'){
 let almacen=document.getElementById('compAlmacen').value.trim(); let dirEnt=document.getElementById('compDirEntrega').value.trim();
 if(!almacen||!dirEnt){ mostrarModalElegante({title:'Falta dato',text:'Almacen y entrega obligatorios',showCancel:false}); return; }
 o=await geo(almacen); de=await geo(dirEnt); if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
-dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let costo=Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6); pedido={servicio:'comprar',clienteSel:{nombre:document.getElementById('compNombreRecibe').value.trim()||'Compra',direccion:almacen,telefono:document.getElementById('compTel').value.trim()},entrega:dirEnt,telEntrega:document.getElementById('compTel').value.trim(),refEntrega:document.getElementById('compRefEntrega').value.trim(),tipoProd:document.getElementById('compTipo').value.trim(),referenciaCompra:document.getElementById('compReferencia').value.trim(),tiempoRecogida:document.getElementById('compTiempo').value.trim(),de,o,km,min,costo}; document.getElementById('txtKm').innerText=`${km}km • ${min}m`; document.getElementById('txtCosto').innerText=`$${costo}`; } }); return;
+dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let extraKm=Math.max(0,km-(tarifas.kmBase||2)); let base=tarifas.centro||tarifas.mandado||35; let costoKm=extraKm*(tarifas.precioKm||6); let climaExtra=0; if(tarifas.clima==='leve') climaExtra=tarifas.lluviaLeve||0; else if(tarifas.clima==='moderada') climaExtra=tarifas.lluviaMod||0; else if(tarifas.clima==='fuerte') climaExtra=tarifas.lluviaFuerte||0; let costo=Math.round(base+costoKm+climaExtra); pedido={servicio:'comprar',clienteSel:{nombre:document.getElementById('compNombreRecibe').value.trim()||'Compra',direccion:almacen,telefono:document.getElementById('compTel').value.trim()},entrega:dirEnt,telEntrega:document.getElementById('compTel').value.trim(),refEntrega:document.getElementById('compRefEntrega').value.trim(),tipoProd:document.getElementById('compTipo').value.trim(),referenciaCompra:document.getElementById('compReferencia').value.trim(),tiempoRecogida:document.getElementById('compTiempo').value.trim(),de,o,km,min,costo}; document.getElementById('txtKm').innerText=`${km}km • ${min}m`; document.getElementById('txtCosto').innerText=`$${costo}`; } }); return;
 }
 let entrega='', telEntrega='', refEntrega='', nombreCliente='', telRecogida='', tiempoRecogida='';
 if(modoActual==='lista'){
@@ -568,7 +682,7 @@ entrega=document.getElementById('dirEntrega').value.trim(); telEntrega=document.
 let nombre=document.getElementById('nuevoNombre').value.trim(); let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim(); let dirEnt=document.getElementById('nuevoDirEntrega').value.trim(); if(!nombre||!dirRecoge||!dirEnt){ mostrarModalElegante({title:'Falta dato',text:'Completa datos',showCancel:false}); return; } entrega=dirEnt; telEntrega=document.getElementById('nuevoTelEntrega').value.trim(); refEntrega=document.getElementById('nuevoRefEntrega').value.trim(); tiempoRecogida=document.getElementById('nuevoTiempoRecogida').value.trim(); nombreCliente=nombre; telRecogida=document.getElementById('nuevoTel').value.trim(); clienteSel={nombre:nombre,direccion:dirRecoge,telefono:telRecogida}; o=await geo(dirRecoge); de=await geo(dirEnt);
 }
 if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
-dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let costo=Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6); pedido={servicio:'recoger',clienteSel:{nombre:nombreCliente,direccion:clienteSel.direccion,telefono:telRecogida},entrega:entrega,telEntrega:telEntrega,refEntrega:refEntrega,tiempoRecogida:tiempoRecogida,de,o,km,min,costo}; document.getElementById('txtKm').innerText=`${km}km • ${min}m`; document.getElementById('txtCosto').innerText=`$${costo}`; } });
+dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let extraKm=Math.max(0,km-(tarifas.kmBase||2)); let base=tarifas.centro||tarifas.mandado||35; let costoKm=extraKm*(tarifas.precioKm||6); let climaExtra=0; if(tarifas.clima==='leve') climaExtra=tarifas.lluviaLeve||0; else if(tarifas.clima==='moderada') climaExtra=tarifas.lluviaMod||0; else if(tarifas.clima==='fuerte') climaExtra=tarifas.lluviaFuerte||0; let costo=Math.round(base+costoKm+climaExtra); pedido={servicio:'recoger',clienteSel:{nombre:nombreCliente,direccion:clienteSel.direccion,telefono:telRecogida},entrega:entrega,telEntrega:telEntrega,refEntrega:refEntrega,tiempoRecogida:tiempoRecogida,de,o,km,min,costo}; document.getElementById('txtKm').innerText=`${km}km • ${min}m`; document.getElementById('txtCosto').innerText=`$${costo}`; } });
 }
 window.confirmar=async function(){
 if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
