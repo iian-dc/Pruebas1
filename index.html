@@ -38,16 +38,12 @@ body{font-family:Manrope,sans-serif;background:#f7f7f7;max-width:640px;margin:0 
 <div id="view-pedidos" class="view active">
 <div class="card" style="padding:8px">
 <div id="map"></div>
-
-<!-- ESTILO RAPPI - CENTRADO Y ELEGANTE -->
 <div style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:8px;margin-top:10px">
-<!-- IZQUIERDA - TEXTO CENTRADO -->
 <div style="background:#0a0a0a;color:#fff;border-radius:12px;height:42px;display:flex;align-items:center;justify-content:center;gap:10px">
-<span id="txtKm" style="font-size:11px;font-weight:700;letter-spacing:.2px">-- km • -- min</span>
+<span id="txtKm" style="font-size:11px;font-weight:700">-- km • -- min</span>
 <span style="width:1px;height:16px;background:#333"></span>
 <span id="txtCosto" style="font-size:14px;font-weight:800">$0</span>
 </div>
-<!-- DERECHA - MAS LARGO ESTILO RAPPI -->
 <div style="background:#fff;border:1.5px solid #0a0a0a;border-radius:12px;height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 10px">
 <div style="display:flex;align-items:center;gap:6px;flex:1">
 <span class="dot off" id="dotEstado"></span>
@@ -65,17 +61,27 @@ body{font-family:Manrope,sans-serif;background:#f7f7f7;max-width:640px;margin:0 
 <button id="clearBusc" class="btn-clear" onclick="limpiarCampo('buscCli','clearBusc')">✕</button>
 <div id="listCli"></div>
 </div>
-<div id="boxSel" style="display:none;margin-top:10px;background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:10px">
-<div id="txtNom" style="font-weight:800;font-size:12px"></div><div id="txtDirSel" style="font-size:10px"></div><div id="txtTelSel" style="font-size:10px;color:#10b981;font-weight:800"></div>
+
+<!-- CAJITA VERDE CON TELEFONO INTEGRADO -->
+<div id="boxSel" style="display:none;margin-top:10px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:12px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start">
+<div style="flex:1">
+<div id="txtNom" style="font-weight:800;font-size:12px"></div>
+<div id="txtDirSel" style="font-size:10px;color:#555;margin-top:2px"></div>
+<div id="txtTelSel" style="font-size:11px;font-weight:800;margin-top:4px;display:flex;align-items:center;gap:4px"></div>
 </div>
-<span class="label" style="margin-top:10px">Telefono recogida</span>
-<div class="wrap wrap-clear"><input type="text" id="telRecogida" oninput="toggleClear('telRecogida','clearTelRec')"><button id="clearTelRec" class="btn-clear" onclick="limpiarCampo('telRecogida','clearTelRec')">✕</button></div>
+<button onclick="limpiarCampo('buscCli','clearBusc')" style="width:22px;height:22px;border-radius:50%;border:none;background:#dcfce7;color:#16a34a;font-weight:800;cursor:pointer">✕</button>
+</div>
+</div>
+
 <span class="label" style="margin-top:10px">Direccion entrega</span>
 <div class="wrap wrap-clear"><input type="text" id="dirEntrega" placeholder="Escribe dirección..." oninput="toggleClear('dirEntrega','clearEnt')"><button id="clearEnt" class="btn-clear" onclick="limpiarCampo('dirEntrega','clearEnt')">✕</button></div>
+
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
 <div><span class="label">Tel entrega</span><div class="wrap wrap-clear"><input type="text" id="telEntrega" oninput="toggleClear('telEntrega','clearTelEnt')"><button id="clearTelEnt" class="btn-clear" onclick="limpiarCampo('telEntrega','clearTelEnt')">✕</button></div></div>
 <div><span class="label">Referencia</span><div class="wrap wrap-clear"><input type="text" id="refEntrega" oninput="toggleClear('refEntrega','clearRef')"><button id="clearRef" class="btn-clear" onclick="limpiarCampo('refEntrega','clearRef')">✕</button></div></div>
 </div>
+
 <button class="btn" style="margin-top:12px" onclick="cotizar()">COTIZAR RUTA</button>
 <button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
 </div>
@@ -170,24 +176,16 @@ document.getElementById('bP').classList.toggle('active',v==='pedidos');
 document.getElementById('bC').classList.toggle('active',v==='clientes');
 if(v==='pedidos'&&map) setTimeout(()=>google.maps.event.trigger(map,'resize'),200);
 }
-
-// MAPA - CORREGIDO DEFINITIVO SIN CALLBACK
 function initMapReal(){
 if(!window.google||!google.maps){ setTimeout(initMapReal,300); return; }
 map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1576,lng:-100.9345},zoom:14});
 dirServ=new google.maps.DirectionsService();
 dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
 let opts={bounds:{north:21.30,south:21.00,east:-100.75,west:-101.10},componentRestrictions:{country:'mx'}};
-try{
-new google.maps.places.Autocomplete(document.getElementById('dirEntrega'),opts);
-new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts);
-}catch(e){ console.log('autocomplete pending'); }
-console.log('Mapa OK');
+try{ new google.maps.places.Autocomplete(document.getElementById('dirEntrega'),opts); new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts); }catch(e){}
 }
 window._initMapReal=initMapReal;
-// Intenta iniciar en cuanto cargue el modulo
-setTimeout(initMapReal,500);
-setTimeout(initMapReal,1500);
+setTimeout(initMapReal,500); setTimeout(initMapReal,1500);
 
 function clearM(){markers.forEach(m=>m.setMap(null));markers=[];}
 window.clearM=clearM;
@@ -281,9 +279,15 @@ document.getElementById('buscCli').value=n;document.getElementById('listCli').st
 document.getElementById('boxSel').style.display='block';
 document.getElementById('txtNom').innerText=n;
 document.getElementById('txtDirSel').innerText=d.direccion;
-document.getElementById('txtTelSel').innerText=d.telefono||'';
-document.getElementById('telRecogida').value=d.telefono||'';
-toggleClear('buscCli','clearBusc'); toggleClear('telRecogida','clearTelRec');
+let telBox=document.getElementById('txtTelSel');
+if(d.telefono && d.telefono.trim()!==''){
+telBox.innerHTML=`<span style="color:#10b981">📞 ${d.telefono}</span>`;
+telBox.style.color='#10b981';
+}else{
+telBox.innerHTML=`<span style="color:#ef4444">✕ SIN NÚMERO</span>`;
+telBox.style.color='#ef4444';
+}
+toggleClear('buscCli','clearBusc');
 geo(d.direccion).then(p=>{if(p&&map){map.setCenter(p);map.setZoom(15);clearM();addM(p,'#ef4444');}});
 }
 window.cotizar=async function(){
@@ -305,8 +309,10 @@ document.getElementById('txtCosto').innerText=`$${costo}`;
 window.confirmar=async function(){
 if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
 let repa=document.getElementById('selRepa')?.value||'sin asignar';
+// usa telefono de la base de datos directamente
+let telRecogida = clienteSel.telefono || '';
 let nr=push(ref(db,'kigoPedidosLive'));
-await set(nr,{cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:document.getElementById('telRecogida').value,telefono:document.getElementById('telEntrega').value,referencia:document.getElementById('refEntrega').value,km:pedido.km,costoSugerido:pedido.costo,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
+await set(nr,{cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:telRecogida,telefono:document.getElementById('telEntrega').value,referencia:document.getElementById('refEntrega').value,km:pedido.km,costoSugerido:pedido.costo,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
 mostrarModalElegante({title:'Enviado',text:'Asignado a '+repa+' $'+pedido.costo,showCancel:false});
 }
 document.addEventListener('click',e=>{if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')){let l=document.getElementById('listCli'); if(l) l.style.display='none';}});
