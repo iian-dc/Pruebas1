@@ -18,25 +18,33 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .btn{width:100%;height:48px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer}
 .btn-outline{width:100%;height:42px;background:#fff;border:1.5px solid #111;border-radius:12px;font-weight:800;font-size:10px;letter-spacing:.4px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;text-transform:uppercase}
 .btn-outline.active{background:#0a0a0a;color:#fff}
-.btn-serv{width:100%;height:44px;border-radius:12px;border:1.5px solid #111;background:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;letter-spacing:.3px}
+.btn-serv{width:100%;height:44px;border-radius:12px;border:1.5px solid #111;background:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer}
 .btn-serv.active{background:#0a0a0a;color:#fff}
 .btn-serv.active svg{stroke:#fff}
 .view{display:none}.view.active{display:block}
 #map{width:100%;height:360px;border-radius:14px;background:#e5e7eb;display:block}
 #listCli{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #0a0a0a;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none;z-index:50}
-.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;display:flex;padding:10px;max-width:640px;margin:0 auto;gap:8px;z-index:100}
-.bottom button{flex:1;height:42px;border-radius:12px;border:1px solid #eee;background:#fff;font-weight:800;font-size:11px}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;display:flex;padding:10px;max-width:640px;margin:0 auto;gap:6px;z-index:100}
+.bottom button{flex:1;height:38px;border-radius:12px;border:1px solid #eee;background:#fff;font-weight:800;font-size:10px}
 .bottom button.active{background:#0a0a0a;color:#fff}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .dot.on{background:#10b981;box-shadow:0 0 0 2px #d1fae5}
 .dot.off{background:#ef4444;box-shadow:0 0 0 2px #fee2e2}
-.kigo-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:200}
+.kigo-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:200;padding:12px}
 .kigo-overlay.show{display:flex}
-.kigo-modal{background:#fff;border-radius:20px;padding:20px;max-width:340px;width:90%}
+.kigo-modal{background:#fff;border-radius:20px;padding:20px;max-width:380px;width:95%;max-height:90vh;overflow:auto}
 .kigo-btn{flex:1;height:42px;border-radius:12px;border:none;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
 .kigo-btn-confirm{background:#0a0a0a;color:#fff}
 .icon-btn{width:32px;height:32px;border-radius:9px;border:1px solid #e5e7eb;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .ico{width:15px;height:15px;stroke:#111;stroke-width:1.8;fill:none}
+.tabSeg{height:34px;padding:0 12px;border-radius:20px;border:1px solid #e5e7eb;background:#fff;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.tabSeg.active{background:#0a0a0a;color:#fff;border-color:#0a0a0a}
+.badgeCount{background:#f3f4f6;color:#111;padding:2px 6px;border-radius:10px;font-size:9px;font-weight:800}
+.tabSeg.active.badgeCount{background:#fff;color:#0a0a0a}
+.cardPedido{border:1px solid #eee;border-radius:16px;padding:12px;margin-bottom:10px;background:#fff}
+.estadoPend{color:#f59e0b;background:#fef3c7;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
+.estadoCamino{color:#3b82f6;background:#dbeafe;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
+.estadoFin{color:#10b981;background:#d1fae5;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
 </style>
 </head>
 <body>
@@ -58,8 +66,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 <span id="txtEstado" style="font-size:8px;font-weight:800;background:#f3f4f6;padding:3px 7px;border-radius:20px;white-space:nowrap">--</span>
 </div>
 </div>
-
-<!-- DOS SERVICIOS ELEGANTES -->
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
 <button id="btnRecoger" class="btn-serv active" onclick="setServicio('recoger')">
 <svg class="ico" viewBox="0 0 24 24"><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 10h6M2 14h6M18 10h4M18 14h4"/></svg>
@@ -68,7 +74,6 @@ RECOGER</button>
 <svg class="ico" viewBox="0 0 24 24"><path d="M6 2l1.2 2M10 2l1.2 2M14 2l1.2 2M6 8h12l-1 12H7L6 8z"/><path d="M9 11v5M12 11v5M15 11v5"/></svg>
 COMPRAR</button>
 </div>
-
 <div id="wrapModoCliente" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
 <button id="btnLista" class="btn-outline active" onclick="setModo('lista')">
 <svg class="ico" viewBox="0 0 24 24"><path d="M8 6h10M8 12h10M8 18h10M4 6h.01M4 12h.01M4 18h.01"/></svg>
@@ -79,7 +84,6 @@ CLIENTE NUEVO</button>
 </div>
 </div>
 
-<!-- MODO RECOGER - LISTA -->
 <div id="modoLista" class="card">
 <span class="label">Buscar cliente de base de datos</span>
 <div class="wrap wrap-clear" style="overflow:visible">
@@ -114,7 +118,6 @@ CLIENTE NUEVO</button>
 <button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
 </div>
 
-<!-- MODO RECOGER - NUEVO -->
 <div id="modoNuevo" class="card" style="display:none">
 <span class="label">Nombre del cliente nuevo</span>
 <div class="wrap wrap-clear"><input type="text" id="nuevoNombre" placeholder="Nombre cliente" oninput="toggleClear('nuevoNombre','clearNuevoNom')"><button id="clearNuevoNom" class="btn-clear" onclick="limpiarCampo('nuevoNombre','clearNuevoNom')">✕</button></div>
@@ -140,14 +143,13 @@ CLIENTE NUEVO</button>
 <button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
 </div>
 
-<!-- MODO COMPRAR - NUEVAS OPCIONES -->
 <div id="modoComprar" class="card" style="display:none">
 <span class="label">Tipo de producto que se va a comprar</span>
-<div class="wrap wrap-clear"><input type="text" id="compTipo" placeholder="Ej. Medicamentos, despensa, refacciones" oninput="toggleClear('compTipo','clearCompTipo')"><button id="clearCompTipo" class="btn-clear" onclick="limpiarCampo('compTipo','clearCompTipo')">✕</button></div>
+<div class="wrap wrap-clear"><input type="text" id="compTipo" placeholder="Ej. Medicamentos" oninput="toggleClear('compTipo','clearCompTipo')"><button id="clearCompTipo" class="btn-clear" onclick="limpiarCampo('compTipo','clearCompTipo')">✕</button></div>
 <span class="label" style="margin-top:10px">Referencia de lo que se va a comprar</span>
-<div class="wrap wrap-clear"><input type="text" id="compReferencia" placeholder="Ej. 2 cajas de paracetamol, 1kg tortillas" oninput="toggleClear('compReferencia','clearCompRef')"><button id="clearCompRef" class="btn-clear" onclick="limpiarCampo('compReferencia','clearCompRef')">✕</button></div>
+<div class="wrap wrap-clear"><input type="text" id="compReferencia" placeholder="Ej. 2 cajas paracetamol" oninput="toggleClear('compReferencia','clearCompRef')"><button id="clearCompRef" class="btn-clear" onclick="limpiarCampo('compReferencia','clearCompRef')">✕</button></div>
 <span class="label" style="margin-top:10px">Almacén / Local / Dirección donde comprar</span>
-<div class="wrap wrap-clear"><input type="text" id="compAlmacen" placeholder="Ej. Farmacia Guadalajara centro" oninput="toggleClear('compAlmacen','clearCompAlm')"><button id="clearCompAlm" class="btn-clear" onclick="limpiarCampo('compAlmacen','clearCompAlm')">✕</button></div>
+<div class="wrap wrap-clear"><input type="text" id="compAlmacen" placeholder="Ej. Farmacia Guadalajara" oninput="toggleClear('compAlmacen','clearCompAlm')"><button id="clearCompAlm" class="btn-clear" onclick="limpiarCampo('compAlmacen','clearCompAlm')">✕</button></div>
 <span class="label" style="margin-top:10px">Dirección de entrega</span>
 <div class="wrap wrap-clear"><input type="text" id="compDirEntrega" placeholder="Dirección entrega" oninput="toggleClear('compDirEntrega','clearCompDir')"><button id="clearCompDir" class="btn-clear" onclick="limpiarCampo('compDirEntrega','clearCompDir')">✕</button></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
@@ -155,7 +157,7 @@ CLIENTE NUEVO</button>
 <div><span class="label">Teléfono</span><div class="wrap wrap-clear"><input type="text" id="compTel" placeholder="Teléfono" oninput="toggleClear('compTel','clearCompTel')"><button id="clearCompTel" class="btn-clear" onclick="limpiarCampo('compTel','clearCompTel')">✕</button></div></div>
 </div>
 <span class="label" style="margin-top:10px">Referencia entrega</span>
-<div class="wrap wrap-clear"><input type="text" id="compRefEntrega" placeholder="Ej. Casa blanca portón negro" oninput="toggleClear('compRefEntrega','clearCompRefEnt')"><button id="clearCompRefEnt" class="btn-clear" onclick="limpiarCampo('compRefEntrega','clearCompRefEnt')">✕</button></div>
+<div class="wrap wrap-clear"><input type="text" id="compRefEntrega" placeholder="Referencia" oninput="toggleClear('compRefEntrega','clearCompRefEnt')"><button id="clearCompRefEnt" class="btn-clear" onclick="limpiarCampo('compRefEntrega','clearCompRefEnt')">✕</button></div>
 <span class="label" style="margin-top:10px">Tiempo de compra</span>
 <div class="wrap wrap-clear">
 <span style="padding-left:12px;display:flex;align-items:center"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
@@ -166,7 +168,23 @@ CLIENTE NUEVO</button>
 <button class="btn" style="margin-top:12px" onclick="cotizar()">COTIZAR RUTA</button>
 <button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
 </div>
+</div>
 
+<!-- NUEVA CATEGORIA SEGUIMIENTO -->
+<div id="view-seguimiento" class="view">
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h3 style="font-size:12px;font-weight:800">SEGUIMIENTO EN TIEMPO REAL</h3>
+<span id="totalPedidosBadge" style="background:#0a0a0a;color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800">0 PEDIDOS</span>
+</div>
+<div style="display:flex;gap:6px;margin-top:10px;overflow:auto;padding-bottom:4px">
+<button class="tabSeg active" onclick="filtrarSeg('todos')" id="tabTodos">TODOS <span class="badgeCount" id="cTodos">0</span></button>
+<button class="tabSeg" onclick="filtrarSeg('pendiente')" id="tabPend">PENDIENTES <span class="badgeCount" id="cPend">0</span></button>
+<button class="tabSeg" onclick="filtrarSeg('camino')" id="tabCam">EN CAMINO <span class="badgeCount" id="cCam">0</span></button>
+<button class="tabSeg" onclick="filtrarSeg('finalizado')" id="tabFin">FINALIZADOS <span class="badgeCount" id="cFin">0</span></button>
+</div>
+</div>
+<div id="listaSeguimiento"></div>
 </div>
 
 <div id="view-clientes" class="view">
@@ -186,23 +204,57 @@ CLIENTE NUEVO</button>
 </div>
 </div>
 
-<div class="bottom"><button id="bP" class="active" onclick="showView('pedidos')">PEDIDOS</button><button id="bC" onclick="showView('clientes')">CLIENTES</button></div>
+<div class="bottom">
+<button id="bP" class="active" onclick="showView('pedidos')">PEDIDOS</button>
+<button id="bS" onclick="showView('seguimiento')">SEGUIMIENTO</button>
+<button id="bC" onclick="showView('clientes')">CLIENTES</button>
+</div>
 
+<!-- MODALES -->
 <div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><h3 id="modalTitle" style="font-size:13px;font-weight:800;text-align:center"></h3><p id="modalText" style="font-size:11px;margin:10px 0;color:#6b7280;text-align:center"></p><div id="editBox" style="display:none"><span class="label">Nombre</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editNombre"></div><span class="label">Direccion</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editDir"></div><span class="label">Telefono</span><div class="wrap" style="margin-bottom:12px"><input type="text" id="editTel"></div></div><div style="display:flex;gap:8px"><button id="modalCancel" class="kigo-btn" style="background:#f3f4f6" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">OK</button></div></div></div>
+
+<div class="kigo-overlay" id="overlayDetalle"><div class="kigo-modal">
+<h3 style="font-size:12px;font-weight:800;text-align:center">DETALLES DEL PEDIDO</h3>
+<div id="detalleContent" style="margin-top:12px"></div>
+<div style="margin-top:12px">
+<span class="label">Editar dirección recogida</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editRecogida"></div>
+<span class="label">Editar dirección entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editEntrega"></div>
+<span class="label">Editar teléfono entrega</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editTelEnt"></div>
+<span class="label">Añadir costo extra envío</span>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+<button class="btn-outline" style="height:36px" onclick="addCosto(5)">+$5</button>
+<button class="btn-outline" style="height:36px" onclick="addCosto(10)">+$10</button>
+<button class="btn-outline" style="height:36px" onclick="addCosto(15)">+$15</button>
+</div>
+<div class="wrap" style="margin-bottom:12px"><input type="number" id="editCostoExtra" placeholder="Costo extra manual" oninput="calcTotalEdit()"></div>
+<div style="background:#f7f7f7;border-radius:10px;padding:8px;display:flex;justify-content:space-between;margin-bottom:12px">
+<span style="font-size:10px;font-weight:800">TOTAL</span><span id="txtTotalEdit" style="font-size:12px;font-weight:800">$0</span>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<button class="kigo-btn" style="background:#f3f4f6" onclick="cerrarDetalle()">Cerrar</button>
+<button class="kigo-btn kigo-btn-confirm" onclick="guardarEdicion()">Guardar cambios</button>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+<button class="kigo-btn" style="background:#fee2e2;color:#ef4444" onclick="cancelarPedido()">Cancelar servicio</button>
+<button class="kigo-btn" style="background:#d1fae5;color:#10b981" onclick="finalizarPedido()">Finalizar - Historial</button>
+</div>
+</div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, set, push, remove, update, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", authDomain: "historial-kigo-xpress.firebaseapp.com", databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com", projectId: "historial-kigo-xpress", storageBucket: "historial-kigo-xpress.firebasestorage.app", messagingSenderId: "571399920545", appId: "1:571399920545:web:aa16407753b43cbe2e89e0" };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35};
 let map, dirServ, dirRend, markers=[], clienteSel=null;
-let modoActual='lista';
-let servicioActual='recoger';
+let modoActual='lista', servicioActual='recoger';
+let pedidosLive={}, filtroSeg='todos', pedidoEditId=null, pedidoEditData=null;
 
 window.cerrarModal=function(){ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
+window.cerrarDetalle=function(){ document.getElementById('overlayDetalle').classList.remove('show'); pedidoEditId=null; pedidoEditData=null; }
 window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText='Cancelar', confirmText='OK', showCancel=true, onConfirm=null, showEdit=false, editData=null}){
  document.getElementById('modalTitle').innerText=title; document.getElementById('modalText').innerText=text;
  document.getElementById('modalCancel').innerText=cancelText; document.getElementById('modalConfirm').innerText=confirmText;
@@ -251,6 +303,7 @@ if(dirRend) dirRend.setDirections({routes:[]});
 clearM();
 }
 
+// FIREBASE CLIENTES Y REPAS
 onValue(ref(db,'kigoClientesDir'),snap=>{
 let v=snap.val()||{}; let m={};
 Object.entries(v).forEach(([k,d])=>{
@@ -286,12 +339,154 @@ if(!dot||!txt) return;
 if(online){ dot.className='dot on'; txt.innerText='EN LINEA'; txt.style.color='#10b981'; txt.style.background='#d1fae5'; }
 else{ dot.className='dot off'; txt.innerText='OFFLINE'; txt.style.color='#ef4444'; txt.style.background='#fee2e2'; }
 }
+
+// SEGUIMIENTO TIEMPO REAL
+onValue(ref(db,'kigoPedidosLive'),snap=>{
+pedidosLive=snap.val()||{};
+renderSeguimiento();
+});
+
+window.filtrarSeg=function(f){
+filtroSeg=f;
+document.querySelectorAll('.tabSeg').forEach(b=>b.classList.remove('active'));
+if(f==='todos') document.getElementById('tabTodos').classList.add('active');
+if(f==='pendiente') document.getElementById('tabPend').classList.add('active');
+if(f==='camino') document.getElementById('tabCam').classList.add('active');
+if(f==='finalizado') document.getElementById('tabFin').classList.add('active');
+renderSeguimiento();
+}
+
+function renderSeguimiento(){
+let lista=document.getElementById('listaSeguimiento');
+let entries=Object.entries(pedidosLive).sort((a,b)=> (b[1].ts||0)-(a[1].ts||0));
+let cTodos=entries.length;
+let cPend=entries.filter(([k,v])=> (v.etapa||'pendiente')==='pendiente').length;
+let cCam=entries.filter(([k,v])=> v.etapa==='camino' || v.etapa==='en camino').length;
+let cFin=entries.filter(([k,v])=> v.etapa==='finalizado').length;
+document.getElementById('cTodos').innerText=cTodos;
+document.getElementById('cPend').innerText=cPend;
+document.getElementById('cCam').innerText=cCam;
+document.getElementById('cFin').innerText=cFin;
+document.getElementById('totalPedidosBadge').innerText=cTodos+' PEDIDOS';
+
+let filtrados=entries.filter(([k,v])=>{
+if(filtroSeg==='todos') return true;
+if(filtroSeg==='pendiente') return (v.etapa||'pendiente')==='pendiente';
+if(filtroSeg==='camino') return v.etapa==='camino' || v.etapa==='en camino';
+if(filtroSeg==='finalizado') return v.etapa==='finalizado';
+return true;
+});
+
+if(!filtrados.length){
+lista.innerHTML='<div style="text-align:center;padding:30px;color:#999;font-size:11px">No hay pedidos en esta categoría</div>';
+return;
+}
+
+lista.innerHTML=filtrados.map(([id,p])=>{
+let fecha=new Date(p.ts||Date.now());
+let hora=fecha.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+let codigo=id.substring(1,7).toUpperCase();
+let estado=p.etapa||'pendiente';
+let estadoClass=estado==='pendiente'?'estadoPend':(estado==='finalizado'?'estadoFin':'estadoCamino');
+let estadoTxt=estado==='pendiente'?'PENDIENTE':(estado==='finalizado'?'FINALIZADO':'EN CAMINO');
+let tiempoRec=p.tiempoRecogida?`Recoger en ${p.tiempoRecogida} min`:'';
+return `<div class="cardPedido">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<span style="font-size:10px;font-weight:800;background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:6px">#${codigo}</span>
+<span style="font-size:9px;color:#888">${hora} ${fecha.toLocaleDateString()}</span>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<span class="${estadoClass}">${estadoTxt}</span>
+<span style="font-size:9px;color:#666">${tiempoRec}</span>
+</div>
+<div style="font-size:11px;font-weight:700;margin-bottom:4px">${p.cliente||'--'} ${p.servicio==='comprar'?'🛒 COMPRA':'📦 RECOGER'}</div>
+<div style="font-size:9px;color:#555;margin-bottom:2px"><b>Recoge:</b> ${p.dirRecogida||''}</div>
+<div style="font-size:9px;color:#555;margin-bottom:2px"><b>Entrega:</b> ${p.entrega||''}</div>
+<div style="display:flex;gap:8px;margin-top:6px;font-size:9px;color:#666">
+<span>${p.km||0} km</span><span>•</span><span>$${p.costoSugerido||0} ${(p.costoExtra?`+ $${p.costoExtra} = $${(p.costoSugerido||0)+(p.costoExtra||0)}`:'')}</span><span>•</span><span>${p.repaAsignado||''}</span>
+</div>
+${p.tipoProd?`<div style="font-size:9px;color:#333;margin-top:4px"><b>Producto:</b> ${p.tipoProd} - ${p.referenciaCompra||''}</div>`:''}
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+<button class="btn-outline" style="height:36px;font-size:9px" onclick="verDetalles('${id}')">VER DETALLES</button>
+<button class="btn-outline" style="height:36px;font-size:9px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="cancelarDirecto('${id}')">CANCELAR</button>
+</div>
+</div>`;
+}).join('');
+}
+
+window.verDetalles=function(id){
+let p=pedidosLive[id];
+if(!p) return;
+pedidoEditId=id; pedidoEditData=p;
+document.getElementById('detalleContent').innerHTML=`
+<div style="font-size:10px;color:#666">
+<div><b>Código:</b> ${id}</div>
+<div><b>Hora:</b> ${new Date(p.ts).toLocaleString()}</div>
+<div><b>Estado:</b> ${p.etapa}</div>
+<div><b>Cliente:</b> ${p.cliente}</div>
+<div><b>Servicio:</b> ${p.servicio}</div>
+${p.tiempoRecogida?`<div><b>Recoger en:</b> ${p.tiempoRecogida} min</div>`:''}
+<div><b>Repartidor:</b> ${p.repaAsignado}</div>
+</div>`;
+document.getElementById('editRecogida').value=p.dirRecogida||'';
+document.getElementById('editEntrega').value=p.entrega||'';
+document.getElementById('editTelEnt').value=p.telefono||'';
+document.getElementById('editCostoExtra').value=p.costoExtra||0;
+calcTotalEdit();
+document.getElementById('overlayDetalle').classList.add('show');
+}
+window.addCosto=function(n){
+let inp=document.getElementById('editCostoExtra');
+let cur=parseInt(inp.value||0);
+inp.value=cur+n;
+calcTotalEdit();
+}
+window.calcTotalEdit=function(){
+let base=pedidoEditData?.costoSugerido||0;
+let extra=parseInt(document.getElementById('editCostoExtra').value||0);
+document.getElementById('txtTotalEdit').innerText='$'+(base+extra);
+}
+window.guardarEdicion=async function(){
+if(!pedidoEditId) return;
+let extra=parseInt(document.getElementById('editCostoExtra').value||0);
+await update(ref(db,'kigoPedidosLive/'+pedidoEditId),{
+dirRecogida:document.getElementById('editRecogida').value,
+entrega:document.getElementById('editEntrega').value,
+telefono:document.getElementById('editTelEnt').value,
+costoExtra:extra
+});
+mostrarModalElegante({title:'Actualizado',text:'Pedido actualizado en tiempo real',showCancel:false});
+cerrarDetalle();
+}
+window.cancelarPedido=async function(){
+if(!pedidoEditId) return;
+mostrarModalElegante({title:'Cancelar',text:'¿Cancelar este servicio?',confirmText:'Sí, cancelar',onConfirm:async()=>{
+await remove(ref(db,'kigoPedidosLive/'+pedidoEditId));
+cerrarDetalle(); cerrarModal();
+}});
+}
+window.cancelarDirecto=function(id){
+pedidoEditId=id; pedidoEditData=pedidosLive[id];
+cancelarPedido();
+}
+window.finalizarPedido=async function(){
+if(!pedidoEditId) return;
+let p=pedidosLive[pedidoEditId];
+let histRef=push(ref(db,'kigoHistorial'));
+await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()});
+await remove(ref(db,'kigoPedidosLive/'+pedidoEditId));
+cerrarDetalle();
+mostrarModalElegante({title:'Historial',text:'Enviado a historial',showCancel:false});
+}
+
 window.showView=function(v){
 document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
 document.getElementById('view-'+v).classList.add('active');
 document.getElementById('bP').classList.toggle('active',v==='pedidos');
+document.getElementById('bS').classList.toggle('active',v==='seguimiento');
 document.getElementById('bC').classList.toggle('active',v==='clientes');
 if(v==='pedidos'&&map) setTimeout(()=>google.maps.event.trigger(map,'resize'),200);
+if(v==='seguimiento') renderSeguimiento();
 }
 function initMapReal(){
 if(!window.google||!google.maps){ setTimeout(initMapReal,300); return; }
@@ -482,8 +677,8 @@ window.confirmar=async function(){
 if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
 let repa=document.getElementById('selRepa')?.value||'sin asignar';
 let nr=push(ref(db,'kigoPedidosLive'));
-await set(nr,{servicio:pedido.servicio||'recoger',cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:pedido.clienteSel.telefono||'',telefono:pedido.telEntrega||'',referencia:pedido.refEntrega||'',tiempoRecogida:pedido.tiempoRecogida||'',tipoProd:pedido.tipoProd||'',referenciaCompra:pedido.referenciaCompra||'',km:pedido.km,costoSugerido:pedido.costo,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
-mostrarModalElegante({title:'Enviado',text:(pedido.servicio==='comprar'?'Compra':'Recogida')+' asignada a '+repa+' - '+(pedido.tiempoRecogida||'0')+' min - $'+pedido.costo,showCancel:false});
+await set(nr,{servicio:pedido.servicio||'recoger',cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:pedido.clienteSel.telefono||'',telefono:pedido.telEntrega||'',referencia:pedido.refEntrega||'',tiempoRecogida:pedido.tiempoRecogida||'',tipoProd:pedido.tipoProd||'',referenciaCompra:pedido.referenciaCompra||'',km:pedido.km,costoSugerido:pedido.costo,costoExtra:0,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
+mostrarModalElegante({title:'Enviado',text:(pedido.servicio==='comprar'?'Compra':'Recogida')+' asignada a '+repa+' - '+(pedido.tiempoRecogida||'0')+' min - $'+pedido.costo,showCancel:false, onConfirm:()=>{ cerrarModal(); showView('seguimiento'); }});
 }
 document.addEventListener('click',e=>{if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')){let l=document.getElementById('listCli'); if(l) l.style.display='none';}});
 </script>
