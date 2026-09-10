@@ -30,7 +30,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .bottom button.active{background:#0a0a0a;border-color:#0a0a0a}
 .bottom button svg{width:18px;height:18px;stroke:#111;fill:none;stroke-width:1.8}
 .bottom button.active svg{stroke:#fff}
-.bottom.hidden{display:none}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .dot.on{background:#10b981;box-shadow:0 0 0 2px #d1fae5}
 .dot.off{background:#ef4444;box-shadow:0 0 0 2px #fee2e2}
@@ -65,6 +64,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .tabAjuste.active{background:#0a0a0a;color:#fff}
 .login-screen{position:fixed;inset:0;background:#0a0a0a;display:flex;align-items:center;justify-content:center;z-index:5000;padding:20px}
 .login-card{background:#fff;border-radius:20px;padding:20px;width:100%;max-width:340px}
+.climaBox{background:linear-gradient(135deg,#0a0a0a,#333);color:#fff;border-radius:12px;padding:10px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
 </style>
 </head>
 <body>
@@ -77,7 +77,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 <p style="font-size:9px;color:#888;font-weight:700;margin-top:4px">INGRESO SEGURO</p>
 </div>
 <span class="label">Usuario</span><div class="wrap" style="margin-bottom:10px"><input type="text" id="loginUser" placeholder="admin o nombre repartidor" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
-<span class="label">Contraseña / PIN</span><div class="wrap" style="margin-bottom:14px"><input type="password" id="loginPass" placeholder="••••" autocomplete="new-password"><button type="button" style="padding:0 12px;border:none;background:transparent;font-size:12px;cursor:pointer" onclick="togglePass()">👁</button></div>
+<span class="label">Contraseña / PIN</span><div class="wrap" style="margin-bottom:14px"><input type="password" id="loginPass" placeholder="••••" autocomplete="new-password"><button type="button" onclick="togglePass()" style="width:42px;height:42px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
 <button class="btn" onclick="hacerLogin()">INGRESAR</button>
 <div style="display:flex;align-items:center;gap:8px;margin-top:12px"><input type="checkbox" id="keepLogin" checked><label for="keepLogin" style="font-size:10px;font-weight:700">Mantener sesión en este teléfono</label></div>
 </div>
@@ -89,6 +89,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 <div id="view-pedidos" class="view active">
 <div class="card" style="padding:8px">
 <div id="map"></div>
+<div id="climaInfo" class="climaBox" style="display:none"><div><div style="font-size:9px;opacity:.7">CLIMA ACTUAL - DOLORES HIDALGO</div><div id="txtClima" style="font-size:11px;font-weight:800;margin-top:2px">--</div></div><div id="txtClimaExtra" style="font-size:12px;font-weight:800;background:#fff;color:#111;padding:4px 8px;border-radius:20px">--</div></div>
 <div style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:8px;margin-top:10px">
 <div style="background:#0a0a0a;color:#fff;border-radius:12px;height:42px;display:flex;align-items:center;justify-content:center;gap:10px">
 <span id="txtKm" style="font-size:11px;font-weight:700">-- km • -- min</span>
@@ -208,7 +209,26 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 
 <div id="view-ajustes" class="view">
 <div class="card"><h3 style="font-size:12px;font-weight:800">AJUSTES</h3><div style="display:flex;gap:6px;margin-top:10px"><button class="tabAjuste active" id="tabPrecio" onclick="showAjuste('precio')">PRECIOS</button><button class="tabAjuste" id="tabRepas" onclick="showAjuste('repas')">REPARTIDORES</button><button class="tabAjuste" id="tabInterno" onclick="showAjuste('interno')">INTERNO</button></div></div>
-<div id="ajuste-precio" class="card"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">CONFIGURACIÓN DE PRECIOS EN TIEMPO REAL</h4><span class="label">Precio por cada kilómetro</span><div class="wrap"><input type="number" id="cfgPrecioKm" placeholder="6"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / KM</span></div><span class="label" style="margin-top:8px">Valor zona céntrica</span><div class="wrap"><input type="number" id="cfgCentro" placeholder="35"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div><span class="label" style="margin-top:8px">Km base incluidos</span><div class="wrap"><input type="number" id="cfgKmBase" placeholder="2"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div><span class="label" style="margin-top:12px">Precio lluvia leve</span><div class="wrap"><input type="number" id="cfgLluviaLeve" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Precio lluvia moderada</span><div class="wrap"><input type="number" id="cfgLluviaMod" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Precio lluvia fuerte</span><div class="wrap"><input type="number" id="cfgLluviaFuerte" placeholder="15"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Clima actual</span><div class="wrap"><select id="cfgClimaActual"><option value="normal">Normal</option><option value="leve">Lluvia leve</option><option value="moderada">Lluvia moderada</option><option value="fuerte">Lluvia fuerte</option></select></div><button class="btn" style="margin-top:12px" onclick="guardarPrecios()">GUARDAR PRECIOS</button></div>
+<div id="ajuste-precio" class="card">
+<h4 style="font-size:11px;font-weight:800;margin-bottom:10px">CONFIGURACIÓN DE PRECIOS AVANZADA + CLIMA</h4>
+<span class="label">Precio base centro a centro</span><div class="wrap"><input type="number" id="cfgCentro" placeholder="35"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div>
+<span class="label" style="margin-top:8px">Km base incluidos en centro</span><div class="wrap"><input type="number" id="cfgKmBase" placeholder="2"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div>
+<span class="label" style="margin-top:12px">Alrededor del centro - Radio a la redonda</span><div class="wrap"><input type="number" id="cfgRadioCentro" placeholder="1"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div>
+<span class="label" style="margin-top:8px">Cobro extra si es alrededor del centro (1km)</span><div class="wrap"><input type="number" id="cfgExtraCentro" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div>
+<span class="label" style="margin-top:12px">Pedidos lejanos - A partir de</span><div class="wrap"><input type="number" id="cfgKmLejano" placeholder="4"><span style="padding-right:12px;font-size:10px;font-weight:800">KM del centro</span></div>
+<span class="label" style="margin-top:8px">Cobro extra pedidos lejanos</span><div class="wrap"><input type="number" id="cfgExtraLejano" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div>
+<span class="label" style="margin-top:12px">Precio por cada km adicional</span><div class="wrap"><input type="number" id="cfgPrecioKm" placeholder="6"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / KM</span></div>
+<span class="label" style="margin-top:8px">Precio por metro (0.01 = 1 cent por metro)</span><div class="wrap"><input type="number" step="0.01" id="cfgPrecioMetro" placeholder="0"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / M</span></div>
+<div style="background:#f7f7f7;border-radius:12px;padding:10px;margin-top:12px">
+<span class="label">LLUVIA - DETECCIÓN AUTOMÁTICA EN MAPA</span>
+<div style="display:flex;gap:6px;margin-top:6px"><button class="btn-outline" style="height:32px;font-size:8px" onclick="detectarLluvia()">DETECTAR LLUVIA AHORA</button><span id="txtLluviaAuto" style="font-size:9px;font-weight:800;background:#fff;border:1px solid #eee;padding:4px 8px;border-radius:20px;display:flex;align-items:center">--</span></div>
+<span class="label" style="margin-top:8px">Precio lluvia leve</span><div class="wrap"><input type="number" id="cfgLluviaLeve" placeholder="0"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
+<span class="label" style="margin-top:8px">Precio lluvia moderada</span><div class="wrap"><input type="number" id="cfgLluviaMod" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
+<span class="label" style="margin-top:8px">Precio lluvia fuerte</span><div class="wrap"><input type="number" id="cfgLluviaFuerte" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
+<span class="label" style="margin-top:8px">Clima actual (manual o auto)</span><div class="wrap"><select id="cfgClimaActual"><option value="normal">Normal</option><option value="leve">Lluvia leve</option><option value="moderada">Lluvia moderada</option><option value="fuerte">Lluvia fuerte</option></select></div>
+</div>
+<button class="btn" style="margin-top:12px" onclick="guardarPrecios()">GUARDAR PRECIOS AVANZADOS</button>
+</div>
 <div id="ajuste-repas" class="card" style="display:none"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">REPARTIDORES - AGREGAR Y EDITAR PIN</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><span class="label">Nombre repartidor (sin tilde)</span><div class="wrap"><input type="text" id="nuevoRepaNombre" placeholder="Ej. Jose, Carlos"></div></div><div><span class="label">PIN</span><div class="wrap"><input type="text" id="nuevoRepaPin" placeholder="1234"></div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><div><span class="label">Tipo</span><div class="wrap"><select id="nuevoRepaTipo"><option value="repartidor">Repartidor</option><option value="admin">Admin</option></select></div></div><div style="display:flex;align-items:end"><button class="btn" style="height:42px" onclick="agregarRepa()">AGREGAR</button></div></div><div style="margin-top:14px"><span class="label">LISTA DE REPARTIDORES GUARDADOS - TODOS SE PUEDEN BORRAR</span><div id="listaRepasAjuste"></div></div></div>
 <div id="ajuste-interno" class="card" style="display:none"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">AJUSTES INTERNOS</h4><span class="label">Nombre empresa</span><div class="wrap"><input type="text" id="cfgNombreEmpresa" placeholder="Kigo Xpress"></div><span class="label" style="margin-top:8px">Subir logo desde teléfono</span><input type="file" id="inputLogoFile" accept="image/*" style="margin-top:6px"><div id="previewLogo" style="margin-top:10px;text-align:center"></div><span class="label" style="margin-top:8px">O URL logo</span><div class="wrap"><input type="text" id="cfgLogo" placeholder="https://..."></div><button class="btn" style="margin-top:12px" onclick="guardarInterno()">GUARDAR CAMBIOS INTERNOS</button></div>
 </div>
@@ -236,34 +256,94 @@ const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", auth
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35, precioKm:6, kmBase:2, centro:35, lluviaLeve:5, lluviaMod:10, lluviaFuerte:15, clima:'normal'};
+let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35, precioKm:6, precioMetro:0, kmBase:2, centro:35, radioCentro:1, extraCentro:5, kmLejano:4, extraLejano:10, lluviaLeve:0, lluviaMod:5, lluviaFuerte:10, clima:'normal'};
 let map, mapRepa, dirServ, dirRend, dirRendRepa, markers=[], markersRepa=[], clienteSel=null;
 let modoActual='lista', servicioActual='recoger';
 let pedidosLive={}, historialLive={}, chatLive={}, filtroSeg='todos', pedidoEditId=null, pedidoEditData=null;
-let repaPanelActual='', joseOnline=true, chatSenderBase='';
+let repaPanelActual='', chatSenderBase='';
 let prevKeys=new Set();
 let audioUnlocked=false;
 let currentUser=null, currentRole='admin';
+const CENTRO_DOLORES={lat:21.1576,lng:-100.9345};
 
 window.cerrarModal=()=>{ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
 window.cerrarDetalle=()=>{ document.getElementById('overlayDetalle').classList.remove('show'); }
 window.cerrarHist=()=>{ document.getElementById('overlayHist').classList.remove('show'); }
 window.cerrarCancel=()=>{ document.getElementById('overlayCancel').classList.remove('show'); }
-window.togglePass=()=>{ let i=document.getElementById('loginPass'); i.type=i.type==='password'?'text':'password'; }
+window.togglePass=()=>{
+ let i=document.getElementById('loginPass');
+ let icon=document.getElementById('eyeIcon');
+ if(i.type==='password'){ i.type='text'; icon.innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.53 9.53a3 3 0 1 0 4.24 4.24"/><path d="M14.07 14.07L3 3"/><path d="M9.53 9.53L12 12"/><path d="M14.07 14.07a3 3 0 0 0 0-4.24"/><path d="M1 1l22 22"/>'; }
+ else{ i.type='password'; icon.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'; }
+}
 
 function unlockAudio(){ if(audioUnlocked) return; audioUnlocked=true; try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume(); }catch(e){} }
 document.addEventListener('click',unlockAudio,{once:true}); document.addEventListener('touchstart',unlockAudio,{once:true});
 
-function sonidoRappi(){
+function sonidoPedidoNuevo(){
  unlockAudio();
- try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume(); let t=ctx.currentTime; for(let i=0;i<12;i++){ let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sine'; o.frequency.value=i%2===0?900:1400; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.8, t+i*0.4); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.4+0.35); o.start(t+i*0.4); o.stop(t+i*0.4+0.35); } }catch(e){}
- if(navigator.vibrate) navigator.vibrate([200,80,200,80,200,80,300,80,400,80,500]);
+ try{
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  ctx.resume();
+  let t=ctx.currentTime;
+  // sonido tipo pedido: ding dong ascendente
+  const seq=[523,659,784,1046];
+  seq.forEach((f,i)=>{
+   let o=ctx.createOscillator(); let g=ctx.createGain();
+   o.type='sine'; o.frequency.value=f;
+   o.connect(g); g.connect(ctx.destination);
+   g.gain.setValueAtTime(0.7, t+i*0.25);
+   g.gain.exponentialRampToValueAtTime(0.01, t+i*0.25+0.4);
+   o.start(t+i*0.25); o.stop(t+i*0.25+0.4);
+  });
+  // segunda vuelta más intensa
+  seq.forEach((f,i)=>{
+   let o=ctx.createOscillator(); let g=ctx.createGain();
+   o.type='triangle'; o.frequency.value=f;
+   o.connect(g); g.connect(ctx.destination);
+   g.gain.setValueAtTime(0.5, t+1.2+i*0.2);
+   g.gain.exponentialRampToValueAtTime(0.01, t+1.2+i*0.2+0.3);
+   o.start(t+1.2+i*0.2); o.stop(t+1.2+i*0.2+0.3);
+  });
+ }catch(e){}
+ if(navigator.vibrate) navigator.vibrate([250,100,250,100,250,100,400,100,500]);
 }
 
 function sonidoCancel(){
  unlockAudio();
  try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume(); let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sawtooth'; o.frequency.value=220; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.5, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+1.5); o.start(); o.stop(ctx.currentTime+1.5); }catch(e){}
  if(navigator.vibrate) navigator.vibrate([600,200,600,200,600]);
+}
+
+window.detectarLluvia=async()=>{
+ document.getElementById('txtLluviaAuto').innerText='Detectando...';
+ try{
+  let res=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${CENTRO_DOLORES.lat}&longitude=${CENTRO_DOLORES.lng}&current=precipitation,weathercode,temperature_2m&timezone=auto`);
+  let data=await res.json();
+  let prec=data.current?.precipitation||0;
+  let code=data.current?.weathercode||0;
+  let tipo='normal';
+  if(prec>0 && prec<2) tipo='leve';
+  else if(prec>=2 && prec<8) tipo='moderada';
+  else if(prec>=8) tipo='fuerte';
+  if([51,53,55,61,63,65,80,81,82].includes(code)){
+   if(prec<2) tipo='leve'; else if(prec<8) tipo='moderada'; else tipo='fuerte';
+  }
+  document.getElementById('cfgClimaActual').value=tipo;
+  document.getElementById('txtLluviaAuto').innerText=`${tipo.toUpperCase()} - ${prec}mm`;
+  document.getElementById('climaInfo').style.display='flex';
+  document.getElementById('txtClima').innerText=`Lluvia ${tipo} - ${data.current.temperature_2m}°C`;
+  let extra=0;
+  if(tipo==='leve') extra=tarifas.lluviaLeve;
+  else if(tipo==='moderada') extra=tarifas.lluviaMod;
+  else if(tipo==='fuerte') extra=tarifas.lluviaFuerte;
+  document.getElementById('txtClimaExtra').innerText=`+$${extra}`;
+  // auto guardar clima
+  await update(ref(db,'kigoTarifas'),{clima:tipo});
+  mostrarModalElegante({title:'Clima detectado',text:`Lluvia ${tipo} detectada - Se cobrara extra $${extra} automatico`,showCancel:false});
+ }catch(e){
+  document.getElementById('txtLluviaAuto').innerText='Error - Usa manual';
+ }
 }
 
 window.hacerLogin=async()=>{
@@ -307,7 +387,7 @@ function iniciarApp(){
   document.querySelectorAll('.bottom button').forEach(b=>b.style.display='flex');
   showView('pedidos');
  }
- setTimeout(()=>{ if(map) google.maps.event.trigger(map,'resize'); if(mapRepa) google.maps.event.trigger(mapRepa,'resize'); },500);
+ setTimeout(()=>{ if(map) google.maps.event.trigger(map,'resize'); if(mapRepa) google.maps.event.trigger(mapRepa,'resize'); detectarLluvia(); },500);
 }
 
 window.showAjuste=(t)=>{
@@ -319,22 +399,35 @@ window.showAjuste=(t)=>{
  document.getElementById('tabInterno').classList.toggle('active',t==='interno');
 }
 window.guardarPrecios=async()=>{
- let data={ mandado:parseFloat(document.getElementById('cfgCentro').value)||35, centro:parseFloat(document.getElementById('cfgCentro').value)||35, precioKm:parseFloat(document.getElementById('cfgPrecioKm').value)||6, kmBase:parseFloat(document.getElementById('cfgKmBase').value)||2, lluviaLeve:parseFloat(document.getElementById('cfgLluviaLeve').value)||5, lluviaMod:parseFloat(document.getElementById('cfgLluviaMod').value)||10, lluviaFuerte:parseFloat(document.getElementById('cfgLluviaFuerte').value)||15, clima:document.getElementById('cfgClimaActual').value||'normal' };
+ let data={
+  mandado:parseFloat(document.getElementById('cfgCentro').value)||35,
+  centro:parseFloat(document.getElementById('cfgCentro').value)||35,
+  precioKm:parseFloat(document.getElementById('cfgPrecioKm').value)||6,
+  precioMetro:parseFloat(document.getElementById('cfgPrecioMetro').value)||0,
+  kmBase:parseFloat(document.getElementById('cfgKmBase').value)||2,
+  radioCentro:parseFloat(document.getElementById('cfgRadioCentro').value)||1,
+  extraCentro:parseFloat(document.getElementById('cfgExtraCentro').value)||5,
+  kmLejano:parseFloat(document.getElementById('cfgKmLejano').value)||4,
+  extraLejano:parseFloat(document.getElementById('cfgExtraLejano').value)||10,
+  lluviaLeve:parseFloat(document.getElementById('cfgLluviaLeve').value)||0,
+  lluviaMod:parseFloat(document.getElementById('cfgLluviaMod').value)||5,
+  lluviaFuerte:parseFloat(document.getElementById('cfgLluviaFuerte').value)||10,
+  clima:document.getElementById('cfgClimaActual').value||'normal'
+ };
  await set(ref(db,'kigoTarifas'),data);
- mostrarModalElegante({title:'Guardado',text:'Precios actualizados en tiempo real',showCancel:false});
+ mostrarModalElegante({title:'Guardado',text:'Precios avanzados guardados en tiempo real',showCancel:false});
 }
 window.agregarRepa=async()=>{
  let nombre=document.getElementById('nuevoRepaNombre').value.trim();
  let pin=document.getElementById('nuevoRepaPin').value.trim();
  let tipo=document.getElementById('nuevoRepaTipo').value;
  if(!nombre){ mostrarModalElegante({title:'Falta',text:'Escribe nombre sin tilde',showCancel:false}); return; }
- // normalizar sin tildes para evitar bug
  let nombreNorm=nombre.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
  await set(ref(db,'kigoPins/repas/'+nombreNorm),{nombre:nombreNorm,pin:pin||'1234',tipo:tipo,online:true,ts:Date.now()});
  document.getElementById('nuevoRepaNombre').value=''; document.getElementById('nuevoRepaPin').value='';
 }
 window.editarPinRepa=async(nombre)=>{ let nuevo=prompt('Nuevo PIN para '+nombre); if(nuevo===null) return; await update(ref(db,'kigoPins/repas/'+nombre),{pin:nuevo}); }
-window.borrarRepa=async(nombre)=>{ if(!confirm('Borrar '+nombre+'? Este repartidor se eliminará de todos lados')) return; await remove(ref(db,'kigoPins/repas/'+nombre)); }
+window.borrarRepa=async(nombre)=>{ if(!confirm('Borrar '+nombre+'?')) return; await remove(ref(db,'kigoPins/repas/'+nombre)); }
 window.guardarInterno=async()=>{
  let nombre=document.getElementById('cfgNombreEmpresa').value.trim();
  let logo=document.getElementById('cfgLogo').value.trim();
@@ -406,7 +499,7 @@ function renderListaRepas(){
  let listAjuste=document.getElementById('listaRepasAjuste');
  if(listAjuste){
   let repas=Object.entries(repasData);
-  listAjuste.innerHTML=repas.map(([k,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6"><div><div style="font-size:11px;font-weight:800">${v.nombre||k} <span style="font-size:8px;background:${(v.tipo||'repartidor')==='admin'?'#0a0a0a':'#eee'};color:${(v.tipo||'repartidor')==='admin'?'#fff':'#111'};padding:2px 6px;border-radius:10px;margin-left:4px">${(v.tipo||'repartidor').toUpperCase()}</span></div><div style="font-size:9px;color:#888">PIN: ${v.pin||'--'} • ${v.online!==false?'EN LINEA':'OFFLINE'}</div></div><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px" onclick="editarPinRepa('${k}')">EDITAR PIN</button><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarRepa('${k}')">BORRAR</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores - Agrega uno</div>';
+  listAjuste.innerHTML=repas.map(([k,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6"><div><div style="font-size:11px;font-weight:800">${v.nombre||k} <span style="font-size:8px;background:${(v.tipo||'repartidor')==='admin'?'#0a0a0a':'#eee'};color:${(v.tipo||'repartidor')==='admin'?'#fff':'#111'};padding:2px 6px;border-radius:10px;margin-left:4px">${(v.tipo||'repartidor').toUpperCase()}</span></div><div style="font-size:9px;color:#888">PIN: ${v.pin||'--'} • ${v.online!==false?'EN LINEA':'OFFLINE'}</div></div><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px" onclick="editarPinRepa('${k}')">EDITAR PIN</button><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarRepa('${k}')">BORRAR</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores</div>';
  }
  let listRepasChat=document.getElementById('listaRepasChat');
  if(listRepasChat){
@@ -483,13 +576,25 @@ clientesDB=m; renderClientes();
 });
 onValue(ref(db,'kigoTarifas'),snap=>{
  let v=snap.val(); if(v){ tarifas={...tarifas,...v};
-  let el1=document.getElementById('cfgPrecioKm'); if(el1) el1.value=v.precioKm||6;
-  let el2=document.getElementById('cfgCentro'); if(el2) el2.value=v.centro||v.mandado||35;
-  let el3=document.getElementById('cfgKmBase'); if(el3) el3.value=v.kmBase||2;
-  let el4=document.getElementById('cfgLluviaLeve'); if(el4) el4.value=v.lluviaLeve||5;
-  let el5=document.getElementById('cfgLluviaMod'); if(el5) el5.value=v.lluviaMod||10;
-  let el6=document.getElementById('cfgLluviaFuerte'); if(el6) el6.value=v.lluviaFuerte||15;
-  let el7=document.getElementById('cfgClimaActual'); if(el7) el7.value=v.clima||'normal';
+  document.getElementById('cfgPrecioKm').value=v.precioKm||6;
+  document.getElementById('cfgPrecioMetro').value=v.precioMetro||0;
+  document.getElementById('cfgCentro').value=v.centro||v.mandado||35;
+  document.getElementById('cfgKmBase').value=v.kmBase||2;
+  document.getElementById('cfgRadioCentro').value=v.radioCentro||1;
+  document.getElementById('cfgExtraCentro').value=v.extraCentro||5;
+  document.getElementById('cfgKmLejano').value=v.kmLejano||4;
+  document.getElementById('cfgExtraLejano').value=v.extraLejano||10;
+  document.getElementById('cfgLluviaLeve').value=v.lluviaLeve||0;
+  document.getElementById('cfgLluviaMod').value=v.lluviaMod||5;
+  document.getElementById('cfgLluviaFuerte').value=v.lluviaFuerte||10;
+  document.getElementById('cfgClimaActual').value=v.clima||'normal';
+  // mostrar clima box si hay lluvia
+  if(v.clima!=='normal'){
+   document.getElementById('climaInfo').style.display='flex';
+   document.getElementById('txtClima').innerText=`Lluvia ${v.clima}`;
+   let extra=v.clima==='leve'?v.lluviaLeve:v.clima==='moderada'?v.lluviaMod:v.lluviaFuerte;
+   document.getElementById('txtClimaExtra').innerText=`+$${extra}`;
+  }
  }
 });
 onValue(ref(db,'kigoConfig'),snap=>{
@@ -500,14 +605,10 @@ onValue(ref(db,'kigoConfig'),snap=>{
 });
 onValue(ref(db,'kigoPins'),snap=>{
 let v=snap.val()||{}; repasData=v.repas||v||{};
-// ya no auto-crea Jose
 renderListaRepas();
 mostrarEstadoRepa();
 actualizarUIJose();
-if(currentRole==='repartidor' &&!repasData[currentUser]){
- // si borraron al repartidor logueado, cerrar sesion
- cerrarSesion();
-}
+if(currentRole==='repartidor' &&!repasData[currentUser]){ cerrarSesion(); }
 });
 window.mostrarEstadoRepa=()=>{
 let sel=document.getElementById('selRepa'); if(!sel) return;
@@ -517,26 +618,35 @@ if(!dot) return;
 if(online){ dot.className='dot on'; txt.innerText='EN LINEA'; txt.style.color='#10b981'; txt.style.background='#d1fae5'; }
 else{ dot.className='dot off'; txt.innerText='OFFLINE'; txt.style.color='#ef4444'; txt.style.background='#fee2e2'; }
 }
+function distanciaCentro(latLng){
+ if(!latLng) return 0;
+ let R=6371;
+ let dLat=(latLng.lat-CENTRO_DOLORES.lat)*Math.PI/180;
+ let dLng=(latLng.lng-CENTRO_DOLORES.lng)*Math.PI/180;
+ let a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(CENTRO_DOLORES.lat*Math.PI/180)*Math.cos(latLng.lat*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+ let c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+ return R*c;
+}
 onValue(ref(db,'kigoPedidosLive'),snap=>{
  let newVal=snap.val()||{};
- let newKeys=new Set(Object.keys(newVal));
- let isNew=false;
- for(let k of newKeys){ if(!prevKeys.has(k)){ isNew=true; break; } }
- if(isNew && prevKeys.size>0){
-  let lastKey=[...newKeys].find(k=>!prevKeys.has(k));
-  let lastPedido=newVal[lastKey];
-  // si es para este repartidor o es pendiente general
-  if(currentRole==='repartidor'){
-   if(lastPedido && lastPedido.repaAsignado===currentUser){
-    sonidoRappi();
-    mostrarModalElegante({title:'NUEVO PEDIDO',text:`Te llego pedido de ${lastPedido.cliente}`,showCancel:false});
-    setTimeout(cerrarModal,4000);
+ let newKeys=Object.keys(newVal);
+ let oldKeys=[...prevKeys];
+ let nuevos=newKeys.filter(k=>!oldKeys.includes(k));
+ if(nuevos.length>0){
+  nuevos.forEach(k=>{
+   let p=newVal[k];
+   if(currentRole==='repartidor'){
+    if(p.repaAsignado===currentUser){
+     sonidoPedidoNuevo();
+     mostrarModalElegante({title:'NUEVO PEDIDO',text:`Te llego pedido de ${p.cliente} - $${p.costoSugerido}`,showCancel:false});
+     setTimeout(cerrarModal,4000);
+    }
+   }else{
+    sonidoPedidoNuevo();
    }
-  }else{
-   sonidoRappi();
-  }
+  });
  }
- prevKeys=newKeys;
+ prevKeys=new Set(newKeys);
  pedidosLive=newVal; renderSeguimiento(); renderRepaPanel();
 });
 onValue(ref(db,'kigoNotificaciones'),snap=>{
@@ -619,8 +729,8 @@ window.scrollTo(0,0);
 }
 function initMapReal(){
 if(!window.google||!google.maps){ setTimeout(initMapReal,300); return; }
-map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1576,lng:-100.9345},zoom:14});
-mapRepa=new google.maps.Map(document.getElementById('mapRepa'),{center:{lat:21.1576,lng:-100.9345},zoom:14});
+map=new google.maps.Map(document.getElementById('map'),{center:CENTRO_DOLORES,zoom:14});
+mapRepa=new google.maps.Map(document.getElementById('mapRepa'),{center:CENTRO_DOLORES,zoom:14});
 dirServ=new google.maps.DirectionsService();
 dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
 let opts={bounds:{north:21.30,south:21.00,east:-100.75,west:-101.10},componentRestrictions:{country:'mx'}};
@@ -655,7 +765,7 @@ if(servicioActual==='comprar'){
 let almacen=document.getElementById('compAlmacen').value.trim(); let dirEnt=document.getElementById('compDirEntrega').value.trim();
 if(!almacen||!dirEnt){ mostrarModalElegante({title:'Falta dato',text:'Almacen y entrega obligatorios',showCancel:false}); return; }
 o=await geo(almacen); de=await geo(dirEnt); if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
-dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let extraKm=Math.max(0,km-(tarifas.kmBase||2)); let base=tarifas.centro||tarifas.mandado||35; let costoKm=extraKm*(tarifas.precioKm||6); let climaExtra=0; if(tarifas.clima==='leve') climaExtra=tarifas.lluviaLeve||0; else if(tarifas.clima==='moderada') climaExtra=tarifas.lluviaMod||0; else if(tarifas.clima==='fuerte') climaExtra=tarifas.lluviaFuerte||0; let costo=Math.round(base+costoKm+climaExtra); pedido={servicio:'comprar',clienteSel:{nombre:document.getElementById('compNombreRecibe').value.trim()||'Compra',direccion:almacen,telefono:document.getElementById('compTel').value.trim()},entrega:dirEnt,telEntrega:document.getElementById('compTel').value.trim(),refEntrega:document.getElementById('compRefEntrega').value.trim(),tipoProd:document.getElementById('compTipo').value.trim(),referenciaCompra:document.getElementById('compReferencia').value.trim(),tiempoRecogida:document.getElementById('compTiempo').value.trim(),de,o,km,min,costo}; document.getElementById('txtKm').innerText=`${km}km • ${min}m`; document.getElementById('txtCosto').innerText=`$${costo}`; } }); return;
+dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let distCentro=distanciaCentro(o); let extraKm=Math.max(0,km-(tarifas.kmBase||2)); let base=tarifas.centro||35; let costoKm=extraKm*(tarifas.precioKm||6); let costoMetro=(leg.distance.value*(tarifas.precioMetro||0)); let extraCentro=distCentro<=tarifas.radioCentro?0:distCentro<=tarifas.kmLejano?tarifas.extraCentro:tarifas.extraLejano; let climaExtra=0; if(tarifas.clima==='leve') climaExtra=tarifas.lluviaLeve||0; else if(tarifas.clima==='moderada') climaExtra=tarifas.lluviaMod||0; else if(tarifas.clima==='fuerte') climaExtra=tarifas.lluviaFuerte||0; let costo=Math.round(base+costoKm+costoMetro+extraCentro+climaExtra); pedido={servicio:'comprar',clienteSel:{nombre:document.getElementById('compNombreRecibe').value.trim()||'Compra',direccion:almacen,telefono:document.getElementById('compTel').value.trim()},entrega:dirEnt,telEntrega:document.getElementById('compTel').value.trim(),refEntrega:document.getElementById('compRefEntrega').value.trim(),tipoProd:document.getElementById('compTipo').value.trim(),referenciaCompra:document.getElementById('compReferencia').value.trim(),tiempoRecogida:document.getElementById('compTiempo').value.trim(),de,o,km,min,costo,distCentro}; document.getElementById('txtKm').innerText=`${km}km • ${min}m • ${distCentro.toFixed(1)}km del centro`; document.getElementById('txtCosto').innerText=`$${costo}`; } }); return;
 }
 let entrega='', telEntrega='', refEntrega='', nombreCliente='', telRecogida='', tiempoRecogida='';
 if(modoActual==='lista'){
@@ -665,7 +775,7 @@ entrega=document.getElementById('dirEntrega').value.trim(); telEntrega=document.
 let nombre=document.getElementById('nuevoNombre').value.trim(); let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim(); let dirEnt=document.getElementById('nuevoDirEntrega').value.trim(); if(!nombre||!dirRecoge||!dirEnt){ mostrarModalElegante({title:'Falta dato',text:'Completa datos',showCancel:false}); return; } entrega=dirEnt; telEntrega=document.getElementById('nuevoTelEntrega').value.trim(); refEntrega=document.getElementById('nuevoRefEntrega').value.trim(); tiempoRecogida=document.getElementById('nuevoTiempoRecogida').value.trim(); nombreCliente=nombre; telRecogida=document.getElementById('nuevoTel').value.trim(); clienteSel={nombre:nombre,direccion:dirRecoge,telefono:telRecogida}; o=await geo(dirRecoge); de=await geo(dirEnt);
 }
 if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
-dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let extraKm=Math.max(0,km-(tarifas.kmBase||2)); let base=tarifas.centro||tarifas.mandado||35; let costoKm=extraKm*(tarifas.precioKm||6); let climaExtra=0; if(tarifas.clima==='leve') climaExtra=tarifas.lluviaLeve||0; else if(tarifas.clima==='moderada') climaExtra=tarifas.lluviaMod||0; else if(tarifas.clima==='fuerte') climaExtra=tarifas.lluviaFuerte||0; let costo=Math.round(base+costoKm+climaExtra); pedido={servicio:'recoger',clienteSel:{nombre:nombreCliente,direccion:clienteSel.direccion,telefono:telRecogida},entrega:entrega,telEntrega:telEntrega,refEntrega:refEntrega,tiempoRecogida:tiempoRecogida,de,o,km,min,costo}; document.getElementById('txtKm').innerText=`${km}km • ${min}m`; document.getElementById('txtCosto').innerText=`$${costo}`; } });
+dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let distCentro=distanciaCentro(o); let extraKm=Math.max(0,km-(tarifas.kmBase||2)); let base=tarifas.centro||35; let costoKm=extraKm*(tarifas.precioKm||6); let costoMetro=(leg.distance.value*(tarifas.precioMetro||0)); let extraCentro=distCentro<=tarifas.radioCentro?0:distCentro<=tarifas.kmLejano?tarifas.extraCentro:tarifas.extraLejano; let climaExtra=0; if(tarifas.clima==='leve') climaExtra=tarifas.lluviaLeve||0; else if(tarifas.clima==='moderada') climaExtra=tarifas.lluviaMod||0; else if(tarifas.clima==='fuerte') climaExtra=tarifas.lluviaFuerte||0; let costo=Math.round(base+costoKm+costoMetro+extraCentro+climaExtra); pedido={servicio:'recoger',clienteSel:{nombre:nombreCliente,direccion:clienteSel.direccion,telefono:telRecogida},entrega:entrega,telEntrega:telEntrega,refEntrega:refEntrega,tiempoRecogida:tiempoRecogida,de,o,km,min,costo,distCentro}; document.getElementById('txtKm').innerText=`${km}km • ${min}m • ${distCentro.toFixed(1)}km centro`; document.getElementById('txtCosto').innerText=`$${costo}`; } });
 }
 window.confirmar=async()=>{
 if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
