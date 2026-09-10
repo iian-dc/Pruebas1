@@ -9,7 +9,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640px;margin:0 auto;padding:0;padding-bottom:70px;letter-spacing:-.2px;overflow-x:hidden}
-.content{padding:10px;padding-bottom:10px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.content{padding:10px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .card{background:#fff;border:1px solid #eee;border-radius:18px;padding:12px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .label{font-size:8px;font-weight:800;color:#8a8a8a;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;display:block}
 .wrap{border:1.2px solid #e9e9e9;border-radius:12px;background:#fff;display:flex;align-items:center;position:relative}
@@ -26,7 +26,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 #map,#mapRepa{width:100%;height:360px;border-radius:14px;background:#e5e7eb;display:block}
 #listCli{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #0a0a0a;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none;z-index:50}
 .bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:640px;background:#fff;border-top:1px solid #eee;display:flex;padding:8px 6px;gap:4px;z-index:999;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
-.bottom button{flex:1;height:44px;border-radius:12px;border:1px solid #eee;background:#fff;display:flex;align-items:center;justify-content:center;transition:.2s}
+.bottom button{flex:1;height:44px;border-radius:12px;border:1px solid #eee;background:#fff;display:flex;align-items:center;justify-content:center}
 .bottom button.active{background:#0a0a0a;border-color:#0a0a0a}
 .bottom button svg{width:18px;height:18px;stroke:#111;fill:none;stroke-width:1.8}
 .bottom button.active svg{stroke:#fff}
@@ -156,7 +156,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 <div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;padding:0 12px;height:36px;font-size:8px;background:#0a0a0a;color:#fff" onclick="toggleChatRepa()"><svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> CHAT</button><button id="btnToggleJose" class="btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:9px;background:#10b981;color:#fff;border-color:#10b981" onclick="toggleJose()">DESACTIVAR</button></div>
 </div>
 <div id="chatRepaSlide" class="chatSlide">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:9px;font-weight:800">CHAT CON BASE</span><button class="btn-outline" style="width:auto;height:30px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarChatRepa()"><svg style="width:12px;height:12px;stroke:#ef4444" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> BORRAR MI CHAT</button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:9px;font-weight:800">CHAT CON BASE</span><button class="btn-outline" style="width:auto;height:30px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarChatRepa()">BORRAR MI CHAT</button></div>
 <div id="chatRepaBox" style="height:260px;overflow:auto;display:flex;flex-direction:column;padding:6px"></div>
 <div style="display:flex;gap:6px;margin-top:8px"><div class="wrap" style="flex:1"><input type="text" id="chatRepaInput" placeholder="Escribe a base..." onkeypress="if(event.key==='Enter') enviarChatRepa()"></div><button class="btn" style="width:64px;height:42px;font-size:10px" onclick="enviarChatRepa()">ENVIAR</button></div>
 </div>
@@ -169,7 +169,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 
 <div id="view-chat" class="view">
 <div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:12px;font-weight:800">CHAT BASE ↔ REPARTIDORES</h3><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarChatBase()"><svg style="width:12px;height:12px;stroke:#ef4444" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> BORRAR CHAT</button><span id="chatCount" style="background:#ff0040;color:#fff;padding:4px 8px;border-radius:12px;font-size:9px;font-weight:800;display:flex;align-items:center">0</span></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:12px;font-weight:800">CHAT BASE ↔ REPARTIDORES</h3><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarChatBase()">BORRAR CHAT</button><span id="chatCount" style="background:#ff0040;color:#fff;padding:4px 8px;border-radius:12px;font-size:9px;font-weight:800;display:flex;align-items:center">0</span></div></div>
 <div style="display:flex;gap:6px;margin-top:10px;overflow:auto;padding-bottom:4px" id="listaRepasChat"></div>
 <div id="chatBox" style="height:380px;overflow:auto;display:flex;flex-direction:column;padding:10px;margin-top:10px;background:#f8fafc;border-radius:14px;border:1px solid #eee"></div>
 <div style="display:flex;gap:6px;margin-top:10px"><div class="wrap" style="flex:1"><input type="text" id="chatInput" placeholder="Escribe mensaje..." onkeypress="if(event.key==='Enter') enviarChat()"></div><button class="btn" style="width:64px;height:42px" onclick="enviarChat()">ENVIAR</button></div>
@@ -188,8 +188,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 
 <div id="view-ajustes" class="view">
 <div class="card"><h3 style="font-size:12px;font-weight:800">AJUSTES</h3><div style="display:flex;gap:6px;margin-top:10px"><button class="tabAjuste active" id="tabPrecio" onclick="showAjuste('precio')">PRECIOS</button><button class="tabAjuste" id="tabRepas" onclick="showAjuste('repas')">REPARTIDORES</button><button class="tabAjuste" id="tabInterno" onclick="showAjuste('interno')">INTERNO</button></div></div>
-<div id="ajuste-precio" class="card"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">CONFIGURACIÓN DE PRECIOS</h4><span class="label">Precio por cada kilómetro</span><div class="wrap"><input type="number" id="cfgPrecioKm" placeholder="6"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / KM</span></div><span class="label" style="margin-top:8px">Valor zona céntrica</span><div class="wrap"><input type="number" id="cfgCentro" placeholder="35"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div><span class="label" style="margin-top:8px">Km base incluidos</span><div class="wrap"><input type="number" id="cfgKmBase" placeholder="2"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div><span class="label" style="margin-top:12px">Precio lluvia leve</span><div class="wrap"><input type="number" id="cfgLluviaLeve" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Precio lluvia moderada</span><div class="wrap"><input type="number" id="cfgLluviaMod" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Precio lluvia fuerte</span><div class="wrap"><input type="number" id="cfgLluviaFuerte" placeholder="15"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Clima actual</span><div class="wrap"><select id="cfgClimaActual"><option value="normal">Normal</option><option value="leve">Lluvia leve</option><option value="moderada">Lluvia moderada</option><option value="fuerte">Lluvia fuerte</option></select></div><button class="btn" style="margin-top:12px" onclick="guardarPrecios()">GUARDAR PRECIOS</button></div>
-<div id="ajuste-repas" class="card" style="display:none"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">REPARTIDORES - AGREGAR Y EDITAR PIN</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><span class="label">Nombre repartidor</span><div class="wrap"><input type="text" id="nuevoRepaNombre" placeholder="Ej. Carlos"></div></div><div><span class="label">PIN</span><div class="wrap"><input type="text" id="nuevoRepaPin" placeholder="1234"></div></div></div><button class="btn" style="margin-top:10px" onclick="agregarRepa()">AGREGAR REPARTIDOR</button><div style="margin-top:14px"><span class="label">LISTA DE REPARTIDORES</span><div id="listaRepasAjuste"></div></div></div>
+<div id="ajuste-precio" class="card"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">CONFIGURACIÓN DE PRECIOS EN TIEMPO REAL</h4><span class="label">Precio por cada kilómetro</span><div class="wrap"><input type="number" id="cfgPrecioKm" placeholder="6"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / KM</span></div><span class="label" style="margin-top:8px">Valor zona céntrica</span><div class="wrap"><input type="number" id="cfgCentro" placeholder="35"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div><span class="label" style="margin-top:8px">Km base incluidos</span><div class="wrap"><input type="number" id="cfgKmBase" placeholder="2"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div><span class="label" style="margin-top:12px">Precio lluvia leve</span><div class="wrap"><input type="number" id="cfgLluviaLeve" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Precio lluvia moderada</span><div class="wrap"><input type="number" id="cfgLluviaMod" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Precio lluvia fuerte</span><div class="wrap"><input type="number" id="cfgLluviaFuerte" placeholder="15"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Clima actual</span><div class="wrap"><select id="cfgClimaActual"><option value="normal">Normal</option><option value="leve">Lluvia leve</option><option value="moderada">Lluvia moderada</option><option value="fuerte">Lluvia fuerte</option></select></div><button class="btn" style="margin-top:12px" onclick="guardarPrecios()">GUARDAR PRECIOS EN TIEMPO REAL</button></div>
+<div id="ajuste-repas" class="card" style="display:none"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">REPARTIDORES - AGREGAR Y EDITAR PIN</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><span class="label">Nombre repartidor</span><div class="wrap"><input type="text" id="nuevoRepaNombre" placeholder="Ej. Carlos"></div></div><div><span class="label">PIN</span><div class="wrap"><input type="text" id="nuevoRepaPin" placeholder="1234"></div></div></div><button class="btn" style="margin-top:10px" onclick="agregarRepa()">AGREGAR REPARTIDOR</button><div style="margin-top:14px"><span class="label">LISTA DE REPARTIDORES GUARDADOS</span><div id="listaRepasAjuste"></div></div></div>
 <div id="ajuste-interno" class="card" style="display:none"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">AJUSTES INTERNOS</h4><span class="label">Nombre empresa</span><div class="wrap"><input type="text" id="cfgNombreEmpresa" placeholder="Kigo Xpress"></div><span class="label" style="margin-top:8px">Subir logo desde teléfono</span><input type="file" id="inputLogoFile" accept="image/*" style="margin-top:6px"><div id="previewLogo" style="margin-top:10px;text-align:center"></div><span class="label" style="margin-top:8px">O URL logo</span><div class="wrap"><input type="text" id="cfgLogo" placeholder="https://..."></div><button class="btn" style="margin-top:12px" onclick="guardarInterno()">GUARDAR CAMBIOS INTERNOS</button></div>
 </div>
 </div>
@@ -211,7 +211,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, set, push, remove, update, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", authDomain: "historial-kigo-xpress.firebaseapp.com", databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com", projectId: "historial-kigo-xpress", storageBucket: "historial-kigo-xpress.firebasestorage.app", messagingSenderId: "571399920545", appId: "1:571399920545:web:aa16407753b43cbe2e89e0" };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -235,12 +235,11 @@ document.addEventListener('click',unlockAudio,{once:true}); document.addEventLis
 function sonidoRappi(){
  unlockAudio();
  try{
-  const ctx=new (window.AudioContext||window.webkitAudioContext)();
-  ctx.resume();
+  const ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume();
   let t=ctx.currentTime;
   for(let i=0;i<10;i++){ let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sine'; o.frequency.value=i%2===0?880:1200; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.6, t+i*0.5); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.5+0.4); o.start(t+i*0.5); o.stop(t+i*0.5+0.4); }
  }catch(e){}
- if(navigator.vibrate) navigator.vibrate([300,100,300,100,300,100,300,100,500,200,500,200,500]);
+ if(navigator.vibrate) navigator.vibrate([300,100,300,100,300,100,300,100,500,200,500]);
 }
 function sonidoCancel(){
  unlockAudio();
@@ -259,7 +258,7 @@ window.showAjuste=(t)=>{
 window.guardarPrecios=async()=>{
  let data={ mandado:parseFloat(document.getElementById('cfgCentro').value)||35, centro:parseFloat(document.getElementById('cfgCentro').value)||35, precioKm:parseFloat(document.getElementById('cfgPrecioKm').value)||6, kmBase:parseFloat(document.getElementById('cfgKmBase').value)||2, lluviaLeve:parseFloat(document.getElementById('cfgLluviaLeve').value)||5, lluviaMod:parseFloat(document.getElementById('cfgLluviaMod').value)||10, lluviaFuerte:parseFloat(document.getElementById('cfgLluviaFuerte').value)||15, clima:document.getElementById('cfgClimaActual').value||'normal' };
  await set(ref(db,'kigoTarifas'),data);
- mostrarModalElegante({title:'Guardado',text:'Precios guardados',showCancel:false});
+ mostrarModalElegante({title:'Guardado',text:'Precios actualizados en tiempo real para admin y repartidor',showCancel:false});
 }
 window.agregarRepa=async()=>{
  let nombre=document.getElementById('nuevoRepaNombre').value.trim();
@@ -267,7 +266,6 @@ window.agregarRepa=async()=>{
  if(!nombre){ mostrarModalElegante({title:'Falta',text:'Escribe nombre',showCancel:false}); return; }
  await set(ref(db,'kigoPins/repas/'+nombre),{nombre:nombre,pin:pin||'1234',online:true,ts:Date.now()});
  document.getElementById('nuevoRepaNombre').value=''; document.getElementById('nuevoRepaPin').value='';
- mostrarModalElegante({title:'Agregado',text:nombre+' agregado',showCancel:false});
 }
 window.editarPinRepa=async(nombre)=>{ let nuevo=prompt('Nuevo PIN para '+nombre); if(nuevo===null) return; await update(ref(db,'kigoPins/repas/'+nombre),{pin:nuevo}); }
 window.borrarRepa=async(nombre)=>{ if(!confirm('Borrar '+nombre+'?')) return; await remove(ref(db,'kigoPins/repas/'+nombre)); }
@@ -281,7 +279,7 @@ window.guardarInterno=async()=>{
    let base64=e.target.result;
    await set(ref(db,'kigoConfig'),{nombreEmpresa:nombre,logo:base64,ts:Date.now()});
    document.getElementById('previewLogo').innerHTML=`<img src="${base64}" style="max-width:120px;border-radius:12px">`;
-   mostrarModalElegante({title:'Guardado',text:'Logo subido desde teléfono',showCancel:false});
+   mostrarModalElegante({title:'Guardado',text:'Logo subido',showCancel:false});
   };
   reader.readAsDataURL(fileInput.files[0]);
  }else{
@@ -292,16 +290,20 @@ window.guardarInterno=async()=>{
 }
 
 window.borrarChatBase=async()=>{
- if(!confirm('Borrar chat de '+chatSenderBase+'?')) return;
- let entries=Object.entries(chatLive).filter(([k,m])=> m.repa===chatSenderBase);
- for(let [k] of entries){ await remove(ref(db,'kigoChat/'+k)); }
- mostrarModalElegante({title:'Borrado',text:'Chat de '+chatSenderBase+' borrado',showCancel:false});
+ if(!confirm('Borrar chat de '+chatSenderBase+'? Se borrará para ambos')) return;
+ let snap=await get(ref(db,'kigoChat'));
+ let val=snap.val()||{};
+ let promises=[];
+ Object.entries(val).forEach(([k,m])=>{ if(m.repa===chatSenderBase){ promises.push(remove(ref(db,'kigoChat/'+k))); } });
+ await Promise.all(promises);
 }
 window.borrarChatRepa=async()=>{
- if(!confirm('Borrar tu chat con base?')) return;
- let entries=Object.entries(chatLive).filter(([k,m])=> m.repa==='José');
- for(let [k] of entries){ await remove(ref(db,'kigoChat/'+k)); }
- mostrarModalElegante({title:'Borrado',text:'Tu chat borrado',showCancel:false});
+ if(!confirm('Borrar tu chat con base? Se borrará para ambos')) return;
+ let snap=await get(ref(db,'kigoChat'));
+ let val=snap.val()||{};
+ let promises=[];
+ Object.entries(val).forEach(([k,m])=>{ if(m.repa==='José'){ promises.push(remove(ref(db,'kigoChat/'+k))); } });
+ await Promise.all(promises);
 }
 
 window.toggleChatRepa=()=>{ document.getElementById('chatRepaSlide').classList.toggle('open'); }
@@ -329,20 +331,32 @@ function renderChatRepa(){
  }).join('');
  box.scrollTop=box.scrollHeight;
 }
+function renderListaRepas(){
+ let listAjuste=document.getElementById('listaRepasAjuste');
+ if(!listAjuste) return;
+ let repas=Object.entries(repasData);
+ listAjuste.innerHTML=repas.map(([k,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6"><div><div style="font-size:11px;font-weight:800">${v.nombre||k}</div><div style="font-size:9px;color:#888">PIN: ${v.pin||'--'} • ${v.online!==false?'EN LINEA':'OFFLINE'}</div></div><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px" onclick="editarPinRepa('${k}')">EDITAR PIN</button><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarRepa('${k}')">BORRAR</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores</div>';
+ let listRepasChat=document.getElementById('listaRepasChat');
+ if(listRepasChat){
+  let keys=Object.keys(repasData); if(!keys.length) keys=['José'];
+  listRepasChat.innerHTML=keys.map(r=>`<button class="btnChatRepa tabSeg ${r===chatSenderBase?'active':''}" data-repa="${r}" onclick="setChatBaseRepa('${r}')">${r}</button>`).join('');
+ }
+ let sel=document.getElementById('selRepa');
+ if(sel){
+  let keys=Object.keys(repasData); if(!keys.length) keys=['José'];
+  let cur=sel.value;
+  sel.innerHTML=keys.map(n=>`<option value="${n}">${n}</option>`).join('');
+  if(cur) sel.value=cur; if(!sel.value) sel.value='José';
+ }
+ let selEdit=document.getElementById('editRepa');
+ if(selEdit){
+  let keys=Object.keys(repasData); selEdit.innerHTML=keys.map(n=>`<option value="${n}">${n}</option>`).join('');
+ }
+}
 onValue(ref(db,'kigoChat'),snap=>{
  chatLive=snap.val()||{};
  document.getElementById('chatCount').innerText=Object.keys(chatLive).length;
  renderChatBase(); renderChatRepa();
- let listRepas=document.getElementById('listaRepasChat');
- if(listRepas){
-  let repas=Object.keys(repasData); if(!repas.length) repas=['José'];
-  listRepas.innerHTML=repas.map(r=>`<button class="btnChatRepa tabSeg ${r===chatSenderBase?'active':''}" data-repa="${r}" onclick="setChatBaseRepa('${r}')">${r}</button>`).join('');
- }
- let listAjuste=document.getElementById('listaRepasAjuste');
- if(listAjuste){
-  let repas=Object.entries(repasData);
-  listAjuste.innerHTML=repas.map(([k,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6"><div><div style="font-size:11px;font-weight:800">${v.nombre||k}</div><div style="font-size:9px;color:#888">PIN: ${v.pin||'--'} • ${v.online!==false?'EN LINEA':'OFFLINE'}</div></div><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px" onclick="editarPinRepa('${k}')">EDITAR PIN</button><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarRepa('${k}')">BORRAR</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores</div>';
- }
 });
 
 window.mostrarModalElegante=({title='Aviso', text='Mensaje', cancelText='Cancelar', confirmText='OK', showCancel=true, onConfirm=null, showEdit=false, editData=null})=>{
@@ -409,17 +423,14 @@ onValue(ref(db,'kigoTarifas'),snap=>{
 onValue(ref(db,'kigoConfig'),snap=>{
  let v=snap.val(); if(!v) return;
  let n1=document.getElementById('cfgNombreEmpresa'); if(n1) n1.value=v.nombreEmpresa||'';
- let l1=document.getElementById('cfgLogo'); if(l1) l1.value=v.logo?.substring(0,100)||'';
+ let l1=document.getElementById('cfgLogo'); if(l1 && v.logo &&!v.logo.startsWith('data:')) l1.value=v.logo;
  if(v.logo){ let pv=document.getElementById('previewLogo'); if(pv) pv.innerHTML=`<img src="${v.logo}" style="max-width:120px;border-radius:12px">`; }
 });
 onValue(ref(db,'kigoPins'),snap=>{
 let v=snap.val()||{}; repasData=v.repas||v||{};
 if(!repasData['José']) set(ref(db,'kigoPins/repas/José'),{online:true,nombre:'José',pin:'1234',ts:Date.now()});
 if(repasData['José']){ joseOnline=repasData['José'].online!==false; actualizarUIJose(); }
-let keys=Object.keys(repasData); if(!keys.length) keys=['José'];
-let html=keys.map(n=>`<option value="${n}">${n}</option>`).join('');
-let sel=document.getElementById('selRepa'); if(sel){ sel.innerHTML=html; if(!sel.value) sel.value='José'; }
-let selEdit=document.getElementById('editRepa'); if(selEdit) selEdit.innerHTML=html;
+renderListaRepas();
 mostrarEstadoRepa();
 });
 window.mostrarEstadoRepa=()=>{
