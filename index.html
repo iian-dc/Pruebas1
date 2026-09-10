@@ -44,7 +44,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .estadoCamino{color:#3b82f6;background:#dbeafe;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
 .estadoFin{color:#10b981;background:#d1fae5;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
 .xclose{position:absolute;right:12px;top:12px;width:28px;height:28px;border-radius:50%;border:none;background:#f3f4f6;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.repaCard{border:1.5px solid #111;border-radius:16px;padding:12px;margin-bottom:10px;background:#fff}
+.repaCard{border:1.5px solid #111;border-radius:16px;padding:12px;background:#fff;min-width:280px;max-width:300px;flex-shrink:0}
+.repaCardActiva{border:2px solid #0a0a0a;border-radius:18px;padding:14px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.sliderEspera{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.sliderEspera::-webkit-scrollbar{display:none}
 </style>
 </head>
 <body>
@@ -186,17 +189,23 @@ CLIENTE NUEVO</button>
 <div id="listaSeguimiento"></div>
 </div>
 
-<!-- PANEL REPARTIDOR -->
+<!-- PANEL REPARTIDOR CORREGIDO -->
 <div id="view-repartidor" class="view">
 <div class="card" style="padding:8px">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<h3 style="font-size:12px;font-weight:800">PANEL REPARTIDOR</h3>
-<select id="selRepaPanel" onchange="cambiarRepaPanel()" style="height:36px;border:1.5px solid #111;border-radius:10px;padding:0 10px;font-weight:800;font-size:11px;background:#fff"></select>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+<div style="display:flex;align-items:center;gap:8px">
+<div style="width:36px;height:36px;background:#0a0a0a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px">J</div>
+<div>
+<div style="font-size:12px;font-weight:800">José</div>
+<div style="display:flex;align-items:center;gap:4px"><span class="dot on" id="dotJose"></span><span id="txtEstadoJose" style="font-size:9px;font-weight:800;color:#10b981">EN LÍNEA</span></div>
+</div>
+</div>
+<button id="btnToggleJose" class="btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:9px;background:#10b981;color:#fff;border-color:#10b981" onclick="toggleJose()">DESACTIVAR</button>
 </div>
 <div id="mapRepa"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
 <div style="background:#0a0a0a;color:#fff;border-radius:12px;height:42px;display:flex;align-items:center;justify-content:center;gap:6px">
-<svg style="width:14px;height:14px;stroke:#fff" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+<svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.8" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
 <span id="txtKmRepa" style="font-size:11px;font-weight:700">-- km</span>
 <span style="width:1px;height:16px;background:#333"></span>
 <span id="txtCostoRepa" style="font-size:13px;font-weight:800">$0</span>
@@ -207,19 +216,27 @@ CLIENTE NUEVO</button>
 </div>
 </div>
 </div>
+
 <div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<span style="font-size:10px;font-weight:800">PEDIDOS EN ESPERA</span>
-<span id="countEspera" style="background:#f59e0b;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800">0</span>
-</div>
-<div id="listaEspera" style="margin-top:10px"></div>
-</div>
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<span style="font-size:10px;font-weight:800">MIS PEDIDOS ACTIVOS</span>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+<span style="font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px">
+<svg class="ico" viewBox="0 0 24 24"><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 10h6M2 14h6M18 10h4M18 14h4"/></svg>
+PEDIDO ACTIVO
+</span>
 <span id="countActivos" style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800">0</span>
 </div>
-<div id="listaActivos" style="margin-top:10px"></div>
+<div id="listaActivos"></div>
+</div>
+
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+<span style="font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px">
+<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+PEDIDOS EN ESPERA - DESLIZA
+</span>
+<span id="countEspera" style="background:#f59e0b;color:#fff;padding:3px 8px;border-radius:12px;font-size:9px;font-weight:800">0</span>
+</div>
+<div class="sliderEspera" id="listaEspera"></div>
 </div>
 </div>
 
@@ -288,7 +305,8 @@ let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35};
 let map, mapRepa, dirServ, dirRend, dirRendRepa, markers=[], markersRepa=[], clienteSel=null;
 let modoActual='lista', servicioActual='recoger';
 let pedidosLive={}, filtroSeg='todos', pedidoEditId=null, pedidoEditData=null;
-let repaPanelActual=null;
+let repaPanelActual='José';
+let joseOnline=true;
 
 window.cerrarModal=function(){ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
 window.cerrarDetalle=function(){ document.getElementById('overlayDetalle').classList.remove('show'); pedidoEditId=null; pedidoEditData=null; }
@@ -305,6 +323,23 @@ window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText=
  }
  document.getElementById('kigoOverlay').classList.add('show');
  document.getElementById('modalConfirm').onclick=()=>{ if(onConfirm) onConfirm(); else cerrarModal(); };
+}
+window.toggleJose=async function(){
+joseOnline=!joseOnline;
+await set(ref(db,'kigoPins/repas/José'),{online:joseOnline, nombre:'José', ts:Date.now()});
+actualizarUIJose();
+}
+function actualizarUIJose(){
+let dot=document.getElementById('dotJose');
+let txt=document.getElementById('txtEstadoJose');
+let btn=document.getElementById('btnToggleJose');
+if(joseOnline){
+ dot.className='dot on'; txt.innerText='EN LÍNEA'; txt.style.color='#10b981';
+ btn.innerText='DESACTIVAR'; btn.style.background='#10b981'; btn.style.borderColor='#10b981';
+}else{
+ dot.className='dot off'; txt.innerText='DESACTIVADO'; txt.style.color='#ef4444';
+ btn.innerText='ACTIVAR'; btn.style.background='#ef4444'; btn.style.borderColor='#ef4444';
+}
 }
 window.setServicio=function(s){
 servicioActual=s;
@@ -353,20 +388,23 @@ clientesDB=m; renderClientes();
 });
 onValue(ref(db,'kigoTarifas'),s=>{ if(s.val()) tarifas=s.val(); });
 onValue(ref(db,'kigoPins'),snap=>{
-let v=snap.val()||{}; repasData=v.repas||v||{};
+let v=snap.val()||{};
+repasData=v.repas||v||{};
+// ASEGURAR JOSÉ
+if(!repasData['José']){
+ set(ref(db,'kigoPins/repas/José'),{online:true,nombre:'José',ts:Date.now()});
+}
+if(repasData['José']){
+ joseOnline=repasData['José'].online!==false;
+ actualizarUIJose();
+}
 let keys=Object.keys(repasData);
+if(!keys.length) keys=['José'];
 let sel=document.getElementById('selRepa');
-let selPanel=document.getElementById('selRepaPanel');
 let selEdit=document.getElementById('editRepa');
 let html=keys.map(n=>`<option value="${n}">${n}</option>`).join('');
-if(sel) sel.innerHTML=html||'<option>Sin repas</option>';
-if(selPanel){
- selPanel.innerHTML=html||'<option>Sin repas</option>';
- if(!repaPanelActual && keys.length) repaPanelActual=keys[0];
- if(repaPanelActual) selPanel.value=repaPanelActual;
- renderRepaPanel();
-}
-if(selEdit) selEdit.innerHTML=html||'<option>Sin repas</option>';
+if(sel){ sel.innerHTML=html; if(!sel.value) sel.value='José'; }
+if(selEdit) selEdit.innerHTML=html;
 mostrarEstadoRepa();
 });
 window.mostrarEstadoRepa=function(){
@@ -383,11 +421,6 @@ pedidosLive=snap.val()||{};
 renderSeguimiento();
 renderRepaPanel();
 });
-window.cambiarRepaPanel=function(){
-repaPanelActual=document.getElementById('selRepaPanel').value;
-renderRepaPanel();
-if(mapRepa) cotizarRepaPanel();
-}
 function calcularHoraRecogida(ts, minutos){
 if(!minutos) return '';
 let m=parseInt(minutos);
@@ -434,7 +467,6 @@ let hora=fecha.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
 let codigo=id.substring(1,7).toUpperCase();
 let estado=p.etapa||'pendiente';
 let estadoClass=estado==='pendiente'?'estadoPend':(estado==='finalizado'?'estadoFin':'estadoCamino');
-let estadoTxt=estado.toUpperCase();
 let horaRecogida=calcularHoraRecogida(p.ts||Date.now(), p.tiempoRecogida);
 return `<div class="cardPedido">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -442,7 +474,7 @@ return `<div class="cardPedido">
 <span style="font-size:9px;color:#888">${hora} ${fecha.toLocaleDateString()}</span>
 </div>
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<span class="${estadoClass}">${estadoTxt}</span>
+<span class="${estadoClass}">${estado.toUpperCase()}</span>
 <span style="font-size:9px;color:#0a0a0a;font-weight:800">${horaRecogida}</span>
 </div>
 <div style="font-size:11px;font-weight:700;margin-bottom:4px">${p.cliente||'--'} ${p.servicio==='comprar'?'COMPRA':'RECOGER'}</div>
@@ -459,48 +491,22 @@ return `<div class="cardPedido">
 }).join('');
 }
 
-// PANEL REPARTIDOR
+// PANEL REPARTIDOR CORREGIDO - ACTIVO ARRIBA, ESPERA DESLIZABLE
 function renderRepaPanel(){
-if(!repaPanelActual) return;
 let listaEspera=document.getElementById('listaEspera');
 let listaActivos=document.getElementById('listaActivos');
 if(!listaEspera ||!listaActivos) return;
 let entries=Object.entries(pedidosLive).sort((a,b)=> (b[1].ts||0)-(a[1].ts||0));
+// TODOS LOS PENDIENTES VAN A JOSÉ EN TIEMPO REAL
 let enEspera=entries.filter(([k,p])=> (p.etapa||'pendiente')==='pendiente');
-let misActivos=entries.filter(([k,p])=> p.repaAsignado===repaPanelActual && p.etapa!=='finalizado' && p.etapa!=='pendiente');
+let misActivos=entries.filter(([k,p])=> p.repaAsignado===repaPanelActual && ['camino','en camino','recogido','entrega'].includes(p.etapa||''));
+
 document.getElementById('countEspera').innerText=enEspera.length;
 document.getElementById('countActivos').innerText=misActivos.length;
 
-if(!enEspera.length){
- listaEspera.innerHTML='<div style="text-align:center;padding:12px;color:#999;font-size:10px">No hay pedidos en espera</div>';
-}else{
- listaEspera.innerHTML=enEspera.map(([id,p])=>{
-  let codigo=id.substring(1,7).toUpperCase();
-  let horaRec=calcularHoraRecogida(p.ts, p.tiempoRecogida);
-  return `<div class="repaCard">
-   <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-    <span style="font-size:9px;font-weight:800;background:#f59e0b;color:#fff;padding:2px 6px;border-radius:6px">#${codigo} ${p.servicio==='comprar'?'COMPRA':'RECOGER'}</span>
-    <span style="font-size:9px;color:#888">${new Date(p.ts).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})} ${horaRec?'- '+horaRec:''}</span>
-   </div>
-   <div style="font-size:11px;font-weight:800">${p.cliente}</div>
-   <div style="font-size:9px;color:#555;margin-top:4px"><b>Recoge:</b> ${p.dirRecogida}</div>
-   <div style="font-size:9px;color:#555"><b>Entrega:</b> ${p.entrega}</div>
-   <div style="font-size:9px;color:#555;margin-top:2px"><b>Tel:</b> ${p.telefono||''} <b>Ref:</b> ${p.referencia||''}</div>
-   ${p.tipoProd?`<div style="font-size:9px;margin-top:4px"><b>${p.tipoProd}:</b> ${p.referenciaCompra||''}</div>`:''}
-   <div style="display:flex;gap:6px;margin-top:8px;font-size:9px;font-weight:800">
-    <span style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px">${p.km} km</span>
-    <span style="background:#d1fae5;color:#10b981;padding:3px 8px;border-radius:20px">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span>
-   </div>
-   <button class="btn" style="height:40px;margin-top:10px;background:#0a0a0a;display:flex;align-items:center;justify-content:center;gap:6px" onclick="aceptarPedido('${id}')">
-    <svg style="width:14px;height:14px;stroke:#fff" viewBox="0 0 24 24"><path d="M5 12l5 5l10-10"/></svg>
-    ACEPTAR PEDIDO
-   </button>
-  </div>`;
- }).join('');
-}
-
+// ACTIVO ARRIBA
 if(!misActivos.length){
- listaActivos.innerHTML='<div style="text-align:center;padding:12px;color:#999;font-size:10px">Sin pedidos activos</div>';
+ listaActivos.innerHTML='<div style="text-align:center;padding:16px;color:#999;font-size:10px;border:1.5px dashed #e5e7eb;border-radius:12px">Sin pedido activo - Acepta uno de abajo</div>';
 }else{
  listaActivos.innerHTML=misActivos.map(([id,p])=>{
   let codigo=id.substring(1,7).toUpperCase();
@@ -508,34 +514,79 @@ if(!misActivos.length){
   let btns='';
   if(etapa==='camino' || etapa==='en camino'){
    btns=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
-    <button class="btn-outline" style="height:40px;background:#dbeafe;border-color:#3b82f6;color:#3b82f6" onclick="cambiarEtapa('${id}','recogido')">VOY EN CAMINO A RECOGER</button>
-    <button class="btn" style="height:40px;background:#3b82f6" onclick="cambiarEtapa('${id}','recogido')">RECOGIDO</button>
+    <button class="btn-outline" style="height:42px;background:#dbeafe;border-color:#3b82f6;color:#3b82f6" onclick="cambiarEtapa('${id}','recogido')">
+     <svg class="ico" style="stroke:#3b82f6" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+     EN CAMINO A RECOGER</button>
+    <button class="btn" style="height:42px;background:#3b82f6" onclick="cambiarEtapa('${id}','recogido')">RECOGIDO</button>
    </div>`;
   }else if(etapa==='recogido'){
-   btns=`<button class="btn" style="height:40px;margin-top:10px;background:#f59e0b" onclick="cambiarEtapa('${id}','entrega')">EN CAMINO A ENTREGA</button>`;
+   btns=`<button class="btn" style="height:42px;margin-top:10px;background:#f59e0b;display:flex;align-items:center;justify-content:center;gap:6px" onclick="cambiarEtapa('${id}','entrega')">
+    <svg style="width:14px;height:14px;stroke:#fff" viewBox="0 0 24 24"><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+    EN CAMINO A ENTREGA</button>`;
   }else if(etapa==='entrega'){
-   btns=`<button class="btn" style="height:40px;margin-top:10px;background:#10b981" onclick="cambiarEtapa('${id}','finalizado')">ENTREGADO - FINALIZAR</button>`;
+   btns=`<button class="btn" style="height:42px;margin-top:10px;background:#10b981;display:flex;align-items:center;justify-content:center;gap:6px" onclick="cambiarEtapa('${id}','finalizado')">
+    <svg style="width:14px;height:14px;stroke:#fff" viewBox="0 0 24 24"><path d="M5 12l5 5l10-10"/></svg>
+    ENTREGADO - FINALIZAR</button>`;
   }
-  return `<div class="repaCard" style="border-color:#10b981">
-   <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-    <span style="font-size:9px;font-weight:800;background:#0a0a0a;color:#fff;padding:2px 6px;border-radius:6px">#${codigo} ${etapa.toUpperCase()}</span>
-    <span style="font-size:9px;color:#10b981;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span>
+  return `<div class="repaCardActiva">
+   <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+    <span style="font-size:9px;font-weight:800;background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:6px">#${codigo} ${etapa.toUpperCase()}</span>
+    <span style="font-size:11px;font-weight:800;color:#10b981">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span>
    </div>
-   <div style="font-size:11px;font-weight:800">${p.cliente}</div>
-   <div style="font-size:9px;color:#555;margin-top:4px"><b>Recoge:</b> ${p.dirRecogida}</div>
-   <div style="font-size:9px;color:#555"><b>Entrega:</b> ${p.entrega}</div>
-   <div style="font-size:9px;color:#555"><b>Tel:</b> ${p.telefono||''}</div>
-   ${p.tiempoRecogida?`<div style="font-size:9px;color:#0a0a0a;font-weight:800;margin-top:4px">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div>`:''}
-   <button class="btn-outline" style="height:36px;margin-top:8px;font-size:9px" onclick="verRutaRepa('${id}')">VER RUTA EN MAPA</button>
+   <div style="font-size:13px;font-weight:800">${p.cliente} ${p.servicio==='comprar'?' - COMPRA':''}</div>
+   <div style="background:#f7f7f7;border-radius:10px;padding:8px;margin-top:8px">
+    <div style="font-size:10px;color:#111"><b>Recoge:</b> ${p.dirRecogida}</div>
+    <div style="font-size:10px;color:#111;margin-top:4px"><b>Entrega:</b> ${p.entrega}</div>
+    <div style="font-size:9px;color:#666;margin-top:4px">Tel: ${p.telefono||''} • Ref: ${p.referencia||''}</div>
+    ${p.tipoProd?`<div style="font-size:10px;margin-top:4px;font-weight:700">Producto: ${p.tipoProd} - ${p.referenciaCompra||''}</div>`:''}
+    ${p.tiempoRecogida?`<div style="font-size:10px;color:#0a0a0a;font-weight:800;margin-top:6px;background:#fef3c7;padding:4px 8px;border-radius:6px;display:inline-block">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div>`:''}
+   </div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+    <button class="btn-outline" style="height:38px;font-size:9px" onclick="verRutaRepa('${id}')">
+     <svg class="ico" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/></svg>
+     VER RUTA</button>
+    <span style="background:#f3f4f6;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">${p.km} km</span>
+   </div>
    ${btns}
   </div>`;
  }).join('');
 }
+
+// ESPERA DESLIZABLE ABAJO
+if(!enEspera.length){
+ listaEspera.innerHTML='<div style="text-align:center;padding:12px;color:#999;font-size:10px">No hay pedidos en espera</div>';
+}else{
+ listaEspera.innerHTML=enEspera.map(([id,p])=>{
+  let codigo=id.substring(1,7).toUpperCase();
+  let horaRec=calcularHoraRecogida(p.ts, p.tiempoRecogida);
+  return `<div class="repaCard" style="scroll-snap-align:start">
+   <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+    <span style="font-size:8px;font-weight:800;background:#f59e0b;color:#fff;padding:3px 6px;border-radius:6px">#${codigo} ${p.servicio==='comprar'?'COMPRA':'RECOGER'}</span>
+    <span style="font-size:8px;color:#888">${new Date(p.ts).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</span>
+   </div>
+   <div style="font-size:11px;font-weight:800">${p.cliente}</div>
+   <div style="font-size:8px;color:#0a0a0a;font-weight:700;margin-top:4px">${horaRec}</div>
+   <div style="font-size:9px;color:#555;margin-top:6px"><b>Recoge:</b> ${p.dirRecogida.substring(0,40)}...</div>
+   <div style="font-size:9px;color:#555"><b>Entrega:</b> ${p.entrega.substring(0,40)}...</div>
+   <div style="display:flex;gap:6px;margin-top:8px">
+    <span style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:800">${p.km} km</span>
+    <span style="background:#d1fae5;color:#10b981;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span>
+   </div>
+   <button class="btn" style="height:38px;margin-top:10px;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="aceptarPedido('${id}')">
+    <svg style="width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2" viewBox="0 0 24 24"><path d="M5 12l5 5l10-10"/></svg>
+    ACEPTAR
+   </button>
+  </div>`;
+ }).join('');
 }
+}
+
 window.aceptarPedido=async function(id){
-if(!repaPanelActual){ mostrarModalElegante({title:'Selecciona',text:'Selecciona repartidor arriba',showCancel:false}); return; }
-await update(ref(db,'kigoPedidosLive/'+id),{repaAsignado:repaPanelActual,etapa:'camino'});
-mostrarModalElegante({title:'Aceptado',text:'Pedido asignado a '+repaPanelActual,showCancel:false});
+if(!joseOnline){
+ mostrarModalElegante({title:'Desactivado',text:'Actívate en línea primero',showCancel:false});
+ return;
+}
+await update(ref(db,'kigoPedidosLive/'+id),{repaAsignado:'José',etapa:'camino'});
 verRutaRepa(id);
 }
 window.cambiarEtapa=async function(id, nuevaEtapa){
@@ -544,7 +595,7 @@ if(nuevaEtapa==='finalizado'){
  let histRef=push(ref(db,'kigoHistorial'));
  await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()});
  await remove(ref(db,'kigoPedidosLive/'+id));
- mostrarModalElegante({title:'Finalizado',text:'Enviado a historial',showCancel:false});
+ mostrarModalElegante({title:'Finalizado',text:'Pedido enviado a historial',showCancel:false});
 }else{
  await update(ref(db,'kigoPedidosLive/'+id),{etapa:nuevaEtapa});
 }
@@ -573,12 +624,6 @@ dirServRepa.route({origin:o,destination:d,travelMode:'DRIVING'},(r,s)=>{
  }
 });
 }
-function cotizarRepaPanel(){
-let entries=Object.entries(pedidosLive);
-if(!entries.length) return;
-let first=entries.find(([k,p])=> p.repaAsignado===repaPanelActual) || entries[0];
-if(first) verRutaRepa(first[0]);
-}
 
 window.verDetalles=function(id){
 let p=pedidosLive[id];
@@ -600,7 +645,7 @@ document.getElementById('editTelEnt').value=p.telefono||'';
 document.getElementById('editRefEnt').value=p.referencia||'';
 document.getElementById('editCostoExtra').value=p.costoExtra||0;
 let selEdit=document.getElementById('editRepa');
-if(selEdit) selEdit.value=p.repaAsignado||'';
+if(selEdit) selEdit.value=p.repaAsignado||'José';
 calcTotalEdit();
 document.getElementById('overlayDetalle').classList.add('show');
 }
@@ -860,7 +905,7 @@ document.getElementById('txtCosto').innerText=`$${costo}`;
 }
 window.confirmar=async function(){
 if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
-let repa=document.getElementById('selRepa')?.value||'sin asignar';
+let repa=document.getElementById('selRepa')?.value||'José';
 let nr=push(ref(db,'kigoPedidosLive'));
 await set(nr,{servicio:pedido.servicio||'recoger',cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:pedido.clienteSel.telefono||'',telefono:pedido.telEntrega||'',referencia:pedido.refEntrega||'',tiempoRecogida:pedido.tiempoRecogida||'',tipoProd:pedido.tipoProd||'',referenciaCompra:pedido.referenciaCompra||'',km:pedido.km,costoSugerido:pedido.costo,costoExtra:0,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
 mostrarModalElegante({title:'Enviado',text:(pedido.servicio==='comprar'?'Compra':'Recogida')+' asignada a '+repa+' - '+(pedido.tiempoRecogida||'0')+' min - $'+pedido.costo,showCancel:false, onConfirm:()=>{ cerrarModal(); limpiarTodoPedido(); showView('seguimiento'); }});
