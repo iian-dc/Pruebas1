@@ -20,13 +20,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .btn-outline.active{background:#0a0a0a;color:#fff}
 .btn-serv{width:100%;height:44px;border-radius:12px;border:1.5px solid #111;background:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer}
 .btn-serv.active{background:#0a0a0a;color:#fff}
-.btn-serv.active svg{stroke:#fff}
 .view{display:none}.view.active{display:block}
 #map,#mapRepa{width:100%;height:360px;border-radius:14px;background:#e5e7eb;display:block}
 #listCli{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #0a0a0a;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none;z-index:50}
-.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;display:flex;padding:6px;max-width:640px;margin:0 auto;gap:2px;z-index:100}
-.bottom button{flex:1;height:38px;border-radius:12px;border:1px solid #eee;background:#fff;font-weight:800;font-size:6px}
-.bottom button.active{background:#0a0a0a;color:#fff}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;display:flex;padding:8px;max-width:640px;margin:0 auto;gap:4px;z-index:100}
+.bottom button{flex:1;height:42px;border-radius:12px;border:1px solid #eee;background:#fff;display:flex;align-items:center;justify-content:center}
+.bottom button.active{background:#0a0a0a;border-color:#0a0a0a}
+.bottom button svg{width:18px;height:18px;stroke:#111;fill:none;stroke-width:2}
+.bottom button.active svg{stroke:#fff}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .dot.on{background:#10b981;box-shadow:0 0 0 2px #d1fae5}
 .dot.off{background:#ef4444;box-shadow:0 0 0 2px #fee2e2}
@@ -35,7 +36,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .kigo-modal{background:#fff;border-radius:20px;padding:20px;max-width:380px;width:95%;max-height:90vh;overflow:auto;position:relative}
 .kigo-btn{flex:1;height:42px;border-radius:12px;border:none;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
 .kigo-btn-confirm{background:#0a0a0a;color:#fff}
-.icon-btn{width:32px;height:32px;border-radius:9px;border:1px solid #e5e7eb;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .ico{width:15px;height:15px;stroke:#111;stroke-width:1.8;fill:none}
 .tabSeg{height:34px;padding:0 12px;border-radius:20px;border:1px solid #e5e7eb;background:#fff;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .tabSeg.active{background:#0a0a0a;color:#fff;border-color:#0a0a0a}
@@ -50,11 +50,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .repaCardActiva{border:2px solid #0a0a0a;border-radius:22px;padding:16px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.08)}
 .sliderEspera{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
 .sliderEspera::-webkit-scrollbar{display:none}
-.btnAccion{width:100%;height:52px;border-radius:16px;border:none;font-weight:800;font-size:11px;letter-spacing:.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.btnAccion{width:100%;height:52px;border-radius:16px;border:none;font-weight:800;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
 .btnCall{width:100%;height:44px;border-radius:12px;border:1.5px solid #111;background:#fff;font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;margin-top:8px}
 .chatBubble{max-width:78%;padding:10px 12px;border-radius:16px;font-size:11px;margin-bottom:8px;line-height:1.3}
 .chatBase{background:#0a0a0a;color:#fff;border-bottom-left-radius:4px;align-self:flex-end}
-.chatJose{background:#fff;border:1px solid #111;color:#111;border-bottom-right-radius:4px;align-self:flex-start;box-shadow:0 2px 8px rgba(255,0,80,.15)}
+.chatJose{background:#fff;border:1px solid #111;color:#111;border-bottom-right-radius:4px;align-self:flex-start}
 .chatJose b{color:#ff0040;text-shadow:0 0 8px rgba(255,0,64,.6)}
 .chatSlide{max-height:0;overflow:hidden;transition:max-height.3s ease;background:#f8fafc;border-radius:14px;margin-top:10px}
 .chatSlide.open{max-height:420px;border:1px solid #eee;padding:10px}
@@ -100,11 +100,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 </div>
 <div id="boxSel" style="display:none;margin-top:10px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:12px">
 <div style="display:flex;justify-content:space-between">
-<div style="flex:1">
-<div id="txtNom" style="font-weight:800;font-size:12px"></div>
-<div id="txtDirSel" style="font-size:10px;color:#555;margin-top:2px"></div>
-<div id="txtTelSel" style="font-size:11px;font-weight:800;margin-top:4px"></div>
-</div>
+<div style="flex:1"><div id="txtNom" style="font-weight:800;font-size:12px"></div><div id="txtDirSel" style="font-size:10px;color:#555;margin-top:2px"></div><div id="txtTelSel" style="font-size:11px;font-weight:800;margin-top:4px"></div></div>
 <button onclick="limpiarCampo('buscCli','clearBusc')" style="width:22px;height:22px;border-radius:50%;border:none;background:#dcfce7;color:#16a34a;font-weight:800;cursor:pointer">✕</button>
 </div>
 </div>
@@ -270,58 +266,43 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 <button class="tabAjuste" id="tabInterno" onclick="showAjuste('interno')">INTERNO</button>
 </div>
 </div>
-
 <div id="ajuste-precio" class="card">
 <h4 style="font-size:11px;font-weight:800;margin-bottom:10px">CONFIGURACIÓN DE PRECIOS</h4>
-<span class="label">Precio por cada kilómetro</span>
-<div class="wrap"><input type="number" id="cfgPrecioKm" placeholder="6"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / KM</span></div>
-<span class="label" style="margin-top:8px">Valor zona céntrica (centro a centro)</span>
-<div class="wrap"><input type="number" id="cfgCentro" placeholder="35"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div>
-<span class="label" style="margin-top:8px">Km base incluidos en tarifa centro</span>
-<div class="wrap"><input type="number" id="cfgKmBase" placeholder="2"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div>
-<span class="label" style="margin-top:12px">Precio lluvia leve</span>
-<div class="wrap"><input type="number" id="cfgLluviaLeve" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
-<span class="label" style="margin-top:8px">Precio lluvia moderada</span>
-<div class="wrap"><input type="number" id="cfgLluviaMod" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
-<span class="label" style="margin-top:8px">Precio lluvia fuerte</span>
-<div class="wrap"><input type="number" id="cfgLluviaFuerte" placeholder="15"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
-<span class="label" style="margin-top:8px">Clima actual</span>
-<div class="wrap"><select id="cfgClimaActual"><option value="normal">Normal</option><option value="leve">Lluvia leve</option><option value="moderada">Lluvia moderada</option><option value="fuerte">Lluvia fuerte</option></select></div>
+<span class="label">Precio por cada kilómetro</span><div class="wrap"><input type="number" id="cfgPrecioKm" placeholder="6"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / KM</span></div>
+<span class="label" style="margin-top:8px">Valor zona céntrica (centro a centro)</span><div class="wrap"><input type="number" id="cfgCentro" placeholder="35"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div>
+<span class="label" style="margin-top:8px">Km base incluidos</span><div class="wrap"><input type="number" id="cfgKmBase" placeholder="2"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div>
+<span class="label" style="margin-top:12px">Precio lluvia leve</span><div class="wrap"><input type="number" id="cfgLluviaLeve" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
+<span class="label" style="margin-top:8px">Precio lluvia moderada</span><div class="wrap"><input type="number" id="cfgLluviaMod" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
+<span class="label" style="margin-top:8px">Precio lluvia fuerte</span><div class="wrap"><input type="number" id="cfgLluviaFuerte" placeholder="15"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div>
+<span class="label" style="margin-top:8px">Clima actual</span><div class="wrap"><select id="cfgClimaActual"><option value="normal">Normal</option><option value="leve">Lluvia leve</option><option value="moderada">Lluvia moderada</option><option value="fuerte">Lluvia fuerte</option></select></div>
 <button class="btn" style="margin-top:12px" onclick="guardarPrecios()">GUARDAR PRECIOS</button>
 </div>
-
 <div id="ajuste-repas" class="card" style="display:none">
 <h4 style="font-size:11px;font-weight:800;margin-bottom:10px">REPARTIDORES - AGREGAR Y EDITAR PIN</h4>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
 <div><span class="label">Nombre repartidor</span><div class="wrap"><input type="text" id="nuevoRepaNombre" placeholder="Ej. Carlos"></div></div>
-<div><span class="label">PIN</span><div class="wrap"><input type="text" id="nuevoRepaPin" placeholder="Ej. 1234"></div></div>
+<div><span class="label">PIN</span><div class="wrap"><input type="text" id="nuevoRepaPin" placeholder="1234"></div></div>
 </div>
 <button class="btn" style="margin-top:10px" onclick="agregarRepa()">AGREGAR REPARTIDOR</button>
-<div style="margin-top:14px">
-<span class="label">LISTA DE REPARTIDORES</span>
-<div id="listaRepasAjuste"></div>
+<div style="margin-top:14px"><span class="label">LISTA DE REPARTIDORES</span><div id="listaRepasAjuste"></div></div>
 </div>
-</div>
-
 <div id="ajuste-interno" class="card" style="display:none">
 <h4 style="font-size:11px;font-weight:800;margin-bottom:10px">AJUSTES INTERNOS</h4>
-<span class="label">Nombre empresa</span>
-<div class="wrap"><input type="text" id="cfgNombreEmpresa" placeholder="Kigo Xpress"></div>
-<span class="label" style="margin-top:8px">Logo URL</span>
-<div class="wrap"><input type="text" id="cfgLogo" placeholder="https://..."></div>
+<span class="label">Nombre empresa</span><div class="wrap"><input type="text" id="cfgNombreEmpresa" placeholder="Kigo Xpress"></div>
+<span class="label" style="margin-top:8px">Logo URL</span><div class="wrap"><input type="text" id="cfgLogo" placeholder="https://..."></div>
 <div id="previewLogo" style="margin-top:10px;text-align:center"></div>
 <button class="btn" style="margin-top:12px" onclick="guardarInterno()">GUARDAR CAMBIOS INTERNOS</button>
 </div>
 </div>
 
 <div class="bottom">
-<button id="bP" class="active" onclick="showView('pedidos')">PEDIDOS</button>
-<button id="bS" onclick="showView('seguimiento')">SEGUIMIENTO</button>
-<button id="bR" onclick="showView('repartidor')">REPARTIDOR</button>
-<button id="bCH" onclick="showView('chat')">CHAT</button>
-<button id="bH" onclick="showView('historial')">HISTORIAL</button>
-<button id="bC" onclick="showView('clientes')">CLIENTES</button>
-<button id="bA" onclick="showView('ajustes')">AJUSTES</button>
+<button id="bP" class="active" onclick="showView('pedidos')"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></button>
+<button id="bS" onclick="showView('seguimiento')"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+<button id="bR" onclick="showView('repartidor')"><svg viewBox="0 0 24 24"><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 10h6M2 14h6M18 10h4M18 14h4"/></svg></button>
+<button id="bCH" onclick="showView('chat')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+<button id="bH" onclick="showView('historial')"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg></button>
+<button id="bC" onclick="showView('clientes')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
+<button id="bA" onclick="showView('ajustes')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0.33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 9 15a1.65 1.65 0 0 0-1-1.51V13a2 2 0 0 1 4 0v.5a1.65 1.65 0 0 0 1 1.5z"/></svg></button>
 </div>
 
 <div class="kigo-overlay" id="overlayCancel"><div class="kigo-modal" style="background:#fee2e2;border:2px solid #ef4444"><div style="text-align:center"><div style="width:56px;height:56px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px"><svg style="width:28px;height:28px;stroke:#fff;stroke-width:2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div><h3 style="font-size:14px;font-weight:800;color:#ef4444">PEDIDO CANCELADO</h3><p id="txtCancel" style="font-size:11px;color:#7f1d1d;margin-top:8px;font-weight:600"></p><button class="btn" style="margin-top:14px;background:#ef4444" onclick="cerrarCancel()">ENTENDIDO</button></div></div></div>
@@ -341,33 +322,27 @@ let map, mapRepa, dirServ, dirRend, dirRendRepa, markers=[], markersRepa=[], cli
 let modoActual='lista', servicioActual='recoger';
 let pedidosLive={}, historialLive={}, chatLive={}, filtroSeg='todos', pedidoEditId=null, pedidoEditData=null;
 let repaPanelActual='José', joseOnline=true, chatSenderBase='José';
-let prevPedidosKeys=new Set();
+let prevKeys=new Set();
 
-window.cerrarModal=function(){ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
-window.cerrarDetalle=function(){ document.getElementById('overlayDetalle').classList.remove('show'); }
-window.cerrarHist=function(){ document.getElementById('overlayHist').classList.remove('show'); }
-window.cerrarCancel=function(){ document.getElementById('overlayCancel').classList.remove('show'); }
+window.cerrarModal=()=>{ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
+window.cerrarDetalle=()=>{ document.getElementById('overlayDetalle').classList.remove('show'); }
+window.cerrarHist=()=>{ document.getElementById('overlayHist').classList.remove('show'); }
+window.cerrarCancel=()=>{ document.getElementById('overlayCancel').classList.remove('show'); }
 
 function sonidoRappi(){
  try{
   const ctx=new (window.AudioContext||window.webkitAudioContext)();
   let t=ctx.currentTime;
-  for(let i=0;i<10;i++){
-   let o=ctx.createOscillator(); let g=ctx.createGain();
-   o.type='sine'; o.frequency.value=i%2===0?880:1200;
-   o.connect(g); g.connect(ctx.destination);
-   g.gain.setValueAtTime(0.4, t+i*0.5); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.5+0.35);
-   o.start(t+i*0.5); o.stop(t+i*0.5+0.35);
-  }
+  for(let i=0;i<10;i++){ let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sine'; o.frequency.value=i%2===0?880:1200; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.4, t+i*0.5); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.5+0.35); o.start(t+i*0.5); o.stop(t+i*0.5+0.35); }
  }catch(e){}
- if(navigator.vibrate) navigator.vibrate([300][100][300][100][300][100][300][100][500][200][500][200][500]);
+ if(navigator.vibrate) navigator.vibrate([300,100,300,100,300,100,300,100,500,200,500]);
 }
 function sonidoCancel(){
  try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sawtooth'; o.frequency.value=220; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.5, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+1.5); o.start(); o.stop(ctx.currentTime+1.5); }catch(e){}
- if(navigator.vibrate) navigator.vibrate([600][200][600][200][600]);
+ if(navigator.vibrate) navigator.vibrate([600,200,600,200,600]);
 }
 
-window.showAjuste=function(t){
+window.showAjuste=(t)=>{
  document.getElementById('ajuste-precio').style.display=t==='precio'?'block':'none';
  document.getElementById('ajuste-repas').style.display=t==='repas'?'block':'none';
  document.getElementById('ajuste-interno').style.display=t==='interno'?'block':'none';
@@ -375,67 +350,48 @@ window.showAjuste=function(t){
  document.getElementById('tabRepas').classList.toggle('active',t==='repas');
  document.getElementById('tabInterno').classList.toggle('active',t==='interno');
 }
-window.guardarPrecios=async function(){
- let data={
-  mandado:parseFloat(document.getElementById('cfgCentro').value)||35,
-  centro:parseFloat(document.getElementById('cfgCentro').value)||35,
-  precioKm:parseFloat(document.getElementById('cfgPrecioKm').value)||6,
-  kmBase:parseFloat(document.getElementById('cfgKmBase').value)||2,
-  lluviaLeve:parseFloat(document.getElementById('cfgLluviaLeve').value)||5,
-  lluviaMod:parseFloat(document.getElementById('cfgLluviaMod').value)||10,
-  lluviaFuerte:parseFloat(document.getElementById('cfgLluviaFuerte').value)||15,
-  clima:document.getElementById('cfgClimaActual').value||'normal'
- };
+window.guardarPrecios=async()=>{
+ let data={ mandado:parseFloat(document.getElementById('cfgCentro').value)||35, centro:parseFloat(document.getElementById('cfgCentro').value)||35, precioKm:parseFloat(document.getElementById('cfgPrecioKm').value)||6, kmBase:parseFloat(document.getElementById('cfgKmBase').value)||2, lluviaLeve:parseFloat(document.getElementById('cfgLluviaLeve').value)||5, lluviaMod:parseFloat(document.getElementById('cfgLluviaMod').value)||10, lluviaFuerte:parseFloat(document.getElementById('cfgLluviaFuerte').value)||15, clima:document.getElementById('cfgClimaActual').value||'normal' };
  await set(ref(db,'kigoTarifas'),data);
  mostrarModalElegante({title:'Guardado',text:'Precios guardados',showCancel:false});
 }
-window.agregarRepa=async function(){
+window.agregarRepa=async()=>{
  let nombre=document.getElementById('nuevoRepaNombre').value.trim();
  let pin=document.getElementById('nuevoRepaPin').value.trim();
  if(!nombre){ mostrarModalElegante({title:'Falta',text:'Escribe nombre',showCancel:false}); return; }
  await set(ref(db,'kigoPins/repas/'+nombre),{nombre:nombre,pin:pin||'1234',online:true,ts:Date.now()});
  document.getElementById('nuevoRepaNombre').value=''; document.getElementById('nuevoRepaPin').value='';
- mostrarModalElegante({title:'Agregado',text:nombre+' agregado',showCancel:false});
 }
-window.editarPinRepa=async function(nombre){
- let nuevo=prompt('Nuevo PIN para '+nombre);
- if(nuevo===null) return;
- await update(ref(db,'kigoPins/repas/'+nombre),{pin:nuevo});
-}
-window.borrarRepa=async function(nombre){
- if(!confirm('Borrar '+nombre+'?')) return;
- await remove(ref(db,'kigoPins/repas/'+nombre));
-}
-window.guardarInterno=async function(){
+window.editarPinRepa=async(nombre)=>{ let nuevo=prompt('Nuevo PIN para '+nombre); if(nuevo===null) return; await update(ref(db,'kigoPins/repas/'+nombre),{pin:nuevo}); }
+window.borrarRepa=async(nombre)=>{ if(!confirm('Borrar '+nombre+'?')) return; await remove(ref(db,'kigoPins/repas/'+nombre)); }
+window.guardarInterno=async()=>{
  let nombre=document.getElementById('cfgNombreEmpresa').value.trim();
  let logo=document.getElementById('cfgLogo').value.trim();
  await set(ref(db,'kigoConfig'),{nombreEmpresa:nombre,logo:logo,ts:Date.now()});
- mostrarModalElegante({title:'Guardado',text:'Ajustes internos guardados',showCancel:false});
- if(logo){ document.getElementById('previewLogo').innerHTML=`<img src="${logo}" style="max-width:120px;border-radius:12px">`; }
+ mostrarModalElegante({title:'Guardado',text:'Interno guardado',showCancel:false});
+ if(logo) document.getElementById('previewLogo').innerHTML=`<img src="${logo}" style="max-width:120px;border-radius:12px">`;
 }
 
-window.toggleChatRepa=function(){
- let slide=document.getElementById('chatRepaSlide'); slide.classList.toggle('open');
-}
-window.enviarChatRepa=async function(){
+window.toggleChatRepa=()=>{ document.getElementById('chatRepaSlide').classList.toggle('open'); }
+window.enviarChatRepa=async()=>{
  let txt=document.getElementById('chatRepaInput').value.trim(); if(!txt) return;
  let r=push(ref(db,'kigoChat')); await set(r,{sender:'José',repa:'José',text:txt,ts:Date.now()}); document.getElementById('chatRepaInput').value='';
 }
-window.setChatBaseRepa=function(repa){ chatSenderBase=repa; document.querySelectorAll('.btnChatRepa').forEach(b=>{ b.classList.toggle('active',b.dataset.repa===repa); }); renderChatBase(); }
-window.enviarChat=async function(){ let txt=document.getElementById('chatInput').value.trim(); if(!txt) return; let r=push(ref(db,'kigoChat')); await set(r,{sender:'BASE',repa:chatSenderBase,text:txt,ts:Date.now()}); document.getElementById('chatInput').value=''; }
+window.setChatBaseRepa=(repa)=>{ chatSenderBase=repa; document.querySelectorAll('.btnChatRepa').forEach(b=>b.classList.toggle('active',b.dataset.repa===repa)); renderChatBase(); }
+window.enviarChat=async()=>{ let txt=document.getElementById('chatInput').value.trim(); if(!txt) return; let r=push(ref(db,'kigoChat')); await set(r,{sender:'BASE',repa:chatSenderBase,text:txt,ts:Date.now()}); document.getElementById('chatInput').value=''; }
 function renderChatBase(){
  let box=document.getElementById('chatBox'); if(!box) return;
- let entries=Object.entries(chatLive).filter(([k,m])=> (m.repa===chatSenderBase || m.sender===chatSenderBase)).sort((a,b)=>a[1].ts-b[1].ts);
+ let entries=Object.entries(chatLive).filter(([k,m])=> m.repa===chatSenderBase || m.sender===chatSenderBase).sort((a,b)=>a[1].ts-b[1].ts);
  box.innerHTML=entries.map(([k,m])=>{
   let isBase=m.sender==='BASE';
-  return `<div style="display:flex;flex-direction:${isBase?'row-reverse':'row'};width:100%"><div class="chatBubble ${isBase?'chatBase':'chatJose'}"><b>${m.sender}:</b> ${m.text}<div style="font-size:8px;opacity:.6;margin-top:4px">${new Date(m.ts).toLocaleTimeString()}</div></div></div>`;
+  return `<div style="display:flex;flex-direction:${isBase?'row-reverse':'row'};width:100%"><div class="chatBubble ${isBase?'chatBase':'chatJose'}"><b>${m.sender}:</b> ${m.text}</div></div>`;
  }).join('');
  box.scrollTop=box.scrollHeight;
 }
 function renderChatRepa(){
  let box=document.getElementById('chatRepaBox'); if(!box) return;
- let entries=Object.entries(chatLive).filter(([k][m])=> m.repa==='José' || m.sender==='José').sort((a,b)=>a[1].ts-b[1].ts);
- box.innerHTML=entries.map(([k][m])=>{
+ let entries=Object.entries(chatLive).filter(([k,m])=> m.repa==='José' || m.sender==='José').sort((a,b)=>a[1].ts-b[1].ts);
+ box.innerHTML=entries.map(([k,m])=>{
   let isBase=m.sender==='BASE';
   return `<div style="display:flex;flex-direction:${isBase?'row':'row-reverse'};width:100%"><div class="chatBubble ${isBase?'chatBase':'chatJose'}" style="font-size:10px"><b>${m.sender}:</b> ${m.text}</div></div>`;
  }).join('');
@@ -453,11 +409,11 @@ onValue(ref(db,'kigoChat'),snap=>{
  let listAjuste=document.getElementById('listaRepasAjuste');
  if(listAjuste){
   let repas=Object.entries(repasData);
-  listAjuste.innerHTML=repas.map(([k][v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f3f4f6"><div><b style="font-size:11px">${v.nombre||k}</b> <span style="font-size:9px;color:#888">PIN: ${v.pin||'--'}</span> <span class="${v.online!==false?'dot on':'dot off'}" style="margin-left:6px"></span></div><div style="display:flex;gap:4px"><button class="icon-btn" style="width:28px;height:28px;font-size:10px" onclick="editarPinRepa('${k}')">✎</button><button class="icon-btn" style="width:28px;height:28px;font-size:10px;color:#ef4444" onclick="borrarRepa('${k}')">✕</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores</div>';
+  listAjuste.innerHTML=repas.map(([k,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f3f4f6"><div><b style="font-size:11px">${v.nombre||k}</b> <span style="font-size:9px;color:#888">PIN:${v.pin||'--'}</span> <span class="${v.online!==false?'dot on':'dot off'}" style="margin-left:6px"></span></div><div style="display:flex;gap:4px"><button class="icon-btn" onclick="editarPinRepa('${k}')">✎</button><button class="icon-btn" onclick="borrarRepa('${k}')">✕</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores</div>';
  }
 });
 
-window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText='Cancelar', confirmText='OK', showCancel=true, onConfirm=null, showEdit=false, editData=null}){
+window.mostrarModalElegante=({title='Aviso', text='Mensaje', cancelText='Cancelar', confirmText='OK', showCancel=true, onConfirm=null, showEdit=false, editData=null})=>{
  document.getElementById('modalTitle').innerText=title; document.getElementById('modalText').innerText=text;
  document.getElementById('modalCancel').innerText=cancelText; document.getElementById('modalConfirm').innerText=confirmText;
  document.getElementById('modalCancel').style.display=showCancel?'flex':'none';
@@ -471,7 +427,7 @@ window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText=
  document.getElementById('kigoOverlay').classList.add('show');
  document.getElementById('modalConfirm').onclick=()=>{ if(onConfirm) onConfirm(); else cerrarModal(); };
 }
-window.toggleJose=async function(){
+window.toggleJose=async()=>{
 joseOnline=!joseOnline;
 await set(ref(db,'kigoPins/repas/José'),{online:joseOnline, nombre:'José', ts:Date.now()});
 actualizarUIJose();
@@ -482,7 +438,7 @@ if(!dot) return;
 if(joseOnline){ dot.className='dot on'; txt.innerText='EN LÍNEA'; txt.style.color='#10b981'; btn.innerText='DESACTIVAR'; btn.style.background='#10b981'; }
 else{ dot.className='dot off'; txt.innerText='DESACTIVADO'; txt.style.color='#ef4444'; btn.innerText='ACTIVAR'; btn.style.background='#ef4444'; }
 }
-window.setServicio=function(s){
+window.setServicio=(s)=>{
 servicioActual=s;
 document.getElementById('btnRecoger').classList.toggle('active',s==='recoger');
 document.getElementById('btnComprar').classList.toggle('active',s==='comprar');
@@ -492,7 +448,7 @@ else{ document.getElementById('modoLista').style.display='none'; document.getEle
 pedido=null; document.getElementById('txtKm').innerText='-- km • -- min'; document.getElementById('txtCosto').innerText='$0';
 if(dirRend) dirRend.setDirections({routes:[]}); clearM();
 }
-window.setModo=function(m){
+window.setModo=(m)=>{
 if(servicioActual!=='recoger') return;
 modoActual=m;
 document.getElementById('modoLista').style.display=m==='lista'?'block':'none';
@@ -508,22 +464,21 @@ Object.entries(v).forEach(([k,d])=>{ if(!d) return; let dir=d.direccion||''; let
 clientesDB=m; renderClientes();
 });
 onValue(ref(db,'kigoTarifas'),snap=>{
- let v=snap.val();
- if(v){ tarifas={...tarifas,...v};
-  document.getElementById('cfgPrecioKm')&&(document.getElementById('cfgPrecioKm').value=v.precioKm||6);
-  document.getElementById('cfgCentro')&&(document.getElementById('cfgCentro').value=v.centro||v.mandado||35);
-  document.getElementById('cfgKmBase')&&(document.getElementById('cfgKmBase').value=v.kmBase||2);
-  document.getElementById('cfgLluviaLeve')&&(document.getElementById('cfgLluviaLeve').value=v.lluviaLeve||5);
-  document.getElementById('cfgLluviaMod')&&(document.getElementById('cfgLluviaMod').value=v.lluviaMod||10);
-  document.getElementById('cfgLluviaFuerte')&&(document.getElementById('cfgLluviaFuerte').value=v.lluviaFuerte||15);
-  document.getElementById('cfgClimaActual')&&(document.getElementById('cfgClimaActual').value=v.clima||'normal');
+ let v=snap.val(); if(v){ tarifas={...tarifas,...v};
+  let el1=document.getElementById('cfgPrecioKm'); if(el1) el1.value=v.precioKm||6;
+  let el2=document.getElementById('cfgCentro'); if(el2) el2.value=v.centro||v.mandado||35;
+  let el3=document.getElementById('cfgKmBase'); if(el3) el3.value=v.kmBase||2;
+  let el4=document.getElementById('cfgLluviaLeve'); if(el4) el4.value=v.lluviaLeve||5;
+  let el5=document.getElementById('cfgLluviaMod'); if(el5) el5.value=v.lluviaMod||10;
+  let el6=document.getElementById('cfgLluviaFuerte'); if(el6) el6.value=v.lluviaFuerte||15;
+  let el7=document.getElementById('cfgClimaActual'); if(el7) el7.value=v.clima||'normal';
  }
 });
 onValue(ref(db,'kigoConfig'),snap=>{
  let v=snap.val(); if(!v) return;
- document.getElementById('cfgNombreEmpresa')&&(document.getElementById('cfgNombreEmpresa').value=v.nombreEmpresa||'');
- document.getElementById('cfgLogo')&&(document.getElementById('cfgLogo').value=v.logo||'');
- if(v.logo) document.getElementById('previewLogo').innerHTML=`<img src="${v.logo}" style="max-width:120px;border-radius:12px">`;
+ let n1=document.getElementById('cfgNombreEmpresa'); if(n1) n1.value=v.nombreEmpresa||'';
+ let l1=document.getElementById('cfgLogo'); if(l1) l1.value=v.logo||'';
+ if(v.logo){ let pv=document.getElementById('previewLogo'); if(pv) pv.innerHTML=`<img src="${v.logo}" style="max-width:120px;border-radius:12px">`; }
 });
 onValue(ref(db,'kigoPins'),snap=>{
 let v=snap.val()||{}; repasData=v.repas||v||{};
@@ -535,7 +490,7 @@ let sel=document.getElementById('selRepa'); if(sel){ sel.innerHTML=html; if(!sel
 let selEdit=document.getElementById('editRepa'); if(selEdit) selEdit.innerHTML=html;
 mostrarEstadoRepa();
 });
-window.mostrarEstadoRepa=function(){
+window.mostrarEstadoRepa=()=>{
 let sel=document.getElementById('selRepa'); if(!sel) return;
 let d=repasData[sel.value]; let online=d&&typeof d==='object'?d.online!==false:true;
 let dot=document.getElementById('dotEstado'); let txt=document.getElementById('txtEstado');
@@ -546,19 +501,12 @@ else{ dot.className='dot off'; txt.innerText='OFFLINE'; txt.style.color='#ef4444
 onValue(ref(db,'kigoPedidosLive'),snap=>{
  let newVal=snap.val()||{};
  let newKeys=new Set(Object.keys(newVal));
- // Detectar pedidos nuevos que no estaban antes
  let isNew=false;
- for(let k of newKeys){ if(!prevPedidosKeys.has(k)){ isNew=true; break; } }
- if(isNew && prevPedidosKeys.size>0){
-  sonidoRappi();
-  // Mostrar alerta visual en repartidor si está en vista repartidor
-  if(document.getElementById('view-repartidor').classList.contains('active')){
-   mostrarModalElegante({title:'NUEVO PEDIDO',text:'Te llegó un pedido nuevo en tiempo real',showCancel:false});
-   setTimeout(cerrarModal,3000);
-  }
- }
- prevPedidosKeys=newKeys;
+ for(let k of newKeys){ if(!prevKeys.has(k)){ isNew=true; break; } }
+ if(isNew && prevKeys.size>0){ sonidoRappi(); if(document.getElementById('view-repartidor').classList.contains('active')){ setTimeout(()=>{ mostrarModalElegante({title:'NUEVO PEDIDO',text:'Te llegó un pedido nuevo',showCancel:false}); setTimeout(cerrarModal,2500); },300); } }
+ prevKeys=newKeys;
  pedidosLive=newVal; renderSeguimiento(); renderRepaPanel();
+ if(prevKeys.size===0 && Object.keys(newVal).length>0){ prevKeys=newKeys; }
 });
 onValue(ref(db,'kigoNotificaciones'),snap=>{
 let v=snap.val()||{}; let entries=Object.entries(v).sort((a,b)=>b[1].ts-a[1].ts);
@@ -570,7 +518,7 @@ onValue(ref(db,'kigoHistorial'),snap=>{ historialLive=snap.val()||{}; renderHist
 
 function calcularHoraRecogida(ts, minutos){ if(!minutos) return ''; let m=parseInt(minutos); let fecha=new Date(ts + m*60000); return `Recoger a las ${fecha.toLocaleTimeString('es-MX',{hour:'numeric',minute:'2-digit',hour12:true})}`; }
 function getUbicacionRepa(){ return new Promise((resolve)=>{ if(!navigator.geolocation){ resolve(null); return; } navigator.geolocation.getCurrentPosition(pos=>{ resolve({lat:pos.coords.latitude,lng:pos.coords.longitude}); },()=>{ resolve(null); },{enableHighAccuracy:true,timeout:5000}); }); }
-window.filtrarSeg=function(f){ filtroSeg=f; document.querySelectorAll('.tabSeg').forEach(b=>b.classList.remove('active')); if(f==='todos') document.getElementById('tabTodos').classList.add('active'); if(f==='pendiente') document.getElementById('tabPend').classList.add('active'); if(f==='camino') document.getElementById('tabCam').classList.add('active'); if(f==='finalizado') document.getElementById('tabFin').classList.add('active'); renderSeguimiento(); }
+window.filtrarSeg=(f)=>{ filtroSeg=f; document.querySelectorAll('.tabSeg').forEach(b=>b.classList.remove('active')); document.getElementById('tab'+(f==='todos'?'Todos':f==='pendiente'?'Pend':f==='camino'?'Cam':'Fin')).classList.add('active'); renderSeguimiento(); }
 function renderSeguimiento(){
 let lista=document.getElementById('listaSeguimiento'); if(!lista) return;
 let entries=Object.entries(pedidosLive).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
@@ -586,12 +534,12 @@ return `<div class="cardPedido" style="${esFin?'border:2px solid #10b981;backgro
 function renderRepaPanel(){
 let listaEspera=document.getElementById('listaEspera'); let listaActivos=document.getElementById('listaActivos'); if(!listaEspera) return;
 let entries=Object.entries(pedidosLive).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
-let enEspera=entries.filter(([k][p])=>(p.etapa||'pendiente')==='pendiente');
-let misActivos=entries.filter(([k][p])=>p.repaAsignado===repaPanelActual && ['camino','en camino','recogido','entrega'].includes(p.etapa||''));
+let enEspera=entries.filter(([k,p])=>(p.etapa||'pendiente')==='pendiente');
+let misActivos=entries.filter(([k,p])=>p.repaAsignado===repaPanelActual && ['camino','en camino','recogido','entrega'].includes(p.etapa||''));
 document.getElementById('countEspera').innerText=enEspera.length; document.getElementById('countActivos').innerText=misActivos.length;
 if(!misActivos.length){ listaActivos.innerHTML='<div style="text-align:center;padding:16px;color:#999;font-size:10px;border:1.5px dashed #e5e7eb;border-radius:12px">Sin activo</div>'; }
 else{
- listaActivos.innerHTML=misActivos.map(([id][p])=>{
+ listaActivos.innerHTML=misActivos.map(([id,p])=>{
   let codigo=id.substring(1,7).toUpperCase(); let etapa=p.etapa; let total=(p.costoSugerido||0)+(p.costoExtra||0);
   let cfg=etapa==='camino'||etapa==='en camino'?{l:'VOY EN CAMINO A RECOGER',bg:'rgba(59,130,246,.12)',c:'#3b82f6',n:'recogido'}:etapa==='recogido'?{l:'RECOGIDO',bg:'rgba(139,92,246,.12)',c:'#8b5cf6',n:'entrega'}:{l:'VOY EN CAMINO A ENTREGAR',bg:'rgba(245,158,11,.12)',c:'#f59e0b',n:'finalizado'};
   let call=etapa==='camino'||etapa==='en camino'?`LLAMAR A QUIEN RECOGE ${p.telefonoRecogida||''}`:`LLAMAR A QUIEN RECIBE ${p.telefono||''}`; let tel=etapa==='camino'||etapa==='en camino'?p.telefonoRecogida:p.telefono;
@@ -607,29 +555,24 @@ let filtro=document.getElementById('filtroHist')?.value.toLowerCase()||''; let e
 if(!fil.length){ lista.innerHTML='<div style="text-align:center;padding:30px;color:#999;font-size:11px">Sin historial</div>'; return; }
 lista.innerHTML=fil.map(([id,p])=>{ let fecha=new Date(p.finalizadoEn||p.ts||Date.now()); let codigo=id.substring(1,7).toUpperCase(); return `<div class="cardPedido" style="border-left:4px solid #10b981;cursor:pointer" onclick="verHistorial('${id}')"><div style="display:flex;justify-content:space-between"><span style="font-size:10px;font-weight:800;background:#10b981;color:#fff;padding:3px 8px;border-radius:6px">#${codigo} FINALIZADO</span><span style="font-size:9px;color:#888">${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString()}</span></div><div style="font-size:11px;font-weight:800;margin-top:6px">${p.cliente}</div><div style="font-size:9px;color:#555;margin-top:4px"><b>Recogida:</b> ${p.dirRecogida}</div><div style="font-size:9px;color:#555"><b>Entrega:</b> ${p.entrega}</div></div>`; }).join('');
 }
-window.verHistorial=function(id){ let p=historialLive[id]; if(!p) return; document.getElementById('histDetalle').innerHTML=`<div style="background:#f7f7f7;border-radius:12px;padding:12px"><div style="font-size:11px"><b>Código:</b> ${id.substring(1,7).toUpperCase()}</div><div style="font-size:10px;margin-top:6px"><b>Fecha:</b> ${new Date(p.ts).toLocaleString()}</div><div style="font-size:10px"><b>Finalizado:</b> ${new Date(p.finalizadoEn).toLocaleString()}</div><div style="font-size:10px;margin-top:6px;background:#fef3c7;padding:6px;border-radius:8px;font-weight:800">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div><div style="margin-top:10px;font-size:11px;font-weight:800">Cliente: ${p.cliente}</div><div style="font-size:10px"><b>Recogida:</b> ${p.dirRecogida}</div><div style="font-size:10px"><b>Entrega:</b> ${p.entrega}</div><div style="font-size:10px"><b>Tel:</b> ${p.telefono||''}</div><div style="display:flex;gap:8px;margin-top:10px"><span style="background:#0a0a0a;color:#fff;padding:6px 10px;border-radius:20px;font-size:11px">${p.km} km</span><span style="background:#d1fae5;color:#10b981;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span></div></div>`; document.getElementById('overlayHist').classList.add('show'); }
-window.llamarCliente=function(tel){ if(!tel){ mostrarModalElegante({title:'Sin teléfono',text:'No hay teléfono',showCancel:false}); return; } window.location.href='tel:'+tel; }
-window.aceptarPedido=async function(id){ if(!joseOnline){ mostrarModalElegante({title:'Desactivado',text:'Actívate primero',showCancel:false}); return; } await update(ref(db,'kigoPedidosLive/'+id),{repaAsignado:'José',etapa:'camino'}); let pos=await getUbicacionRepa(); let p=pedidosLive[id]; if(pos) trazarRutaRepa(pos, await geo(p.dirRecogida), p); else verRutaRepa(id); }
-window.cambiarEtapaConRuta=async function(id, nuevaEtapa, tipoRuta){ let pos=await getUbicacionRepa(); let p=pedidosLive[id]; if(nuevaEtapa==='finalizado'){ await update(ref(db,'kigoPedidosLive/'+id),{etapa:'finalizado',finalizadoEn:Date.now()}); mostrarModalElegante({title:'Entregado',text:'Se quitó de tu panel. Queda en seguimiento',showCancel:false}); }else{ await update(ref(db,'kigoPedidosLive/'+id),{etapa:nuevaEtapa}); if(tipoRuta==='recogida'){ if(pos) trazarRutaRepa(pos, await geo(p.dirRecogida), p); }else{ if(pos) trazarRutaRepa(pos, await geo(p.entrega), p); } } }
+window.verHistorial=(id)=>{ let p=historialLive[id]; if(!p) return; document.getElementById('histDetalle').innerHTML=`<div style="background:#f7f7f7;border-radius:12px;padding:12px"><div style="font-size:11px"><b>Código:</b> ${id.substring(1,7).toUpperCase()}</div><div style="font-size:10px;margin-top:6px"><b>Fecha:</b> ${new Date(p.ts).toLocaleString()}</div><div style="font-size:10px"><b>Finalizado:</b> ${new Date(p.finalizadoEn).toLocaleString()}</div><div style="font-size:10px;margin-top:6px;background:#fef3c7;padding:6px;border-radius:8px;font-weight:800">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div><div style="margin-top:10px;font-size:11px;font-weight:800">Cliente: ${p.cliente}</div><div style="font-size:10px"><b>Recogida:</b> ${p.dirRecogida}</div><div style="font-size:10px"><b>Entrega:</b> ${p.entrega}</div><div style="font-size:10px"><b>Tel:</b> ${p.telefono||''}</div><div style="display:flex;gap:8px;margin-top:10px"><span style="background:#0a0a0a;color:#fff;padding:6px 10px;border-radius:20px;font-size:11px">${p.km} km</span><span style="background:#d1fae5;color:#10b981;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span></div></div>`; document.getElementById('overlayHist').classList.add('show'); }
+window.llamarCliente=(tel)=>{ if(!tel){ mostrarModalElegante({title:'Sin teléfono',text:'No hay teléfono',showCancel:false}); return; } window.location.href='tel:'+tel; }
+window.aceptarPedido=async(id)=>{ if(!joseOnline){ mostrarModalElegante({title:'Desactivado',text:'Actívate primero',showCancel:false}); return; } await update(ref(db,'kigoPedidosLive/'+id),{repaAsignado:'José',etapa:'camino'}); let pos=await getUbicacionRepa(); let p=pedidosLive[id]; if(pos) trazarRutaRepa(pos, await geo(p.dirRecogida), p); else verRutaRepa(id); }
+window.cambiarEtapaConRuta=async(id, nuevaEtapa, tipoRuta)=>{ let pos=await getUbicacionRepa(); let p=pedidosLive[id]; if(nuevaEtapa==='finalizado'){ await update(ref(db,'kigoPedidosLive/'+id),{etapa:'finalizado',finalizadoEn:Date.now()}); mostrarModalElegante({title:'Entregado',text:'Se quitó de tu panel. Queda en seguimiento',showCancel:false}); }else{ await update(ref(db,'kigoPedidosLive/'+id),{etapa:nuevaEtapa}); if(tipoRuta==='recogida'){ if(pos) trazarRutaRepa(pos, await geo(p.dirRecogida), p); }else{ if(pos) trazarRutaRepa(pos, await geo(p.entrega), p); } } }
 function trazarRutaRepa(origen, destino, p){ if(!origen||!destino||!mapRepa) return; let dir=new google.maps.DirectionsService(); dir.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ if(!dirRendRepa) dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); dirRendRepa.setMap(mapRepa); dirRendRepa.setDirections(r); clearMRepa(); addMRepa(origen,'#3b82f6'); addMRepa(destino,'#ef4444'); let leg=r.routes[0].legs[0]; document.getElementById('txtKmRepa').innerText=leg.distance.text; document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0)); document.getElementById('txtTiempoRepa').innerText=leg.duration.text+' • '+calcularHoraRecogida(p.ts,p.tiempoRecogida); } }); }
-window.verRutaRepa=async function(id){ let p=pedidosLive[id]; if(!p) return; let o=await geo(p.dirRecogida); let d=await geo(p.entrega); if(!o||!d) return; let etapa=p.etapa||'pendiente'; let origen=o; let destino=d; if(['camino','en camino'].includes(etapa)){ let pos=await getUbicacionRepa(); if(pos) origen=pos; destino=o; }else if(['entrega','recogido'].includes(etapa)){ let pos=await getUbicacionRepa(); if(pos) origen=pos; destino=d; } let dir=new google.maps.DirectionsService(); dir.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ if(!dirRendRepa) dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); dirRendRepa.setMap(mapRepa); dirRendRepa.setDirections(r); clearMRepa(); addMRepa(origen,'#3b82f6'); addMRepa(destino,'#ef4444'); let leg=r.routes[0].legs[0]; document.getElementById('txtKmRepa').innerText=leg.distance.text; document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0)); document.getElementById('txtTiempoRepa').innerText=leg.duration.text; } }); }
-window.registrarHistorial=async function(id){ let p=pedidosLive[id]; if(!p) return; let histRef=push(ref(db,'kigoHistorial')); await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+id)); mostrarModalElegante({title:'Historial',text:'Registrado',showCancel:false}); }
-window.verDetalles=function(id){ let p=pedidosLive[id]; if(!p) return; pedidoEditId=id; pedidoEditData=p; document.getElementById('detalleContent').innerHTML=`<div style="font-size:10px;color:#666;background:#f7f7f7;border-radius:10px;padding:10px"><div><b>Código:</b> ${id.substring(1,7).toUpperCase()}</div><div style="margin-top:4px;font-weight:800">${calcularHoraRecogida(p.ts,p.tiempoRecogida)} - ${p.etapa}</div><div><b>Cliente:</b> ${p.cliente}</div><div><b>Recoge:</b> ${p.dirRecogida}</div><div><b>Entrega:</b> ${p.entrega}</div></div>`; document.getElementById('editRecogida').value=p.dirRecogida||''; document.getElementById('editEntrega').value=p.entrega||''; document.getElementById('editTelEnt').value=p.telefono||''; document.getElementById('editRefEnt').value=p.referencia||''; document.getElementById('editCostoExtra').value=p.costoExtra||0; let selEdit=document.getElementById('editRepa'); if(selEdit) selEdit.value=p.repaAsignado||'José'; calcTotalEdit(); document.getElementById('overlayDetalle').classList.add('show'); }
-window.addCosto=function(n){ let inp=document.getElementById('editCostoExtra'); inp.value=(parseInt(inp.value||0)+n); calcTotalEdit(); }
-window.calcTotalEdit=function(){ let base=pedidoEditData?.costoSugerido||0; let extra=parseInt(document.getElementById('editCostoExtra').value||0); document.getElementById('txtTotalEdit').innerText='$'+(base+extra); }
-window.guardarEdicion=async function(){ if(!pedidoEditId) return; let extra=parseInt(document.getElementById('editCostoExtra').value||0); await update(ref(db,'kigoPedidosLive/'+pedidoEditId),{dirRecogida:document.getElementById('editRecogida').value,entrega:document.getElementById('editEntrega').value,telefono:document.getElementById('editTelEnt').value,referencia:document.getElementById('editRefEnt').value,repaAsignado:document.getElementById('editRepa').value,costoExtra:extra}); mostrarModalElegante({title:'Actualizado',text:'Actualizado',showCancel:false}); cerrarDetalle(); }
-window.cancelarDirecto=async function(id){ let p=pedidosLive[id]; if(!p) return; pedidoEditId=id; mostrarModalElegante({title:'Cancelar pedido',text:`¿Cancelar pedido de ${p.cliente}? A José le sonará alerta roja`,confirmText:'Sí, cancelar',onConfirm:async()=>{ let codigo=id.substring(1,7).toUpperCase(); let notifRef=push(ref(db,'kigoNotificaciones')); await set(notifRef,{tipo:'cancelado',id:id,codigo:codigo,cliente:p.cliente,ts:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+id)); cerrarModal(); sonidoCancel(); }}); }
-window.finalizarPedido=async function(){ if(!pedidoEditId) return; let p=pedidosLive[pedidoEditId]; let histRef=push(ref(db,'kigoHistorial')); await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+pedidoEditId)); cerrarDetalle(); mostrarModalElegante({title:'Historial',text:'Enviado',showCancel:false}); }
-window.showView=function(v){
+window.verRutaRepa=async(id)=>{ let p=pedidosLive[id]; if(!p) return; let o=await geo(p.dirRecogida); let d=await geo(p.entrega); if(!o||!d) return; let etapa=p.etapa||'pendiente'; let origen=o; let destino=d; if(['camino','en camino'].includes(etapa)){ let pos=await getUbicacionRepa(); if(pos) origen=pos; destino=o; }else if(['entrega','recogido'].includes(etapa)){ let pos=await getUbicacionRepa(); if(pos) origen=pos; destino=d; } let dir=new google.maps.DirectionsService(); dir.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ if(!dirRendRepa) dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); dirRendRepa.setMap(mapRepa); dirRendRepa.setDirections(r); clearMRepa(); addMRepa(origen,'#3b82f6'); addMRepa(destino,'#ef4444'); let leg=r.routes[0].legs[0]; document.getElementById('txtKmRepa').innerText=leg.distance.text; document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0)); document.getElementById('txtTiempoRepa').innerText=leg.duration.text; } }); }
+window.registrarHistorial=async(id)=>{ let p=pedidosLive[id]; if(!p) return; let histRef=push(ref(db,'kigoHistorial')); await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+id)); mostrarModalElegante({title:'Historial',text:'Registrado',showCancel:false}); }
+window.verDetalles=(id)=>{ let p=pedidosLive[id]; if(!p) return; pedidoEditId=id; pedidoEditData=p; document.getElementById('detalleContent').innerHTML=`<div style="font-size:10px;color:#666;background:#f7f7f7;border-radius:10px;padding:10px"><div><b>Código:</b> ${id.substring(1,7).toUpperCase()}</div><div style="margin-top:4px;font-weight:800">${calcularHoraRecogida(p.ts,p.tiempoRecogida)} - ${p.etapa}</div><div><b>Cliente:</b> ${p.cliente}</div><div><b>Recoge:</b> ${p.dirRecogida}</div><div><b>Entrega:</b> ${p.entrega}</div></div>`; document.getElementById('editRecogida').value=p.dirRecogida||''; document.getElementById('editEntrega').value=p.entrega||''; document.getElementById('editTelEnt').value=p.telefono||''; document.getElementById('editRefEnt').value=p.referencia||''; document.getElementById('editCostoExtra').value=p.costoExtra||0; let selEdit=document.getElementById('editRepa'); if(selEdit) selEdit.value=p.repaAsignado||'José'; calcTotalEdit(); document.getElementById('overlayDetalle').classList.add('show'); }
+window.addCosto=(n)=>{ let inp=document.getElementById('editCostoExtra'); inp.value=(parseInt(inp.value||0)+n); calcTotalEdit(); }
+window.calcTotalEdit=()=>{ let base=pedidoEditData?.costoSugerido||0; let extra=parseInt(document.getElementById('editCostoExtra').value||0); document.getElementById('txtTotalEdit').innerText='$'+(base+extra); }
+window.guardarEdicion=async()=>{ if(!pedidoEditId) return; let extra=parseInt(document.getElementById('editCostoExtra').value||0); await update(ref(db,'kigoPedidosLive/'+pedidoEditId),{dirRecogida:document.getElementById('editRecogida').value,entrega:document.getElementById('editEntrega').value,telefono:document.getElementById('editTelEnt').value,referencia:document.getElementById('editRefEnt').value,repaAsignado:document.getElementById('editRepa').value,costoExtra:extra}); mostrarModalElegante({title:'Actualizado',text:'Actualizado',showCancel:false}); cerrarDetalle(); }
+window.cancelarDirecto=async(id)=>{ let p=pedidosLive[id]; if(!p) return; pedidoEditId=id; mostrarModalElegante({title:'Cancelar pedido',text:`¿Cancelar pedido de ${p.cliente}? A José le sonará alerta roja`,confirmText:'Sí, cancelar',onConfirm:async()=>{ let codigo=id.substring(1,7).toUpperCase(); let notifRef=push(ref(db,'kigoNotificaciones')); await set(notifRef,{tipo:'cancelado',id:id,codigo:codigo,cliente:p.cliente,ts:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+id)); cerrarModal(); sonidoCancel(); }}); }
+window.finalizarPedido=async()=>{ if(!pedidoEditId) return; let p=pedidosLive[pedidoEditId]; let histRef=push(ref(db,'kigoHistorial')); await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+pedidoEditId)); cerrarDetalle(); mostrarModalElegante({title:'Historial',text:'Enviado',showCancel:false}); }
+window.showView=(v)=>{
 document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
 document.getElementById('view-'+v).classList.add('active');
-document.getElementById('bP').classList.toggle('active',v==='pedidos');
-document.getElementById('bS').classList.toggle('active',v==='seguimiento');
-document.getElementById('bR').classList.toggle('active',v==='repartidor');
-document.getElementById('bCH').classList.toggle('active',v==='chat');
-document.getElementById('bH').classList.toggle('active',v==='historial');
-document.getElementById('bC').classList.toggle('active',v==='clientes');
-document.getElementById('bA').classList.toggle('active',v==='ajustes');
+document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active'));
+document.getElementById('b'+(v==='pedidos'?'P':v==='seguimiento'?'S':v==='repartidor'?'R':v==='chat'?'CH':v==='historial'?'H':v==='clientes'?'C':'A')).classList.add('active');
 if(v==='pedidos'&&map) setTimeout(()=>google.maps.event.trigger(map,'resize'),200);
 if(v==='repartidor'&&mapRepa) setTimeout(()=>{ google.maps.event.trigger(mapRepa,'resize'); renderRepaPanel(); },200);
 if(v==='chat') renderChatBase();
@@ -656,17 +599,17 @@ function clearMRepa(){markersRepa.forEach(m=>m.setMap(null));markersRepa=[];}
 function addM(p,c){let m=new google.maps.Marker({position:p,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:c,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});markers.push(m);}
 function addMRepa(p,c){let m=new google.maps.Marker({position:p,map:mapRepa,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:c,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});markersRepa.push(m);}
 function geo(dir){return new Promise(r=>{new google.maps.Geocoder().geocode({address:dir+', Dolores Hidalgo, Mexico'},(re,s)=>{if(s==='OK'&&re[0]){let l=re[0].geometry.location;r({lat:l.lat(),lng:l.lng()});}else r(null);});});}
-window.toggleClear=function(inputId, btnId){ let v=document.getElementById(inputId)?.value||''; let b=document.getElementById(btnId); if(!b) return; if(v.length>0) b.classList.add('show'); else b.classList.remove('show'); }
-window.limpiarCampo=function(inputId, btnId){ let inp=document.getElementById(inputId); if(inp) inp.value=''; let b=document.getElementById(btnId); if(b) b.classList.remove('show'); if(inputId==='buscCli'){ clienteSel=null; document.getElementById('boxSel').style.display='none'; document.getElementById('listCli').style.display='none'; document.getElementById('txtKm').innerText='-- km • -- min'; document.getElementById('txtCosto').innerText='$0'; clearM(); if(dirRend) dirRend.setDirections({routes:[]}); } }
-window.limpiarTodoPedido=function(){ clienteSel=null; pedido=null; ['buscCli','dirEntrega','tiempoRecogida','telEntrega','refEntrega','nuevoNombre','nuevoDirRecoge','nuevoTel','nuevoDirEntrega','nuevoTiempoRecogida','nuevoTelEntrega','nuevoRefEntrega','compTipo','compReferencia','compAlmacen','compDirEntrega','compNombreRecibe','compTel','compRefEntrega','compTiempo'].forEach(id=>{ let el=document.getElementById(id); if(el) el.value=''; }); document.getElementById('boxSel').style.display='none'; document.getElementById('listCli').style.display='none'; document.getElementById('txtKm').innerText='-- km • -- min'; document.getElementById('txtCosto').innerText='$0'; document.querySelectorAll('.btn-clear').forEach(b=>b.classList.remove('show')); clearM(); if(dirRend) dirRend.setDirections({routes:[]}); }
-window.guardarClienteReal=async function(){ let nombre=document.getElementById('cliNombre')?.value.trim(); let dir=document.getElementById('cliDir')?.value.trim(); let tel=document.getElementById('cliTel')?.value.trim(); if(!nombre||!dir){ mostrarModalElegante({title:'Falta dato',text:'Escribe nombre y direccion',showCancel:false}); return; } let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await set(ref(db,'kigoClientesDir/'+key),{direccion:dir,telefono:tel,nombreOriginal:nombre,ts:Date.now()}); document.getElementById('cliNombre').value=''; document.getElementById('cliDir').value=''; document.getElementById('cliTel').value=''; }
-window.guardarDesdePedidoNuevo=async function(){ let nombre=document.getElementById('nuevoNombre').value.trim(); let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim(); let tel=document.getElementById('nuevoTel').value.trim(); if(!nombre||!dirRecoge){ mostrarModalElegante({title:'Falta dato',text:'Nombre y direccion obligatoria',showCancel:false}); return; } let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await set(ref(db,'kigoClientesDir/'+key),{direccion:dirRecoge,telefono:tel,nombreOriginal:nombre,ts:Date.now()}); mostrarModalElegante({title:'Guardado',text:nombre+' guardado',showCancel:false}); }
-window.renderClientes=function(){ let lista=document.getElementById('listaClientes'); let filtro=document.getElementById('filtroCli')?.value.toLowerCase()||''; if(!lista) return; let entries=Object.entries(clientesDB).filter(([n])=>n.toLowerCase().includes(filtro)).sort((a,b)=>a[0].localeCompare(b[0])); document.getElementById('countCli').innerText=entries.length; if(!entries.length){ lista.innerHTML='<div style="text-align:center;padding:20px;color:#999;font-size:11px">No hay clientes</div>'; return; } lista.innerHTML=entries.map(([n,d])=>`<div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between"><div><b style="font-size:11px">${n}</b><br><small style="font-size:10px;color:#666">${d.direccion}</small></div><div style="display:flex;gap:6px"><button class="icon-btn" onclick="editarCliente('${n.replace(/'/g,"\\'")}')">✎</button><button class="icon-btn" onclick="borrarClienteDB('${n.replace(/'/g,"\\'")}')">🗑</button></div></div>`).join(''); }
-window.editarCliente=function(n){ let d=clientesDB[n]; if(!d) return; mostrarModalElegante({title:'Editar cliente',text:'Modifica y guarda',confirmText:'Guardar cambios',showEdit:true,editData:{...d, oldKey:d._key},onConfirm:async()=>{ let newNombre=document.getElementById('editNombre').value.trim(); let newDir=document.getElementById('editDir').value.trim(); let newTel=document.getElementById('editTel').value.trim(); if(!newNombre||!newDir){ alert('Falta'); return; } let oldKey=document.getElementById('editNombre').dataset.oldKey; let newKey=newNombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); if(newKey!==oldKey){ await remove(ref(db,'kigoClientesDir/'+oldKey)); } await set(ref(db,'kigoClientesDir/'+newKey),{direccion:newDir,telefono:newTel,nombreOriginal:newNombre,ts:Date.now()}); cerrarModal(); }}); }
-window.borrarClienteDB=async function(n){ let d=clientesDB[n]; mostrarModalElegante({title:'Borrar',text:'Borrar '+n+'?',confirmText:'Borrar',onConfirm:async()=>{ await remove(ref(db,'kigoClientesDir/'+d._key)); cerrarModal(); }}); }
-window.buscarCliente=function(){ let q=document.getElementById('buscCli').value.toLowerCase().trim(); let list=document.getElementById('listCli'); let todos=Object.keys(clientesDB); if(!q){list.style.display='none';return;} let fil=todos.filter(n=>n.toLowerCase().includes(q)).slice(0,12); if(!fil.length){list.innerHTML='<div style="padding:10px;font-size:10px">No encontrado</div>';list.style.display='block';return;} list.innerHTML=fil.map(n=>{let d=clientesDB[n];return `<div onclick="seleccionar('${n.replace(/'/g,"\\'")}')" style="padding:9px;border-bottom:1px solid #eee;cursor:pointer"><b style="font-size:11px">${n}</b><br><small style="font-size:9px">${d.direccion}</small></div>`;}).join(''); list.style.display='block'; }
-window.seleccionar=function(n){ let d=clientesDB[n]; if(!d) return; clienteSel={nombre:n,direccion:d.direccion,telefono:d.telefono}; document.getElementById('buscCli').value=n;document.getElementById('listCli').style.display='none'; document.getElementById('boxSel').style.display='block'; document.getElementById('txtNom').innerText=n; document.getElementById('txtDirSel').innerText=d.direccion; document.getElementById('txtTelSel').innerText=d.telefono||'SIN NÚMERO'; toggleClear('buscCli','clearBusc'); geo(d.direccion).then(p=>{if(p&&map){map.setCenter(p);map.setZoom(15);clearM();addM(p,'#ef4444');}}); }
-window.cotizar=async function(){
+window.toggleClear=(inputId, btnId)=>{ let v=document.getElementById(inputId)?.value||''; let b=document.getElementById(btnId); if(!b) return; if(v.length>0) b.classList.add('show'); else b.classList.remove('show'); }
+window.limpiarCampo=(inputId, btnId)=>{ let inp=document.getElementById(inputId); if(inp) inp.value=''; let b=document.getElementById(btnId); if(b) b.classList.remove('show'); if(inputId==='buscCli'){ clienteSel=null; document.getElementById('boxSel').style.display='none'; document.getElementById('listCli').style.display='none'; document.getElementById('txtKm').innerText='-- km • -- min'; document.getElementById('txtCosto').innerText='$0'; clearM(); if(dirRend) dirRend.setDirections({routes:[]}); } }
+window.limpiarTodoPedido=()=>{ clienteSel=null; pedido=null; ['buscCli','dirEntrega','tiempoRecogida','telEntrega','refEntrega','nuevoNombre','nuevoDirRecoge','nuevoTel','nuevoDirEntrega','nuevoTiempoRecogida','nuevoTelEntrega','nuevoRefEntrega','compTipo','compReferencia','compAlmacen','compDirEntrega','compNombreRecibe','compTel','compRefEntrega','compTiempo'].forEach(id=>{ let el=document.getElementById(id); if(el) el.value=''; }); document.getElementById('boxSel').style.display='none'; document.getElementById('listCli').style.display='none'; document.getElementById('txtKm').innerText='-- km • -- min'; document.getElementById('txtCosto').innerText='$0'; document.querySelectorAll('.btn-clear').forEach(b=>b.classList.remove('show')); clearM(); if(dirRend) dirRend.setDirections({routes:[]}); }
+window.guardarClienteReal=async()=>{ let nombre=document.getElementById('cliNombre')?.value.trim(); let dir=document.getElementById('cliDir')?.value.trim(); let tel=document.getElementById('cliTel')?.value.trim(); if(!nombre||!dir){ mostrarModalElegante({title:'Falta dato',text:'Escribe nombre y direccion',showCancel:false}); return; } let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await set(ref(db,'kigoClientesDir/'+key),{direccion:dir,telefono:tel,nombreOriginal:nombre,ts:Date.now()}); document.getElementById('cliNombre').value=''; document.getElementById('cliDir').value=''; document.getElementById('cliTel').value=''; }
+window.guardarDesdePedidoNuevo=async()=>{ let nombre=document.getElementById('nuevoNombre').value.trim(); let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim(); let tel=document.getElementById('nuevoTel').value.trim(); if(!nombre||!dirRecoge){ mostrarModalElegante({title:'Falta dato',text:'Nombre y direccion obligatoria',showCancel:false}); return; } let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); await set(ref(db,'kigoClientesDir/'+key),{direccion:dirRecoge,telefono:tel,nombreOriginal:nombre,ts:Date.now()}); mostrarModalElegante({title:'Guardado',text:nombre+' guardado',showCancel:false}); }
+window.renderClientes=()=>{ let lista=document.getElementById('listaClientes'); let filtro=document.getElementById('filtroCli')?.value.toLowerCase()||''; if(!lista) return; let entries=Object.entries(clientesDB).filter(([n])=>n.toLowerCase().includes(filtro)).sort((a,b)=>a[0].localeCompare(b[0])); document.getElementById('countCli').innerText=entries.length; if(!entries.length){ lista.innerHTML='<div style="text-align:center;padding:20px;color:#999;font-size:11px">No hay clientes</div>'; return; } lista.innerHTML=entries.map(([n,d])=>`<div style="padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between"><div><b style="font-size:11px">${n}</b><br><small style="font-size:10px;color:#666">${d.direccion}</small></div><div style="display:flex;gap:6px"><button class="icon-btn" onclick="editarCliente('${n.replace(/'/g,"\\'")}')">✎</button><button class="icon-btn" onclick="borrarClienteDB('${n.replace(/'/g,"\\'")}')">🗑</button></div></div>`).join(''); }
+window.editarCliente=(n)=>{ let d=clientesDB[n]; if(!d) return; mostrarModalElegante({title:'Editar cliente',text:'Modifica y guarda',confirmText:'Guardar cambios',showEdit:true,editData:{...d, oldKey:d._key},onConfirm:async()=>{ let newNombre=document.getElementById('editNombre').value.trim(); let newDir=document.getElementById('editDir').value.trim(); let newTel=document.getElementById('editTel').value.trim(); if(!newNombre||!newDir){ alert('Falta'); return; } let oldKey=document.getElementById('editNombre').dataset.oldKey; let newKey=newNombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120); if(newKey!==oldKey){ await remove(ref(db,'kigoClientesDir/'+oldKey)); } await set(ref(db,'kigoClientesDir/'+newKey),{direccion:newDir,telefono:newTel,nombreOriginal:newNombre,ts:Date.now()}); cerrarModal(); }}); }
+window.borrarClienteDB=async(n)=>{ let d=clientesDB[n]; mostrarModalElegante({title:'Borrar',text:'Borrar '+n+'?',confirmText:'Borrar',onConfirm:async()=>{ await remove(ref(db,'kigoClientesDir/'+d._key)); cerrarModal(); }}); }
+window.buscarCliente=()=>{ let q=document.getElementById('buscCli').value.toLowerCase().trim(); let list=document.getElementById('listCli'); let todos=Object.keys(clientesDB); if(!q){list.style.display='none';return;} let fil=todos.filter(n=>n.toLowerCase().includes(q)).slice(0,12); if(!fil.length){list.innerHTML='<div style="padding:10px;font-size:10px">No encontrado</div>';list.style.display='block';return;} list.innerHTML=fil.map(n=>{let d=clientesDB[n];return `<div onclick="seleccionar('${n.replace(/'/g,"\\'")}')" style="padding:9px;border-bottom:1px solid #eee;cursor:pointer"><b style="font-size:11px">${n}</b><br><small style="font-size:9px">${d.direccion}</small></div>`;}).join(''); list.style.display='block'; }
+window.seleccionar=(n)=>{ let d=clientesDB[n]; if(!d) return; clienteSel={nombre:n,direccion:d.direccion,telefono:d.telefono}; document.getElementById('buscCli').value=n;document.getElementById('listCli').style.display='none'; document.getElementById('boxSel').style.display='block'; document.getElementById('txtNom').innerText=n; document.getElementById('txtDirSel').innerText=d.direccion; document.getElementById('txtTelSel').innerText=d.telefono||'SIN NÚMERO'; toggleClear('buscCli','clearBusc'); geo(d.direccion).then(p=>{if(p&&map){map.setCenter(p);map.setZoom(15);clearM();addM(p,'#ef4444');}}); }
+window.cotizar=async()=>{
 let o=null, de=null;
 if(servicioActual==='comprar'){
 let almacen=document.getElementById('compAlmacen').value.trim(); let dirEnt=document.getElementById('compDirEntrega').value.trim();
@@ -684,7 +627,7 @@ let nombre=document.getElementById('nuevoNombre').value.trim(); let dirRecoge=do
 if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
 dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; dirRend.setDirections(r); clearM(); addM(o,'#ef4444'); addM(de,'#0a0a0a'); let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let extraKm=Math.max(0,km-(tarifas.kmBase||2)); let base=tarifas.centro||tarifas.mandado||35; let costoKm=extraKm*(tarifas.precioKm||6); let climaExtra=0; if(tarifas.clima==='leve') climaExtra=tarifas.lluviaLeve||0; else if(tarifas.clima==='moderada') climaExtra=tarifas.lluviaMod||0; else if(tarifas.clima==='fuerte') climaExtra=tarifas.lluviaFuerte||0; let costo=Math.round(base+costoKm+climaExtra); pedido={servicio:'recoger',clienteSel:{nombre:nombreCliente,direccion:clienteSel.direccion,telefono:telRecogida},entrega:entrega,telEntrega:telEntrega,refEntrega:refEntrega,tiempoRecogida:tiempoRecogida,de,o,km,min,costo}; document.getElementById('txtKm').innerText=`${km}km • ${min}m`; document.getElementById('txtCosto').innerText=`$${costo}`; } });
 }
-window.confirmar=async function(){
+window.confirmar=async()=>{
 if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
 let repa=document.getElementById('selRepa')?.value||'José';
 let nr=push(ref(db,'kigoPedidosLive'));
