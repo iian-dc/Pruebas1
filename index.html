@@ -47,9 +47,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 .estadoFin{color:#10b981;background:#d1fae5;padding:3px 8px;border-radius:20px;font-size:8px;font-weight:800}
 .xclose{position:absolute;right:12px;top:12px;width:28px;height:28px;border-radius:50%;border:none;background:#f3f4f6;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .repaCard{border:1.5px solid #111;border-radius:16px;padding:12px;background:#fff;min-width:280px;max-width:300px;flex-shrink:0}
-.repaCardActiva{border:2px solid #0a0a0a;border-radius:18px;padding:14px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.repaCardActiva{border:2px solid #0a0a0a;border-radius:22px;padding:16px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.08)}
 .sliderEspera{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
 .sliderEspera::-webkit-scrollbar{display:none}
+.btnAccion{width:100%;height:52px;border-radius:16px;border:none;font-weight:800;font-size:11px;letter-spacing:.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
+.btnCall{width:100%;height:44px;border-radius:12px;border:1.5px solid #111;background:#fff;font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;margin-top:8px}
 </style>
 </head>
 <body>
@@ -205,18 +207,19 @@ CLIENTE NUEVO</button>
 </div>
 <div id="mapRepa"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-<div style="background:#0a0a0a;color:#fff;border-radius:12px;height:42px;display:flex;align-items:center;justify-content:center;gap:6px">
+<div style="background:#0a0a0a;color:#fff;border-radius:12px;height:48px;display:flex;align-items:center;justify-content:center;gap:6px">
 <svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.8" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
 <span id="txtKmRepa" style="font-size:11px;font-weight:700">-- km</span>
 <span style="width:1px;height:16px;background:#333"></span>
-<span id="txtCostoRepa" style="font-size:13px;font-weight:800">$0</span>
+<span id="txtCostoRepa" style="font-size:18px;font-weight:800;letter-spacing:.3px">$0</span>
 </div>
-<div style="background:#fff;border:1.5px solid #0a0a0a;border-radius:12px;height:42px;display:flex;align-items:center;justify-content:center;gap:6px">
+<div style="background:#fff;border:1.5px solid #0a0a0a;border-radius:12px;height:48px;display:flex;align-items:center;justify-content:center;gap:6px">
 <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
 <span id="txtTiempoRepa" style="font-size:11px;font-weight:800">--</span>
 </div>
 </div>
 </div>
+
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
 <span style="font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px">
@@ -227,6 +230,7 @@ PEDIDO ACTIVO
 </div>
 <div id="listaActivos"></div>
 </div>
+
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
 <span style="font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px">
@@ -505,6 +509,7 @@ ${esFinalizado?`<div style="margin-top:10px"><button class="btn" style="height:3
 }).join('');
 }
 
+// PANEL REPARTIDOR - UN SOLO BOTÓN ELEGANTE
 function renderRepaPanel(){
 let listaEspera=document.getElementById('listaEspera');
 let listaActivos=document.getElementById('listaActivos');
@@ -522,50 +527,62 @@ if(!misActivos.length){
  listaActivos.innerHTML=misActivos.map(([id,p])=>{
   let codigo=id.substring(1,7).toUpperCase();
   let etapa=p.etapa;
-  let btns='';
+  let precioTotal=(p.costoSugerido||0)+(p.costoExtra||0);
+  let config={};
   if(etapa==='camino' || etapa==='en camino'){
-   btns=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
-    <button class="btn-outline" style="height:42px;background:#dbeafe;border-color:#3b82f6;color:#3b82f6" onclick="cambiarEtapaConRuta('${id}','recogido','recogida')">
-     <svg class="ico" style="stroke:#3b82f6" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-     EN CAMINO A RECOGER</button>
-    <button class="btn" style="height:42px;background:#3b82f6" onclick="cambiarEtapaConRuta('${id}','recogido','recogida')">RECOGIDO</button>
-   </div>`;
+   config={label:'VOY EN CAMINO A RECOGER',bg:'rgba(59,130,246,0.12)',color:'#3b82f6',border:'#3b82f6',next:'recogido',icon:'<path d="M5 12h14M12 5l7 7-7 7"/>'};
   }else if(etapa==='recogido'){
-   btns=`<button class="btn" style="height:42px;margin-top:10px;background:#f59e0b;display:flex;align-items:center;justify-content:center;gap:6px" onclick="cambiarEtapaConRuta('${id}','entrega','entrega')">
-    <svg style="width:14px;height:14px;stroke:#fff" viewBox="0 0 24 24"><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-    EN CAMINO A ENTREGA</button>`;
+   config={label:'RECOGIDO',bg:'rgba(139,92,246,0.12)',color:'#8b5cf6',border:'#8b5cf6',next:'entrega',icon:'<path d="M5 12l5 5l10-10"/>'};
   }else if(etapa==='entrega'){
-   btns=`<button class="btn" style="height:42px;margin-top:10px;background:#10b981;display:flex;align-items:center;justify-content:center;gap:6px" onclick="cambiarEtapaConRuta('${id}','finalizado','entrega')">
-    <svg style="width:14px;height:14px;stroke:#fff" viewBox="0 0 24 24"><path d="M5 12l5 5l10-10"/></svg>
-    ENTREGADO - FINALIZAR</button>`;
+   config={label:'VOY EN CAMINO A ENTREGAR',bg:'rgba(245,158,11,0.12)',color:'#f59e0b',border:'#f59e0b',next:'finalizado',icon:'<path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/>'};
   }else if(etapa==='finalizado'){
-   btns=`<div style="background:#d1fae5;color:#10b981;padding:10px;border-radius:10px;text-align:center;font-weight:800;font-size:10px;margin-top:10px">ENTREGADO - ESPERANDO REGISTRO EN HISTORIAL</div>`;
+   config={label:'ENTREGADO',bg:'rgba(16,185,129,0.12)',color:'#10b981',border:'#10b981',next:'historial',icon:'<path d="M5 12l5 5l10-10"/>'};
   }
+  let llamarBtn='';
+  if(etapa==='camino' || etapa==='en camino'){
+   llamarBtn=`<button class="btnCall" onclick="llamarCliente('${p.telefonoRecogida||p.telefono}')">
+    <svg class="ico" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0.7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.03 12.03 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    LLAMAR A QUIEN RECOGE ${p.telefonoRecogida?'- '+p.telefonoRecogida:''}
+   </button>`;
+  }else if(etapa==='entrega'){
+   llamarBtn=`<button class="btnCall" onclick="llamarCliente('${p.telefono}')">
+    <svg class="ico" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0.7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.03 12.03 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    LLAMAR A QUIEN RECIBE ${p.telefono?'- '+p.telefono:''}
+   </button>`;
+  }
+
   return `<div class="repaCardActiva" style="${etapa==='finalizado'?'border-color:#10b981;background:#f0fdf4':''}">
-   <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-    <span style="font-size:9px;font-weight:800;background:${etapa==='finalizado'?'#10b981':'#0a0a0a'};color:#fff;padding:4px 8px;border-radius:6px">#${codigo} ${etapa.toUpperCase()}</span>
-    <span style="font-size:11px;font-weight:800;color:#10b981">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span>
+   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <span style="font-size:9px;font-weight:800;background:${etapa==='finalizado'?'#10b981':'#0a0a0a'};color:#fff;padding:5px 10px;border-radius:8px;letter-spacing:.4px">#${codigo} • ${etapa.toUpperCase()}</span>
+    <div style="text-align:right">
+     <div style="font-size:10px;color:#888;font-weight:700">COBRAR</div>
+     <div style="font-size:22px;font-weight:800;letter-spacing:-.5px;color:#0a0a0a">$${precioTotal}</div>
+    </div>
    </div>
-   <div style="font-size:13px;font-weight:800">${p.cliente} ${p.servicio==='comprar'?' - COMPRA':''}</div>
-   <div style="background:#f7f7f7;border-radius:10px;padding:8px;margin-top:8px">
-    <div style="font-size:10px;color:#111"><b>Recoge:</b> ${p.dirRecogida}</div>
-    <div style="font-size:10px;color:#111;margin-top:4px"><b>Entrega:</b> ${p.entrega}</div>
-    <div style="font-size:9px;color:#666;margin-top:4px">Tel: ${p.telefono||''} • Ref: ${p.referencia||''}</div>
-    ${p.tiempoRecogida?`<div style="font-size:10px;color:#0a0a0a;font-weight:800;margin-top:6px;background:#fef3c7;padding:4px 8px;border-radius:6px;display:inline-block">${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div>`:''}
+   <div style="font-size:14px;font-weight:800;letter-spacing:-.3px">${p.cliente} ${p.servicio==='comprar'?' - COMPRA':''}</div>
+   <div style="background:#f8fafc;border-radius:12px;padding:10px;margin-top:10px;border:1px solid #f1f5f9">
+    <div style="display:flex;gap:8px"><div style="width:8px;height:8px;background:#ef4444;border-radius:50%;margin-top:4px;flex-shrink:0"></div><div style="font-size:10px;color:#111"><b>Recoge:</b> ${p.dirRecogida}</div></div>
+    <div style="display:flex;gap:8px;margin-top:6px"><div style="width:8px;height:8px;background:#0a0a0a;border-radius:50%;margin-top:4px;flex-shrink:0"></div><div style="font-size:10px;color:#111"><b>Entrega:</b> ${p.entrega}</div></div>
+    ${p.tipoProd?`<div style="font-size:10px;margin-top:8px;font-weight:700;background:#fff;padding:6px 8px;border-radius:8px;border:1px solid #eee">Producto: ${p.tipoProd} - ${p.referenciaCompra||''}</div>`:''}
+    ${p.tiempoRecogida?`<div style="font-size:10px;color:#0a0a0a;font-weight:800;margin-top:8px;background:#fef3c7;padding:6px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:6px"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>${calcularHoraRecogida(p.ts,p.tiempoRecogida)}</div>`:''}
    </div>
-   <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
-    <button class="btn-outline" style="height:38px;font-size:9px" onclick="verRutaRepa('${id}')">
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+    <button class="btn-outline" style="height:40px;font-size:9px" onclick="verRutaRepa('${id}')">
      <svg class="ico" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/></svg>
      VER RUTA</button>
-    <span style="background:#f3f4f6;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">${p.km} km</span>
+    <span style="background:#f8fafc;border:1.5px solid #f1f5f9;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800">${p.km} km</span>
    </div>
-   ${btns}
+   ${llamarBtn}
+   <button class="btnAccion" style="margin-top:12px;background:${config.bg};color:${config.color};border:1.5px solid ${config.border}" onclick="cambiarEtapaConRuta('${id}','${config.next}','${etapa==='camino' || etapa==='en camino'? 'recogida' : etapa==='recogido'? 'entrega' : etapa==='entrega'? 'entrega' : 'historial'}')">
+    <svg style="width:16px;height:16px;stroke:${config.color};fill:none;stroke-width:2" viewBox="0 0 24 24">${config.icon}</svg>
+    ${config.label}
+   </button>
   </div>`;
  }).join('');
 }
 
 if(!enEspera.length){
- listaEspera.innerHTML='<div style="text-align:center;padding:12px;color:#999;font-size:10px">No hay pedidos en espera - Todo en tiempo real</div>';
+ listaEspera.innerHTML='<div style="text-align:center;padding:12px;color:#999;font-size:10px">No hay pedidos en espera</div>';
 }else{
  listaEspera.innerHTML=enEspera.map(([id,p])=>{
   let codigo=id.substring(1,7).toUpperCase();
@@ -581,7 +598,7 @@ if(!enEspera.length){
    <div style="font-size:9px;color:#555"><b>Entrega:</b> ${p.entrega.substring(0,40)}...</div>
    <div style="display:flex;gap:6px;margin-top:8px">
     <span style="background:#0a0a0a;color:#fff;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:800">${p.km} km</span>
-    <span style="background:#d1fae5;color:#10b981;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span>
+    <span style="background:#d1fae5;color:#10b981;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:800">$${(p.costoSugerido||0)+(p.costoExtra||0)}</span>
    </div>
    <button class="btn" style="height:38px;margin-top:10px;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="aceptarPedido('${id}')">
     <svg style="width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2" viewBox="0 0 24 24"><path d="M5 12l5 5l10-10"/></svg>
@@ -592,13 +609,17 @@ if(!enEspera.length){
 }
 }
 
+window.llamarCliente=function(tel){
+if(!tel){ mostrarModalElegante({title:'Sin teléfono',text:'No hay teléfono registrado',showCancel:false}); return; }
+window.location.href='tel:'+tel;
+}
+
 window.aceptarPedido=async function(id){
 if(!joseOnline){
  mostrarModalElegante({title:'Desactivado',text:'Actívate en línea primero',showCancel:false});
  return;
 }
 await update(ref(db,'kigoPedidosLive/'+id),{repaAsignado:'José',etapa:'camino'});
-// Ruta desde ubicación real del repa hacia recogida
 let pos=await getUbicacionRepa();
 let p=pedidosLive[id];
 if(pos){
@@ -613,12 +634,13 @@ let p=pedidosLive[id];
 if(nuevaEtapa==='finalizado'){
  let histRef=push(ref(db,'kigoHistorial'));
  await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()});
- // No borramos aún, lo dejamos en verde para que en seguimiento se pueda registrar
  await update(ref(db,'kigoPedidosLive/'+id),{etapa:'finalizado'});
- mostrarModalElegante({title:'Entregado',text:'Ahora en seguimiento aparece en verde para registrar en historial',showCancel:false});
+ mostrarModalElegante({title:'Entregado',text:'Ahora aparece en verde en seguimiento para registrar en historial',showCancel:false});
+}else if(nuevaEtapa==='historial'){
+ registrarHistorial(id);
+ return;
 }else{
  await update(ref(db,'kigoPedidosLive/'+id),{etapa:nuevaEtapa});
- // Trazar nueva ruta
  if(tipoRuta==='recogida'){
   if(pos) trazarRutaRepa(pos, await geo(p.dirRecogida), p);
  }else if(tipoRuta==='entrega'){
@@ -651,9 +673,6 @@ dirServRepa.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)
  }
 });
 }
-window.cambiarEtapa=async function(id, nuevaEtapa){
- await cambiarEtapaConRuta(id, nuevaEtapa, nuevaEtapa==='recogido'?'entrega':'recogida');
-}
 window.verRutaRepa=async function(id){
 let p=pedidosLive[id];
 if(!p) return;
@@ -663,12 +682,18 @@ if(!o||!d) return;
 if(!mapRepa) return;
 let etapa=p.etapa||'pendiente';
 let origen=o;
+let destino=d;
 if(['camino','en camino'].includes(etapa)){
  let pos=await getUbicacionRepa();
  if(pos) origen=pos;
+ destino=o;
+}else if(etapa==='entrega' || etapa==='recogido'){
+ let pos=await getUbicacionRepa();
+ if(pos) origen=pos;
+ destino=d;
 }
 let dirServRepa=new google.maps.DirectionsService();
-dirServRepa.route({origin:origen,destination:etapa==='camino'||etapa==='en camino'?o:d,travelMode:'DRIVING'},(r,s)=>{
+dirServRepa.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{
  if(s==='OK'){
   if(!dirRendRepa){
    dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
@@ -676,7 +701,7 @@ dirServRepa.route({origin:origen,destination:etapa==='camino'||etapa==='en camin
   dirRendRepa.setMap(mapRepa);
   dirRendRepa.setDirections(r);
   clearMRepa();
-  addMRepa(origen,'#3b82f6'); addMRepa(etapa==='camino'||etapa==='en camino'?o:d,'#ef4444');
+  addMRepa(origen,'#3b82f6'); addMRepa(destino,'#ef4444');
   let leg=r.routes[0].legs[0];
   document.getElementById('txtKmRepa').innerText=leg.distance.text;
   document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0));
