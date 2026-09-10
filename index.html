@@ -16,6 +16,8 @@ body{font-family:Manrope,sans-serif;background:#f7f7f7;max-width:640px;margin:0 
 .btn-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;border:none;background:#f2f2f2;color:#888;font-weight:800;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:10}
 .btn-clear.show{display:flex}
 .btn{width:100%;height:48px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer}
+.btn-outline{width:100%;height:38px;background:#fff;border:1.5px solid #0a0a0a;border-radius:10px;font-weight:800;font-size:11px;cursor:pointer}
+.btn-outline.active{background:#0a0a0a;color:#fff}
 .view{display:none}.view.active{display:block}
 #map{width:100%;height:360px;border-radius:14px;background:#e5e7eb;display:block}
 #listCli{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #0a0a0a;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none;z-index:50}
@@ -52,17 +54,22 @@ body{font-family:Manrope,sans-serif;background:#f7f7f7;max-width:640px;margin:0 
 <span id="txtEstado" style="font-size:8px;font-weight:800;background:#f3f4f6;padding:3px 7px;border-radius:20px;white-space:nowrap">--</span>
 </div>
 </div>
+
+<!-- DOS BOTONES NUEVOS -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+<button id="btnLista" class="btn-outline active" onclick="setModo('lista')">📋 LISTA CLIENTES</button>
+<button id="btnNuevo" class="btn-outline" onclick="setModo('nuevo')">➕ CLIENTE NUEVO</button>
+</div>
 </div>
 
-<div class="card">
+<!-- MODO LISTA - LO QUE YA TENEMOS -->
+<div id="modoLista" class="card">
 <span class="label">Buscar cliente de base de datos</span>
 <div class="wrap wrap-clear" style="overflow:visible">
 <input type="text" id="buscCli" placeholder="Escribe nombre..." autocomplete="off" oninput="buscarCliente();toggleClear('buscCli','clearBusc')">
 <button id="clearBusc" class="btn-clear" onclick="limpiarCampo('buscCli','clearBusc')">✕</button>
 <div id="listCli"></div>
 </div>
-
-<!-- CAJITA VERDE CON TELEFONO INTEGRADO -->
 <div id="boxSel" style="display:none;margin-top:10px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:12px">
 <div style="display:flex;justify-content:space-between;align-items:flex-start">
 <div style="flex:1">
@@ -73,16 +80,33 @@ body{font-family:Manrope,sans-serif;background:#f7f7f7;max-width:640px;margin:0 
 <button onclick="limpiarCampo('buscCli','clearBusc')" style="width:22px;height:22px;border-radius:50%;border:none;background:#dcfce7;color:#16a34a;font-weight:800;cursor:pointer">✕</button>
 </div>
 </div>
-
 <span class="label" style="margin-top:10px">Direccion entrega</span>
 <div class="wrap wrap-clear"><input type="text" id="dirEntrega" placeholder="Escribe dirección..." oninput="toggleClear('dirEntrega','clearEnt')"><button id="clearEnt" class="btn-clear" onclick="limpiarCampo('dirEntrega','clearEnt')">✕</button></div>
-
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
 <div><span class="label">Tel entrega</span><div class="wrap wrap-clear"><input type="text" id="telEntrega" oninput="toggleClear('telEntrega','clearTelEnt')"><button id="clearTelEnt" class="btn-clear" onclick="limpiarCampo('telEntrega','clearTelEnt')">✕</button></div></div>
 <div><span class="label">Referencia</span><div class="wrap wrap-clear"><input type="text" id="refEntrega" oninput="toggleClear('refEntrega','clearRef')"><button id="clearRef" class="btn-clear" onclick="limpiarCampo('refEntrega','clearRef')">✕</button></div></div>
 </div>
+<button id="btnGuardarNuevoLista" style="display:none;width:100%;height:42px;margin-top:12px;background:#fff;border:1.5px dashed #10b981;color:#10b981;border-radius:12px;font-weight:800;cursor:pointer" onclick="guardarDesdePedido()">💾 GUARDAR EN CLIENTES</button>
+<button class="btn" style="margin-top:10px" onclick="cotizar()">COTIZAR RUTA</button>
+<button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
+</div>
 
-<button class="btn" style="margin-top:12px" onclick="cotizar()">COTIZAR RUTA</button>
+<!-- MODO NUEVO - FORMULARIO NUEVO -->
+<div id="modoNuevo" class="card" style="display:none">
+<span class="label">Nombre del cliente nuevo</span>
+<div class="wrap wrap-clear"><input type="text" id="nuevoNombre" placeholder="Ej. Alitas de Luz" oninput="toggleClear('nuevoNombre','clearNuevoNom')"><button id="clearNuevoNom" class="btn-clear" onclick="limpiarCampo('nuevoNombre','clearNuevoNom')">✕</button></div>
+<span class="label" style="margin-top:10px">Dirección donde se recoge</span>
+<div class="wrap wrap-clear"><input type="text" id="nuevoDirRecoge" placeholder="Ej. Calle Hidalgo 12" oninput="toggleClear('nuevoDirRecoge','clearNuevoRec')"><button id="clearNuevoRec" class="btn-clear" onclick="limpiarCampo('nuevoDirRecoge','clearNuevoRec')">✕</button></div>
+<span class="label" style="margin-top:10px">Teléfono cliente</span>
+<div class="wrap wrap-clear"><input type="text" id="nuevoTel" placeholder="Ej. 418..." oninput="toggleClear('nuevoTel','clearNuevoTel')"><button id="clearNuevoTel" class="btn-clear" onclick="limpiarCampo('nuevoTel','clearNuevoTel')">✕</button></div>
+<span class="label" style="margin-top:10px">Dirección entrega</span>
+<div class="wrap wrap-clear"><input type="text" id="nuevoDirEntrega" placeholder="Ej. Colonia Centro 45" oninput="toggleClear('nuevoDirEntrega','clearNuevoEnt')"><button id="clearNuevoEnt" class="btn-clear" onclick="limpiarCampo('nuevoDirEntrega','clearNuevoEnt')">✕</button></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+<div><span class="label">Tel entrega</span><div class="wrap wrap-clear"><input type="text" id="nuevoTelEntrega" oninput="toggleClear('nuevoTelEntrega','clearNuevoTelEnt')"><button id="clearNuevoTelEnt" class="btn-clear" onclick="limpiarCampo('nuevoTelEntrega','clearNuevoTelEnt')">✕</button></div></div>
+<div><span class="label">Referencia entrega</span><div class="wrap wrap-clear"><input type="text" id="nuevoRefEntrega" oninput="toggleClear('nuevoRefEntrega','clearNuevoRef')"><button id="clearNuevoRef" class="btn-clear" onclick="limpiarCampo('nuevoRefEntrega','clearNuevoRef')">✕</button></div></div>
+</div>
+<button style="width:100%;height:42px;margin-top:12px;background:#fff;border:1.5px dashed #10b981;color:#10b981;border-radius:12px;font-weight:800;cursor:pointer" onclick="guardarDesdePedidoNuevo()">💾 GUARDAR EN CLIENTES</button>
+<button class="btn" style="margin-top:10px" onclick="cotizar()">COTIZAR RUTA</button>
 <button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
 </div>
 </div>
@@ -117,6 +141,7 @@ const db = getDatabase(app);
 
 let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35};
 let map, dirServ, dirRend, markers=[], clienteSel=null;
+let modoActual='lista';
 
 window.cerrarModal=function(){ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
 window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText='Cancelar', confirmText='OK', showCancel=true, onConfirm=null, showEdit=false, editData=null}){
@@ -132,6 +157,20 @@ window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText=
  }
  document.getElementById('kigoOverlay').classList.add('show');
  document.getElementById('modalConfirm').onclick=()=>{ if(onConfirm) onConfirm(); else cerrarModal(); };
+}
+
+// MODO LISTA / NUEVO
+window.setModo=function(m){
+modoActual=m;
+document.getElementById('modoLista').style.display=m==='lista'?'block':'none';
+document.getElementById('modoNuevo').style.display=m==='nuevo'?'block':'none';
+document.getElementById('btnLista').classList.toggle('active',m==='lista');
+document.getElementById('btnNuevo').classList.toggle('active',m==='nuevo');
+pedido=null;
+document.getElementById('txtKm').innerText='-- km • -- min';
+document.getElementById('txtCosto').innerText='$0';
+if(dirRend) dirRend.setDirections({routes:[]});
+clearM();
 }
 
 onValue(ref(db,'kigoClientesDir'),snap=>{
@@ -182,7 +221,12 @@ map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1576,lng:
 dirServ=new google.maps.DirectionsService();
 dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
 let opts={bounds:{north:21.30,south:21.00,east:-100.75,west:-101.10},componentRestrictions:{country:'mx'}};
-try{ new google.maps.places.Autocomplete(document.getElementById('dirEntrega'),opts); new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts); }catch(e){}
+try{
+new google.maps.places.Autocomplete(document.getElementById('dirEntrega'),opts);
+new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts);
+new google.maps.places.Autocomplete(document.getElementById('nuevoDirRecoge'),opts);
+new google.maps.places.Autocomplete(document.getElementById('nuevoDirEntrega'),opts);
+}catch(e){}
 }
 window._initMapReal=initMapReal;
 setTimeout(initMapReal,500); setTimeout(initMapReal,1500);
@@ -222,6 +266,24 @@ let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120)
 await set(ref(db,'kigoClientesDir/'+key),{direccion:dir,telefono:tel,nombreOriginal:nombre,ts:Date.now()});
 document.getElementById('cliNombre').value=''; document.getElementById('cliDir').value=''; document.getElementById('cliTel').value='';
 }
+
+// GUARDAR DESDE PEDIDO - MODO LISTA Y NUEVO
+window.guardarDesdePedido=async function(){
+if(!clienteSel){ mostrarModalElegante({title:'Selecciona',text:'Selecciona cliente de lista',showCancel:false}); return; }
+let key=clienteSel.nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
+await set(ref(db,'kigoClientesDir/'+key),{direccion:clienteSel.direccion,telefono:clienteSel.telefono,nombreOriginal:clienteSel.nombre,ts:Date.now()});
+mostrarModalElegante({title:'Guardado',text:'Cliente guardado',showCancel:false});
+}
+window.guardarDesdePedidoNuevo=async function(){
+let nombre=document.getElementById('nuevoNombre').value.trim();
+let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim();
+let tel=document.getElementById('nuevoTel').value.trim();
+if(!nombre||!dirRecoge){ mostrarModalElegante({title:'Falta dato',text:'Nombre y direccion recogida obligatoria',showCancel:false}); return; }
+let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
+await set(ref(db,'kigoClientesDir/'+key),{direccion:dirRecoge,telefono:tel,nombreOriginal:nombre,ts:Date.now()});
+mostrarModalElegante({title:'Guardado',text:nombre+' guardado en clientes',showCancel:false});
+}
+
 window.renderClientes=function(){
 let lista=document.getElementById('listaClientes'); let filtro=document.getElementById('filtroCli')?.value.toLowerCase()||'';
 if(!lista) return;
@@ -282,25 +344,43 @@ document.getElementById('txtDirSel').innerText=d.direccion;
 let telBox=document.getElementById('txtTelSel');
 if(d.telefono && d.telefono.trim()!==''){
 telBox.innerHTML=`<span style="color:#10b981">📞 ${d.telefono}</span>`;
-telBox.style.color='#10b981';
 }else{
 telBox.innerHTML=`<span style="color:#ef4444">✕ SIN NÚMERO</span>`;
-telBox.style.color='#ef4444';
 }
 toggleClear('buscCli','clearBusc');
 geo(d.direccion).then(p=>{if(p&&map){map.setCenter(p);map.setZoom(15);clearM();addM(p,'#ef4444');}});
 }
 window.cotizar=async function(){
+let o=null, de=null, entrega='', telEntrega='', refEntrega='', nombreCliente='', telRecogida='';
+if(modoActual==='lista'){
 if(!clienteSel){ mostrarModalElegante({title:'Falta cliente',text:'Busca cliente en base de datos',showCancel:false}); return; }
-let entrega=document.getElementById('dirEntrega').value.trim();
-if(!entrega){ mostrarModalElegante({title:'Falta entrega',text:'Escribe direccion entrega',showCancel:false}); return; }
-let o=await geo(clienteSel.direccion);let de=await geo(entrega);
+entrega=document.getElementById('dirEntrega').value.trim();
+telEntrega=document.getElementById('telEntrega').value.trim();
+refEntrega=document.getElementById('refEntrega').value.trim();
+nombreCliente=clienteSel.nombre;
+telRecogida=clienteSel.telefono||'';
+o=await geo(clienteSel.direccion);
+de=await geo(entrega);
+}else{
+let nombre=document.getElementById('nuevoNombre').value.trim();
+let dirRecoge=document.getElementById('nuevoDirRecoge').value.trim();
+let dirEnt=document.getElementById('nuevoDirEntrega').value.trim();
+if(!nombre||!dirRecoge||!dirEnt){ mostrarModalElegante({title:'Falta dato',text:'Completa nombre, direccion recogida y entrega',showCancel:false}); return; }
+entrega=dirEnt;
+telEntrega=document.getElementById('nuevoTelEntrega').value.trim();
+refEntrega=document.getElementById('nuevoRefEntrega').value.trim();
+nombreCliente=nombre;
+telRecogida=document.getElementById('nuevoTel').value.trim();
+clienteSel={nombre:nombre,direccion:dirRecoge,telefono:telRecogida};
+o=await geo(dirRecoge);
+de=await geo(dirEnt);
+}
 if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
 dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{
 if(s==='OK'){
 let leg=r.routes[0].legs[0];dirRend.setDirections(r);clearM();addM(o,'#ef4444');addM(de,'#0a0a0a');
 let km=(leg.distance.value/1000).toFixed(1);let min=Math.round(leg.duration.value/60);let costo=Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6);
-pedido={clienteSel,entrega,de,o,km,min,costo};
+pedido={clienteSel:{nombre:nombreCliente,direccion:clienteSel.direccion,telefono:telRecogida},entrega:entrega,telEntrega:telEntrega,refEntrega:refEntrega,de,o,km,min,costo};
 document.getElementById('txtKm').innerText=`${km}km • ${min}m`;
 document.getElementById('txtCosto').innerText=`$${costo}`;
 }
@@ -309,10 +389,8 @@ document.getElementById('txtCosto').innerText=`$${costo}`;
 window.confirmar=async function(){
 if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
 let repa=document.getElementById('selRepa')?.value||'sin asignar';
-// usa telefono de la base de datos directamente
-let telRecogida = clienteSel.telefono || '';
 let nr=push(ref(db,'kigoPedidosLive'));
-await set(nr,{cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:telRecogida,telefono:document.getElementById('telEntrega').value,referencia:document.getElementById('refEntrega').value,km:pedido.km,costoSugerido:pedido.costo,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
+await set(nr,{cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:pedido.clienteSel.telefono||'',telefono:pedido.telEntrega||'',referencia:pedido.refEntrega||'',km:pedido.km,costoSugerido:pedido.costo,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
 mostrarModalElegante({title:'Enviado',text:'Asignado a '+repa+' $'+pedido.costo,showCancel:false});
 }
 document.addEventListener('click',e=>{if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')){let l=document.getElementById('listCli'); if(l) l.style.display='none';}});
