@@ -71,12 +71,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 
 <div id="loginScreen" class="login-screen">
 <div class="login-card">
-<div style="text-align:center;margin-bottom:16px"><div style="width:56px;height:56px;background:#0a0a0a;color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;margin:0 auto">K</div><h3 style="font-size:14px;font-weight:800;margin-top:10px">KIGO XPRESS</h3><p style="font-size:9px;color:#888;font-weight:700;margin-top:4px">INGRESO INDEPENDIENTE POR TELÉFONO</p></div>
-<span class="label">Usuario</span><div class="wrap" style="margin-bottom:10px"><input type="text" id="loginUser" placeholder="admin o nombre repartidor"></div>
-<span class="label">Contraseña / PIN</span><div class="wrap" style="margin-bottom:14px"><input type="password" id="loginPass" placeholder="0831 o PIN repartidor"></div>
+<div style="text-align:center;margin-bottom:16px">
+<div id="loginLogoBox" style="width:56px;height:56px;background:#0a0a0a;color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;margin:0 auto;overflow:hidden">K</div>
+<h3 id="loginNombreEmpresa" style="font-size:14px;font-weight:800;margin-top:10px">KIGO XPRESS</h3>
+<p style="font-size:9px;color:#888;font-weight:700;margin-top:4px">INGRESO SEGURO</p>
+</div>
+<span class="label">Usuario</span><div class="wrap" style="margin-bottom:10px"><input type="text" id="loginUser" placeholder="admin o nombre repartidor" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+<span class="label">Contraseña / PIN</span><div class="wrap" style="margin-bottom:14px"><input type="password" id="loginPass" placeholder="••••" autocomplete="new-password"><button type="button" style="padding:0 12px;border:none;background:transparent;font-size:12px;cursor:pointer" onclick="togglePass()">👁</button></div>
 <button class="btn" onclick="hacerLogin()">INGRESAR</button>
 <div style="display:flex;align-items:center;gap:8px;margin-top:12px"><input type="checkbox" id="keepLogin" checked><label for="keepLogin" style="font-size:10px;font-weight:700">Mantener sesión en este teléfono</label></div>
-<p style="font-size:8px;color:#888;margin-top:10px;text-align:center">Admin: admin / 0831<br>Repartidor: nombre / PIN configurado en ajustes</p>
 </div>
 </div>
 
@@ -169,7 +172,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 <div id="view-repartidor" class="view">
 <div class="card" style="padding:8px">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-<div style="display:flex;align-items:center;gap:8px"><div style="width:36px;height:36px;background:#0a0a0a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px" id="repaAvatar">J</div><div><div style="font-size:12px;font-weight:800" id="repaNombreTop">José</div><div style="display:flex;align-items:center;gap:4px"><span class="dot on" id="dotJose"></span><span id="txtEstadoJose" style="font-size:9px;font-weight:800;color:#10b981">EN LÍNEA</span></div></div></div>
+<div style="display:flex;align-items:center;gap:8px"><div style="width:36px;height:36px;background:#0a0a0a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px" id="repaAvatar">?</div><div><div style="font-size:12px;font-weight:800" id="repaNombreTop">--</div><div style="display:flex;align-items:center;gap:4px"><span class="dot on" id="dotJose"></span><span id="txtEstadoJose" style="font-size:9px;font-weight:800;color:#10b981">EN LÍNEA</span></div></div></div>
 <div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;padding:0 12px;height:36px;font-size:8px;background:#0a0a0a;color:#fff" onclick="toggleChatRepa()">CHAT</button><button id="btnToggleJose" class="btn-outline" style="width:auto;padding:0 14px;height:36px;font-size:9px;background:#10b981;color:#fff;border-color:#10b981" onclick="toggleJose()">DESACTIVAR</button></div>
 </div>
 <div id="chatRepaSlide" class="chatSlide">
@@ -206,7 +209,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640
 <div id="view-ajustes" class="view">
 <div class="card"><h3 style="font-size:12px;font-weight:800">AJUSTES</h3><div style="display:flex;gap:6px;margin-top:10px"><button class="tabAjuste active" id="tabPrecio" onclick="showAjuste('precio')">PRECIOS</button><button class="tabAjuste" id="tabRepas" onclick="showAjuste('repas')">REPARTIDORES</button><button class="tabAjuste" id="tabInterno" onclick="showAjuste('interno')">INTERNO</button></div></div>
 <div id="ajuste-precio" class="card"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">CONFIGURACIÓN DE PRECIOS EN TIEMPO REAL</h4><span class="label">Precio por cada kilómetro</span><div class="wrap"><input type="number" id="cfgPrecioKm" placeholder="6"><span style="padding-right:12px;font-size:10px;font-weight:800">$ / KM</span></div><span class="label" style="margin-top:8px">Valor zona céntrica</span><div class="wrap"><input type="number" id="cfgCentro" placeholder="35"><span style="padding-right:12px;font-size:10px;font-weight:800">$</span></div><span class="label" style="margin-top:8px">Km base incluidos</span><div class="wrap"><input type="number" id="cfgKmBase" placeholder="2"><span style="padding-right:12px;font-size:10px;font-weight:800">KM</span></div><span class="label" style="margin-top:12px">Precio lluvia leve</span><div class="wrap"><input type="number" id="cfgLluviaLeve" placeholder="5"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Precio lluvia moderada</span><div class="wrap"><input type="number" id="cfgLluviaMod" placeholder="10"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Precio lluvia fuerte</span><div class="wrap"><input type="number" id="cfgLluviaFuerte" placeholder="15"><span style="padding-right:12px;font-size:10px;font-weight:800">$ extra</span></div><span class="label" style="margin-top:8px">Clima actual</span><div class="wrap"><select id="cfgClimaActual"><option value="normal">Normal</option><option value="leve">Lluvia leve</option><option value="moderada">Lluvia moderada</option><option value="fuerte">Lluvia fuerte</option></select></div><button class="btn" style="margin-top:12px" onclick="guardarPrecios()">GUARDAR PRECIOS</button></div>
-<div id="ajuste-repas" class="card" style="display:none"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">REPARTIDORES - AGREGAR Y EDITAR PIN</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><span class="label">Nombre repartidor</span><div class="wrap"><input type="text" id="nuevoRepaNombre" placeholder="Ej. Carlos"></div></div><div><span class="label">PIN</span><div class="wrap"><input type="text" id="nuevoRepaPin" placeholder="1234"></div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><div><span class="label">Tipo</span><div class="wrap"><select id="nuevoRepaTipo"><option value="repartidor">Repartidor</option><option value="admin">Admin</option></select></div></div><div style="display:flex;align-items:end"><button class="btn" style="height:42px" onclick="agregarRepa()">AGREGAR</button></div></div><div style="margin-top:14px"><span class="label">LISTA DE REPARTIDORES GUARDADOS</span><div id="listaRepasAjuste"></div></div></div>
+<div id="ajuste-repas" class="card" style="display:none"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">REPARTIDORES - AGREGAR Y EDITAR PIN</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><span class="label">Nombre repartidor (sin tilde)</span><div class="wrap"><input type="text" id="nuevoRepaNombre" placeholder="Ej. Jose, Carlos"></div></div><div><span class="label">PIN</span><div class="wrap"><input type="text" id="nuevoRepaPin" placeholder="1234"></div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><div><span class="label">Tipo</span><div class="wrap"><select id="nuevoRepaTipo"><option value="repartidor">Repartidor</option><option value="admin">Admin</option></select></div></div><div style="display:flex;align-items:end"><button class="btn" style="height:42px" onclick="agregarRepa()">AGREGAR</button></div></div><div style="margin-top:14px"><span class="label">LISTA DE REPARTIDORES GUARDADOS - TODOS SE PUEDEN BORRAR</span><div id="listaRepasAjuste"></div></div></div>
 <div id="ajuste-interno" class="card" style="display:none"><h4 style="font-size:11px;font-weight:800;margin-bottom:10px">AJUSTES INTERNOS</h4><span class="label">Nombre empresa</span><div class="wrap"><input type="text" id="cfgNombreEmpresa" placeholder="Kigo Xpress"></div><span class="label" style="margin-top:8px">Subir logo desde teléfono</span><input type="file" id="inputLogoFile" accept="image/*" style="margin-top:6px"><div id="previewLogo" style="margin-top:10px;text-align:center"></div><span class="label" style="margin-top:8px">O URL logo</span><div class="wrap"><input type="text" id="cfgLogo" placeholder="https://..."></div><button class="btn" style="margin-top:12px" onclick="guardarInterno()">GUARDAR CAMBIOS INTERNOS</button></div>
 </div>
 </div>
@@ -237,7 +240,7 @@ let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35, precioKm:6, k
 let map, mapRepa, dirServ, dirRend, dirRendRepa, markers=[], markersRepa=[], clienteSel=null;
 let modoActual='lista', servicioActual='recoger';
 let pedidosLive={}, historialLive={}, chatLive={}, filtroSeg='todos', pedidoEditId=null, pedidoEditData=null;
-let repaPanelActual='José', joseOnline=true, chatSenderBase='José';
+let repaPanelActual='', joseOnline=true, chatSenderBase='';
 let prevKeys=new Set();
 let audioUnlocked=false;
 let currentUser=null, currentRole='admin';
@@ -246,15 +249,17 @@ window.cerrarModal=()=>{ document.getElementById('kigoOverlay').classList.remove
 window.cerrarDetalle=()=>{ document.getElementById('overlayDetalle').classList.remove('show'); }
 window.cerrarHist=()=>{ document.getElementById('overlayHist').classList.remove('show'); }
 window.cerrarCancel=()=>{ document.getElementById('overlayCancel').classList.remove('show'); }
+window.togglePass=()=>{ let i=document.getElementById('loginPass'); i.type=i.type==='password'?'text':'password'; }
 
 function unlockAudio(){ if(audioUnlocked) return; audioUnlocked=true; try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume(); }catch(e){} }
 document.addEventListener('click',unlockAudio,{once:true}); document.addEventListener('touchstart',unlockAudio,{once:true});
 
 function sonidoRappi(){
  unlockAudio();
- try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume(); let t=ctx.currentTime; for(let i=0;i<10;i++){ let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sine'; o.frequency.value=i%2===0?880:1200; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.6, t+i*0.5); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.5+0.4); o.start(t+i*0.5); o.stop(t+i*0.5+0.4); } }catch(e){}
- if(navigator.vibrate) navigator.vibrate([300,100,300,100,300,100,300,100,500,200,500]);
+ try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume(); let t=ctx.currentTime; for(let i=0;i<12;i++){ let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sine'; o.frequency.value=i%2===0?900:1400; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.8, t+i*0.4); g.gain.exponentialRampToValueAtTime(0.01, t+i*0.4+0.35); o.start(t+i*0.4); o.stop(t+i*0.4+0.35); } }catch(e){}
+ if(navigator.vibrate) navigator.vibrate([200,80,200,80,200,80,300,80,400,80,500]);
 }
+
 function sonidoCancel(){
  unlockAudio();
  try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume(); let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='sawtooth'; o.frequency.value=220; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(0.5, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+1.5); o.start(); o.stop(ctx.currentTime+1.5); }catch(e){}
@@ -266,61 +271,43 @@ window.hacerLogin=async()=>{
  let pass=document.getElementById('loginPass').value.trim();
  if(!user||!pass){ mostrarModalElegante({title:'Falta dato',text:'Usuario y contraseña',showCancel:false}); return; }
  if(user==='admin' && pass==='0831'){
-  currentUser='admin'; currentRole='admin';
-  guardarSesion();
-  iniciarApp();
-  return;
+  currentUser='admin'; currentRole='admin'; repaPanelActual='admin';
+  guardarSesion(); iniciarApp(); return;
  }
  let snap=await get(ref(db,'kigoPins/repas/'+user));
  if(snap.exists()){
   let data=snap.val();
   if(data.pin===pass){
-   currentUser=user; currentRole=data.tipo||'repartidor'; repaPanelActual=user;
-   guardarSesion();
-   iniciarApp();
-   return;
+   currentUser=user; currentRole=data.tipo||'repartidor'; repaPanelActual=user; chatSenderBase=user;
+   guardarSesion(); iniciarApp(); return;
   }
  }
  mostrarModalElegante({title:'Error',text:'Usuario o PIN incorrecto',showCancel:false});
 }
 function guardarSesion(){
  let keep=document.getElementById('keepLogin')?.checked;
- if(keep){
-  localStorage.setItem('kigoLogin', JSON.stringify({user:currentUser, role:currentRole, repa:repaPanelActual, ts:Date.now()}));
- }else{
-  sessionStorage.setItem('kigoLogin', JSON.stringify({user:currentUser, role:currentRole, repa:repaPanelActual, ts:Date.now()}));
- }
+ if(keep){ localStorage.setItem('kigoLogin', JSON.stringify({user:currentUser, role:currentRole, repa:repaPanelActual, ts:Date.now()})); }
+ else{ sessionStorage.setItem('kigoLogin', JSON.stringify({user:currentUser, role:currentRole, repa:repaPanelActual, ts:Date.now()})); }
 }
-window.cerrarSesion=()=>{
- localStorage.removeItem('kigoLogin'); sessionStorage.removeItem('kigoLogin');
- location.reload();
-}
+window.cerrarSesion=()=>{ localStorage.removeItem('kigoLogin'); sessionStorage.removeItem('kigoLogin'); location.reload(); }
 function iniciarApp(){
- let loginScreen=document.getElementById('loginScreen');
- let mainContent=document.getElementById('mainContent');
- loginScreen.style.display='none';
- mainContent.style.display='block';
+ document.getElementById('loginScreen').style.display='none';
+ document.getElementById('mainContent').style.display='block';
  document.getElementById('txtBienvenida').innerText=currentRole==='admin'?`ADMIN: ${currentUser}`:`REPARTIDOR: ${currentUser}`;
  document.getElementById('repaNombreTop').innerText=currentUser;
  document.getElementById('repaAvatar').innerText=currentUser.charAt(0).toUpperCase();
  let bottom=document.getElementById('bottomNav');
  if(currentRole==='repartidor'){
-  // solo mostrar repartidor
   document.querySelectorAll('.bottom button').forEach(b=>b.style.display='none');
   document.getElementById('bR').style.display='flex';
   document.getElementById('bR').classList.add('active');
   showView('repartidor');
-  repaPanelActual=currentUser;
+  repaPanelActual=currentUser; chatSenderBase=currentUser;
  }else{
   document.querySelectorAll('.bottom button').forEach(b=>b.style.display='flex');
   showView('pedidos');
  }
  setTimeout(()=>{ if(map) google.maps.event.trigger(map,'resize'); if(mapRepa) google.maps.event.trigger(mapRepa,'resize'); },500);
-}
-// auto login
-let saved=localStorage.getItem('kigoLogin')||sessionStorage.getItem('kigoLogin');
-if(saved){
- try{ let data=JSON.parse(saved); currentUser=data.user; currentRole=data.role; repaPanelActual=data.repa||data.user; }catch(e){}
 }
 
 window.showAjuste=(t)=>{
@@ -340,12 +327,14 @@ window.agregarRepa=async()=>{
  let nombre=document.getElementById('nuevoRepaNombre').value.trim();
  let pin=document.getElementById('nuevoRepaPin').value.trim();
  let tipo=document.getElementById('nuevoRepaTipo').value;
- if(!nombre){ mostrarModalElegante({title:'Falta',text:'Escribe nombre',showCancel:false}); return; }
- await set(ref(db,'kigoPins/repas/'+nombre),{nombre:nombre,pin:pin||'1234',tipo:tipo,online:true,ts:Date.now()});
+ if(!nombre){ mostrarModalElegante({title:'Falta',text:'Escribe nombre sin tilde',showCancel:false}); return; }
+ // normalizar sin tildes para evitar bug
+ let nombreNorm=nombre.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ await set(ref(db,'kigoPins/repas/'+nombreNorm),{nombre:nombreNorm,pin:pin||'1234',tipo:tipo,online:true,ts:Date.now()});
  document.getElementById('nuevoRepaNombre').value=''; document.getElementById('nuevoRepaPin').value='';
 }
 window.editarPinRepa=async(nombre)=>{ let nuevo=prompt('Nuevo PIN para '+nombre); if(nuevo===null) return; await update(ref(db,'kigoPins/repas/'+nombre),{pin:nuevo}); }
-window.borrarRepa=async(nombre)=>{ if(!confirm('Borrar '+nombre+'?')) return; await remove(ref(db,'kigoPins/repas/'+nombre)); }
+window.borrarRepa=async(nombre)=>{ if(!confirm('Borrar '+nombre+'? Este repartidor se eliminará de todos lados')) return; await remove(ref(db,'kigoPins/repas/'+nombre)); }
 window.guardarInterno=async()=>{
  let nombre=document.getElementById('cfgNombreEmpresa').value.trim();
  let logo=document.getElementById('cfgLogo').value.trim();
@@ -356,14 +345,21 @@ window.guardarInterno=async()=>{
    let base64=e.target.result;
    await set(ref(db,'kigoConfig'),{nombreEmpresa:nombre,logo:base64,ts:Date.now()});
    document.getElementById('previewLogo').innerHTML=`<img src="${base64}" style="max-width:120px;border-radius:12px">`;
+   actualizarLoginLogo(base64,nombre);
    mostrarModalElegante({title:'Guardado',text:'Logo subido',showCancel:false});
   };
   reader.readAsDataURL(fileInput.files[0]);
  }else{
   await set(ref(db,'kigoConfig'),{nombreEmpresa:nombre,logo:logo,ts:Date.now()});
   if(logo) document.getElementById('previewLogo').innerHTML=`<img src="${logo}" style="max-width:120px;border-radius:12px">`;
+  actualizarLoginLogo(logo,nombre);
   mostrarModalElegante({title:'Guardado',text:'Interno guardado',showCancel:false});
  }
+}
+function actualizarLoginLogo(logo,nombre){
+ let box=document.getElementById('loginLogoBox');
+ if(logo){ box.innerHTML=`<img src="${logo}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">`; }
+ if(nombre){ document.getElementById('loginNombreEmpresa').innerText=nombre.toUpperCase(); }
 }
 window.borrarChatBase=async()=>{
  if(!confirm('Borrar chat de '+chatSenderBase+'?')) return;
@@ -374,17 +370,17 @@ window.borrarChatBase=async()=>{
  await Promise.all(promises);
 }
 window.borrarChatRepa=async()=>{
- if(!confirm('Borrar tu chat con base?')) return;
+ if(!confirm('Borrar tu chat?')) return;
  let snap=await get(ref(db,'kigoChat'));
  let val=snap.val()||{};
  let promises=[];
- Object.entries(val).forEach(([k,m])=>{ if(m.repa===currentUser||m.repa==='José'&&currentUser==='José'||m.sender===currentUser){ if(m.repa===currentUser||m.repa===repaPanelActual) promises.push(remove(ref(db,'kigoChat/'+k))); } });
+ Object.entries(val).forEach(([k,m])=>{ if(m.repa===repaPanelActual||m.repa===currentUser||m.sender===currentUser){ promises.push(remove(ref(db,'kigoChat/'+k))); } });
  await Promise.all(promises);
 }
 window.toggleChatRepa=()=>{ document.getElementById('chatRepaSlide').classList.toggle('open'); }
 window.enviarChatRepa=async()=>{
  let txt=document.getElementById('chatRepaInput').value.trim(); if(!txt) return;
- let r=push(ref(db,'kigoChat')); await set(r,{sender:currentUser, repa:currentUser, text:txt,ts:Date.now()}); document.getElementById('chatRepaInput').value='';
+ let r=push(ref(db,'kigoChat')); await set(r,{sender:repaPanelActual, repa:repaPanelActual, text:txt,ts:Date.now()}); document.getElementById('chatRepaInput').value='';
 }
 window.setChatBaseRepa=(repa)=>{ chatSenderBase=repa; document.querySelectorAll('.btnChatRepa').forEach(b=>b.classList.toggle('active',b.dataset.repa===repa)); renderChatBase(); }
 window.enviarChat=async()=>{ let txt=document.getElementById('chatInput').value.trim(); if(!txt) return; let r=push(ref(db,'kigoChat')); await set(r,{sender:'BASE',repa:chatSenderBase,text:txt,ts:Date.now()}); document.getElementById('chatInput').value=''; }
@@ -399,7 +395,7 @@ function renderChatBase(){
 }
 function renderChatRepa(){
  let box=document.getElementById('chatRepaBox'); if(!box) return;
- let entries=Object.entries(chatLive).filter(([k,m])=> m.repa===currentUser || m.repa===repaPanelActual || m.sender===currentUser).sort((a,b)=>a[1].ts-b[1].ts);
+ let entries=Object.entries(chatLive).filter(([k,m])=> m.repa===repaPanelActual || m.repa===currentUser || m.sender===currentUser).sort((a,b)=>a[1].ts-b[1].ts);
  box.innerHTML=entries.map(([k,m])=>{
   let isBase=m.sender==='BASE';
   return `<div style="display:flex;flex-direction:${isBase?'row':'row-reverse'};width:100%"><div class="chatBubble ${isBase?'chatBase':'chatJose'}" style="font-size:10px"><b>${m.sender}:</b> ${m.text}</div></div>`;
@@ -410,19 +406,19 @@ function renderListaRepas(){
  let listAjuste=document.getElementById('listaRepasAjuste');
  if(listAjuste){
   let repas=Object.entries(repasData);
-  listAjuste.innerHTML=repas.map(([k,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6"><div><div style="font-size:11px;font-weight:800">${v.nombre||k} <span style="font-size:8px;background:${(v.tipo||'repartidor')==='admin'?'#0a0a0a':'#eee'};color:${(v.tipo||'repartidor')==='admin'?'#fff':'#111'};padding:2px 6px;border-radius:10px;margin-left:4px">${(v.tipo||'repartidor').toUpperCase()}</span></div><div style="font-size:9px;color:#888">PIN: ${v.pin||'--'} • ${v.online!==false?'EN LINEA':'OFFLINE'}</div></div><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px" onclick="editarPinRepa('${k}')">EDITAR PIN</button><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarRepa('${k}')">BORRAR</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores</div>';
+  listAjuste.innerHTML=repas.map(([k,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6"><div><div style="font-size:11px;font-weight:800">${v.nombre||k} <span style="font-size:8px;background:${(v.tipo||'repartidor')==='admin'?'#0a0a0a':'#eee'};color:${(v.tipo||'repartidor')==='admin'?'#fff':'#111'};padding:2px 6px;border-radius:10px;margin-left:4px">${(v.tipo||'repartidor').toUpperCase()}</span></div><div style="font-size:9px;color:#888">PIN: ${v.pin||'--'} • ${v.online!==false?'EN LINEA':'OFFLINE'}</div></div><div style="display:flex;gap:6px"><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px" onclick="editarPinRepa('${k}')">EDITAR PIN</button><button class="btn-outline" style="width:auto;height:32px;padding:0 10px;font-size:8px;background:#fee2e2;border-color:#fecaca;color:#ef4444" onclick="borrarRepa('${k}')">BORRAR</button></div></div>`).join('')||'<div style="text-align:center;color:#999;font-size:10px;padding:10px">No hay repartidores - Agrega uno</div>';
  }
  let listRepasChat=document.getElementById('listaRepasChat');
  if(listRepasChat){
-  let keys=Object.keys(repasData); if(!keys.length) keys=['José'];
-  listRepasChat.innerHTML=keys.map(r=>`<button class="btnChatRepa tabSeg ${r===chatSenderBase?'active':''}" data-repa="${r}" onclick="setChatBaseRepa('${r}')">${r}</button>`).join('');
+  let keys=Object.keys(repasData);
+  listRepasChat.innerHTML=keys.map(r=>`<button class="btnChatRepa tabSeg ${r===chatSenderBase?'active':''}" data-repa="${r}" onclick="setChatBaseRepa('${r}')">${r}</button>`).join('')||'<span style="font-size:9px;color:#999">Sin repartidores</span>';
  }
  let sel=document.getElementById('selRepa');
  if(sel && currentRole==='admin'){
-  let keys=Object.keys(repasData); if(!keys.length) keys=['José'];
+  let keys=Object.keys(repasData);
   let cur=sel.value;
-  sel.innerHTML=keys.map(n=>`<option value="${n}">${n}</option>`).join('');
-  if(cur) sel.value=cur; if(!sel.value) sel.value='José';
+  sel.innerHTML=keys.map(n=>`<option value="${n}">${n}</option>`).join('')||'<option value="">Sin repartidores</option>';
+  if(cur) sel.value=cur;
  }
  let selEdit=document.getElementById('editRepa');
  if(selEdit){
@@ -451,7 +447,7 @@ window.mostrarModalElegante=({title='Aviso', text='Mensaje', cancelText='Cancela
 window.toggleJose=async()=>{
 let isRepa=repaPanelActual;
 let curOnline=repasData[isRepa]?.online!==false;
-await set(ref(db,'kigoPins/repas/'+isRepa),{...repasData[isRepa], online:!curOnline, nombre:isRepa, ts:Date.now()});
+await update(ref(db,'kigoPins/repas/'+isRepa),{online:!curOnline, ts:Date.now()});
 }
 function actualizarUIJose(){
 let dot=document.getElementById('dotJose'); let txt=document.getElementById('txtEstadoJose'); let btn=document.getElementById('btnToggleJose');
@@ -500,14 +496,18 @@ onValue(ref(db,'kigoConfig'),snap=>{
  let v=snap.val(); if(!v) return;
  let n1=document.getElementById('cfgNombreEmpresa'); if(n1) n1.value=v.nombreEmpresa||'';
  let l1=document.getElementById('cfgLogo'); if(l1 && v.logo &&!v.logo.startsWith('data:')) l1.value=v.logo;
- if(v.logo){ let pv=document.getElementById('previewLogo'); if(pv) pv.innerHTML=`<img src="${v.logo}" style="max-width:120px;border-radius:12px">`; }
+ if(v.logo){ let pv=document.getElementById('previewLogo'); if(pv) pv.innerHTML=`<img src="${v.logo}" style="max-width:120px;border-radius:12px">`; actualizarLoginLogo(v.logo,v.nombreEmpresa); }
 });
 onValue(ref(db,'kigoPins'),snap=>{
 let v=snap.val()||{}; repasData=v.repas||v||{};
-if(!repasData['José']) set(ref(db,'kigoPins/repas/José'),{online:true,nombre:'José',pin:'1234',tipo:'repartidor',ts:Date.now()});
+// ya no auto-crea Jose
 renderListaRepas();
 mostrarEstadoRepa();
 actualizarUIJose();
+if(currentRole==='repartidor' &&!repasData[currentUser]){
+ // si borraron al repartidor logueado, cerrar sesion
+ cerrarSesion();
+}
 });
 window.mostrarEstadoRepa=()=>{
 let sel=document.getElementById('selRepa'); if(!sel) return;
@@ -523,9 +523,17 @@ onValue(ref(db,'kigoPedidosLive'),snap=>{
  let isNew=false;
  for(let k of newKeys){ if(!prevKeys.has(k)){ isNew=true; break; } }
  if(isNew && prevKeys.size>0){
-  sonidoRappi();
-  if(currentRole==='repartidor' || document.getElementById('view-repartidor').classList.contains('active')){
-   setTimeout(()=>{ mostrarModalElegante({title:'NUEVO PEDIDO',text:'Te llegó un pedido nuevo - Revisa en espera',showCancel:false}); setTimeout(cerrarModal,3000); },200);
+  let lastKey=[...newKeys].find(k=>!prevKeys.has(k));
+  let lastPedido=newVal[lastKey];
+  // si es para este repartidor o es pendiente general
+  if(currentRole==='repartidor'){
+   if(lastPedido && lastPedido.repaAsignado===currentUser){
+    sonidoRappi();
+    mostrarModalElegante({title:'NUEVO PEDIDO',text:`Te llego pedido de ${lastPedido.cliente}`,showCancel:false});
+    setTimeout(cerrarModal,4000);
+   }
+  }else{
+   sonidoRappi();
   }
  }
  prevKeys=newKeys;
@@ -561,7 +569,7 @@ return `<div class="cardPedido" style="${esFin?'border:2px solid #10b981;backgro
 function renderRepaPanel(){
 let listaEspera=document.getElementById('listaEspera'); let listaActivos=document.getElementById('listaActivos'); if(!listaEspera) return;
 let entries=Object.entries(pedidosLive).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
-let enEspera=entries.filter(([k,p])=>(p.etapa||'pendiente')==='pendiente' && (currentRole==='admin' || p.repaAsignado===currentUser ||!p.repaAsignado));
+let enEspera=entries.filter(([k,p])=>(p.etapa||'pendiente')==='pendiente' && (currentRole==='admin' || p.repaAsignado===currentUser ||!p.repaAsignado || p.repaAsignado===repaPanelActual));
 let misActivos=entries.filter(([k,p])=>p.repaAsignado===repaPanelActual && ['camino','en camino','recogido','entrega'].includes(p.etapa||''));
 document.getElementById('countEspera').innerText=enEspera.length; document.getElementById('countActivos').innerText=misActivos.length;
 if(!misActivos.length){ listaActivos.innerHTML='<div style="text-align:center;padding:16px;color:#999;font-size:10px;border:1.5px dashed #e5e7eb;border-radius:12px">Sin activo</div>'; }
@@ -591,7 +599,7 @@ window.cambiarEtapaConRuta=async(id, nuevaEtapa, tipoRuta)=>{ let pos=await getU
 function trazarRutaRepa(origen, destino, p){ if(!origen||!destino||!mapRepa) return; let dir=new google.maps.DirectionsService(); dir.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ if(!dirRendRepa) dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); dirRendRepa.setMap(mapRepa); dirRendRepa.setDirections(r); clearMRepa(); addMRepa(origen,'#3b82f6'); addMRepa(destino,'#ef4444'); let leg=r.routes[0].legs[0]; document.getElementById('txtKmRepa').innerText=leg.distance.text; document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0)); document.getElementById('txtTiempoRepa').innerText=leg.duration.text+' • '+calcularHoraRecogida(p.ts,p.tiempoRecogida); } }); }
 window.verRutaRepa=async(id)=>{ let p=pedidosLive[id]; if(!p) return; let o=await geo(p.dirRecogida); let d=await geo(p.entrega); if(!o||!d) return; let etapa=p.etapa||'pendiente'; let origen=o; let destino=d; if(['camino','en camino'].includes(etapa)){ let pos=await getUbicacionRepa(); if(pos) origen=pos; destino=o; }else if(['entrega','recogido'].includes(etapa)){ let pos=await getUbicacionRepa(); if(pos) origen=pos; destino=d; } let dir=new google.maps.DirectionsService(); dir.route({origin:origen,destination:destino,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ if(!dirRendRepa) dirRendRepa=new google.maps.DirectionsRenderer({suppressMarkers:true,map:mapRepa,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); dirRendRepa.setMap(mapRepa); dirRendRepa.setDirections(r); clearMRepa(); addMRepa(origen,'#3b82f6'); addMRepa(destino,'#ef4444'); let leg=r.routes[0].legs[0]; document.getElementById('txtKmRepa').innerText=leg.distance.text; document.getElementById('txtCostoRepa').innerText='$'+((p.costoSugerido||0)+(p.costoExtra||0)); document.getElementById('txtTiempoRepa').innerText=leg.duration.text; } }); }
 window.registrarHistorial=async(id)=>{ let p=pedidosLive[id]; if(!p) return; let histRef=push(ref(db,'kigoHistorial')); await set(histRef,{...p,etapa:'finalizado',finalizadoEn:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+id)); mostrarModalElegante({title:'Historial',text:'Registrado',showCancel:false}); }
-window.verDetalles=(id)=>{ let p=pedidosLive[id]; if(!p) return; pedidoEditId=id; pedidoEditData=p; document.getElementById('detalleContent').innerHTML=`<div style="font-size:10px;color:#666;background:#f7f7f7;border-radius:10px;padding:10px"><div><b>Código:</b> ${id.substring(1,7).toUpperCase()}</div><div style="margin-top:4px;font-weight:800">${calcularHoraRecogida(p.ts,p.tiempoRecogida)} - ${p.etapa}</div><div><b>Cliente:</b> ${p.cliente}</div><div><b>Recoge:</b> ${p.dirRecogida}</div><div><b>Entrega:</b> ${p.entrega}</div></div>`; document.getElementById('editRecogida').value=p.dirRecogida||''; document.getElementById('editEntrega').value=p.entrega||''; document.getElementById('editTelEnt').value=p.telefono||''; document.getElementById('editRefEnt').value=p.referencia||''; document.getElementById('editCostoExtra').value=p.costoExtra||0; let selEdit=document.getElementById('editRepa'); if(selEdit) selEdit.value=p.repaAsignado||'José'; calcTotalEdit(); document.getElementById('overlayDetalle').classList.add('show'); }
+window.verDetalles=(id)=>{ let p=pedidosLive[id]; if(!p) return; pedidoEditId=id; pedidoEditData=p; document.getElementById('detalleContent').innerHTML=`<div style="font-size:10px;color:#666;background:#f7f7f7;border-radius:10px;padding:10px"><div><b>Código:</b> ${id.substring(1,7).toUpperCase()}</div><div style="margin-top:4px;font-weight:800">${calcularHoraRecogida(p.ts,p.tiempoRecogida)} - ${p.etapa}</div><div><b>Cliente:</b> ${p.cliente}</div><div><b>Recoge:</b> ${p.dirRecogida}</div><div><b>Entrega:</b> ${p.entrega}</div></div>`; document.getElementById('editRecogida').value=p.dirRecogida||''; document.getElementById('editEntrega').value=p.entrega||''; document.getElementById('editTelEnt').value=p.telefono||''; document.getElementById('editRefEnt').value=p.referencia||''; document.getElementById('editCostoExtra').value=p.costoExtra||0; let selEdit=document.getElementById('editRepa'); if(selEdit) selEdit.value=p.repaAsignado||Object.keys(repasData)[0]||''; calcTotalEdit(); document.getElementById('overlayDetalle').classList.add('show'); }
 window.addCosto=(n)=>{ let inp=document.getElementById('editCostoExtra'); inp.value=(parseInt(inp.value||0)+n); calcTotalEdit(); }
 window.calcTotalEdit=()=>{ let base=pedidoEditData?.costoSugerido||0; let extra=parseInt(document.getElementById('editCostoExtra').value||0); document.getElementById('txtTotalEdit').innerText='$'+(base+extra); }
 window.guardarEdicion=async()=>{ if(!pedidoEditId) return; let extra=parseInt(document.getElementById('editCostoExtra').value||0); await update(ref(db,'kigoPedidosLive/'+pedidoEditId),{dirRecogida:document.getElementById('editRecogida').value,entrega:document.getElementById('editEntrega').value,telefono:document.getElementById('editTelEnt').value,referencia:document.getElementById('editRefEnt').value,repaAsignado:document.getElementById('editRepa').value,costoExtra:extra}); mostrarModalElegante({title:'Actualizado',text:'Actualizado',showCancel:false}); cerrarDetalle(); }
@@ -661,27 +669,30 @@ dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK
 }
 window.confirmar=async()=>{
 if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
-let repa=document.getElementById('selRepa')?.value||repaPanelActual||'José';
+let repa=document.getElementById('selRepa')?.value||repaPanelActual||Object.keys(repasData)[0]||'';
+if(!repa){ mostrarModalElegante({title:'Falta repartidor',text:'Agrega un repartidor primero',showCancel:false}); return; }
 let nr=push(ref(db,'kigoPedidosLive'));
 await set(nr,{servicio:pedido.servicio||'recoger',cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:pedido.clienteSel.telefono||'',telefono:pedido.telEntrega||'',referencia:pedido.refEntrega||'',tiempoRecogida:pedido.tiempoRecogida||'',tipoProd:pedido.tipoProd||'',referenciaCompra:pedido.referenciaCompra||'',km:pedido.km,costoSugerido:pedido.costo,costoExtra:0,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
 mostrarModalElegante({title:'Enviado',text:'Asignada a '+repa+' - $'+pedido.costo,showCancel:false,onConfirm:()=>{ cerrarModal(); limpiarTodoPedido(); showView('seguimiento'); }});
 }
 document.addEventListener('click',e=>{if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')){let l=document.getElementById('listCli'); if(l) l.style.display='none';}});
 
-// iniciar si hay sesion guardada
-if(currentUser){
- document.getElementById('loginScreen').style.display='none';
- document.getElementById('mainContent').style.display='block';
- document.getElementById('txtBienvenida').innerText=currentRole==='admin'?`ADMIN: ${currentUser}`:`REPARTIDOR: ${currentUser}`;
- document.getElementById('repaNombreTop').innerText=currentUser;
- document.getElementById('repaAvatar').innerText=currentUser.charAt(0).toUpperCase();
- if(currentRole==='repartidor'){
-  document.querySelectorAll('.bottom button').forEach(b=>b.style.display='none');
-  document.getElementById('bR').style.display='flex';
-  showView('repartidor');
- }else{
-  showView('pedidos');
- }
+let saved=localStorage.getItem('kigoLogin')||sessionStorage.getItem('kigoLogin');
+if(saved){
+ try{ let data=JSON.parse(saved); currentUser=data.user; currentRole=data.role; repaPanelActual=data.repa||data.user; chatSenderBase=data.repa||data.user;
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('mainContent').style.display='block';
+  document.getElementById('txtBienvenida').innerText=currentRole==='admin'?`ADMIN: ${currentUser}`:`REPARTIDOR: ${currentUser}`;
+  document.getElementById('repaNombreTop').innerText=currentUser;
+  document.getElementById('repaAvatar').innerText=currentUser.charAt(0).toUpperCase();
+  if(currentRole==='repartidor'){
+   document.querySelectorAll('.bottom button').forEach(b=>b.style.display='none');
+   document.getElementById('bR').style.display='flex';
+   showView('repartidor');
+  }else{
+   showView('pedidos');
+  }
+ }catch(e){}
 }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTV1sm6McEIkv-cheaVFCD_svp_a--6wg&libraries=places" async defer></script>
