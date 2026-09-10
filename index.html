@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Plus Jakarta Sans',Manrope,sans-serif;background:#f7f7f7;max-width:640px;margin:0 auto;padding:10px;padding-bottom:90px;letter-spacing:-.2px}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f7f7f7;max-width:640px;margin:0 auto;padding:10px;padding-bottom:90px;letter-spacing:-.2px}
 .card{background:#fff;border:1px solid #eee;border-radius:18px;padding:12px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .label{font-size:8px;font-weight:800;color:#8a8a8a;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;display:block}
 .wrap{border:1.2px solid #e9e9e9;border-radius:12px;background:#fff;display:flex;align-items:center;position:relative}
@@ -15,9 +15,12 @@ body{font-family:'Plus Jakarta Sans',Manrope,sans-serif;background:#f7f7f7;max-w
 .wrap-clear{position:relative}
 .btn-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;border:none;background:#f2f2f2;color:#888;font-weight:800;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:10}
 .btn-clear.show{display:flex}
-.btn{width:100%;height:48px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer;letter-spacing:.2px}
+.btn{width:100%;height:48px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer}
 .btn-outline{width:100%;height:42px;background:#fff;border:1.5px solid #111;border-radius:12px;font-weight:800;font-size:10px;letter-spacing:.4px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;text-transform:uppercase}
 .btn-outline.active{background:#0a0a0a;color:#fff}
+.btn-serv{width:100%;height:44px;border-radius:12px;border:1.5px solid #111;background:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;letter-spacing:.3px}
+.btn-serv.active{background:#0a0a0a;color:#fff}
+.btn-serv.active svg{stroke:#fff}
 .view{display:none}.view.active{display:block}
 #map{width:100%;height:360px;border-radius:14px;background:#e5e7eb;display:block}
 #listCli{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid #0a0a0a;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow:auto;display:none;z-index:50}
@@ -33,7 +36,7 @@ body{font-family:'Plus Jakarta Sans',Manrope,sans-serif;background:#f7f7f7;max-w
 .kigo-btn{flex:1;height:42px;border-radius:12px;border:none;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
 .kigo-btn-confirm{background:#0a0a0a;color:#fff}
 .icon-btn{width:32px;height:32px;border-radius:9px;border:1px solid #e5e7eb;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.ico{width:14px;height:14px;stroke:#111;stroke-width:1.8;fill:none}
+.ico{width:15px;height:15px;stroke:#111;stroke-width:1.8;fill:none}
 </style>
 </head>
 <body>
@@ -56,8 +59,17 @@ body{font-family:'Plus Jakarta Sans',Manrope,sans-serif;background:#f7f7f7;max-w
 </div>
 </div>
 
-<!-- BOTONES PROFESIONALES SIN EMOJI - MISMO TAMAÑO QUE ARRIBA -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+<!-- DOS SERVICIOS ELEGANTES -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+<button id="btnRecoger" class="btn-serv active" onclick="setServicio('recoger')">
+<svg class="ico" viewBox="0 0 24 24"><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 10h6M2 14h6M18 10h4M18 14h4"/></svg>
+RECOGER</button>
+<button id="btnComprar" class="btn-serv" onclick="setServicio('comprar')">
+<svg class="ico" viewBox="0 0 24 24"><path d="M6 2l1.2 2M10 2l1.2 2M14 2l1.2 2M6 8h12l-1 12H7L6 8z"/><path d="M9 11v5M12 11v5M15 11v5"/></svg>
+COMPRAR</button>
+</div>
+
+<div id="wrapModoCliente" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
 <button id="btnLista" class="btn-outline active" onclick="setModo('lista')">
 <svg class="ico" viewBox="0 0 24 24"><path d="M8 6h10M8 12h10M8 18h10M4 6h.01M4 12h.01M4 18h.01"/></svg>
 LISTA CLIENTES</button>
@@ -67,6 +79,7 @@ CLIENTE NUEVO</button>
 </div>
 </div>
 
+<!-- MODO RECOGER - LISTA -->
 <div id="modoLista" class="card">
 <span class="label">Buscar cliente de base de datos</span>
 <div class="wrap wrap-clear" style="overflow:visible">
@@ -79,34 +92,29 @@ CLIENTE NUEVO</button>
 <div style="flex:1">
 <div id="txtNom" style="font-weight:800;font-size:12px"></div>
 <div id="txtDirSel" style="font-size:10px;color:#555;margin-top:2px"></div>
-<div id="txtTelSel" style="font-size:11px;font-weight:800;margin-top:4px;display:flex;align-items:center;gap:4px"></div>
+<div id="txtTelSel" style="font-size:11px;font-weight:800;margin-top:4px"></div>
 </div>
 <button onclick="limpiarCampo('buscCli','clearBusc')" style="width:22px;height:22px;border-radius:50%;border:none;background:#dcfce7;color:#16a34a;font-weight:800;cursor:pointer">✕</button>
 </div>
 </div>
-
 <span class="label" style="margin-top:10px">Direccion entrega</span>
 <div class="wrap wrap-clear"><input type="text" id="dirEntrega" placeholder="Escribe dirección..." oninput="toggleClear('dirEntrega','clearEnt')"><button id="clearEnt" class="btn-clear" onclick="limpiarCampo('dirEntrega','clearEnt')">✕</button></div>
-
-<!-- NUEVO CAMPO TIEMPO RECOGIDA -->
 <span class="label" style="margin-top:10px">Tiempo de recogida</span>
 <div class="wrap wrap-clear">
 <span style="padding-left:12px;display:flex;align-items:center"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
-<input type="number" id="tiempoRecogida" placeholder="Ej. 15" min="1" max="120" oninput="toggleClear('tiempoRecogida','clearTiempo')">
+<input type="number" id="tiempoRecogida" placeholder="15" min="1" max="120" oninput="toggleClear('tiempoRecogida','clearTiempo')">
 <span style="font-size:10px;font-weight:800;color:#888;padding-right:32px">MINUTOS</span>
 <button id="clearTiempo" class="btn-clear" onclick="limpiarCampo('tiempoRecogida','clearTiempo')">✕</button>
 </div>
-
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
 <div><span class="label">Tel entrega</span><div class="wrap wrap-clear"><input type="text" id="telEntrega" oninput="toggleClear('telEntrega','clearTelEnt')"><button id="clearTelEnt" class="btn-clear" onclick="limpiarCampo('telEntrega','clearTelEnt')">✕</button></div></div>
 <div><span class="label">Referencia</span><div class="wrap wrap-clear"><input type="text" id="refEntrega" oninput="toggleClear('refEntrega','clearRef')"><button id="clearRef" class="btn-clear" onclick="limpiarCampo('refEntrega','clearRef')">✕</button></div></div>
 </div>
-
-<button id="btnGuardarNuevoLista" style="display:none;width:100%;height:42px;margin-top:12px;background:#fff;border:1.5px dashed #10b981;color:#10b981;border-radius:12px;font-weight:800;cursor:pointer" onclick="guardarDesdePedido()">GUARDAR EN CLIENTES</button>
 <button class="btn" style="margin-top:10px" onclick="cotizar()">COTIZAR RUTA</button>
 <button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
 </div>
 
+<!-- MODO RECOGER - NUEVO -->
 <div id="modoNuevo" class="card" style="display:none">
 <span class="label">Nombre del cliente nuevo</span>
 <div class="wrap wrap-clear"><input type="text" id="nuevoNombre" placeholder="Nombre cliente" oninput="toggleClear('nuevoNombre','clearNuevoNom')"><button id="clearNuevoNom" class="btn-clear" onclick="limpiarCampo('nuevoNombre','clearNuevoNom')">✕</button></div>
@@ -116,24 +124,49 @@ CLIENTE NUEVO</button>
 <div class="wrap wrap-clear"><input type="text" id="nuevoTel" placeholder="Teléfono" oninput="toggleClear('nuevoTel','clearNuevoTel')"><button id="clearNuevoTel" class="btn-clear" onclick="limpiarCampo('nuevoTel','clearNuevoTel')">✕</button></div>
 <span class="label" style="margin-top:10px">Dirección entrega</span>
 <div class="wrap wrap-clear"><input type="text" id="nuevoDirEntrega" placeholder="Dirección entrega" oninput="toggleClear('nuevoDirEntrega','clearNuevoEnt')"><button id="clearNuevoEnt" class="btn-clear" onclick="limpiarCampo('nuevoDirEntrega','clearNuevoEnt')">✕</button></div>
-
 <span class="label" style="margin-top:10px">Tiempo de recogida</span>
 <div class="wrap wrap-clear">
 <span style="padding-left:12px;display:flex;align-items:center"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
-<input type="number" id="nuevoTiempoRecogida" placeholder="Ej. 15" min="1" max="120" oninput="toggleClear('nuevoTiempoRecogida','clearNuevoTiempo')">
+<input type="number" id="nuevoTiempoRecogida" placeholder="15" min="1" max="120" oninput="toggleClear('nuevoTiempoRecogida','clearNuevoTiempo')">
 <span style="font-size:10px;font-weight:800;color:#888;padding-right:32px">MINUTOS</span>
 <button id="clearNuevoTiempo" class="btn-clear" onclick="limpiarCampo('nuevoTiempoRecogida','clearNuevoTiempo')">✕</button>
 </div>
-
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
 <div><span class="label">Tel entrega</span><div class="wrap wrap-clear"><input type="text" id="nuevoTelEntrega" oninput="toggleClear('nuevoTelEntrega','clearNuevoTelEnt')"><button id="clearNuevoTelEnt" class="btn-clear" onclick="limpiarCampo('nuevoTelEntrega','clearNuevoTelEnt')">✕</button></div></div>
 <div><span class="label">Referencia entrega</span><div class="wrap wrap-clear"><input type="text" id="nuevoRefEntrega" oninput="toggleClear('nuevoRefEntrega','clearNuevoRef')"><button id="clearNuevoRef" class="btn-clear" onclick="limpiarCampo('nuevoRefEntrega','clearNuevoRef')">✕</button></div></div>
 </div>
-
 <button style="width:100%;height:42px;margin-top:12px;background:#fff;border:1.5px dashed #10b981;color:#10b981;border-radius:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" onclick="guardarDesdePedidoNuevo()"><svg class="ico" style="stroke:#10b981" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21V13H7v8"/><path d="M7 3v5h8"/></svg> GUARDAR EN CLIENTES</button>
 <button class="btn" style="margin-top:10px" onclick="cotizar()">COTIZAR RUTA</button>
 <button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
 </div>
+
+<!-- MODO COMPRAR - NUEVAS OPCIONES -->
+<div id="modoComprar" class="card" style="display:none">
+<span class="label">Tipo de producto que se va a comprar</span>
+<div class="wrap wrap-clear"><input type="text" id="compTipo" placeholder="Ej. Medicamentos, despensa, refacciones" oninput="toggleClear('compTipo','clearCompTipo')"><button id="clearCompTipo" class="btn-clear" onclick="limpiarCampo('compTipo','clearCompTipo')">✕</button></div>
+<span class="label" style="margin-top:10px">Referencia de lo que se va a comprar</span>
+<div class="wrap wrap-clear"><input type="text" id="compReferencia" placeholder="Ej. 2 cajas de paracetamol, 1kg tortillas" oninput="toggleClear('compReferencia','clearCompRef')"><button id="clearCompRef" class="btn-clear" onclick="limpiarCampo('compReferencia','clearCompRef')">✕</button></div>
+<span class="label" style="margin-top:10px">Almacén / Local / Dirección donde comprar</span>
+<div class="wrap wrap-clear"><input type="text" id="compAlmacen" placeholder="Ej. Farmacia Guadalajara centro" oninput="toggleClear('compAlmacen','clearCompAlm')"><button id="clearCompAlm" class="btn-clear" onclick="limpiarCampo('compAlmacen','clearCompAlm')">✕</button></div>
+<span class="label" style="margin-top:10px">Dirección de entrega</span>
+<div class="wrap wrap-clear"><input type="text" id="compDirEntrega" placeholder="Dirección entrega" oninput="toggleClear('compDirEntrega','clearCompDir')"><button id="clearCompDir" class="btn-clear" onclick="limpiarCampo('compDirEntrega','clearCompDir')">✕</button></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+<div><span class="label">Nombre quien recibe</span><div class="wrap wrap-clear"><input type="text" id="compNombreRecibe" placeholder="Nombre" oninput="toggleClear('compNombreRecibe','clearCompNom')"><button id="clearCompNom" class="btn-clear" onclick="limpiarCampo('compNombreRecibe','clearCompNom')">✕</button></div></div>
+<div><span class="label">Teléfono</span><div class="wrap wrap-clear"><input type="text" id="compTel" placeholder="Teléfono" oninput="toggleClear('compTel','clearCompTel')"><button id="clearCompTel" class="btn-clear" onclick="limpiarCampo('compTel','clearCompTel')">✕</button></div></div>
+</div>
+<span class="label" style="margin-top:10px">Referencia entrega</span>
+<div class="wrap wrap-clear"><input type="text" id="compRefEntrega" placeholder="Ej. Casa blanca portón negro" oninput="toggleClear('compRefEntrega','clearCompRefEnt')"><button id="clearCompRefEnt" class="btn-clear" onclick="limpiarCampo('compRefEntrega','clearCompRefEnt')">✕</button></div>
+<span class="label" style="margin-top:10px">Tiempo de compra</span>
+<div class="wrap wrap-clear">
+<span style="padding-left:12px;display:flex;align-items:center"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+<input type="number" id="compTiempo" placeholder="15" min="1" max="120" oninput="toggleClear('compTiempo','clearCompTiempo')">
+<span style="font-size:10px;font-weight:800;color:#888;padding-right:32px">MINUTOS</span>
+<button id="clearCompTiempo" class="btn-clear" onclick="limpiarCampo('compTiempo','clearCompTiempo')">✕</button>
+</div>
+<button class="btn" style="margin-top:12px" onclick="cotizar()">COTIZAR RUTA</button>
+<button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
+</div>
+
 </div>
 
 <div id="view-clientes" class="view">
@@ -167,6 +200,7 @@ const db = getDatabase(app);
 let clientesDB={}, repasData={}, pedido=null, tarifas={mandado:35};
 let map, dirServ, dirRend, markers=[], clienteSel=null;
 let modoActual='lista';
+let servicioActual='recoger';
 
 window.cerrarModal=function(){ document.getElementById('kigoOverlay').classList.remove('show'); document.getElementById('editBox').style.display='none'; }
 window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText='Cancelar', confirmText='OK', showCancel=true, onConfirm=null, showEdit=false, editData=null}){
@@ -183,7 +217,28 @@ window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText=
  document.getElementById('kigoOverlay').classList.add('show');
  document.getElementById('modalConfirm').onclick=()=>{ if(onConfirm) onConfirm(); else cerrarModal(); };
 }
+
+window.setServicio=function(s){
+servicioActual=s;
+document.getElementById('btnRecoger').classList.toggle('active',s==='recoger');
+document.getElementById('btnComprar').classList.toggle('active',s==='comprar');
+document.getElementById('wrapModoCliente').style.display=s==='recoger'?'grid':'none';
+if(s==='recoger'){
+ setModo(modoActual);
+ document.getElementById('modoComprar').style.display='none';
+}else{
+ document.getElementById('modoLista').style.display='none';
+ document.getElementById('modoNuevo').style.display='none';
+ document.getElementById('modoComprar').style.display='block';
+}
+pedido=null;
+document.getElementById('txtKm').innerText='-- km • -- min';
+document.getElementById('txtCosto').innerText='$0';
+if(dirRend) dirRend.setDirections({routes:[]});
+clearM();
+}
 window.setModo=function(m){
+if(servicioActual!=='recoger') return;
 modoActual=m;
 document.getElementById('modoLista').style.display=m==='lista'?'block':'none';
 document.getElementById('modoNuevo').style.display=m==='nuevo'?'block':'none';
@@ -195,6 +250,7 @@ document.getElementById('txtCosto').innerText='$0';
 if(dirRend) dirRend.setDirections({routes:[]});
 clearM();
 }
+
 onValue(ref(db,'kigoClientesDir'),snap=>{
 let v=snap.val()||{}; let m={};
 Object.entries(v).forEach(([k,d])=>{
@@ -248,6 +304,8 @@ new google.maps.places.Autocomplete(document.getElementById('dirEntrega'),opts);
 new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts);
 new google.maps.places.Autocomplete(document.getElementById('nuevoDirRecoge'),opts);
 new google.maps.places.Autocomplete(document.getElementById('nuevoDirEntrega'),opts);
+new google.maps.places.Autocomplete(document.getElementById('compAlmacen'),opts);
+new google.maps.places.Autocomplete(document.getElementById('compDirEntrega'),opts);
 }catch(e){}
 }
 window._initMapReal=initMapReal;
@@ -287,12 +345,6 @@ if(!nombre||!dir){ mostrarModalElegante({title:'Falta dato',text:'Escribe nombre
 let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
 await set(ref(db,'kigoClientesDir/'+key),{direccion:dir,telefono:tel,nombreOriginal:nombre,ts:Date.now()});
 document.getElementById('cliNombre').value=''; document.getElementById('cliDir').value=''; document.getElementById('cliTel').value='';
-}
-window.guardarDesdePedido=async function(){
-if(!clienteSel){ mostrarModalElegante({title:'Selecciona',text:'Selecciona cliente de lista',showCancel:false}); return; }
-let key=clienteSel.nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120);
-await set(ref(db,'kigoClientesDir/'+key),{direccion:clienteSel.direccion,telefono:clienteSel.telefono,nombreOriginal:clienteSel.nombre,ts:Date.now()});
-mostrarModalElegante({title:'Guardado',text:'Cliente guardado',showCancel:false});
 }
 window.guardarDesdePedidoNuevo=async function(){
 let nombre=document.getElementById('nuevoNombre').value.trim();
@@ -370,7 +422,26 @@ toggleClear('buscCli','clearBusc');
 geo(d.direccion).then(p=>{if(p&&map){map.setCenter(p);map.setZoom(15);clearM();addM(p,'#ef4444');}});
 }
 window.cotizar=async function(){
-let o=null, de=null, entrega='', telEntrega='', refEntrega='', nombreCliente='', telRecogida='', tiempoRecogida='';
+let o=null, de=null;
+if(servicioActual==='comprar'){
+let almacen=document.getElementById('compAlmacen').value.trim();
+let dirEnt=document.getElementById('compDirEntrega').value.trim();
+if(!almacen||!dirEnt){ mostrarModalElegante({title:'Falta dato',text:'Almacen y direccion entrega obligatorios',showCancel:false}); return; }
+o=await geo(almacen);
+de=await geo(dirEnt);
+if(!o||!de){ mostrarModalElegante({title:'Error',text:'Direccion no encontrada',showCancel:false}); return; }
+dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{
+if(s==='OK'){
+let leg=r.routes[0].legs[0];dirRend.setDirections(r);clearM();addM(o,'#ef4444');addM(de,'#0a0a0a');
+let km=(leg.distance.value/1000).toFixed(1);let min=Math.round(leg.duration.value/60);let costo=Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6);
+pedido={servicio:'comprar',clienteSel:{nombre:document.getElementById('compNombreRecibe').value.trim()||'Compra',direccion:almacen,telefono:document.getElementById('compTel').value.trim()},entrega:dirEnt,telEntrega:document.getElementById('compTel').value.trim(),refEntrega:document.getElementById('compRefEntrega').value.trim(),tipoProd:document.getElementById('compTipo').value.trim(),referenciaCompra:document.getElementById('compReferencia').value.trim(),tiempoRecogida:document.getElementById('compTiempo').value.trim(),de,o,km,min,costo};
+document.getElementById('txtKm').innerText=`${km}km • ${min}m`;
+document.getElementById('txtCosto').innerText=`$${costo}`;
+}
+});
+return;
+}
+let entrega='', telEntrega='', refEntrega='', nombreCliente='', telRecogida='', tiempoRecogida='';
 if(modoActual==='lista'){
 if(!clienteSel){ mostrarModalElegante({title:'Falta cliente',text:'Busca cliente en base de datos',showCancel:false}); return; }
 entrega=document.getElementById('dirEntrega').value.trim();
@@ -401,7 +472,7 @@ dirServ.route({origin:o,destination:de,travelMode:'DRIVING'},(r,s)=>{
 if(s==='OK'){
 let leg=r.routes[0].legs[0];dirRend.setDirections(r);clearM();addM(o,'#ef4444');addM(de,'#0a0a0a');
 let km=(leg.distance.value/1000).toFixed(1);let min=Math.round(leg.duration.value/60);let costo=Math.round((tarifas.mandado||35)+Math.max(0,km-2)*6);
-pedido={clienteSel:{nombre:nombreCliente,direccion:clienteSel.direccion,telefono:telRecogida},entrega:entrega,telEntrega:telEntrega,refEntrega:refEntrega,tiempoRecogida:tiempoRecogida,de,o,km,min,costo};
+pedido={servicio:'recoger',clienteSel:{nombre:nombreCliente,direccion:clienteSel.direccion,telefono:telRecogida},entrega:entrega,telEntrega:telEntrega,refEntrega:refEntrega,tiempoRecogida:tiempoRecogida,de,o,km,min,costo};
 document.getElementById('txtKm').innerText=`${km}km • ${min}m`;
 document.getElementById('txtCosto').innerText=`$${costo}`;
 }
@@ -411,8 +482,8 @@ window.confirmar=async function(){
 if(!pedido){ mostrarModalElegante({title:'Cotiza',text:'Cotiza primero',showCancel:false}); return; }
 let repa=document.getElementById('selRepa')?.value||'sin asignar';
 let nr=push(ref(db,'kigoPedidosLive'));
-await set(nr,{cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:pedido.clienteSel.telefono||'',telefono:pedido.telEntrega||'',referencia:pedido.refEntrega||'',tiempoRecogida:pedido.tiempoRecogida||'',km:pedido.km,costoSugerido:pedido.costo,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
-mostrarModalElegante({title:'Enviado',text:'Asignado a '+repa+' - Recoger en '+ (pedido.tiempoRecogida||'0') +' min - $'+pedido.costo,showCancel:false});
+await set(nr,{servicio:pedido.servicio||'recoger',cliente:pedido.clienteSel.nombre,dirRecogida:pedido.clienteSel.direccion,entrega:pedido.entrega,telefonoRecogida:pedido.clienteSel.telefono||'',telefono:pedido.telEntrega||'',referencia:pedido.refEntrega||'',tiempoRecogida:pedido.tiempoRecogida||'',tipoProd:pedido.tipoProd||'',referenciaCompra:pedido.referenciaCompra||'',km:pedido.km,costoSugerido:pedido.costo,repaAsignado:repa,etapa:'pendiente',ts:Date.now()});
+mostrarModalElegante({title:'Enviado',text:(pedido.servicio==='comprar'?'Compra':'Recogida')+' asignada a '+repa+' - '+(pedido.tiempoRecogida||'0')+' min - $'+pedido.costo,showCancel:false});
 }
 document.addEventListener('click',e=>{if(!e.target.closest('#buscCli')&&!e.target.closest('#listCli')){let l=document.getElementById('listCli'); if(l) l.style.display='none';}});
 </script>
