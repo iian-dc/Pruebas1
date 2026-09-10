@@ -12,8 +12,12 @@
 body{font-family:Manrope,sans-serif;background:#fafafa;max-width:640px;margin:0 auto;padding:10px;padding-bottom:90px}
 .card{background:#fff;border:1.5px solid #e5e7eb;border-radius:20px;padding:14px;margin-bottom:10px}
 .label{font-size:8px;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;display:block}
-.wrap{border:1.5px solid #e5e7eb;border-radius:12px;background:#fff;overflow:hidden;display:flex;align-items:center}
+.wrap{border:1.5px solid #e5e7eb;border-radius:12px;background:#fff;overflow:hidden;display:flex;align-items:center;position:relative}
 .wrap input,.wrap select{flex:1;height:42px;border:none;outline:none;padding:0 12px;font-size:13px;font-weight:600;background:transparent}
+.wrap-clear{position:relative}
+.btn-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;border:none;background:#f3f4f6;color:#6b7280;font-weight:800;font-size:12px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:10}
+.btn-clear.show{display:flex}
+.btn-clear:hover{background:#0a0a0a;color:#fff}
 .btn{width:100%;height:48px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer}
 .view{display:none}.view.active{display:block}
 #map{width:100%;height:360px;border-radius:16px;background:#e5e7eb}
@@ -27,7 +31,7 @@ body{font-family:Manrope,sans-serif;background:#fafafa;max-width:640px;margin:0 
 .kigo-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:200}
 .kigo-overlay.show{display:flex}
 .kigo-modal{background:#fff;border-radius:20px;padding:20px;max-width:340px;width:90%}
-.kigo-btn{flex:1;height:42px;border-radius:12px;border:none;font-weight:800;cursor:pointer}
+.kigo-btn{flex:1;height:42px;border-radius:12px;border:none;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
 .kigo-btn-confirm{background:#0a0a0a;color:#fff}
 .icon-btn{width:32px;height:32px;border-radius:9px;border:1px solid #e5e7eb;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
 .icon-btn.edit:hover{background:#f3f4f6}
@@ -39,8 +43,6 @@ body{font-family:Manrope,sans-serif;background:#fafafa;max-width:640px;margin:0 
 <div id="view-pedidos" class="view active">
 <div class="card" style="padding:8px">
 <div id="map"></div>
-
-<!-- CUADROS REDUCIDOS - TEXTO PAREJITO EN LINEA -->
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
 <div style="background:#0a0a0a;color:#fff;border-radius:10px;padding:0 10px;height:38px;display:flex;align-items:center;justify-content:space-between">
 <span style="font-size:8px;font-weight:800;color:#9ca3af;text-transform:uppercase">Distancia</span>
@@ -62,16 +64,26 @@ body{font-family:Manrope,sans-serif;background:#fafafa;max-width:640px;margin:0 
 
 <div class="card">
 <span class="label">Buscar cliente de base de datos</span>
-<div class="wrap" style="position:relative;overflow:visible"><input type="text" id="buscCli" placeholder="Escribe nombre..." autocomplete="off" oninput="buscarCliente()"><div id="listCli"></div></div>
+<div class="wrap wrap-clear" style="overflow:visible">
+<input type="text" id="buscCli" placeholder="Escribe nombre..." autocomplete="off" oninput="buscarCliente();toggleClear('buscCli','clearBusc')">
+<button id="clearBusc" class="btn-clear" onclick="limpiarCampo('buscCli','clearBusc')">✕</button>
+<div id="listCli"></div>
+</div>
 <div id="boxSel" style="display:none;margin-top:10px;background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:10px">
 <div id="txtNom" style="font-weight:800;font-size:12px"></div><div id="txtDirSel" style="font-size:10px"></div><div id="txtTelSel" style="font-size:10px;color:#10b981;font-weight:800"></div>
 </div>
-<span class="label" style="margin-top:10px">Telefono recogida</span><div class="wrap"><input type="text" id="telRecogida"></div>
-<span class="label" style="margin-top:10px">Direccion entrega</span><div class="wrap"><input type="text" id="dirEntrega" placeholder="Escribe dirección..."></div>
+
+<span class="label" style="margin-top:10px">Telefono recogida</span>
+<div class="wrap wrap-clear"><input type="text" id="telRecogida" oninput="toggleClear('telRecogida','clearTelRec')"><button id="clearTelRec" class="btn-clear" onclick="limpiarCampo('telRecogida','clearTelRec')">✕</button></div>
+
+<span class="label" style="margin-top:10px">Direccion entrega</span>
+<div class="wrap wrap-clear"><input type="text" id="dirEntrega" placeholder="Escribe dirección..." oninput="toggleClear('dirEntrega','clearEnt')"><button id="clearEnt" class="btn-clear" onclick="limpiarCampo('dirEntrega','clearEnt')">✕</button></div>
+
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-<div><span class="label">Tel entrega</span><div class="wrap"><input type="text" id="telEntrega"></div></div>
-<div><span class="label">Referencia</span><div class="wrap"><input type="text" id="refEntrega"></div></div>
+<div><span class="label">Tel entrega</span><div class="wrap wrap-clear"><input type="text" id="telEntrega" oninput="toggleClear('telEntrega','clearTelEnt')"><button id="clearTelEnt" class="btn-clear" onclick="limpiarCampo('telEntrega','clearTelEnt')">✕</button></div></div>
+<div><span class="label">Referencia</span><div class="wrap wrap-clear"><input type="text" id="refEntrega" oninput="toggleClear('refEntrega','clearRef')"><button id="clearRef" class="btn-clear" onclick="limpiarCampo('refEntrega','clearRef')">✕</button></div></div>
 </div>
+
 <button class="btn" style="margin-top:12px" onclick="cotizar()">COTIZAR RUTA</button>
 <button class="btn" style="margin-top:8px;background:#10b981" onclick="confirmar()">CONFIRMAR A REPARTIDOR</button>
 </div>
@@ -96,12 +108,11 @@ body{font-family:Manrope,sans-serif;background:#fafafa;max-width:640px;margin:0 
 
 <div class="bottom"><button id="bP" class="active" onclick="showView('pedidos')">PEDIDOS</button><button id="bC" onclick="showView('clientes')">CLIENTES</button></div>
 
-<!-- MODAL EDITAR -->
-<div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><h3 id="modalTitle" style="font-size:13px;font-weight:800"></h3><p id="modalText" style="font-size:11px;margin:10px 0;color:#6b7280"></p><div id="editBox" style="display:none"><span class="label">Nombre</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editNombre"></div><span class="label">Direccion</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editDir"></div><span class="label">Telefono</span><div class="wrap" style="margin-bottom:12px"><input type="text" id="editTel"></div></div><div style="display:flex;gap:8px"><button id="modalCancel" class="kigo-btn" style="background:#f3f4f6" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">OK</button></div></div></div>
+<div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><h3 id="modalTitle" style="font-size:13px;font-weight:800;text-align:center"></h3><p id="modalText" style="font-size:11px;margin:10px 0;color:#6b7280;text-align:center"></p><div id="editBox" style="display:none"><span class="label">Nombre</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editNombre"></div><span class="label">Direccion</span><div class="wrap" style="margin-bottom:8px"><input type="text" id="editDir"></div><span class="label">Telefono</span><div class="wrap" style="margin-bottom:12px"><input type="text" id="editTel"></div></div><div style="display:flex;gap:8px"><button id="modalCancel" class="kigo-btn" style="background:#f3f4f6" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">OK</button></div></div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", authDomain: "historial-kigo-xpress.firebaseapp.com", databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com", projectId: "historial-kigo-xpress", storageBucket: "historial-kigo-xpress.firebasestorage.app", messagingSenderId: "571399920545", appId: "1:571399920545:web:aa16407753b43cbe2e89e0" };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -125,7 +136,6 @@ window.mostrarModalElegante=function({title='Aviso', text='Mensaje', cancelText=
  document.getElementById('modalConfirm').onclick=()=>{ if(onConfirm) onConfirm(); else cerrarModal(); };
 }
 
-// CLIENTES - TODOS
 onValue(ref(db,'kigoClientesDir'),snap=>{
 let v=snap.val()||{}; let m={};
 Object.entries(v).forEach(([k,d])=>{
@@ -168,19 +178,39 @@ document.getElementById('bP').classList.toggle('active',v==='pedidos');
 document.getElementById('bC').classList.toggle('active',v==='clientes');
 if(v==='pedidos'&&map) setTimeout(()=>google.maps.event.trigger(map,'resize'),200);
 }
-
 window._initMapReal=function(){
-map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1576,lng:-100.9345},zoom:14,disableDefaultUI:false});
+map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1576,lng:-100.9345},zoom:14});
 dirServ=new google.maps.DirectionsService();
 dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
 let opts={bounds:{north:21.30,south:21.00,east:-100.75,west:-101.10},componentRestrictions:{country:'mx'}};
 new google.maps.places.Autocomplete(document.getElementById('dirEntrega'),opts);
 new google.maps.places.Autocomplete(document.getElementById('cliDir'),opts);
-console.log('Mapa cargado');
 }
 function clearM(){markers.forEach(m=>m.setMap(null));markers=[];}
 function addM(p,c){let m=new google.maps.Marker({position:p,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:c,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});markers.push(m);}
 function geo(dir){return new Promise(r=>{new google.maps.Geocoder().geocode({address:dir+', Dolores Hidalgo, Mexico'},(re,s)=>{if(s==='OK'&&re[0]){let l=re[0].geometry.location;r({lat:l.lat(),lng:l.lng()});}else r(null);});});}
+
+window.toggleClear=function(inputId, btnId){
+let v=document.getElementById(inputId)?.value||'';
+let b=document.getElementById(btnId);
+if(!b) return;
+if(v.length>0) b.classList.add('show'); else b.classList.remove('show');
+}
+window.limpiarCampo=function(inputId, btnId){
+let inp=document.getElementById(inputId);
+if(inp) inp.value='';
+let b=document.getElementById(btnId);
+if(b) b.classList.remove('show');
+if(inputId==='buscCli'){
+clienteSel=null;
+document.getElementById('boxSel').style.display='none';
+document.getElementById('listCli').style.display='none';
+document.getElementById('txtKm').innerText='-- km • -- min';
+document.getElementById('txtCosto').innerText='$0';
+clearM();
+if(dirRend) dirRend.setDirections({routes:[]});
+}
+}
 
 window.guardarClienteReal=async function(){
 let nombre=document.getElementById('cliNombre')?.value.trim();
@@ -191,8 +221,6 @@ let key=nombre.replace(/[\.\#\$\[\]\/]/g,'_').replace(/ /g,'_').substring(0,120)
 await set(ref(db,'kigoClientesDir/'+key),{direccion:dir,telefono:tel,nombreOriginal:nombre,ts:Date.now()});
 document.getElementById('cliNombre').value=''; document.getElementById('cliDir').value=''; document.getElementById('cliTel').value='';
 }
-
-// LISTA CON ICONO EDITAR PROFESIONAL
 window.renderClientes=function(){
 let lista=document.getElementById('listaClientes'); let filtro=document.getElementById('filtroCli')?.value.toLowerCase()||'';
 if(!lista) return;
@@ -208,7 +236,6 @@ lista.innerHTML=entries.map(([n,d])=>`
 </div>
 </div>`).join('');
 }
-
 window.editarCliente=function(n){
 let d=clientesDB[n]; if(!d) return;
 mostrarModalElegante({
@@ -230,12 +257,10 @@ cerrarModal();
 }
 });
 }
-
 window.borrarClienteDB=async function(n){
 let d=clientesDB[n];
 mostrarModalElegante({title:'Borrar',text:'Borrar '+n+'?',confirmText:'Borrar',onConfirm:async ()=>{ await remove(ref(db,'kigoClientesDir/'+d._key)); cerrarModal(); }});
 }
-
 window.buscarCliente=function(){
 let q=document.getElementById('buscCli').value.toLowerCase().trim();
 let list=document.getElementById('listCli');
@@ -255,6 +280,7 @@ document.getElementById('txtNom').innerText=n;
 document.getElementById('txtDirSel').innerText=d.direccion;
 document.getElementById('txtTelSel').innerText=d.telefono||'';
 document.getElementById('telRecogida').value=d.telefono||'';
+toggleClear('buscCli','clearBusc'); toggleClear('telRecogida','clearTelRec');
 geo(d.direccion).then(p=>{if(p&&map){map.setCenter(p);map.setZoom(15);clearM();addM(p,'#ef4444');}});
 }
 window.cotizar=async function(){
