@@ -1,161 +1,195 @@
+<!-- ========================================= -->
+<!-- INICIO DEL CÓDIGO - PANEL ADMINISTRADOR KIGO XPRESS -->
+<!-- ========================================= -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- ========== 1. CABEZA / HEAD ========== -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>KIGO XPRESS</title>
+<title>Admin - KIGO XPRESS</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Outfit',sans-serif;-webkit-tap-highlight-color:transparent}
+/* --- ESTILO GENERAL --- */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Outfit',sans-serif}
 body{background:#fff;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
-#map{width:100%;height:48dvh;min-height:48dvh;background:#e5e5e5;position:relative}
-#panel{flex:1;background:#fff;border-radius:28px 28px 0 0;margin-top:-24px;z-index:10;overflow-y:auto;padding:18px 16px 30px;box-shadow:0 -10px 40px rgba(0,0,0,.25)}
-.pill{display:flex;align-items:center;justify-content:space-between;background:#f5f5f7;border:1px solid #eee;border-radius:16px;padding:14px 16px;font-weight:700;font-size:15px;cursor:pointer}
+/* --- ESTILO DEL MAPA --- */
+#map{width:100%;height:48dvh;min-height:320px;background:#e9e9e9;position:relative;z-index:1}
+/* --- ESTILO DEL PANEL INFERIOR --- */
+#panel{flex:1;background:#fff;border-radius:28px 28px 0 0;margin-top:-22px;z-index:10;overflow-y:auto;padding:18px 16px 40px;box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+/* --- ESTILO DE BOTONES --- */
+.pill{display:flex;align-items:center;justify-content:space-between;background:#f5f5f7;border:1px solid #eee;border-radius:16px;padding:14px 16px;font-weight:700;cursor:pointer}
 .row{display:flex;gap:10px;margin-top:12px}
-.btn{flex:1;border:none;border-radius:16px;padding:14px 10px;font-weight:800;font-size:13px;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:.15s}
+.btn{flex:1;border:none;border-radius:16px;padding:14px 10px;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:.15s}
 .btn:active{transform:scale(.96)}
 .btn-red{background:#FF1E1E;color:#fff}
 .btn-green{background:#00D26A;color:#fff}
 .btn-black{background:#111;color:#fff}
 .btn-white{background:#fff;color:#111;border:1.5px solid #111}
-.inactive{opacity:.45}
-.label{font-size:11px;font-weight:800;letter-spacing:1px;color:#aaa;margin:18px 0 8px;text-transform:uppercase}
-.input{width:100%;background:#f5f5f7;border:1.5px solid transparent;border-radius:14px;padding:14px 14px;font-size:14px;font-weight:600;outline:none}
+.inactive{opacity:.4;filter:grayscale(.2)}
+.label{font-size:11px;font-weight:800;color:#aaa;margin:18px 0 8px;letter-spacing:1px;text-transform:uppercase}
+.input{width:100%;background:#f5f5f7;border:1.5px solid transparent;border-radius:14px;padding:14px;font-size:14px;font-weight:600;outline:none}
 .input:focus{background:#fff;border-color:#111}
-.input-neon{background:#111;border:1px solid #39FF14;color:#fff;border-radius:16px;padding:14px;margin-top:12px;box-shadow:0 0 18px rgba(57,255,20,.2)}
-.list-rep{position:fixed;top:10dvh;left:12px;right:12px;background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);z-index:999;max-height:320px;overflow-y:auto;display:none}
+.input-neon{background:#111;border:1px solid #39FF14;border-radius:16px;padding:14px;margin-top:10px;box-shadow:0 0 18px rgba(57,255,20,.2)}
+.hidden{display:none!important}
+.list-rep{position:fixed;top:12dvh;left:12px;right:12px;background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);z-index:999;max-height:320px;overflow-y:auto;display:none}
 .list-rep div{padding:16px;font-weight:700;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between}
 .suggest{position:relative}
 .suggest-box{position:absolute;top:50px;left:0;right:0;background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.15);z-index:50;max-height:200px;overflow-y:auto;display:none}
 .suggest-box div{padding:12px 14px;font-weight:600;font-size:14px;border-bottom:1px solid #f7f7f7}
-.hidden{display:none!important}
-.tag{font-size:10px;background:#111;color:#39FF14;padding:4px 8px;border-radius:20px;font-weight:800}
-.time-box{display:flex;align-items:center;gap:10px;background:#f5f5f7;border-radius:14px;padding:8px 14px;margin-top:12px}
+.time-box{display:flex;align-items:center;gap:10px;background:#f5f5f7;border-radius:14px;padding:8px 14px;margin-top:14px}
 </style>
 </head>
 <body>
 
+<!-- ========== 2.1 SECCION MAPA GOOGLE MAPS ========== -->
+<!-- Para que sirve: Muestra mapa arriba, traza ruta automaticamente -->
 <div id="map"></div>
+
+<!-- ========== 2.2 SECCION LISTA FLOTANTE DE REPARTIDORES ========== -->
+<!-- Para que sirve: Desplegable con repartidores de Firebase -->
 <div id="repList" class="list-rep"></div>
 
+<!-- ========== 2.3 SECCION PANEL INFERIOR ========== -->
 <div id="panel">
+
+  <!-- 2.3.1 BOTON SELECTOR DE REPARTIDOR -->
   <div class="pill" onclick="toggleReps()">
-    <div style="display:flex;align-items:center;gap:10px"><i data-lucide="bike" style="width:18px"></i> Repartidor</div>
-    <span id="repSelected" style="display:flex;align-items:center;gap:6px;color:#888">Seleccionar <i data-lucide="chevron-down" style="width:16px"></i></span>
+    <div style="display:flex;align-items:center;gap:10px"><i data-lucide="bike"></i> Repartidor Asignado</div>
+    <span id="repSelected" style="color:#888;display:flex;align-items:center;gap:6px">Seleccionar <i data-lucide="chevron-down" style="width:16px"></i></span>
   </div>
 
+  <!-- 2.3.2 BOTONES TIPO DE PEDIDO -->
+  <!-- Boton Rojo Recoger / Boton Verde Comprar -->
   <div class="row">
-    <button id="btnRecoger" class="btn btn-red" onclick="setTipo('recoger')"><i data-lucide="package" style="width:18px"></i> RECOGER</button>
-    <button id="btnComprar" class="btn btn-green inactive" onclick="setTipo('comprar')"><i data-lucide="shopping-cart" style="width:18px"></i> COMPRAR</button>
+    <button id="btnRecoger" class="btn btn-red" onclick="setTipo('recoger')"><i data-lucide="package"></i> RECOGER</button>
+    <button id="btnComprar" class="btn btn-green inactive" onclick="setTipo('comprar')"><i data-lucide="shopping-cart"></i> COMPRAR</button>
   </div>
 
-  <div class="row">
-    <button id="btnRegistrado" class="btn btn-black" onclick="setModo('registrado')"><i data-lucide="users" style="width:18px"></i> CLIENTE REGISTRADO</button>
-    <button id="btnManual" class="btn btn-white inactive" onclick="setModo('manual')"><i data-lucide="map-pin" style="width:18px"></i> DIRECCIÓN MANUAL</button>
-  </div>
-
-  <!-- BUSCADOR -->
-  <div id="boxBuscador">
-    <div class="label">Buscar Cliente</div>
-    <div class="suggest">
-      <input id="searchCliente" class="input" placeholder="Escribe nombre del cliente" oninput="filtrarClientes(this.value)">
-      <div id="suggestClientes" class="suggest-box"></div>
+  <!-- ========================================= -->
+  <!-- FORMULARIO 1: MODO RECOGER -->
+  <!-- ========================================= -->
+  <div id="formRecoger">
+    <!-- 2.3.3 BOTONES MODO DE CLIENTE - Solo aparecen en RECOGER -->
+    <div class="row">
+      <button id="btnRegistrado" class="btn btn-black" onclick="setModoCliente('registrado')"><i data-lucide="users"></i> CLIENTE REGISTRADO</button>
+      <button id="btnManual" class="btn btn-white inactive" onclick="setModoCliente('manual')"><i data-lucide="map-pin"></i> DIRECCIÓN MANUAL</button>
     </div>
-    <div id="clienteNeon" class="input-neon hidden">
-      <b id="neonNombre" style="font-size:11px;color:#39FF14;letter-spacing:1px">CLIENTE</b>
-      <p id="neonDir" style="font-size:14px;font-weight:700;margin-top:4px"></p>
+
+    <!-- 2.3.4 BUSCADOR INTELIGENTE DE CLIENTES -->
+    <div id="boxBuscador">
+      <div class="label">Buscar cliente registrado</div>
+      <div class="suggest">
+        <input id="searchCliente" class="input" placeholder="Escribe nombre del cliente" oninput="filtrarClientes(this.value)">
+        <div id="suggestClientes" class="suggest-box"></div>
+      </div>
+      <div id="clienteNeon" class="input-neon hidden">
+        <b id="neonNombre" style="font-size:11px;color:#39FF14">CLIENTE</b>
+        <p id="neonDir" style="font-size:14px;font-weight:700;color:#fff;margin-top:4px"></p>
+      </div>
+    </div>
+
+    <div id="camposRecoger">
+      <div class="label">Ruta de recogida</div>
+      <input id="dirRecogida" class="input" placeholder="Dirección donde se recoge" onblur="trazarRutaRecoger()">
+      <div style="height:10px"></div>
+      <input id="dirEntregaRec" class="input" placeholder="Dirección donde se entrega" onblur="trazarRutaRecoger()">
+      <div class="label">Datos de quien recibe</div>
+      <input id="nomEntregaRec" class="input" placeholder="Nombre de quien recibe">
+      <div style="height:10px"></div>
+      <input id="telEntregaRec" class="input" placeholder="Teléfono" inputmode="numeric">
     </div>
   </div>
 
-  <!-- MODO RECOGER -->
-  <div id="modoRecoger">
-    <div class="label">Ruta de Recogida</div>
-    <input id="dirRecogida" class="input" placeholder="Dirección donde se recoge" onblur="trazarRuta()">
-    <div style="height:10px"></div>
-    <input id="dirEntregaRec" class="input" placeholder="Dirección donde se entrega" onblur="trazarRuta()">
-  </div>
-
-  <!-- MODO COMPRAR -->
-  <div id="modoComprar" class="hidden">
-    <div class="label">Que se va a comprar</div>
-    <input id="producto" class="input" placeholder="Ej: 2 refrescos, 1k tortillas, medicina">
-    <div style="height:10px"></div>
-    <div class="label">En donde se compra (Google Maps)</div>
+  <!-- ========================================= -->
+  <!-- FORMULARIO 2: MODO COMPRAR -->
+  <!-- ========================================= -->
+  <!-- Este formulario NO muestra botones de cliente registrado/manual -->
+  <div id="formComprar" class="hidden">
+    <div class="label">Producto que se va a comprar</div>
+    <input id="producto" class="input" placeholder="Ej: 2 refrescos, medicina, 1kg tortillas">
+    
+    <div class="label">Dirección o comercio donde se compra</div>
     <input id="negocio" class="input" placeholder="Ej: Oxxo centro, Farmacia Guadalajara">
-    <div class="label">Entregar a</div>
+
+    <div class="label">Datos de entrega</div>
     <input id="nomEntregaCompra" class="input" placeholder="Nombre de quien recibe">
     <div style="height:10px"></div>
-    <input id="dirEntregaCompra" class="input" placeholder="Dirección de entrega" onblur="trazarRutaCompra()">
+    <input id="dirEntregaCompra" class="input" placeholder="Dirección de entrega" onblur="trazarRutaComprar()">
     <div style="height:10px"></div>
     <input id="telEntregaCompra" class="input" placeholder="Teléfono de quien recibe" inputmode="numeric">
   </div>
 
-  <!-- DATOS COMUNES RECOGER -->
-  <div id="datosRecoger">
-    <div class="label">Datos de quien recibe</div>
-    <input id="nomEntrega" class="input" placeholder="Nombre de quien recibe">
-    <div style="height:10px"></div>
-    <input id="telEntrega" class="input" placeholder="Teléfono" inputmode="numeric">
-  </div>
-
+  <!-- 2.3.7 INPUT TIEMPO -->
   <div class="time-box">
-    <i data-lucide="timer" style="width:20px"></i>
+    <i data-lucide="timer"></i>
     <span style="font-weight:700;font-size:14px;flex:1">Tiempo para recoger</span>
     <input id="tiempo" type="number" style="width:64px;background:#fff;border:none;border-radius:10px;padding:10px;text-align:center;font-weight:800" placeholder="10">
     <b style="font-size:13px">MIN</b>
   </div>
 
-  <button class="btn btn-black" style="width:100%;margin-top:18px;padding:18px;border-radius:18px;font-size:15px" onclick="crearPedido()"><i data-lucide="zap" style="width:18px"></i> CREAR PEDIDO AHORA</button>
+  <!-- 2.3.8 BOTON FINAL CREAR PEDIDO -->
+  <button class="btn btn-black" style="width:100%;margin-top:18px;padding:18px;border-radius:18px;font-size:15px" onclick="crearPedido()"><i data-lucide="zap"></i> CREAR PEDIDO AHORA</button>
 </div>
 
+<!-- ========== 3. SCRIPTS ========== -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script>
-// CONFIG
+// 3.1 CONEXION FIREBASE
 const firebaseConfig={apiKey:"AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE",authDomain:"historial-kigo-xpress.firebaseapp.com",databaseURL:"https://historial-kigo-xpress-default-rtdb.firebaseio.com",projectId:"historial-kigo-xpress",storageBucket:"historial-kigo-xpress.firebasestorage.app",messagingSenderId:"571399920545",appId:"1:571399920545:web:aa16407753b43cbe2e89e0"};
 firebase.initializeApp(firebaseConfig); const db=firebase.database();
-let map, dirService, dirRender, autocompleteNegocio, tipo='recoger', modo='registrado', clientes=[], repSeleccionado=null, markers=[];
+let map, dirService, dirRender, autoRecogida, autoEntregaRec, autoNegocio, autoEntregaCompra, tipo='recoger', modoCliente='registrado', clientes=[], repSeleccionado=null;
 
+// 3.2 FUNCIONES DEL MAPA
 window.initMap = function(){
   map=new google.maps.Map(document.getElementById("map"),{center:{lat:21.0924,lng:-101.6616},zoom:14,disableDefaultUI:false,zoomControl:false});
   dirService=new google.maps.DirectionsService();
   dirRender=new google.maps.DirectionsRenderer({map:map,suppressMarkers:false,polylineOptions:{strokeColor:"#111",strokeWeight:5}});
-  const inputNeg=document.getElementById("negocio");
-  autocompleteNegocio=new google.maps.places.Autocomplete(inputNeg,{componentRestrictions:{country:["mx"]}});
-  autocompleteNegocio.bindTo("bounds",map);
-  autocompleteNegocio.addListener("place_changed",()=>{ const p=autocompleteNegocio.getPlace(); if(p.geometry){map.panTo(p.geometry.location); trazarRutaCompra()} });
+  
+  // Autocompletado adaptable para celular
+  autoRecogida=new google.maps.places.Autocomplete(document.getElementById("dirRecogida"),{componentRestrictions:{country:["mx"]}});
+  autoEntregaRec=new google.maps.places.Autocomplete(document.getElementById("dirEntregaRec"),{componentRestrictions:{country:["mx"]}});
+  autoNegocio=new google.maps.places.Autocomplete(document.getElementById("negocio"),{componentRestrictions:{country:["mx"]}});
+  autoEntregaCompra=new google.maps.places.Autocomplete(document.getElementById("dirEntregaCompra"),{componentRestrictions:{country:["mx"]}});
+  
+  autoRecogida.addListener("place_changed",trazarRutaRecoger);
+  autoEntregaRec.addListener("place_changed",trazarRutaRecoger);
+  autoNegocio.addListener("place_changed",trazarRutaComprar);
+  autoEntregaCompra.addListener("place_changed",trazarRutaComprar);
+
   cargarClientes(); cargarReps();
-  setTimeout(()=>{google.maps.event.trigger(map,"resize"); map.setCenter({lat:21.0924,lng:-101.6616});},500);
   if(window.lucide) lucide.createIcons();
+  setTimeout(()=>{google.maps.event.trigger(map,"resize")},800);
 }
+function trazarRutaRecoger(){
+  const o=document.getElementById("dirRecogida").value, d=document.getElementById("dirEntregaRec").value;
+  if(!o||!d||tipo!=="recoger")return;
+  dirService.route({origin:o,destination:d,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{if(status==="OK")dirRender.setDirections(res)});
+}
+function trazarRutaComprar(){
+  const o=document.getElementById("negocio").value, d=document.getElementById("dirEntregaCompra").value;
+  if(!o||!d||tipo!=="comprar")return;
+  dirService.route({origin:o,destination:d,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{if(status==="OK")dirRender.setDirections(res)});
+}
+
+// 3.3 FUNCIONES DE REPARTIDORES
 function toggleReps(){const l=document.getElementById("repList");l.style.display=l.style.display==="block"?"none":"block";}
 function cargarReps(){
   db.ref("repartidores").on("value",snap=>{
     const c=document.getElementById("repList");c.innerHTML="";
-    snap.forEach(s=>{const r=s.val();const d=document.createElement("div");d.innerHTML=`<span>${r.nombre||s.key}</span><span class='tag'>${r.estado||'libre'}</span>`;d.onclick=()=>{repSeleccionado=s.key;document.getElementById("repSelected").innerHTML=r.nombre;document.getElementById("repSelected").style.color="#111";toggleReps()};c.appendChild(d)});
+    snap.forEach(s=>{const r=s.val();const d=document.createElement("div");d.innerHTML=`<span>${r.nombre||s.key}</span><span style="font-size:10px;background:#111;color:#39FF14;padding:4px 8px;border-radius:20px">${r.estado||'libre'}</span>`;d.onclick=()=>{repSeleccionado=s.key;document.getElementById("repSelected").innerHTML=r.nombre;document.getElementById("repSelected").style.color="#111";toggleReps()};c.appendChild(d)});
   });
 }
-function setTipo(t){
-  tipo=t;
-  document.getElementById("btnRecoger").classList.toggle("inactive",t!=="recoger");
-  document.getElementById("btnComprar").classList.toggle("inactive",t!=="comprar");
-  document.getElementById("modoRecoger").classList.toggle("hidden",t!=="recoger");
-  document.getElementById("datosRecoger").classList.toggle("hidden",t!=="recoger");
-  document.getElementById("modoComprar").classList.toggle("hidden",t!=="comprar");
-}
-function setModo(m){
-  modo=m;
-  document.getElementById("btnRegistrado").classList.toggle("inactive",m!=="registrado");
-  document.getElementById("btnManual").classList.toggle("inactive",m!=="manual");
-  document.getElementById("boxBuscador").classList.toggle("hidden",m!=="registrado");
-}
+
+// 3.4 FUNCIONES DE CLIENTES
 function cargarClientes(){db.ref("clientes").on("value",snap=>{clientes=[];snap.forEach(s=>{clientes.push({id:s.key,...s.val()})})})}
 function filtrarClientes(txt){
   const box=document.getElementById("suggestClientes");
   if(!txt){box.style.display="none";return}
   const f=clientes.filter(c=>c.nombre&&c.nombre.toLowerCase().includes(txt.toLowerCase())).slice(0,6);
-  box.innerHTML=""; f.forEach(c=>{const d=document.createElement("div");d.textContent=c.nombre; d.onclick=()=>selectCliente(c); box.appendChild(d)});
+  box.innerHTML="";f.forEach(c=>{const d=document.createElement("div");d.textContent=c.nombre; d.onclick=()=>selectCliente(c);box.appendChild(d)});
   box.style.display=f.length?"block":"none";
 }
 function selectCliente(c){
@@ -164,29 +198,41 @@ function selectCliente(c){
   document.getElementById("clienteNeon").classList.remove("hidden");
   document.getElementById("neonNombre").textContent=c.nombre.toUpperCase();
   document.getElementById("neonDir").textContent=c.direccion||c.dir||"";
-  if(tipo==="recoger"){document.getElementById("dirRecogida").value=c.direccion||c.nombre; document.getElementById("nomEntrega").value=c.nombre}
-  else{document.getElementById("dirEntregaCompra").value=c.direccion||c.nombre; document.getElementById("nomEntregaCompra").value=c.nombre}
-  trazarRuta(); trazarRutaCompra();
+  document.getElementById("dirRecogida").value=c.direccion||c.nombre;
+  document.getElementById("nomEntregaRec").value=c.nombre;
+  trazarRutaRecoger();
 }
-function trazarRuta(){
-  const o=document.getElementById("dirRecogida").value, d=document.getElementById("dirEntregaRec").value;
-  if(!o||!d||tipo!=="recoger")return;
-  dirService.route({origin:o,destination:d,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{if(status==="OK"){dirRender.setDirections(res)}});
+
+// 3.5 FUNCIONES DE LOGICA DE BOTONES
+function setTipo(t){
+  tipo=t;
+  document.getElementById("btnRecoger").classList.toggle("inactive",t!=="recoger");
+  document.getElementById("btnComprar").classList.toggle("inactive",t!=="comprar");
+  document.getElementById("formRecoger").classList.toggle("hidden",t!=="recoger");
+  document.getElementById("formComprar").classList.toggle("hidden",t!=="comprar");
 }
-function trazarRutaCompra(){
-  const o=document.getElementById("negocio").value, d=document.getElementById("dirEntregaCompra").value;
-  if(!o||!d||tipo!=="comprar")return;
-  dirService.route({origin:o,destination:d,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{if(status==="OK"){dirRender.setDirections(res)}});
+function setModoCliente(m){
+  modoCliente=m;
+  document.getElementById("btnRegistrado").classList.toggle("inactive",m!=="registrado");
+  document.getElementById("btnManual").classList.toggle("inactive",m!=="manual");
+  document.getElementById("boxBuscador").classList.toggle("hidden",m!=="manual" ? false : true);
+  if(m==="manual"){document.getElementById("searchCliente").value=""; document.getElementById("clienteNeon").classList.add("hidden"); document.getElementById("dirRecogida").value=""; document.getElementById("boxBuscador").classList.add("hidden");}
+  else{document.getElementById("boxBuscador").classList.remove("hidden");}
 }
+
+// 3.6 FUNCION FINAL CREAR PEDIDO
 function crearPedido(){
   if(!repSeleccionado)return alert("Selecciona repartidor");
-  let pedido={tipo,modo,repartidor:repSeleccionado,estado:"pendiente",fecha:Date.now(),tiempo:document.getElementById("tiempo").value};
-  if(tipo==="recoger"){pedido.cliente=document.getElementById("searchCliente").value; pedido.recogida=document.getElementById("dirRecogida").value; pedido.entrega=document.getElementById("dirEntregaRec").value; pedido.nombreEntrega=document.getElementById("nomEntrega").value; pedido.tel=document.getElementById("telEntrega").value}
+  let pedido={tipo,modoCliente,repartidor:repSeleccionado,estado:"pendiente",fecha:Date.now(),tiempo:document.getElementById("tiempo").value};
+  if(tipo==="recoger"){pedido.cliente=document.getElementById("searchCliente").value; pedido.recogida=document.getElementById("dirRecogida").value; pedido.entrega=document.getElementById("dirEntregaRec").value; pedido.nombreEntrega=document.getElementById("nomEntregaRec").value; pedido.tel=document.getElementById("telEntregaRec").value}
   else{pedido.producto=document.getElementById("producto").value; pedido.negocio=document.getElementById("negocio").value; pedido.entrega=document.getElementById("dirEntregaCompra").value; pedido.nombreEntrega=document.getElementById("nomEntregaCompra").value; pedido.tel=document.getElementById("telEntregaCompra").value}
-  db.ref("pedidos").push(pedido).then(()=>alert("Pedido creado")).catch(e=>alert(e.message));
+  db.ref("pedidos").push(pedido).then(()=>alert("Pedido creado correctamente")).catch(e=>alert(e.message));
 }
-setTipo('recoger'); setModo('registrado');
+setTipo('recoger'); setModoCliente('registrado');
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>
+<!-- ========================================= -->
+<!-- FIN DEL CÓDIGO - PANEL ADMINISTRADOR -->
+<!-- ========================================= -->
