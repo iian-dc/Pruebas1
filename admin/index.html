@@ -31,7 +31,6 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 .bottom-app{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;border-top:1.5px solid var(--border);padding:6px 8px;padding-bottom:calc(6px + env(safe-area-inset-bottom));display:flex;gap:6px;box-shadow:0 -2px 10px rgba(0,0,0,.06)}
 .bottom-app button{flex:1;height:44px;background:#fff;border:1.5px solid var(--border);border-radius:12px;font-weight:800;font-size:9px;display:flex;align-items:center;justify-content:center;gap:6px}
 .bottom-app button.active{background:#0a0a0a;color:#fff;border-color:#0a0a0a;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-/* SEGUIMIENTO ESTILOS */
 .filtro-seg{display:flex;gap:4px;overflow-x:auto;padding:8px;margin:0 8px}
 .filtro-seg button{white-space:nowrap;height:30px;padding:0 12px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:8px;font-weight:800;flex-shrink:0}
 .filtro-seg button.active{background:#0a0a0a;color:#fff}
@@ -67,7 +66,6 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 <div style="display:flex;gap:6px;margin-top:12px"><button onclick="cerrarEditar()" class="kigo-btn kigo-btn-cancel">Cerrar</button><button onclick="guardarEdicionSeguimiento()" class="kigo-btn kigo-btn-confirm">Guardar</button></div>
 </div></div>
 
-<!-- VIEW PEDIDOS -->
 <div id="view-pedidos" class="view active">
 <div class="card" style="padding:6px">
 <div id="map"></div>
@@ -134,7 +132,6 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 </div>
 </div>
 
-<!-- VIEW SEGUIMIENTO NUEVO -->
 <div id="view-seguimiento" class="view">
 <div style="display:flex;justify-content:space-between;align-items:center;margin:8px 8px 0">
 <div style="display:flex;gap:4px;overflow-x:auto;flex:1" class="filtro-seg" id="filtrosSeg">
@@ -357,7 +354,7 @@ window.confirmarPedidoCompra=async function(){
  }, 'Enviar', 'green');
 };
 
-// SEGUIMIENTO LOGIC
+// SEGUIMIENTO LOGIC CON FIX ESTADO ARRIBA PRECIO
 window.filtrarSeguimiento=function(t){
  filtroSeguimientoActual=t;
  document.getElementById('fSegTodos').classList.toggle('active',t==='todos');
@@ -381,6 +378,10 @@ window.renderSeguimientoAdmin=function(){
   let numPedido=`#${p._key.slice(-4).toUpperCase()}`; let recogerTxt=p.horaRecoger||`RECOGER ${p.tiempoRecogida||20}min`;
   let precio=p.costoSugerido||0; let cliente=p.cliente||'Cliente'; let dirRec=p.dirRecogida||p.cliente||''; let dirEnt=p.entrega||''; let repa=p.repaAsignado||'';
   let esFinalizado=etapa==='finalizado';
+  let estadoTxt=etapa==='pendiente'?'PENDIENTE':etapa==='en_camino'?'EN CAMINO':etapa==='finalizado'?'FINALIZADO':'EN ESPERA';
+  let colorEstado=etapa==='pendiente'?'#f97316':etapa==='en_camino'?'#3b82f6':etapa==='finalizado'?'#10b981':'#a855f7';
+  let bgEstado=etapa==='pendiente'?'#fff7ed':etapa==='en_camino'?'#eff6ff':etapa==='finalizado'?'#f0fdf4':'#faf5ff';
+  let borderEstado=etapa==='pendiente'?'#fed7aa':etapa==='en_camino'?'#93c5fd':etapa==='finalizado'?'#86efac':'#e9d5ff';
   return `<div class="card-pedido ${clase}">
    <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div style="flex:1">
@@ -388,11 +389,13 @@ window.renderSeguimientoAdmin=function(){
      <div class="hora-recoger">${recogerTxt}</div>
      <div style="margin-top:6px"><div style="font-size:10px;font-weight:800">${cliente}</div><div style="font-size:8px;color:#374151;margin-top:2px"><b style="color:#0a0a0a">REC:</b> ${dirRec.slice(0,45)}</div><div style="font-size:8px;color:#374151;margin-top:1px"><b style="color:#ef4444">ENT:</b> ${dirEnt.slice(0,45)}</div><div style="font-size:7px;color:#6b7280;margin-top:2px">${p.km||'--'}km | ${p.min||'--'}min | ${p.telefono||''}</div></div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;min-width:110px">
+     <span style="font-size:7px;font-weight:800;letter-spacing:.5px;color:${colorEstado};background:${bgEstado};border:1.5px solid ${borderEstado};padding:3px 10px;border-radius:20px;box-shadow:0 0 8px ${colorEstado}40;text-transform:uppercase">${estadoTxt}</span>
+     <div style="height:10px"></div>
      <span class="precio-neon">$${precio}</span>
-     <div style="display:flex;gap:4px">
+     <div style="display:flex;gap:4px;margin-top:8px">
       <button class="btn-editar" onclick="abrirEditar('${p._key}')">EDITAR</button>
-      <button class="btn-historial ${esFinalizado?'activo':'inactivo'}" ${esFinalizado?`onclick="pasarAHistorial('${p._key}')"`:'disabled'}>${esFinalizado?'HISTORIAL':'HISTORIAL'}</button>
+      <button class="btn-historial ${esFinalizado?'activo':'inactivo'}" ${esFinalizado?`onclick="pasarAHistorial('${p._key}')"`:'disabled'}>HISTORIAL</button>
      </div>
     </div>
    </div>
@@ -402,7 +405,6 @@ window.renderSeguimientoAdmin=function(){
 window.abrirEditar=function(key){
  let p=pedidosLive[key]; if(!p) return; detalleActualKey=key;
  document.getElementById('editRecoge').value=p.dirRecogida||p.cliente||''; document.getElementById('editEntrega').value=p.entrega||''; document.getElementById('editNombre').value=p.nombreEntrega||''; document.getElementById('editTel').value=p.telefono||''; document.getElementById('editCosto').value=p.costoSugerido||''; document.getElementById('editTiempo').value=p.tiempoRecogida||20; document.getElementById('editRepa').value=p.repaAsignado||'';
- document.querySelectorAll('#overlayEditar.clear-x').forEach(b=>{ let input=document.getElementById(b.id.replace('clear_','')); if(input&&input.value) b.classList.add('show'); });
  document.getElementById('overlayEditar').classList.add('show');
 }
 window.guardarEdicionSeguimiento=async function(){
