@@ -188,7 +188,6 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 <div id="view-repartidor" class="view">
 <audio id="audioNuevoPedido" preload="auto"><source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg"></audio>
 
-<!-- HEADER COMPACTO ADMIN MULTI + REPA SOLO NOMBRE -->
 <div class="card" style="padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px">
 <div style="display:flex;align-items:center;gap:10px;flex:1">
 <div style="position:relative;flex-shrink:0">
@@ -199,7 +198,6 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 <div style="line-height:1.1;flex:1">
 <div style="font-weight:800;font-size:11px">REPARTIDOR</div>
 <div id="repNombreFijo" style="background:var(--black);color:#fff;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:800;display:inline-block;margin-top:2px"></div>
-<!-- ADMIN MULTI SELECTOR -->
 <div id="groupRepSelector" style="margin-top:4px;display:none">
 <div id="adminMultiRepas" style="display:flex;flex-wrap:wrap;gap:4px;max-height:80px;overflow:auto;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:6px"></div>
 <div class="wrap" style="height:26px;margin-top:4px;display:none"><select id="repView" onchange="renderRepartidor()" style="font-size:9px;height:26px"></select></div>
@@ -214,7 +212,6 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 </div>
 <input type="file" id="inputFotoRepa" accept="image/*" style="display:none" onchange="subirFotoRepa(this)">
 
-<!-- MODAL AJUSTES REPA CON 3 SUBCATEGORIAS -->
 <div id="modalAjustesRepa" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.55);padding:14px">
 <div style="background:#fff;border-radius:22px;max-height:92vh;overflow:auto;padding:14px">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="font-weight:800;font-size:12px">AJUSTES REPARTIDOR</div><button onclick="cerrarAjustesRepa()" style="width:30px;height:30px;border-radius:50%;border:1px solid #e5e7eb;background:#fff">X</button></div>
@@ -223,11 +220,9 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 <button id="subAjustesModif" class="tab-cobro" onclick="showSubAjustesRepa('modificaciones')" style="flex:1">Modificaciones</button>
 <button id="subAjustesHist" class="tab-cobro" onclick="showSubAjustesRepa('historial')" style="flex:1">Historial</button>
 </div>
-
 <div id="panelSubEstado">
 <div style="background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:14px;padding:12px"><div class="label-row"><label>Mi estado online</label></div><button id="btnToggleOnline" onclick="toggleOnline()" style="width:100%;height:46px;border-radius:12px;border:none;font-weight:800;font-size:11px;cursor:pointer;margin-top:8px"></button></div>
 </div>
-
 <div id="panelSubModificaciones" style="display:none">
 <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:14px;padding:12px">
 <div style="font-weight:800;font-size:11px;margin-bottom:10px">✏️ MODIFICAR MI PERFIL</div>
@@ -242,10 +237,8 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 <div class="group" style="margin-top:8px"><div class="label-row"><label>Usuario login</label></div><div class="wrap"><input type="text" id="modifUsuario" placeholder="usuario login"></div></div>
 <div class="group" style="margin-top:8px"><div class="label-row"><label>Nueva contraseña / PIN 4 digitos</label></div><div class="wrap"><input type="text" id="modifPin" placeholder="****" maxlength="4"></div></div>
 <button onclick="guardarModificacionesRepa()" style="width:100%;height:48px;background:#0a0a0a;color:#fff;border:none;border-radius:14px;font-weight:800;margin-top:12px;font-size:11px">GUARDAR CAMBIOS</button>
-<div style="font-size:8px;color:#6b7280;margin-top:6px;text-align:center">Al cambiar, el admin vera el cambio en tiempo real</div>
 </div>
 </div>
-
 <div id="panelSubHistorial" style="display:none">
 <div style="margin-top:8px"><div class="label-row"><label>Filtrar por tipo</label></div><div style="display:flex;gap:4px"><button onclick="setFiltroRep('todos')" id="fRepTodos" class="tab-cobro active">Todos</button><button onclick="setFiltroRep('Moto Mandado')" id="fRepMand" class="tab-cobro">Mandados</button><button onclick="setFiltroRep('Moto Transporte')" id="fRepTrans" class="tab-cobro">Transporte</button></div></div>
 <div style="margin-top:8px"><div class="label-row"><label>Filtrar por mes</label></div><div style="display:flex;gap:6px"><div class="wrap" style="flex:1"><input type="month" id="repMesFiltro" onchange="setFiltroRepMes()"></div><button onclick="limpiarFiltroRepMes()" style="height:34px;padding:0 10px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:9px;font-weight:800">Todos</button></div></div>
@@ -255,39 +248,54 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 </div>
 </div>
 
-<!-- MAPA MAS GRANDE -->
 <div class="card" style="padding:6px;margin-bottom:10px;position:relative"><div id="mapRepa" style="height:420px"></div><div style="position:absolute;top:10px;right:10px;z-index:10"><button onclick="centerMyLocation()" style="width:42px;height:42px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.1)">M</button></div></div>
 
-<!-- PEDIDO ACTIVO MINIMIZADO + PRECIO VERDE NEON DERECHA -->
-<div id="cardPedidoModerna" style="display:none;background:#fff;border-radius:18px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);border:1px solid #f0f0f0;margin-bottom:12px">
+<!-- TARJETA MINIMIZADA - PRECIO VERDE NEON ESQUINA DERECHA GRANDE -->
+<div id="cardPedidoModerna" style="display:none;background:#fff;border-radius:18px;padding:10px;box-shadow:0 8px 24px rgba(0,0,0,.08);border:1px solid #f0f0f0;margin-bottom:12px">
     <div id="boxCanceladoRepa" style="display:none;background:#fee2e2;border:2px solid #ef4444;border-radius:14px;padding:10px;margin-bottom:10px;text-align:center"><div style="font-size:13px;font-weight:800;color:#991b1b">PEDIDO CANCELADO POR ADMIN</div><div id="txtCanceladoMotivo" style="font-size:8px;color:#7f1d1d;margin-top:4px;background:#fff;padding:4px 8px;border-radius:8px"></div><button onclick="aceptarCancelacionRepa()" style="width:100%;height:42px;background:#991b1b;color:#fff;border:none;border-radius:12px;font-weight:800;margin-top:8px;font-size:10px">ACEPTAR - ELIMINAR</button></div>
     <div id="boxNormalRepa">
-    <!-- HEADER MINIMIZADO CON PRECIO VERDE NEON A LA DERECHA -->
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px">
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-        <div style="font-size:11px;font-weight:800">#<span id="txtNumPedido">--</span></div>
-        <span id="txtHoraRecoger" style="display:none;background:#dcfce7;border:1px solid #86efac;color:#166534;padding:3px 7px;border-radius:20px;font-size:8px;font-weight:800"></span>
+    <!-- HEADER: IZQ ESTADO - DER PRECIO NEON ESQUINA -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1">
+        <div style="font-size:10px;font-weight:800">#<span id="txtNumPedido">--</span></div>
         <div id="txtEstadoPedido" style="padding:4px 8px;border-radius:20px;font-size:7px;font-weight:800"></div>
+        <span id="txtHoraRecoger" style="display:none;background:#dcfce7;border:1px solid #86efac;color:#166534;padding:3px 7px;border-radius:20px;font-size:7px;font-weight:800"></span>
+        <span id="txtDistancia" style="background:#f9fafb;border:1px solid #e5e7eb;padding:3px 6px;border-radius:20px;font-size:7px;font-weight:700">--</span>
       </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <span id="txtDistancia" style="background:#f9fafb;border:1px solid #e5e7eb;padding:4px 8px;border-radius:20px;font-size:8px;font-weight:700">--</span>
-        <span id="txtCostoSugerido" class="precio-verde-neon">$--</span>
+      <div style="flex-shrink:0">
+        <span id="txtCostoSugerido" style="background:#00ff88;color:#000;border:2px solid #000;padding:8px 16px;border-radius:24px;font-size:18px;font-weight:900;box-shadow:0 0 14px rgba(0,255,136,.7);display:inline-block"> $-- </span>
       </div>
     </div>
-    <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:8px;margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:7px;font-weight:800;color:#166534">RECOGER EN</div><button onclick="abrirMapsRecogida()" class="btn-maps-elegante" style="height:22px;font-size:8px">Ruta</button></div><div id="txtNegocioNombre" style="font-size:12px;font-weight:800">--</div><div id="txtNegocioDir" style="font-size:10px;font-weight:600;color:#374151;margin-top:4px;background:#fff;border:1px solid #dcfce7;border-radius:8px;padding:6px 8px">--</div></div>
-    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:7px;font-weight:800;color:#991b1b">ENTREGAR EN</div><button onclick="abrirMapsEntrega()" class="btn-maps-elegante red" style="height:22px;font-size:8px">Ruta</button></div><div id="txtClienteDir" style="font-size:11px;font-weight:700;background:#fff;border:1px solid #fecaca;border-radius:8px;padding:6px 8px">--</div><div id="txtTelefonoCliente" style="font-size:9px;font-weight:800;margin-top:4px;background:#fff;border:1px dashed #e5e7eb;border-radius:8px;padding:4px 8px;display:none"></div></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px"><button onclick="accionMensajeCliente()" class="btn-contact" style="height:34px">Mensaje</button><button onclick="accionLlamarCliente()" class="btn-contact" style="height:34px">Llamar</button></div>
-    <!-- BOTONES CON ESPERA CENTRADO AMARILLO -->
-    <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
-      <div style="display:flex;gap:6px;align-items:center;justify-content:center">
-        <button id="btnAceptar" onclick="accionAceptar()" class="btn-pro btn-pro-dark" style="flex:1;height:44px">Aceptar pedido</button>
-        <button onclick="ponerEnEspera()" class="btn-espera">⏸️ Espera</button>
+
+    <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:7px;margin-bottom:5px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-size:7px;font-weight:800;color:#166534">📍 RECOGER EN</div><button onclick="abrirMapsRecogida()" class="btn-maps-elegante" style="height:20px;font-size:7px">🗺️ Ruta</button></div><div id="txtNegocioNombre" style="font-size:11px;font-weight:800">--</div><div id="txtNegocioDir" style="font-size:9px;font-weight:600;color:#374151;margin-top:3px;background:#fff;border:1px solid #dcfce7;border-radius:6px;padding:5px 7px">--</div></div>
+    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:7px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-size:7px;font-weight:800;color:#991b1b">🏠 ENTREGAR EN</div><button onclick="abrirMapsEntrega()" class="btn-maps-elegante red" style="height:20px;font-size:7px">🗺️ Ruta</button></div><div id="txtClienteDir" style="font-size:10px;font-weight:700;background:#fff;border:1px solid #fecaca;border-radius:6px;padding:5px 7px">--</div><div id="txtTelefonoCliente" style="font-size:8px;font-weight:800;margin-top:3px;background:#fff;border:1px dashed #e5e7eb;border-radius:6px;padding:3px 7px;display:none"></div></div>
+
+    <!-- MENSAJE / LLAMAR CON ICONOS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px">
+      <button onclick="accionMensajeCliente()" class="btn-contact" style="height:36px;display:flex;align-items:center;justify-content:center;gap:6px">💬 Mensaje</button>
+      <button onclick="accionLlamarCliente()" class="btn-contact" style="height:36px;display:flex;align-items:center;justify-content:center;gap:6px">📞 Llamar</button>
+    </div>
+
+    <!-- ACCIONES REPARTIDOR CON ICONOS + BOTON ESPERA AMARILLO CENTRADO GRANDE -->
+    <div style="margin-top:9px;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;gap:6px;align-items:center">
+        <button id="btnAceptar" onclick="accionAceptar()" class="btn-pro btn-pro-dark" style="flex:1;height:46px;font-size:11px">✅ Aceptar pedido</button>
+        <button onclick="ponerEnEspera()" class="btn-espera" style="background:#facc15 !important;color:#422006 !important;border:1.5px solid #eab308 !important;height:46px;padding:0 18px;border-radius:14px;font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 2px 6px rgba(250,204,21,.4)">⏸️ Espera</button>
       </div>
-      <div style="display:flex;gap:6px;align-items:center;justify-content:center"><button id="btnEnCamino" onclick="accionEnCamino()" style="display:none;flex:1" class="btn-pro btn-pro-dark">Voy en camino</button><button onclick="ponerEnEspera()" id="btnEspera2" class="btn-espera" style="display:none">⏸️ Espera</button></div>
-      <div style="display:flex;gap:6px;align-items:center;justify-content:center"><button id="btnRecogido" onclick="accionYaRecogi()" style="display:none;flex:1" class="btn-pro btn-pro-green">Recogido</button><button onclick="ponerEnEspera()" id="btnEspera3" class="btn-espera" style="display:none">⏸️ Espera</button></div>
-      <div style="display:flex;gap:6px;align-items:center;justify-content:center"><button id="btnVoyEntregar" onclick="accionVoyEntregar()" style="display:none;flex:1" class="btn-pro btn-pro-green">Voy a entregar</button><button onclick="ponerEnEspera()" id="btnEspera4" class="btn-espera" style="display:none">⏸️ Espera</button></div>
-      <button id="btnEntregado" onclick="accionEntregado()" style="display:none" class="btn-pro btn-pro-red">Pedido entregado</button>
-      <div id="estadoFinal" style="display:none;text-align:center;padding:12px;background:#f0fdf4;border-radius:12px;color:#166534;font-weight:800;font-size:11px">Pedido completado</div>
+      <div style="display:flex;gap:6px;align-items:center;justify-content:center">
+        <button id="btnEnCamino" onclick="accionEnCamino()" style="display:none;flex:1;height:46px" class="btn-pro btn-pro-dark">🏍️ Voy en camino</button>
+        <button onclick="ponerEnEspera()" id="btnEspera2" class="btn-espera" style="display:none;background:#facc15 !important;color:#422006 !important;height:46px;padding:0 18px;border-radius:14px;font-weight:900;font-size:11px;box-shadow:0 2px 6px rgba(250,204,21,.4)">⏸️ Espera</button>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;justify-content:center">
+        <button id="btnRecogido" onclick="accionYaRecogi()" style="display:none;flex:1;height:46px" class="btn-pro btn-pro-green">📦 Recogido</button>
+        <button onclick="ponerEnEspera()" id="btnEspera3" class="btn-espera" style="display:none;background:#facc15 !important;color:#422006 !important;height:46px;padding:0 18px;border-radius:14px;font-weight:900">⏸️ Espera</button>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;justify-content:center">
+        <button id="btnVoyEntregar" onclick="accionVoyEntregar()" style="display:none;flex:1;height:46px" class="btn-pro btn-pro-green">🚀 Voy a entregar</button>
+        <button onclick="ponerEnEspera()" id="btnEspera4" class="btn-espera" style="display:none;background:#facc15 !important;color:#422006 !important;height:46px;padding:0 18px;border-radius:14px;font-weight:900">⏸️ Espera</button>
+      </div>
+      <button id="btnEntregado" onclick="accionEntregado()" style="display:none;height:50px" class="btn-pro btn-pro-red">🎉 Pedido entregado</button>
+      <div id="estadoFinal" style="display:none;text-align:center;padding:12px;background:#f0fdf4;border-radius:12px;color:#166534;font-weight:800;font-size:11px">✅ Pedido completado</div>
     </div>
     </div>
   </div>
