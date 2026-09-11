@@ -6,16 +6,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
-:root{--border:#e5e7eb;--green:#10b981}
+:root{--border:#e5e7eb}
 body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 .top-repa{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1.5px solid var(--border);padding:8px 12px;display:flex;justify-content:space-between;align-items:center}
 .logo-repa{width:32px;height:32px;background:#0a0a0a;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:10px;overflow:hidden}
-.logo-repa img{width:100%;height:100%;object-fit:cover}
 .btn-salir{height:30px;padding:0 12px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:8px;font-weight:800}
-#map{height:320px;width:100%;background:#e5e7eb}
+#map{height:320px;width:100%;background:#e5e7eb;display:block}
 .card-activo{background:#fff;border:1.5px solid var(--border);border-radius:16px;margin:10px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.06)}
 .head-activo{padding:10px 12px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #f3f4f6}
-.num-neon{background:#0a0a0a;color:#fff;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800;box-shadow:0 0 10px rgba(0,0,0,.3)}
+.num-neon{background:#0a0a0a;color:#fff;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800}
 .precio-neon{color:#10b981;font-weight:800;font-size:16px;background:#dcfce7;border:1.5px solid #86efac;padding:4px 12px;border-radius:12px;box-shadow:0 0 12px rgba(34,197,94,.4)}
 .estado-badge{font-size:7px;font-weight:800;padding:3px 8px;border-radius:20px;border:1px solid #fed7aa;background:#fffbeb;color:#f97316}
 .hora-recoger{font-size:9px;font-weight:800;color:#10b981;background:#dcfce7;border:1px solid #86efac;padding:3px 8px;border-radius:10px;display:inline-block;margin-top:4px}
@@ -32,7 +31,6 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 .overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
 .overlay.show{display:flex}
 .modal{background:#fff;border-radius:16px;padding:18px;width:100%;max-width:320px;text-align:center}
-.ico{width:12px;height:12px;fill:currentColor}
 </style>
 </head>
 <body>
@@ -40,9 +38,9 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 <div class="top-repa">
 <div style="display:flex;align-items:center;gap:8px">
 <div class="logo-repa" id="logoRepa">K</div>
-<div><div id="nombreRepaTxt" style="font-weight:800;font-size:11px">Repartidor</div><div id="estadoTxt" style="font-size:7px;color:#10b981;font-weight:800">● EN LINEA</div></div>
+<div><div id="nombreRepaTxt" style="font-weight:800;font-size:11px">Repartidor</div><div style="font-size:7px;color:#10b981;font-weight:800">● EN LINEA</div></div>
 </div>
-<button class="btn-salir" onclick="cerrarSesion()">CERRAR SESIÓN</button>
+<button class="btn-salir" onclick="cerrarSesion()">SALIR</button>
 </div>
 
 <div id="map"></div>
@@ -54,7 +52,11 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 </div>
 
 <div id="view-hist-repa" style="display:none;padding:8px">
-<div style="display:flex;gap:6px;margin-bottom:8px"><div style="flex:1;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:8px;text-align:center"><b id="hTotal">0</b><br><span style="font-size:7px">TOTAL</span></div><div style="flex:1;background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:8px;text-align:center"><b id="hGanado" style="color:#10b981">$0</b><br><span style="font-size:7px">GANADO</span></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+<div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:8px;text-align:center"><b id="hTotal" style="font-size:14px">0</b><br><span style="font-size:7px;font-weight:800">TOTAL</span></div>
+<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:8px;text-align:center"><b id="hGanado" style="font-size:14px;color:#10b981">$0</b><br><span style="font-size:7px;font-weight:800">GANADO</span></div>
+<div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:8px;text-align:center;box-shadow:0 0 10px rgba(239,68,68,.15)"><b id="hDebe" style="font-size:14px;color:#ef4444">$0</b><br><span style="font-size:7px;font-weight:800;color:#991b1b">DEBE</span></div>
+</div>
 <div id="listaHistRepa" style="background:#fff;border:1.5px solid var(--border);border-radius:12px;overflow:hidden"></div>
 </div>
 
@@ -63,7 +65,7 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 <button id="btnHist" onclick="showRepaView('historial')">HISTORIAL</button>
 </div>
 
-<div class="overlay" id="overlayEntregado"><div class="modal"><div style="width:50px;height:50px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px"><span style="font-size:24px">✓</span></div><div style="font-weight:800;font-size:14px">Pedido entregado exitoso</div><div style="font-size:9px;color:#6b7280;margin-top:4px">Se movió a historial</div><button onclick="cerrarEntregado()" style="width:100%;height:40px;margin-top:12px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;font-weight:800">OK</button></div></div>
+<div class="overlay" id="overlayEntregado"><div class="modal"><div style="width:50px;height:50px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">✓</div><div style="font-weight:800;font-size:14px">Pedido entregado exitoso</div><button onclick="cerrarEntregado()" style="width:100%;height:40px;margin-top:12px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;font-weight:800">OK</button></div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -76,101 +78,143 @@ document.getElementById('nombreRepaTxt').innerText = currentRepa;
 document.getElementById('logoRepa').innerText = currentRepa.charAt(0).toUpperCase();
 
 let map=null, dirServ=null, dirRend=null, markers=[], myLocation=null, pedidosLive={}, ventasData={}, activoKey=null;
+let prevCount=0, prevKeys=new Set();
 
 function todayISO(){ let d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+function sonidoUber(tipo='nuevo'){
+ try{
+  let ctx=new (window.AudioContext||window.webkitAudioContext)();
+  if(tipo==='nuevo'){
+    [0,0.2,0.4].forEach(delay=>{
+      let o=ctx.createOscillator(); let g=ctx.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(800, ctx.currentTime+delay); o.frequency.linearRampToValueAtTime(1200, ctx.currentTime+delay+0.15);
+      g.gain.setValueAtTime(0.5, ctx.currentTime+delay); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+delay+0.25);
+      o.connect(g); g.connect(ctx.destination); o.start(ctx.currentTime+delay); o.stop(ctx.currentTime+delay+0.25);
+    });
+    if(navigator.vibrate) navigator.vibrate([300,100,300,100,500]);
+  } else {
+    let o=ctx.createOscillator(); let g=ctx.createGain();
+    o.type='sawtooth'; o.frequency.setValueAtTime(300, ctx.currentTime); o.frequency.linearRampToValueAtTime(80, ctx.currentTime+0.6);
+    g.gain.setValueAtTime(0.6, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+0.6);
+    o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+0.6);
+    if(navigator.vibrate) navigator.vibrate([500,200,500]);
+  }
+ }catch(e){}
+}
 
 function initMap(){ if(!window.google){ setTimeout(initMap,300); return; } map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1556,lng:-100.9343},zoom:14}); dirServ=new google.maps.DirectionsService(); dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); trackLocation(); }
 setTimeout(initMap,500);
 
-function trackLocation(){ if(navigator.geolocation){ navigator.geolocation.watchPosition(pos=>{ myLocation={lat:pos.coords.latitude,lng:pos.coords.longitude}; if(activoKey){ let p=pedidosLive[activoKey]; if(p){ if(p.etapa==='en_camino' && p.subEtapa==='voy_recoger'){ trazarRuta(myLocation,{lat:p.lat1,lng:p.lng1}); } else if(p.subEtapa==='voy_entregar'){ trazarRuta(myLocation,{lat:p.lat2,lng:p.lng2}); } } } }, err=>{}, {enableHighAccuracy:true}); } }
+function trackLocation(){ if(navigator.geolocation){ navigator.geolocation.watchPosition(pos=>{ myLocation={lat:pos.coords.latitude,lng:pos.coords.longitude}; if(activoKey && document.getElementById('view-pedidos-repa').style.display!=='none'){ let p=pedidosLive[activoKey]; if(p){ if(p.subEtapa==='voy_recoger'){ trazarRuta(myLocation,{lat:p.lat1,lng:p.lng1}); } else if(p.subEtapa==='voy_entregar'){ trazarRuta(myLocation,{lat:p.lat2,lng:p.lng2}); } } } }, ()=>{}, {enableHighAccuracy:true}); } }
 
-function trazarRuta(orig, dest){ if(!dirServ||!dirRend) return; dirServ.route({origin:orig,destination:dest,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:orig,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#3b82f6',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); let m2=new google.maps.Marker({position:dest,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); markers=[m1,m2]; } }); }
+function trazarRuta(orig,dest){ if(!dirServ||!dirRend) return; dirServ.route({origin:orig,destination:dest,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:orig,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#3b82f6',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); let m2=new google.maps.Marker({position:dest,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); markers=[m1,m2]; } }); }
+function trazarPedidoCompleto(p){ if(!dirServ||!dirRend) return; dirServ.route({origin:{lat:p.lat1,lng:p.lng1},destination:{lat:p.lat2,lng:p.lng2},travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:{lat:p.lat1,lng:p.lng1},map:map}); let m2=new google.maps.Marker({position:{lat:p.lat2,lng:p.lng2},map:map}); markers=[m1,m2]; } }); }
 
-function trazarPedidoCompleto(p){ if(!dirServ||!dirRend) return; dirServ.route({origin:{lat:p.lat1,lng:p.lng1},destination:{lat:p.lat2,lng:p.lng2},travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:{lat:p.lat1,lng:p.lng1},map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:7,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); let m2=new google.maps.Marker({position:{lat:p.lat2,lng:p.lng2},map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:7,fillColor:'#ef4444',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); markers=[m1,m2]; } }); }
-
-onValue(ref(db,'kigoPedidosLive'), s=>{ pedidosLive=s.val()||{}; renderPedidosRepa(); });
+onValue(ref(db,'kigoPedidosLive'), s=>{
+ let data=s.val()||{};
+ // detectar nuevo pedido para este repa
+ let listaRepa=Object.entries(data).filter(([k,v])=>v.repaAsignado===currentRepa).map(([k])=>k);
+ let newKeys=listaRepa.filter(k=>!prevKeys.has(k));
+ if(newKeys.length>0 && prevKeys.size>0){ sonidoUber('nuevo'); }
+ // detectar cancelado
+ let canceled= [...prevKeys].filter(k=>!listaRepa.includes(k));
+ if(canceled.length>0 && prevKeys.size>0){ sonidoUber('cancelado'); }
+ prevKeys=new Set(listaRepa);
+ pedidosLive=data; renderPedidosRepa();
+});
 onValue(ref(db,'ventasKigo'), s=>{ ventasData=s.val()||{}; renderHistRepa(); });
 
-window.showRepaView=function(v){ document.getElementById('view-pedidos-repa').style.display=v==='pedidos'?'block':'none'; document.getElementById('view-hist-repa').style.display=v==='historial'?'block':'none'; document.getElementById('btnPedidos').classList.toggle('active',v==='pedidos'); document.getElementById('btnHist').classList.toggle('active',v==='historial'); }
+window.showRepaView=function(v){
+ if(v==='pedidos'){
+  document.getElementById('view-pedidos-repa').style.display='block';
+  document.getElementById('view-hist-repa').style.display='none';
+  document.getElementById('map').style.display='block';
+  document.getElementById('btnPedidos').classList.add('active'); document.getElementById('btnHist').classList.remove('active');
+  setTimeout(()=>{ if(map) google.maps.event.trigger(map,'resize'); },100);
+ } else {
+  document.getElementById('view-pedidos-repa').style.display='none';
+  document.getElementById('view-hist-repa').style.display='block';
+  document.getElementById('map').style.display='none';
+  document.getElementById('btnHist').classList.add('active'); document.getElementById('btnPedidos').classList.remove('active');
+ }
+}
 
 window.renderPedidosRepa=function(){
  let lista=Object.entries(pedidosLive).map(([k,v])=>({...v,_key:k})).filter(p=>p.repaAsignado===currentRepa).sort((a,b)=>b.ts-a.ts);
  let activos=lista.filter(p=>p.etapa!=='en_espera' && p.etapa!=='finalizado' && p.etapa!=='cancelado');
  let espera=lista.filter(p=>p.etapa==='en_espera');
-
- // solo 1 activo principal
- let principal = activos.find(p=>p.etapa==='en_camino' || p.activo) || activos[0] || null;
+ let principal = activos.find(p=>p.activo) || activos[0] || null;
  if(principal) activoKey=principal._key; else activoKey=null;
-
  let cont=document.getElementById('contActivo');
- if(!principal){ cont.innerHTML='<div style="text-align:center;padding:30px;color:#9ca3af"><div style="font-size:28px">📦</div><div style="font-size:10px;font-weight:800;margin-top:6px">Sin pedidos activos</div><div style="font-size:8px">Esperando asignaciones...</div></div>'; if(dirRend) dirRend.setDirections({routes:[]}); markers.forEach(m=>m.setMap(null)); markers=[]; }
- else {
-  let p=principal;
-  let sub=p.subEtapa||'pendiente';
+ if(!principal){
+  cont.innerHTML='<div style="text-align:center;padding:30px;color:#9ca3af"><div style="font-size:28px">📦</div><div style="font-size:10px;font-weight:800;margin-top:6px">Sin pedidos activos</div></div>';
+  if(dirRend) dirRend.setDirections({routes:[]});
+ } else {
+  let p=principal; let sub=p.subEtapa||'pendiente';
   let estadoTxt=sub==='voy_recoger'?'VOY A RECOGER':sub==='voy_entregar'?'VOY A ENTREGAR':p.etapa==='pendiente'?'PENDIENTE':'EN CAMINO';
-  let btnPrincipalTxt = p.etapa==='pendiente'?'ACEPTAR PEDIDO':sub==='pendiente'?'VOY A RECOGER':sub==='voy_recoger'?'YA RECOGÍ - VOY A ENTREGAR':'ENTREGADO';
-  let mostrarEspera = p.etapa==='pendiente';
+  let btnTxt = p.etapa==='pendiente'?'ACEPTAR PEDIDO':sub==='pendiente'?'VOY A RECOGER':sub==='voy_recoger'?'YA RECOGÍ - VOY A ENTREGAR':'ENTREGADO';
   if(sub==='voy_entregar' || sub==='voy_recoger'){ if(myLocation){ if(sub==='voy_recoger') trazarRuta(myLocation,{lat:p.lat1,lng:p.lng1}); else trazarRuta(myLocation,{lat:p.lat2,lng:p.lng2}); } else trazarPedidoCompleto(p); } else { trazarPedidoCompleto(p); }
-
+  // CORREGIDO: recoger muestra nombre + direccion + telefono
   cont.innerHTML=`<div class="card-activo">
    <div class="head-activo">
-    <div><div style="display:flex;align-items:center;gap:6px"><span class="num-neon">#${p._key.slice(-4).toUpperCase()}</span><span class="estado-badge">${estadoTxt}</span></div><div class="hora-recoger">${p.horaRecoger||''}</div><div style="font-size:7px;color:#6b7280;margin-top:2px">${p.km||'--'} km • ${p.min||'--'} min</div></div>
-    <div style="text-align:right"><div class="precio-neon">$${p.costoSugerido||0}</div><div style="font-size:7px;margin-top:4px;color:#6b7280">${p.cliente?.slice(0,20)||''}</div></div>
+    <div><div style="display:flex;gap:6px;align-items:center"><span class="num-neon">#${p._key.slice(-4).toUpperCase()}</span><span class="estado-badge">${estadoTxt}</span></div><div class="hora-recoger">${p.horaRecoger||''}</div><div style="font-size:7px;color:#6b7280;margin-top:2px">${p.km||'--'} km • ${p.min||'--'} min</div></div>
+    <div class="precio-neon">$${p.costoSugerido||0}</div>
    </div>
    <div class="bloque-recoger">
-    <div style="font-size:7px;font-weight:800;color:#166534">RECOGER EN</div>
-    <div style="font-size:9px;font-weight:800;margin-top:2px">${p.dirRecogida||p.cliente||''}</div>
-    <div style="font-size:8px;color:#374151;margin-top:2px">${p.telefonoRecogida||''}</div>
+    <div style="font-size:7px;font-weight:800;color:#166534;letter-spacing:.5px">RECOGER EN</div>
+    <div style="font-size:9px;font-weight:800;margin-top:3px">${p.cliente||''}</div>
+    <div style="font-size:8px;font-weight:600;color:#374151;margin-top:3px;line-height:1.3">📍 ${p.dirRecogida||p.cliente||''}</div>
+    <div style="font-size:8px;font-weight:700;color:#0a0a0a;margin-top:3px">📞 ${p.telefonoRecogida||'Sin telefono'}</div>
     <button class="btn-ruta" onclick="abrirRuta(${p.lat1},${p.lng1})">RUTA ↗</button>
    </div>
    <div class="bloque-entregar">
-    <div style="font-size:7px;font-weight:800;color:#991b1b">ENTREGAR EN</div>
-    <div style="font-size:9px;font-weight:800;margin-top:2px">${p.nombreEntrega||''} - ${p.entrega||''}</div>
-    <div style="font-size:8px;color:#374151;margin-top:2px">${p.telefono||''}</div>
+    <div style="font-size:7px;font-weight:800;color:#991b1b;letter-spacing:.5px">ENTREGAR EN</div>
+    <div style="font-size:9px;font-weight:800;margin-top:3px">${p.nombreEntrega||'Cliente entrega'}</div>
+    <div style="font-size:8px;font-weight:600;color:#374151;margin-top:3px;line-height:1.3">📍 ${p.entrega||''}</div>
+    <div style="font-size:8px;font-weight:700;color:#0a0a0a;margin-top:3px">📞 ${p.telefono||'Sin telefono'}</div>
     <button class="btn-ruta" style="background:#ef4444" onclick="abrirRuta(${p.lat2},${p.lng2})">RUTA ↗</button>
    </div>
    <div style="display:flex;gap:6px;padding:8px 10px">
-    <button class="btn-accion" onclick="mensajeCliente('${p._key}')"><svg class="ico" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2.9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>MENSAJE</button>
-    <button class="btn-accion" onclick="llamarCliente('${p._key}')"><svg class="ico" viewBox="0 0 24 24"><path d="M6.62 10.79a15.15 15.15 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1.45 1 1V21c0.55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1.45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>LLAMAR</button>
+    <button class="btn-accion" onclick="mensajeCliente('${p._key}')">MENSAJE</button>
+    <button class="btn-accion" onclick="llamarCliente('${p._key}')">LLAMAR</button>
    </div>
    <div style="display:flex;gap:6px;padding:0 10px 10px">
-    ${mostrarEspera?`<button class="btn-accion wait" onclick="ponerEspera('${p._key}')">ESPERA</button>`:''}
-    <button class="btn-accion ${sub==='voy_entregar'?'green':'primary'}" onclick="accionPrincipal('${p._key}')">${btnPrincipalTxt}</button>
+    ${p.etapa==='pendiente'?`<button class="btn-accion wait" onclick="ponerEspera('${p._key}')">ESPERA</button>`:''}
+    <button class="btn-accion ${sub==='voy_entregar'?'green':'primary'}" onclick="accionPrincipal('${p._key}')">${btnTxt}</button>
    </div>
   </div>`;
  }
-
  let contE=document.getElementById('contEspera'); document.getElementById('countEspera').innerText=espera.length;
- if(!espera.length){ contE.innerHTML='<div style="text-align:center;padding:10px;color:#9ca3af;font-size:8px">Sin pedidos en espera</div>'; }
- else {
-  contE.innerHTML=espera.map(p=>`<div style="background:#fff;border:1px solid #fde68a;border-radius:12px;padding:8px;margin:8px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:8px;font-weight:800">#${p._key.slice(-4)} • ${p.horaRecoger||''}</div><div style="font-size:9px;font-weight:800">${p.cliente}</div><div style="font-size:7px">${p.entrega.slice(0,30)}</div></div><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:10px;font-weight:800;color:#10b981">$${p.costoSugerido}</span><button onclick="activarDesdeEspera('${p._key}')" style="height:24px;padding:0 8px;border-radius:8px;background:#0a0a0a;color:#fff;border:none;font-size:7px;font-weight:800">ACTIVAR</button></div></div>`).join('');
- }
+ if(!espera.length) contE.innerHTML='<div style="text-align:center;padding:10px;color:#9ca3af;font-size:8px">Sin espera</div>';
+ else contE.innerHTML=espera.map(p=>`<div style="background:#fff;border:1px solid #fde68a;border-radius:12px;padding:8px;margin:8px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:8px;font-weight:800">#${p._key.slice(-4)} • ${p.horaRecoger||''}</div><div style="font-size:9px;font-weight:800">${p.cliente}</div><div style="font-size:7px">${p.entrega.slice(0,30)}</div></div><div style="text-align:right"><span style="font-size:10px;font-weight:800;color:#10b981">$${p.costoSugerido}</span><br><button onclick="activarDesdeEspera('${p._key}')" style="height:24px;padding:0 8px;border-radius:8px;background:#0a0a0a;color:#fff;border:none;font-size:7px;font-weight:800;margin-top:4px">ACTIVAR</button></div></div>`).join('');
 }
 
 window.abrirRuta=function(lat,lng){ if(!lat||!lng) return; window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,'_blank'); }
-window.mensajeCliente=function(key){ let p=pedidosLive[key]; if(!p) return; let tel=p.telefono||p.telefonoRecogida||''; let msg=`Hola, soy ${currentRepa} de Kigo Xpress, voy con tu pedido ${p.cliente}`; if(tel) window.open(`https://wa.me/52${tel.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,'_blank'); else window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank'); }
-window.llamarCliente=function(key){ let p=pedidosLive[key]; if(!p) return; let tel=p.telefono||p.telefonoRecogida||''; if(tel) window.open(`tel:${tel}`,'_self'); }
+window.mensajeCliente=function(key){ let p=pedidosLive[key]; let tel=p.telefono||p.telefonoRecogida||''; let msg=`Hola soy ${currentRepa} de Kigo voy con tu pedido`; window.open(tel?`https://wa.me/52${tel.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank'); }
+window.llamarCliente=function(key){ let p=pedidosLive[key]; let tel=p.telefono||p.telefonoRecogida||''; if(tel) window.location.href=`tel:${tel}`; }
 window.ponerEspera=async function(key){ await update(ref(db,'kigoPedidosLive/'+key), {etapa:'en_espera', activo:false}); }
-window.activarDesdeEspera=async function(key){ // pone todos en espera menos este
- let lista=Object.entries(pedidosLive).filter(([k,v])=>v.repaAsignado===currentRepa && k!==key && v.etapa!=='en_espera'); for(let [k] of lista){ if(pedidosLive[k].etapa!=='finalizado') await update(ref(db,'kigoPedidosLive/'+k), {etapa:'en_espera'}); } await update(ref(db,'kigoPedidosLive/'+key), {etapa:'pendiente', activo:true}); }
+window.activarDesdeEspera=async function(key){ let lista=Object.entries(pedidosLive).filter(([k,v])=>v.repaAsignado===currentRepa && k!==key && v.etapa!=='en_espera'); for(let [k] of lista){ if(pedidosLive[k].etapa!=='finalizado') await update(ref(db,'kigoPedidosLive/'+k), {etapa:'en_espera'}); } await update(ref(db,'kigoPedidosLive/'+key), {etapa:'pendiente', activo:true}); }
 window.accionPrincipal=async function(key){
  let p=pedidosLive[key]; if(!p) return;
- if(p.etapa==='pendiente'){ await update(ref(db,'kigoPedidosLive/'+key), {etapa:'en_camino', subEtapa:'voy_recoger', activo:true, tsInicio:Date.now()}); }
+ if(p.etapa==='pendiente'){ await update(ref(db,'kigoPedidosLive/'+key), {etapa:'en_camino', subEtapa:'voy_recoger', activo:true}); }
  else if(p.subEtapa==='voy_recoger' || (!p.subEtapa && p.etapa==='en_camino')){ await update(ref(db,'kigoPedidosLive/'+key), {subEtapa:'voy_entregar'}); }
- else if(p.subEtapa==='voy_entregar'){ await update(ref(db,'kigoPedidosLive/'+key), {etapa:'finalizado', subEtapa:'entregado', tsFin:Date.now()}); document.getElementById('overlayEntregado').classList.add('show'); setTimeout(()=>{ pasarAHistorialAuto(key); },1500); }
+ else if(p.subEtapa==='voy_entregar'){ await update(ref(db,'kigoPedidosLive/'+key), {etapa:'finalizado', subEtapa:'entregado'}); document.getElementById('overlayEntregado').classList.add('show'); setTimeout(()=>{ pasarAHistorialAuto(key); },1200); }
 }
-async function pasarAHistorialAuto(key){ let p=pedidosLive[key]; if(!p) return; let fee=30; let obj={ iso:todayISO(), cliente:p.cliente, tipo:'Moto Mandado', valor:p.costoSugerido||0, repa:currentRepa, pagado:false, feeKigo:fee, ts:Date.now(), origenPedido:key }; let nr=push(ref(db,'ventasKigo')); await set(nr,obj); await update(ref(db,'kigoPedidosLive/'+key), {etapa:'finalizado'}); setTimeout(async()=>{ await remove(ref(db,'kigoPedidosLive/'+key)); },2000); }
+async function pasarAHistorialAuto(key){ let p=pedidosLive[key]; if(!p) return; let fee=30; let obj={ iso:todayISO(), cliente:p.cliente, tipo:'Moto Mandado', valor:p.costoSugerido||0, repa:currentRepa, pagado:false, feeKigo:fee, ts:Date.now(), origenPedido:key }; let nr=push(ref(db,'ventasKigo')); await set(nr,obj); await remove(ref(db,'kigoPedidosLive/'+key)); }
 window.cerrarEntregado=function(){ document.getElementById('overlayEntregado').classList.remove('show'); }
 window.renderHistRepa=function(){
  let lista=Object.entries(ventasData).map(([k,v])=>({...v,_key:k})).filter(v=>v.repa===currentRepa).sort((a,b)=>b.ts-a.ts);
  document.getElementById('hTotal').innerText=lista.length;
- let total=lista.reduce((s,v)=>s+((parseInt(v.valor)||0)-(parseInt(v.feeKigo)||0)),0);
- document.getElementById('hGanado').innerText='$'+total;
+ let ganado=lista.reduce((s,v)=>s+((parseInt(v.valor)||0)-(parseInt(v.feeKigo)||0)),0);
+ let debe=lista.filter(v=>!v.pagado).reduce((s,v)=>s+(parseInt(v.feeKigo)||0),0);
+ document.getElementById('hGanado').innerText='$'+ganado;
+ document.getElementById('hDebe').innerText='$'+debe;
  let cont=document.getElementById('listaHistRepa');
  if(!lista.length){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af;font-size:9px">Sin historial</div>'; return; }
- cont.innerHTML=lista.map(v=>`<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #f3f4f6"><div><div style="font-size:7px;color:#6b7280">${v.iso||''}</div><div style="font-size:9px;font-weight:800">${v.cliente}</div><div style="font-size:7px">${v.tipo||''} • Fee $${v.feeKigo||0}</div></div><div style="text-align:right"><div style="font-size:10px;font-weight:800;color:#10b981">$${v.valor||0}</div><div style="font-size:7px">Ganas $${(parseInt(v.valor)-parseInt(v.feeKigo))||0}</div><div style="font-size:6px;padding:2px 6px;border-radius:10px;background:${v.pagado?'#dcfce7':'#fee2e2'};color:${v.pagado?'#166534':'#991b1b'};margin-top:2px">${v.pagado?'PAGADO':'PENDIENTE PAGO'}</div></div></div>`).join('');
+ cont.innerHTML=lista.map(v=>`<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #f3f4f6"><div><div style="font-size:7px;color:#6b7280">${v.iso||''}</div><div style="font-size:9px;font-weight:800">${v.cliente}</div></div><div style="text-align:right"><div style="font-size:10px;font-weight:800;color:#10b981">$${v.valor||0}</div><div style="font-size:6px;padding:2px 6px;border-radius:10px;background:${v.pagado?'#dcfce7':'#fee2e2'};color:${v.pagado?'#166534':'#991b1b'}">${v.pagado?'PAGADO':'DEBE $${v.feeKigo}'}</div></div></div>`).join('');
 }
-window.cerrarSesion=function(){ localStorage.removeItem('kigoUser'); localStorage.removeItem('kigoPass'); window.location.href='../'; }
+window.cerrarSesion=function(){ localStorage.clear(); window.location.href='../'; }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTV1sm6McEIkv-cheaVFCD_svp_a--6wg&libraries=places" async defer></script>
 </body>
