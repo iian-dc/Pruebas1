@@ -106,7 +106,22 @@
 <div class="group"><div class="label-row"><label>Dirección entrega - Google Maps</label></div><div class="wrap"><input type="text" id="entregaDirRecoger" placeholder="Busca dirección de entrega Google..."></div></div>
 <div class="group"><div class="label-row"><label>Teléfono entrega</label></div><div class="wrap"><input type="tel" id="telefonoEntregaPedido" placeholder="Ej. 5521234567"></div></div>
 
-<button onclick="cotizarRuta()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;margin-top:10px">COTIZAR SERVICIO - VER RUTA GOOGLE</button>
+<div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:14px;padding:12px;margin-top:12px">
+<div class="label-row"><label>⏱️ Tiempo para que pase repartidor</label></div>
+<div style="display:flex;gap:6px;margin-top:6px">
+<button onclick="setTiempoRecogida(10)" id="t10" class="tab-cobro" style="flex:1">10 min</button>
+<button onclick="setTiempoRecogida(20)" id="t20" class="tab-cobro active" style="flex:1;background:#0a0a0a;color:#fff">20 min</button>
+<button onclick="setTiempoRecogida(30)" id="t30" class="tab-cobro" style="flex:1">30 min</button>
+<button onclick="setTiempoRecogida(45)" id="t45" class="tab-cobro" style="flex:1">45 min</button>
+<button onclick="setTiempoRecogida(60)" id="t60" class="tab-cobro" style="flex:1">60 min</button>
+</div>
+<div style="display:flex;gap:6px;margin-top:8px;align-items:center">
+<div class="wrap" style="flex:1"><input type="number" id="tiempoRecogidaInput" value="20" min="5" max="120" placeholder="Min" oninput="actualizarTiempoCustom()"></div>
+<div style="font-size:9px;font-weight:800;color:#92400e;background:#fff;padding:6px 10px;border-radius:20px;border:1px solid #fde68a">Personalizado</div>
+</div>
+</div>
+
+<button onclick="cotizarRuta()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;margin-top:12px">COTIZAR SERVICIO - VER RUTA GOOGLE</button>
 <button onclick="confirmarPedido()" style="width:100%;height:54px;margin-top:10px;background:#ef4444;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:13px">CONFIRMAR PEDIDO</button>
 </div>
 
@@ -118,6 +133,15 @@
 <div class="group"><div class="label-row"><label>Cliente entrega - Buscar registrado</label></div><div class="wrap" style="overflow:visible"><input type="text" id="buscadorClienteCompra" placeholder="Escribe cliente registrado..." oninput="buscarClienteCompra()" onfocus="buscarClienteCompra()" autocomplete="off"><div id="listClienteCompra" style="position:absolute;left:0;right:0;top:100%;z-index:30;background:#fff;border:1.5px solid #0a0a0a;border-top:none;border-radius:0 0 14px 14px;max-height:300px;overflow:auto;display:none"></div></div><div id="clienteCompraSeleccionado" style="display:none;margin-top:8px;background:#fef3c7;border:1px solid #fde68a;border-radius:12px;padding:10px;font-size:11px;font-weight:700"></div></div>
 <div class="group"><div class="label-row"><label>Dirección entrega - Google Maps</label></div><div class="wrap"><input type="text" id="entregaDirComprar" placeholder="Busca dirección Google entrega..."></div></div>
 <div class="group"><div class="label-row"><label>Teléfono entrega</label></div><div class="wrap"><input type="tel" id="telefonoEntregaCompra" placeholder="Ej. 5521234567"></div></div>
+<div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:14px;padding:12px;margin-top:10px">
+<div class="label-row"><label>⏱️ Tiempo compra</label></div>
+<div style="display:flex;gap:6px;margin-top:6px">
+<button onclick="setTiempoCompra(15)" id="tc15" class="tab-cobro active" style="flex:1;background:#0a0a0a;color:#fff">15 min</button>
+<button onclick="setTiempoCompra(30)" id="tc30" class="tab-cobro" style="flex:1">30 min</button>
+<button onclick="setTiempoCompra(45)" id="tc45" class="tab-cobro" style="flex:1">45 min</button>
+</div>
+<div class="wrap" style="margin-top:8px"><input type="number" id="tiempoCompraInput" value="15" min="5" max="120"></div>
+</div>
 </div>
 <button onclick="cotizarRutaComprar()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px">COTIZAR RUTA GOOGLE</button>
 <button onclick="confirmarPedidoCompra()" style="width:100%;height:54px;margin-top:10px;background:#10b981;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:13px">CONFIRMAR COMPRA</button>
@@ -131,10 +155,10 @@
 <div id="view-historial" class="view"><div class="filtros-tipo"><button id="fHistTodos" class="active" onclick="setFiltroHistTipo('todos')">Todos</button><button id="fHistMandado" onclick="setFiltroHistTipo('Moto Mandado')">Mandados</button><button id="fHistTransporte" onclick="setFiltroHistTipo('Moto Transporte')">Transporte</button></div><div style="display:flex;gap:6px;margin-bottom:8px"><input type="date" id="filtroFecha" onchange="filtrarFecha()" style="flex:1;height:34px;border:1.5px solid var(--border);border-radius:10px;padding:0 10px;font-weight:600"><button onclick="limpiarFiltro()" style="height:34px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:10px;font-weight:800">Todos</button></div><div class="stats"><div class="stat"><span>Pedidos</span><strong id="sCount">0</strong></div><div class="stat"><span>Bruto</span><strong id="sBruto">$0</strong></div><div class="stat dark"><span>Repar.</span><strong id="sRep">$0</strong></div><div class="stat red"><span>KIGO</span><strong id="sKigo">$0</strong></div></div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Tipo</th><th>Bruto</th><th>KIGO</th><th>Repar.</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></div>
 
 <div id="view-seguimiento" class="view">
-<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:13px">SEGUIMIENTO EDITABLE</div><div style="font-size:9px;color:#6b7280;font-weight:600;margin-top:2px">Google Maps vivo</div></div><div id="countSeguimiento" style="background:#0a0a0a;color:#fff;padding:6px 12px;border-radius:20px;font-size:10px;font-weight:800">0 activos</div></div><div style="display:flex;gap:6px;margin-top:10px"><button onclick="filtrarSeguimiento('todos')" id="fSegTodos" class="tab-cobro active">Todos</button><button onclick="filtrarSeguimiento('pendiente')" id="fSegPend" class="tab-cobro">Pendientes</button><button onclick="filtrarSeguimiento('en_camino')" id="fSegCamino" class="tab-cobro">En camino</button><button onclick="filtrarSeguimiento('finalizado')" id="fSegFin" class="tab-cobro">Finalizados</button></div></div>
+<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:13px">SEGUIMIENTO EDITABLE</div><div style="font-size:9px;color:#6b7280;font-weight:600;margin-top:2px">Google Maps + estados con colores</div></div><div id="countSeguimiento" style="background:#0a0a0a;color:#fff;padding:6px 12px;border-radius:20px;font-size:10px;font-weight:800">0 activos</div></div><div style="display:flex;gap:6px;margin-top:10px"><button onclick="filtrarSeguimiento('todos')" id="fSegTodos" class="tab-cobro active">Todos</button><button onclick="filtrarSeguimiento('pendiente')" id="fSegPend" class="tab-cobro">Pendientes</button><button onclick="filtrarSeguimiento('en_camino')" id="fSegCamino" class="tab-cobro">En camino</button><button onclick="filtrarSeguimiento('finalizado')" id="fSegFin" class="tab-cobro">Finalizados</button></div></div>
 <div id="cardDetalleSeguimiento" class="detalle-edit-card" style="display:none">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-weight:800;font-size:13px">DETALLE PEDIDO <span id="detalleKey">#--</span></div><button onclick="cerrarDetalleSeguimiento()" style="width:28px;height:28px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;font-weight:800">X</button></div>
-<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:14px;padding:10px;margin-bottom:10px"><div style="font-size:8px;font-weight:800;color:#6b7280">CLIENTE / RECOGER DE:</div><div id="detalleCliente" style="font-size:12px;font-weight:800;margin-top:2px">--</div><div id="detalleRecoge" style="font-size:10px;color:#374151;margin-top:2px;line-height:1.3">--</div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-weight:800;font-size:13px">DETALLE PEDIDO <span id="detalleKey">#--</span> <span id="detalleEstadoColor" style="margin-left:8px;padding:5px 10px;border-radius:20px;font-size:9px;font-weight:800"></span></div><button onclick="cerrarDetalleSeguimiento()" style="width:28px;height:28px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;font-weight:800">X</button></div>
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:14px;padding:10px;margin-bottom:10px"><div style="font-size:8px;font-weight:800;color:#6b7280">CLIENTE / RECOGER DE:</div><div id="detalleCliente" style="font-size:12px;font-weight:800;margin-top:2px">--</div><div id="detalleRecoge" style="font-size:10px;color:#374151;margin-top:2px;line-height:1.3">--</div><div id="detalleHoraRecogida" style="display:none;margin-top:6px;background:#dcfce7;border:1px solid #86efac;color:#166534;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-block"></div></div>
 <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:14px;padding:10px;margin-bottom:10px"><div style="font-size:8px;font-weight:800;color:#92400e">ENTREGAR EN:</div><div id="detalleEntrega" style="font-size:11px;font-weight:700;margin-top:2px;line-height:1.3">--</div></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div><div style="font-size:8px;font-weight:800">KM / MIN GOOGLE</div><div id="detalleKm" style="font-size:11px;font-weight:800;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin-top:4px;text-align:center">--</div></div><div><div style="font-size:8px;font-weight:800">REPARTIDOR</div><div id="detalleRepa" style="font-size:11px;font-weight:800;background:#0a0a0a;color:#fff;border-radius:10px;padding:8px;margin-top:4px;text-align:center">--</div></div></div>
 <div class="group"><div class="label-row"><label>Telefono cliente entrega</label></div><div style="display:flex;gap:6px"><div class="wrap" style="flex:1"><input type="tel" id="inputDetalleTelefono" placeholder="10 digitos..."></div><button onclick="guardarTelefonoDetalle()" style="height:46px;padding:0 12px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:10px">Guardar</button></div></div>
@@ -156,9 +180,9 @@
 <div id="panelRepaLive">
   <div class="card" style="padding:8px;margin-bottom:14px;position:relative"><div id="mapRepa"></div><div style="position:absolute;top:12px;right:12px;z-index:10"><button onclick="centerMyLocation()" style="width:42px;height:42px;background:#fff;border:1px solid #e5e7eb;border-radius:14px">M</button></div></div>
   <div id="cardPedidoModerna" style="display:none;background:#fff;border-radius:24px;padding:18px;box-shadow:0 12px 32px rgba(0,0,0,.10);border:1px solid #f0f0f0;margin-bottom:18px">
-    <div id="boxCanceladoRepa" style="display:none;background:#fee2e2;border:2px solid #ef4444;border-radius:18px;padding:14px;margin-bottom:14px;text-align:center"><div style="font-size:16px;font-weight:800;color:#991b1b">PEDIDO CANCELADO</div><div id="txtCanceladoMotivo" style="font-size:9px;color:#7f1d1d;margin-top:6px;background:#fff;padding:6px 10px;border-radius:10px"></div><button onclick="aceptarCancelacionRepa()" style="width:100%;height:50px;background:#991b1b;color:#fff;border:none;border-radius:14px;font-weight:800;margin-top:10px">ACEPTAR - ELIMINAR</button></div>
+    <div id="boxCanceladoRepa" style="display:none;background:#fee2e2;border:2px solid #ef4444;border-radius:18px;padding:14px;margin-bottom:14px;text-align:center"><div style="font-size:16px;font-weight:800;color:#991b1b">PEDIDO CANCELADO POR ADMIN</div><div id="txtCanceladoMotivo" style="font-size:9px;color:#7f1d1d;margin-top:6px;background:#fff;padding:6px 10px;border-radius:10px"></div><button onclick="aceptarCancelacionRepa()" style="width:100%;height:50px;background:#991b1b;color:#fff;border:none;border-radius:14px;font-weight:800;margin-top:10px">ACEPTAR - ELIMINAR</button></div>
     <div id="boxNormalRepa">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:13px;font-weight:800">Pedido #<span id="txtNumPedido">--</span></div><div id="txtEstadoPedido" style="background:#fef3c7;color:#92400e;padding:6px 12px;border-radius:20px;font-size:9px;font-weight:800">Nuevo</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:13px;font-weight:800">Pedido #<span id="txtNumPedido">--</span> <span id="txtHoraRecoger" style="display:none;background:#dcfce7;border:1px solid #86efac;color:#166534;padding:5px 10px;border-radius:20px;font-size:9px;font-weight:800;margin-left:8px"></span></div><div id="txtEstadoPedido" style="padding:6px 12px;border-radius:20px;font-size:9px;font-weight:800"></div></div>
     <div style="display:flex;gap:8px;margin-bottom:14px"><span id="txtDistancia" style="background:#f9fafb;border:1px solid #e5e7eb;padding:7px 12px;border-radius:20px;font-size:10px;font-weight:700">--</span><span id="txtCostoSugerido" style="background:#0a0a0a;color:#fff;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:800"></span></div>
     <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:16px;padding:12px;margin-bottom:10px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="font-size:9px;font-weight:800;color:#166534">RECOGER EN</div><button onclick="abrirMapsRecogida()" class="btn-maps-elegante">Ruta Google</button></div><div id="txtNegocioNombre" style="font-size:14px;font-weight:800">--</div><div id="txtNegocioDir" style="font-size:11px;font-weight:600;color:#374151;margin-top:6px;background:#fff;border:1px solid #dcfce7;border-radius:10px;padding:8px 10px">--</div></div>
     <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:16px;padding:12px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="font-size:9px;font-weight:800;color:#991b1b">ENTREGAR EN</div><button onclick="abrirMapsEntrega()" class="btn-maps-elegante red">Ruta Google</button></div><div id="txtClienteDir" style="font-size:12px;font-weight:700;background:#fff;border:1px solid #fecaca;border-radius:10px;padding:8px 10px">--</div><div id="txtTelefonoCliente" style="font-size:11px;font-weight:800;margin-top:8px;background:#fff;border:1px dashed #e5e7eb;border-radius:10px;padding:6px 10px;display:none"></div></div>
@@ -207,7 +231,7 @@ window.mostrarAviso=function(msg,t='Listo'){ mostrarModalElegante({title:t,text:
 window.confirmarAccion=function(msg,t,onConfirm,ct='Confirmar',color=''){ mostrarModalElegante({title:t,text:msg,cancelText:'Cancelar',confirmText:ct,confirmClass:color,showCancel:true,onConfirm}); }
 
 let tarifasKmConfig={porKm:8, centroRadio:1.5, centroTarifa:30, lejosRadio:4, lejosExtra:15};
-let ventas=[],filtroFecha=null,filtroHoy='todos',filtroHistTipo='todos',filtroRepa='todos',filtroMesRepa=null,filtroSeguimiento='todos',editId=null,fechasCobro=[],esPromo=false,rol=null,repartidorLogueado=null, opcionRecoger='cliente';
+let ventas=[],filtroFecha=null,filtroHoy='todos',filtroHistTipo='todos',filtroRepa='todos',filtroMesRepa=null,filtroSeguimiento='todos',editId=null,fechasCobro=[],esPromo=false,rol=null,repartidorLogueado=null, opcionRecoger='cliente', tiempoRecogidaMin=20, tiempoCompraMin=15;
 let pinsData={admin:'0831',repas:{'Jose':'1111','Diego Gómez':'2222','Diego':'3333','Carlos':'4444'}};
 let tarifas={mandado:5,transporte:10}; let tarifasRepas={}; let fotosRepas={}; let clientesDirecciones={}; let appConfig={nombre:'Kigo xpress', logo:''};
 let map=null, mapRepa=null, dirServ=null, dirRend=null, dirServRepa=null, dirRendRepa=null, geocoder=null;
@@ -215,6 +239,38 @@ let markers=[], markersRepa=[], clientePedidoSeleccionado=null, clienteCompraSel
 let pedidosLive={}, statusRepas={}, pedidoSeleccionadoKey=null, detalleActualKey=null;
 let calDate=new Date(), watchId=null, myMarker=null, posMarkerRepa=null;
 let tipoPedidoActual='recoger';
+
+function getEstadoStyle(etapa){
+ let e=(etapa||'pendiente').toLowerCase();
+ if(e==='pendiente') return {txt:'PENDIENTE', bg:'#fef3c7', color:'#92400e', border:'#fde68a'};
+ if(e==='aceptado') return {txt:'ACEPTADO', bg:'#dbeafe', color:'#1e40af', border:'#bfdbfe'};
+ if(e==='en_camino_recoger') return {txt:'EN CAMINO A RECOGER', bg:'#ffedd5', color:'#9a3412', border:'#fed7aa'};
+ if(e==='recogido') return {txt:'RECOGIDO', bg:'#dcfce7', color:'#166534', border:'#86efac'};
+ if(e==='en_camino_entrega') return {txt:'EN CAMINO A ENTREGAR', bg:'#e0e7ff', color:'#3730a3', border:'#c7d2fe'};
+ if(e==='finalizado') return {txt:'FINALIZADO', bg:'#f0fdf4', color:'#166534', border:'#86efac'};
+ if(e==='cancelado') return {txt:'CANCELADO', bg:'#fee2e2', color:'#991b1b', border:'#fecaca'};
+ return {txt:e.toUpperCase(), bg:'#f3f4f6', color:'#374151', border:'#e5e7eb'};
+}
+function calcularHoraRecogida(minutos){
+ let ahora=new Date(); ahora.setMinutes(ahora.getMinutes()+parseInt(minutos||20));
+ let h=ahora.getHours(); let m=String(ahora.getMinutes()).padStart(2,'0');
+ let ampm=h>=12?'PM':'AM'; let h12=h%12||12;
+ return {texto:`RECOGER ${h12}:${m} ${ampm}`, iso:ahora.toISOString(), display:`${h12}:${m}`};
+}
+
+window.setTiempoRecogida=function(min){
+ tiempoRecogidaMin=min;
+ document.getElementById('tiempoRecogidaInput').value=min;
+ ['t10','t20','t30','t45','t60'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.classList.remove('active'); el.style.background='#fff'; el.style.color='#0a0a0a'; el.style.border='1.5px solid var(--border)'; } });
+ let act=document.getElementById('t'+min); if(act){ act.classList.add('active'); act.style.background='#0a0a0a'; act.style.color='#fff'; }
+}
+window.actualizarTiempoCustom=function(){ let v=parseInt(document.getElementById('tiempoRecogidaInput').value)||20; tiempoRecogidaMin=v; ['t10','t20','t30','t45','t60'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.classList.remove('active'); el.style.background='#fff'; el.style.color='#0a0a0a'; } }); }
+window.setTiempoCompra=function(min){
+ tiempoCompraMin=min;
+ document.getElementById('tiempoCompraInput').value=min;
+ ['tc15','tc30','tc45'].forEach(id=>{ let el=document.getElementById(id); if(el){ el.classList.remove('active'); el.style.background='#fff'; el.style.color='#0a0a0a'; } });
+ let act=document.getElementById('tc'+min); if(act){ act.classList.add('active'); act.style.background='#0a0a0a'; act.style.color='#fff'; }
+}
 
 function initMapReal(){
  if(!window.google ||!google.maps){ setTimeout(initMapReal,400); return; }
@@ -240,107 +296,39 @@ function initPlaces(){
  let elDondeComprar = document.getElementById('queComprar');
  if(elRecogida &&!elRecogida.dataset.ac){
    let ac = new google.maps.places.Autocomplete(elRecogida, opts);
-   ac.addListener('place_changed', ()=>{
-     let place = ac.getPlace();
-     if(place.geometry){
-       recogidaCoordsTemp = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() };
-       pintarPuntoRecogida(recogidaCoordsTemp);
-       intentarAutoRuta();
-     }
-   });
+   ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ recogidaCoordsTemp = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; pintarPuntoRecogida(recogidaCoordsTemp); intentarAutoRuta(); } });
    elRecogida.dataset.ac='1';
  }
  if(elEntrega &&!elEntrega.dataset.ac){
    let ac = new google.maps.places.Autocomplete(elEntrega, opts);
-   ac.addListener('place_changed', ()=>{
-     let place = ac.getPlace();
-     if(place.geometry){
-       entregaCoordsTemp = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() };
-       intentarAutoRuta();
-     }
-   });
+   ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ entregaCoordsTemp = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; intentarAutoRuta(); } });
    elEntrega.dataset.ac='1';
  }
  if(elDondeComprar &&!elDondeComprar.dataset.ac){
    let ac = new google.maps.places.Autocomplete(elDondeComprar, opts);
-   ac.addListener('place_changed', ()=>{
-     let place = ac.getPlace();
-     if(place.geometry){
-       compraOrigenCoords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() };
-       intentarAutoRutaCompra();
-     }
-   });
+   ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ compraOrigenCoords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; intentarAutoRutaCompra(); } });
    elDondeComprar.dataset.ac='1';
  }
  if(elEntregaCompra &&!elEntregaCompra.dataset.ac){
    let ac = new google.maps.places.Autocomplete(elEntregaCompra, opts);
-   ac.addListener('place_changed', ()=>{
-     let place = ac.getPlace();
-     if(place.geometry){
-       compraEntregaCoords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() };
-       entregaCoordsTemp = compraEntregaCoords;
-       intentarAutoRutaCompra();
-     }
-   });
+   ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ compraEntregaCoords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; entregaCoordsTemp = compraEntregaCoords; intentarAutoRutaCompra(); } });
    elEntregaCompra.dataset.ac='1';
  }
 }
-function pintarPuntoRecogida(coords){
- if(!map ||!coords) return;
- map.setCenter(coords); map.setZoom(15);
- markers.forEach(m=>m.setMap(null)); markers=[];
- let m1=new google.maps.Marker({position:coords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});
- markers.push(m1);
-}
-function pintarSoloEntrega(coords){
- if(!map ||!coords) return;
- if(!recogidaCoordsTemp){
-   map.setCenter(coords); map.setZoom(15);
-   markers.forEach(m=>m.setMap(null)); markers=[];
-   let m2=new google.maps.Marker({position:coords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:'#ef4444',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});
-   markers=[m2];
- }
-}
+function pintarPuntoRecogida(coords){ if(!map ||!coords) return; map.setCenter(coords); map.setZoom(15); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:coords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}}); markers.push(m1); }
+function pintarSoloEntrega(coords){ if(!map ||!coords) return; if(!recogidaCoordsTemp){ map.setCenter(coords); map.setZoom(15); markers.forEach(m=>m.setMap(null)); markers=[]; let m2=new google.maps.Marker({position:coords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:'#ef4444',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}}); markers=[m2]; } }
 function intentarAutoRuta(){
- if(!recogidaCoordsTemp ||!entregaCoordsTemp) {
-   if(entregaCoordsTemp &&!recogidaCoordsTemp) pintarSoloEntrega(entregaCoordsTemp);
-   if(recogidaCoordsTemp &&!entregaCoordsTemp) pintarPuntoRecogida(recogidaCoordsTemp);
-   return;
- }
+ if(!recogidaCoordsTemp ||!entregaCoordsTemp) { if(entregaCoordsTemp &&!recogidaCoordsTemp) pintarSoloEntrega(entregaCoordsTemp); if(recogidaCoordsTemp &&!entregaCoordsTemp) pintarPuntoRecogida(recogidaCoordsTemp); return; }
  dirServ.route({origin:recogidaCoordsTemp, destination:entregaCoordsTemp, travelMode:'DRIVING'},(r,s)=>{
   if(s==='OK'){
-   dirRend.setDirections(r); dirRend.setMap(map);
-   markers.forEach(m=>m.setMap(null)); markers=[];
-   let m1=new google.maps.Marker({position:recogidaCoordsTemp,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});
-   let m2=new google.maps.Marker({position:entregaCoordsTemp,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#ef4444',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});
-   markers=[m1,m2];
-   let leg=r.routes[0].legs[0]; let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let costo=calcularCostoPorKm(km);
-   let info=document.getElementById('infoRuta'); if(info){ info.style.display='block'; info.innerHTML=`AUTO GOOGLE: ${km} km - ${min} min - $${costo}`; }
-   // guarda cotizacion auto
-   let nombreRec = clientePedidoSeleccionado || document.getElementById('nombreClienteNuevo')?.value || 'Recogida';
-   let entregaTxt = document.getElementById('entregaDirRecoger')?.value || '';
-   let nombreEnt = document.getElementById('nombreEntregaPedido')?.value || '';
-   let telRec = document.getElementById('telefonoRecogidaPedido')?.value || '';
-   ultimaCotizacion={cliente:nombreRec, nombreEntrega:nombreEnt, dirRecogida:nombreRec, dirRecogidaObj:{direccion:nombreRec, lat:recogidaCoordsTemp.lat, lng:recogidaCoordsTemp.lng}, entrega:entregaTxt, km:km, min:min, lat1:recogidaCoordsTemp.lat, lng1:recogidaCoordsTemp.lng, lat2:entregaCoordsTemp.lat, lng2:entregaCoordsTemp.lng, costoSugerido:costo, sinRuta:false, telefonoRecogida:telRec};
-   document.getElementById('botonesDespuesCotizar').style.display='flex';
-  }
+   dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:recogidaCoordsTemp,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); let m2=new google.maps.Marker({position:entregaCoordsTemp,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#ef4444',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); markers=[m1,m2]; let leg=r.routes[0].legs[0]; let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let costo=calcularCostoPorKm(km); let info=document.getElementById('infoRuta'); if(info){ info.style.display='block'; info.innerHTML=`AUTO GOOGLE: ${km} km - ${min} min - $${costo} - Recoger en ${tiempoRecogidaMin}min`; } let nombreRec = clientePedidoSeleccionado || document.getElementById('nombreClienteNuevo')?.value || 'Recogida'; let entregaTxt = document.getElementById('entregaDirRecoger')?.value || ''; let nombreEnt = document.getElementById('nombreEntregaPedido')?.value || ''; let telRec = document.getElementById('telefonoRecogidaPedido')?.value || ''; ultimaCotizacion={cliente:nombreRec, nombreEntrega:nombreEnt, dirRecogida:nombreRec, dirRecogidaObj:{direccion:nombreRec, lat:recogidaCoordsTemp.lat, lng:recogidaCoordsTemp.lng}, entrega:entregaTxt, km:km, min:min, lat1:recogidaCoordsTemp.lat, lng1:recogidaCoordsTemp.lng, lat2:entregaCoordsTemp.lat, lng2:entregaCoordsTemp.lng, costoSugerido:costo, sinRuta:false, telefonoRecogida:telRec, tiempoRecogida:tiempoRecogidaMin}; document.getElementById('botonesDespuesCotizar').style.display='flex'; }
  });
 }
 function intentarAutoRutaCompra(){
  if(!compraOrigenCoords ||!compraEntregaCoords) return;
  dirServ.route({origin:compraOrigenCoords, destination:compraEntregaCoords, travelMode:'DRIVING'},(r,s)=>{
   if(s==='OK'){
-   dirRend.setDirections(r); dirRend.setMap(map);
-   markers.forEach(m=>m.setMap(null)); markers=[];
-   let m1=new google.maps.Marker({position:compraOrigenCoords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#f59e0b',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});
-   let m2=new google.maps.Marker({position:compraEntregaCoords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});
-   markers=[m1,m2];
-   let leg=r.routes[0].legs[0]; let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let costo=calcularCostoCompra(km);
-   let info=document.getElementById('infoRuta'); if(info){ info.style.display='block'; info.innerHTML=`COMPRA GOOGLE: ${km} km - ${min} min - $${costo} (base $42 + $5/km)`; }
-   let prod=document.getElementById('queComprarProductos')?.value || ''; let donde=document.getElementById('queComprar')?.value || ''; let entregaTxt=document.getElementById('entregaDirComprar')?.value || '';
-   ultimaCotizacion={cliente:donde||'Compra', nombreEntrega:clienteCompraSeleccionado||'', dirRecogida:donde, productos:prod, dirRecogidaObj:{direccion:donde, lat:compraOrigenCoords.lat, lng:compraOrigenCoords.lng}, entrega:entregaTxt, km:km, min:min, lat1:compraOrigenCoords.lat, lng1:compraOrigenCoords.lng, lat2:compraEntregaCoords.lat, lng2:compraEntregaCoords.lng, costoSugerido:costo, sinRuta:false, esCompra:true};
-   document.getElementById('botonesDespuesCotizar').style.display='flex';
-  }
+   dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:compraOrigenCoords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#f59e0b',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); let m2=new google.maps.Marker({position:compraEntregaCoords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); markers=[m1,m2]; let leg=r.routes[0].legs[0]; let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let costo=calcularCostoCompra(km); let info=document.getElementById('infoRuta'); if(info){ info.style.display='block'; info.innerHTML=`COMPRA GOOGLE: ${km} km - ${min} min - $${costo} - Recoger en ${tiempoCompraMin}min`; } let prod=document.getElementById('queComprarProductos')?.value || ''; let donde=document.getElementById('queComprar')?.value || ''; let entregaTxt=document.getElementById('entregaDirComprar')?.value || ''; ultimaCotizacion={cliente:donde||'Compra', nombreEntrega:clienteCompraSeleccionado||'', dirRecogida:donde, productos:prod, dirRecogidaObj:{direccion:donde, lat:compraOrigenCoords.lat, lng:compraOrigenCoords.lng}, entrega:entregaTxt, km:km, min:min, lat1:compraOrigenCoords.lat, lng1:compraOrigenCoords.lng, lat2:compraEntregaCoords.lat, lng2:compraEntregaCoords.lng, costoSugerido:costo, sinRuta:false, esCompra:true, tiempoRecogida:tiempoCompraMin}; document.getElementById('botonesDespuesCotizar').style.display='flex'; }
  });
 }
 function calcularCostoCompra(km){ let k=parseFloat(km); if(isNaN(k)) return 42; let base=42; let radio=tarifasKmConfig.centroRadio||1.5; if(k<=radio) return base; let costo=base + (k-radio)*5; return Math.round(costo); }
@@ -350,19 +338,14 @@ window.centerMyLocation=function(){
  if(!navigator.geolocation) return;
  navigator.geolocation.getCurrentPosition(pos=>{
   let p={lat:pos.coords.latitude,lng:pos.coords.longitude};
-  if(mapRepa){ mapRepa.setCenter(p); mapRepa.setZoom(17);
-   if(myMarker) myMarker.setMap(null);
-   myMarker=new google.maps.Marker({position:p,map:mapRepa,icon:{path:google.maps.SymbolPath.CIRCLE,scale:10,fillColor:'#0a0a0a',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});
-  }
+  if(mapRepa){ mapRepa.setCenter(p); mapRepa.setZoom(17); if(myMarker) myMarker.setMap(null); myMarker=new google.maps.Marker({position:p,map:mapRepa,icon:{path:google.maps.SymbolPath.CIRCLE,scale:10,fillColor:'#0a0a0a',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}}); }
  },null,{enableHighAccuracy:true});
 }
 function startTracking(){
  if(watchId) navigator.geolocation.clearWatch(watchId);
  watchId=navigator.geolocation.watchPosition(pos=>{
   let p={lat:pos.coords.latitude,lng:pos.coords.longitude};
-  if(posMarkerRepa) posMarkerRepa.setPosition(p); else {
-   posMarkerRepa=new google.maps.Marker({position:p,map:mapRepa,icon:{path:google.maps.SymbolPath.CIRCLE,scale:10,fillColor:'#0a0a0a',fillOpacity:1,strokeColor:'#fff',strokeWeight:3},zIndex:999});
-  }
+  if(posMarkerRepa) posMarkerRepa.setPosition(p); else { posMarkerRepa=new google.maps.Marker({position:p,map:mapRepa,icon:{path:google.maps.SymbolPath.CIRCLE,scale:10,fillColor:'#0a0a0a',fillOpacity:1,strokeColor:'#fff',strokeWeight:3},zIndex:999}); }
   if(mapRepa) mapRepa.panTo(p);
  },null,{enableHighAccuracy:true,maximumAge:0,timeout:10000});
 }
@@ -510,7 +493,6 @@ window.cotizarRuta=async function(){
  intentarAutoRuta();
 };
 window.cotizarRutaComprar=async function(){
- let prod=document.getElementById('queComprarProductos').value.trim();
  let donde=document.getElementById('queComprar').value.trim();
  let ent=document.getElementById('entregaDirComprar').value.trim();
  if(!donde||!ent) return mostrarAviso('Falta donde comprar y entrega','Error');
@@ -520,7 +502,7 @@ window.cotizarRutaComprar=async function(){
  compraOrigenCoords=orig; compraEntregaCoords=dest; entregaCoordsTemp=dest;
  intentarAutoRutaCompra();
 };
-window.enviarCotizacionCliente=function(){ if(!ultimaCotizacion) return mostrarAviso('Cotiza primero','Error'); let c=ultimaCotizacion; let texto=`KIGO - COTIZACION GOOGLE: Recoger: ${c.dirRecogida} Entregar: ${c.entrega} ${c.km} km - ${c.min} min Costo: $${c.costoSugerido}`; window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank'); };
+window.enviarCotizacionCliente=function(){ if(!ultimaCotizacion) return mostrarAviso('Cotiza primero','Error'); let c=ultimaCotizacion; let texto=`KIGO - COTIZACION GOOGLE: Recoger: ${c.dirRecogida} Entregar: ${c.entrega} ${c.km} km - ${c.min} min Costo: $${c.costoSugerido} - Recoger en ${c.tiempoRecogida||20}min`; window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank'); };
 window.restaurarCotizacion=function(){ if(dirRend) dirRend.setDirections({routes:[]}); markers.forEach(m=>m.setMap(null)); markers=[]; document.getElementById('infoRuta').style.display='none'; document.getElementById('botonesDespuesCotizar').style.display='none'; document.getElementById('entregaDirRecoger').value=''; document.getElementById('entregaDirComprar').value=''; document.getElementById('queComprar').value=''; document.getElementById('queComprarProductos').value=''; document.getElementById('nombreEntregaPedido').value=''; document.getElementById('telefonoEntregaPedido').value=''; let telR=document.getElementById('telefonoRecogidaPedido'); if(telR) telR.value=''; document.getElementById('buscadorClientePedido').value=''; document.getElementById('buscadorClienteCompra').value=''; document.getElementById('nombreClienteNuevo').value=''; document.getElementById('direccionRecogidaManual').value=''; let box=document.getElementById('clienteSeleccionadoPedido'); if(box) box.style.display='none'; let box2=document.getElementById('clienteCompraSeleccionado'); if(box2) box2.style.display='none'; clientePedidoSeleccionado=null; clienteCompraSeleccionado=null; ultimaCotizacion=null; entregaCoordsTemp=null; recogidaCoordsTemp=null; compraOrigenCoords=null; compraEntregaCoords=null; };
 window.confirmarPedido=async function(){
  if(!ultimaCotizacion) return mostrarAviso('Cotiza primero en el mapa','Falta');
@@ -530,10 +512,12 @@ window.confirmarPedido=async function(){
  let repaDestino=document.getElementById('pedidoRepaDestino')?.value||'';
  let tel=document.getElementById('telefonoEntregaPedido')?.value.trim()||'';
  let telRec=ultimaCotizacion.telefonoRecogida||'';
+ let tiempoMin=tiempoRecogidaMin||parseInt(document.getElementById('tiempoRecogidaInput').value)||20;
+ let horaRec=calcularHoraRecogida(tiempoMin);
  if(!repaDestino) return mostrarAviso('Falta repartidor','Error');
- confirmarAccion(`Enviar pedido de ${ultimaCotizacion.cliente} a ${repaDestino} por $${ultimaCotizacion.costoSugerido}? Ruta: ${ultimaCotizacion.km}km`, 'Confirmar Google', async ()=>{
-  let pedido={cliente:ultimaCotizacion.cliente, nombreEntrega:nombreEnt, dirRecogida:ultimaCotizacion.dirRecogida, lat1:ultimaCotizacion.lat1, lng1:ultimaCotizacion.lng1, entrega:entTxt, lat2:dest.lat, lng2:dest.lng, km:ultimaCotizacion.km, min:ultimaCotizacion.min, costoSugerido:ultimaCotizacion.costoSugerido, etapa:'pendiente', estado:'pendiente', repaAsignado:repaDestino, telefono:tel, telefonoRecogida:telRec, ts:Date.now(), iso:todayISO(), sinRuta:false};
-  let nr=push(ref(db,'kigoPedidosLive')); await set(nr, pedido); mostrarAviso(`Enviado a ${repaDestino} con ruta Google`,'Enviado'); restaurarCotizacion();
+ confirmarAccion(`Enviar pedido de ${ultimaCotizacion.cliente} a ${repaDestino} por $${ultimaCotizacion.costoSugerido}? Recoger ${horaRec.texto}`, 'Confirmar Google', async ()=>{
+  let pedido={cliente:ultimaCotizacion.cliente, nombreEntrega:nombreEnt, dirRecogida:ultimaCotizacion.dirRecogida, lat1:ultimaCotizacion.lat1, lng1:ultimaCotizacion.lng1, entrega:entTxt, lat2:dest.lat, lng2:dest.lng, km:ultimaCotizacion.km, min:ultimaCotizacion.min, costoSugerido:ultimaCotizacion.costoSugerido, etapa:'pendiente', estado:'pendiente', repaAsignado:repaDestino, telefono:tel, telefonoRecogida:telRec, ts:Date.now(), iso:todayISO(), sinRuta:false, tiempoRecogida:tiempoMin, horaRecoger:horaRec.texto, horaRecogerISO:horaRec.iso};
+  let nr=push(ref(db,'kigoPedidosLive')); await set(nr, pedido); mostrarAviso(`Enviado a ${repaDestino} - ${horaRec.texto}`,'Enviado'); restaurarCotizacion();
  }, 'Enviar', 'green');
 };
 window.confirmarPedidoCompra=async function(){
@@ -541,10 +525,12 @@ window.confirmarPedidoCompra=async function(){
  let entTxt=document.getElementById('entregaDirComprar').value || ultimaCotizacion.entrega;
  let repaDestino=document.getElementById('pedidoRepaDestino')?.value||'';
  let tel=document.getElementById('telefonoEntregaCompra')?.value.trim()||'';
+ let tiempoMin=tiempoCompraMin||parseInt(document.getElementById('tiempoCompraInput').value)||15;
+ let horaRec=calcularHoraRecogida(tiempoMin);
  if(!repaDestino) return mostrarAviso('Falta repartidor','Error');
- confirmarAccion(`Enviar compra ${ultimaCotizacion.productos||''} de ${ultimaCotizacion.dirRecogida} a ${repaDestino} por $${ultimaCotizacion.costoSugerido}?`, 'Confirmar compra', async ()=>{
-  let pedido={cliente:`COMPRA: ${ultimaCotizacion.productos||''} en ${ultimaCotizacion.dirRecogida}`, nombreEntrega:clienteCompraSeleccionado||'', productos:ultimaCotizacion.productos, dirRecogida:ultimaCotizacion.dirRecogida, lat1:ultimaCotizacion.lat1, lng1:ultimaCotizacion.lng1, entrega:entTxt, lat2:ultimaCotizacion.lat2, lng2:ultimaCotizacion.lng2, km:ultimaCotizacion.km, min:ultimaCotizacion.min, costoSugerido:ultimaCotizacion.costoSugerido, etapa:'pendiente', estado:'pendiente', repaAsignado:repaDestino, telefono:tel, ts:Date.now(), iso:todayISO(), esCompra:true};
-  let nr=push(ref(db,'kigoPedidosLive')); await set(nr, pedido); mostrarAviso(`Compra enviada a ${repaDestino}`,'Enviado'); restaurarCotizacion();
+ confirmarAccion(`Enviar compra ${ultimaCotizacion.productos||''} de ${ultimaCotizacion.dirRecogida} a ${repaDestino} por $${ultimaCotizacion.costoSugerido}? ${horaRec.texto}`, 'Confirmar compra', async ()=>{
+  let pedido={cliente:`COMPRA: ${ultimaCotizacion.productos||''} en ${ultimaCotizacion.dirRecogida}`, nombreEntrega:clienteCompraSeleccionado||'', productos:ultimaCotizacion.productos, dirRecogida:ultimaCotizacion.dirRecogida, lat1:ultimaCotizacion.lat1, lng1:ultimaCotizacion.lng1, entrega:entTxt, lat2:ultimaCotizacion.lat2, lng2:ultimaCotizacion.lng2, km:ultimaCotizacion.km, min:ultimaCotizacion.min, costoSugerido:ultimaCotizacion.costoSugerido, etapa:'pendiente', estado:'pendiente', repaAsignado:repaDestino, telefono:tel, ts:Date.now(), iso:todayISO(), esCompra:true, tiempoRecogida:tiempoMin, horaRecoger:horaRec.texto, horaRecogerISO:horaRec.iso};
+  let nr=push(ref(db,'kigoPedidosLive')); await set(nr, pedido); mostrarAviso(`Compra enviada a ${repaDestino} - ${horaRec.texto}`,'Enviado'); restaurarCotizacion();
  }, 'Enviar', 'green');
 };
 
@@ -552,8 +538,9 @@ window.mostrarTarjetaModerna=function(key){
  let p=pedidosLive[key]; if(!p) return; pedidoSeleccionadoKey=key; localStorage.setItem('kigo_pedido_activo', key);
  document.getElementById('cardPedidoModerna').style.display='block';
  let boxCancel=document.getElementById('boxCanceladoRepa'); let boxNormal=document.getElementById('boxNormalRepa');
- if(p.etapa==='cancelado'){ boxCancel.style.display='block'; boxNormal.style.display='none'; document.getElementById('txtCanceladoMotivo').innerText=p.motivoCancelado||'Sin motivo'; document.getElementById('txtNumPedido').innerText=key.slice(-4).toUpperCase(); return; } else { boxCancel.style.display='none'; boxNormal.style.display='block'; }
+ if(p.etapa==='cancelado'){ boxCancel.style.display='block'; boxNormal.style.display='none'; document.getElementById('txtCanceladoMotivo').innerText=p.motivoCancelado||'Sin motivo'; document.getElementById('txtNumPedido').innerText=key.slice(-4).toUpperCase(); let hr=document.getElementById('txtHoraRecoger'); if(hr) hr.style.display='none'; return; } else { boxCancel.style.display='none'; boxNormal.style.display='block'; }
  document.getElementById('txtNumPedido').innerText=key.slice(-4).toUpperCase();
+ let horaEl=document.getElementById('txtHoraRecoger'); if(p.horaRecoger){ horaEl.style.display='inline-block'; horaEl.innerText=p.horaRecoger; } else { horaEl.style.display='none'; }
  document.getElementById('txtNegocioNombre').innerText=p.cliente||'Cliente';
  document.getElementById('txtNegocioDir').innerText=(p.productos? p.productos+' - ':'') + (p.dirRecogida||'--');
  document.getElementById('txtClienteDir').innerText=(p.nombreEntrega? p.nombreEntrega+' - ':'') + (p.entrega||'--');
@@ -567,14 +554,16 @@ window.mostrarTarjetaModerna=function(key){
 }
 window.actualizarEstadoVisual=function(etapa){
  const bAceptar=document.getElementById('btnAceptar'); const bCamino=document.getElementById('btnEnCamino'); const bRecogido=document.getElementById('btnRecogido'); const bVoy=document.getElementById('btnVoyEntregar'); const bEnt=document.getElementById('btnEntregado'); const fin=document.getElementById('estadoFinal'); const estadoTxt=document.getElementById('txtEstadoPedido');
- if(!bAceptar) return; bAceptar.style.display='none'; bCamino.style.display='none'; bRecogido.style.display='none'; bVoy.style.display='none'; bEnt.style.display='none'; fin.style.display='none';
- if(etapa==='pendiente'){ estadoTxt.innerHTML='Nuevo pedido Google'; estadoTxt.style.background='#fef3c7'; estadoTxt.style.color='#92400e'; bAceptar.style.display='flex'; }
- else if(etapa==='aceptado'){ estadoTxt.innerHTML='Aceptado'; estadoTxt.style.background='#dbeafe'; estadoTxt.style.color='#1e40af'; bCamino.style.display='flex'; }
- else if(etapa==='en_camino_recoger'){ estadoTxt.innerHTML='En camino a recoger'; estadoTxt.style.background='#ffedd5'; estadoTxt.style.color='#9a3412'; bRecogido.style.display='flex'; }
- else if(etapa==='recogido'){ estadoTxt.innerHTML='Recogido'; estadoTxt.style.background='#dcfce7'; estadoTxt.style.color='#166534'; bVoy.style.display='flex'; }
- else if(etapa==='en_camino_entrega'){ estadoTxt.innerHTML='En camino a entregar'; estadoTxt.style.background='#e0e7ff'; estadoTxt.style.color='#3730a3'; bEnt.style.display='flex'; }
- else if(etapa==='finalizado'){ estadoTxt.innerHTML='Entregado'; estadoTxt.style.background='#f0fdf4'; estadoTxt.style.color='#166534'; fin.style.display='block'; localStorage.removeItem('kigo_pedido_activo'); stopTracking(); }
- else if(etapa==='cancelado'){ estadoTxt.innerHTML='CANCELADO'; estadoTxt.style.background='#fee2e2'; estadoTxt.style.color='#991b1b'; }
+ if(!bAceptar) return;
+ let estilo=getEstadoStyle(etapa);
+ bAceptar.style.display='none'; bCamino.style.display='none'; bRecogido.style.display='none'; bVoy.style.display='none'; bEnt.style.display='none'; fin.style.display='none';
+ estadoTxt.innerText=estilo.txt; estadoTxt.style.background=estilo.bg; estadoTxt.style.color=estilo.color; estadoTxt.style.border=`1px solid ${estilo.border}`;
+ if(etapa==='pendiente'){ bAceptar.style.display='flex'; }
+ else if(etapa==='aceptado'){ bCamino.style.display='flex'; }
+ else if(etapa==='en_camino_recoger'){ bRecogido.style.display='flex'; }
+ else if(etapa==='recogido'){ bVoy.style.display='flex'; }
+ else if(etapa==='en_camino_entrega'){ bEnt.style.display='flex'; }
+ else if(etapa==='finalizado'){ fin.style.display='block'; localStorage.removeItem('kigo_pedido_activo'); stopTracking(); }
 }
 window.verRutaLive=function(key){
  let p=pedidosLive[key]; if(!p ||!p.lat1 ||!p.lat2) return;
@@ -616,7 +605,6 @@ window.seleccionarClientePedido=async function(nombre){
  clientePedidoSeleccionado=nombre; document.getElementById('buscadorClientePedido').value=nombre; document.getElementById('listClientePedido').style.display='none';
  let dir=clientesDirecciones[nombre]; let box=document.getElementById('clienteSeleccionadoPedido'); box.style.display='block'; box.innerHTML=`<div style="display:flex;justify-content:space-between"><div><b>${nombre}</b><br><span style="font-size:10px;color:#374151">${dir?`${dir.direccion}`:'Sin direccion'}</span></div><button onclick="limpiarClienteSeleccionado()" style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:4px 8px;font-size:8px">X</button></div>`;
  opcionRecoger='cliente'; document.getElementById('btnOpcionCliente').classList.add('active'); document.getElementById('btnOpcionDireccion').classList.remove('active'); document.getElementById('panelOpcionCliente').style.display='block'; document.getElementById('panelOpcionDireccion').style.display='none';
- // MAPA VIVO - PINTA RECOGIDA
  if(dir && dir.lat && dir.lng){ recogidaCoordsTemp={lat:dir.lat,lng:dir.lng}; pintarPuntoRecogida(recogidaCoordsTemp); intentarAutoRuta(); }
  else if(dir){ let c=await geo(dir.direccion); if(c){ recogidaCoordsTemp=c; pintarPuntoRecogida(c); intentarAutoRuta(); } }
 };
@@ -643,11 +631,13 @@ window.renderPedidosLiveRepa=function(){
  let listaEspera=pedidoSeleccionadoKey?arr.filter(p=>p._key!==pedidoSeleccionadoKey):arr;
  if(!arr.length){ cont.innerHTML=''; document.getElementById('emptyLive').style.display='block'; return; } document.getElementById('emptyLive').style.display='none';
  cont.innerHTML=listaEspera.map((p,idx)=>{
-  let hora=new Date(p.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); let min=Math.floor((Date.now()-p.ts)/60000); let costo=p.costoSugerido||'';
+  let hora=new Date(p.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); let min=Math.floor((Date.now()-p.ts)/60000);
+  let estilo=getEstadoStyle(p.etapa||'pendiente');
   if(p.etapa==='cancelado') return `<div class="rappi-card-vertical" style="border:2px solid #ef4444;background:#fef2f2" onclick="mostrarTarjetaModerna('${p._key}')"><div><span style="background:#ef4444;color:#fff;padding:4px 8px;border-radius:20px;font-size:8px">CANCELADO ${hora}</span><div style="font-size:12px;font-weight:800;margin-top:5px;color:#991b1b">${p.cliente}</div><div style="font-size:9px;color:#991b1b">${p.motivoCancelado||''}</div></div></div>`;
-  return `<div class="rappi-card-vertical" onclick="mostrarTarjetaModerna('${p._key}')"><div style="flex:1"><div style="display:flex;gap:6px"><span style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:8px">#${String(idx+1).padStart(2,'0')} - ${hora}</span><span style="background:#fef3c7;color:#92400e;padding:3px 7px;border-radius:10px;font-size:7px">${min} min</span></div><div style="font-size:12px;font-weight:800;margin-top:5px">${p.cliente}</div><div style="font-size:10px;color:#6b7280">${p.dirRecogida} - ${p.entrega}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800">$${costo}</div><div style="font-size:8px;color:#6b7280">${p.km}km</div></div></div>`;
+  let horaRecogerHtml=p.horaRecoger?`<span style="background:#dcfce7;border:1px solid #86efac;color:#166534;padding:4px 8px;border-radius:20px;font-size:8px;font-weight:800;margin-left:6px">${p.horaRecoger}</span>`:'';
+  return `<div class="rappi-card-vertical" onclick="mostrarTarjetaModerna('${p._key}')"><div style="flex:1"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:8px">#${String(idx+1).padStart(2,'0')} - ${hora}</span>${horaRecogerHtml}<span style="background:${estilo.bg};color:${estilo.color};border:1px solid ${estilo.border};padding:3px 7px;border-radius:10px;font-size:7px;font-weight:800">${estilo.txt}</span></div><div style="font-size:12px;font-weight:800;margin-top:5px">${p.cliente}</div><div style="font-size:10px;color:#6b7280">${p.dirRecogida} - ${p.entrega}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800">$${p.costoSugerido||''}</div><div style="font-size:8px;color:#6b7280">${p.km}km</div></div></div>`;
  }).join('');
- if(!pedidoSeleccionadoKey && arr.length>0){ mostrarTarjetaModerna(arr[0]._key); }
+ if(!pedidoSeleccionadoKey && arr.length>0){ let primero=arr.find(p=>p.etapa!=='cancelado')||arr[0]; mostrarTarjetaModerna(primero._key); }
 };
 window.renderSeguimientoAdmin=function(){
  let cont=document.getElementById('listaSeguimiento'); let countEl=document.getElementById('countSeguimiento'); let empty=document.getElementById('emptySeguimiento'); if(!cont) return;
@@ -658,16 +648,30 @@ window.renderSeguimientoAdmin=function(){
  if(countEl) countEl.innerText=`${arr.length} activos`;
  if(!arr.length){ cont.innerHTML=''; if(empty) empty.style.display='block'; return; } if(empty) empty.style.display='none';
  cont.innerHTML=arr.map(p=>{
-  let est=(p.etapa||'pendiente').toUpperCase(); let hora=new Date(p.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  return `<div class="seguimiento-card" style="${p.etapa==='cancelado'?'border:2px solid #ef4444;background:#fef2f2':''}"><div style="display:flex;justify-content:space-between"><div><span style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:8px">#${p._key.slice(-4).toUpperCase()} - ${hora}</span><span style="background:#f3f4f6;padding:4px 8px;border-radius:20px;font-size:8px">${p.repaAsignado||'Sin repa'}</span></div><span style="font-size:8px;font-weight:800">${est}</span></div><div style="font-size:12px;font-weight:800;margin-top:6px">${p.cliente}</div><div style="font-size:10px;color:#6b7280">${p.dirRecogida} - ${p.entrega}</div><div style="display:flex;gap:8px;margin-top:12px"><button onclick="abrirDetalleSeguimiento('${p._key}')" style="flex:1;height:38px;background:#fff;border:1.5px solid #e5e7eb;border-radius:12px;font-weight:800;font-size:10px">Ver / Editar</button><button onclick="pasarAHistorial('${p._key}')" style="flex:1;height:38px;background:${p.etapa==='finalizado'?'#10b981':'#9ca3af'};color:#fff;border:none;border-radius:12px;font-weight:800;font-size:10px">OK Historial</button></div></div>`;
+  let est=getEstadoStyle(p.etapa||'pendiente'); let hora=new Date(p.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  let horaRecogerHtml=p.horaRecoger?`<span style="background:#dcfce7;border:1px solid #86efac;color:#166534;padding:3px 8px;border-radius:20px;font-size:7px;font-weight:800;margin-left:6px">${p.horaRecoger}</span>`:'';
+  return `<div class="seguimiento-card" style="${p.etapa==='cancelado'?'border:2px solid #ef4444;background:#fef2f2':''}"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px"><span style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:8px">#${p._key.slice(-4).toUpperCase()} - ${hora}</span>${horaRecogerHtml}<span style="background:#f3f4f6;padding:4px 8px;border-radius:20px;font-size:8px">${p.repaAsignado||'Sin repa'}</span></div><span style="background:${est.bg};color:${est.color};border:1px solid ${est.border};padding:5px 10px;border-radius:20px;font-size:8px;font-weight:800">${est.txt}</span></div><div style="font-size:12px;font-weight:800;margin-top:6px">${p.cliente}</div><div style="font-size:10px;color:#6b7280">${p.dirRecogida} - ${p.entrega}</div><div style="display:flex;gap:8px;margin-top:12px"><button onclick="abrirDetalleSeguimiento('${p._key}')" style="flex:1;height:38px;background:#fff;border:1.5px solid #e5e7eb;border-radius:12px;font-weight:800;font-size:10px">Ver / Editar</button><button onclick="pasarAHistorial('${p._key}')" style="flex:1;height:38px;background:${p.etapa==='finalizado'?'#10b981':'#9ca3af'};color:#fff;border:none;border-radius:12px;font-weight:800;font-size:10px">OK Historial</button></div></div>`;
  }).join('');
 };
-window.abrirDetalleSeguimiento=function(key,silent=false){ let p=pedidosLive[key]; if(!p) return; detalleActualKey=key; let card=document.getElementById('cardDetalleSeguimiento'); card.style.display='block'; document.getElementById('detalleKey').innerText='#'+key.slice(-4).toUpperCase(); document.getElementById('detalleCliente').innerText=p.cliente; document.getElementById('detalleRecoge').innerText=p.dirRecogida; document.getElementById('detalleEntrega').innerText=(p.nombreEntrega? p.nombreEntrega+' - ':'')+p.entrega; document.getElementById('detalleKm').innerText=`${p.km} km - ${p.min} min (Google)`; document.getElementById('detalleRepa').innerText=p.repaAsignado||'Sin repa'; document.getElementById('inputDetalleTelefono').value=p.telefono||''; document.getElementById('inputDetalleCosto').value=p.costoSugerido||''; document.getElementById('detalleCostoActual').innerText=`Actual $${p.costoSugerido||''}`; if(!silent) card.scrollIntoView({behavior:'smooth'}); }
+window.abrirDetalleSeguimiento=function(key,silent=false){ let p=pedidosLive[key]; if(!p) return; detalleActualKey=key; let card=document.getElementById('cardDetalleSeguimiento'); card.style.display='block'; document.getElementById('detalleKey').innerText='#'+key.slice(-4).toUpperCase(); document.getElementById('detalleCliente').innerText=p.cliente; document.getElementById('detalleRecoge').innerText=p.dirRecogida; document.getElementById('detalleEntrega').innerText=(p.nombreEntrega? p.nombreEntrega+' - ':'')+p.entrega; document.getElementById('detalleKm').innerText=`${p.km} km - ${p.min} min (Google)`; document.getElementById('detalleRepa').innerText=p.repaAsignado||'Sin repa'; document.getElementById('inputDetalleTelefono').value=p.telefono||''; document.getElementById('inputDetalleCosto').value=p.costoSugerido||''; document.getElementById('detalleCostoActual').innerText=`Actual $${p.costoSugerido||''}`; let est=getEstadoStyle(p.etapa); let badge=document.getElementById('detalleEstadoColor'); badge.innerText=est.txt; badge.style.background=est.bg; badge.style.color=est.color; badge.style.border=`1px solid ${est.border}`; let hrDet=document.getElementById('detalleHoraRecogida'); if(p.horaRecoger){ hrDet.style.display='inline-block'; hrDet.innerText=p.horaRecoger; } else { hrDet.style.display='none'; } if(!silent) card.scrollIntoView({behavior:'smooth'}); }
 window.cerrarDetalleSeguimiento=function(){ document.getElementById('cardDetalleSeguimiento').style.display='none'; detalleActualKey=null; }
 window.guardarTelefonoDetalle=async function(){ if(!detalleActualKey) return; let tel=document.getElementById('inputDetalleTelefono').value.trim(); if(!tel) return mostrarAviso('Escribe telefono','Falta'); await update(ref(db,'kigoPedidosLive/'+detalleActualKey), {telefono:tel}); mostrarAviso('Guardado','OK'); }
 window.guardarCostoDetalle=async function(){ if(!detalleActualKey) return; let costo=parseInt(document.getElementById('inputDetalleCosto').value); if(!costo) return mostrarAviso('Costo no valido','Error'); await update(ref(db,'kigoPedidosLive/'+detalleActualKey), {costoSugerido:costo}); mostrarAviso(`Costo $${costo}`,'OK'); }
 window.sumarCosto=async function(extra){ if(!detalleActualKey) return; let p=pedidosLive[detalleActualKey]; let actual=p.costoSugerido||0; let nuevo=actual+extra; document.getElementById('inputDetalleCosto').value=nuevo; await update(ref(db,'kigoPedidosLive/'+detalleActualKey), {costoSugerido:nuevo}); mostrarAviso(`+$${extra}`,'OK'); }
-window.cancelarPedidoConNotificacion=async function(){ if(!detalleActualKey) return; let p=pedidosLive[detalleActualKey]; let motivo=prompt(`Motivo cancelacion para ${p.repaAsignado}:`, 'Cancelado por admin'); if(motivo===null) return; await update(ref(db,'kigoPedidosLive/'+detalleActualKey), {etapa:'cancelado', estado:'cancelado', motivoCancelado:motivo, canceladoTs:Date.now()}); mostrarAviso('Cancelado y notificado','OK'); }
+window.cancelarPedidoConNotificacion=async function(){
+ if(!detalleActualKey) return; let p=pedidosLive[detalleActualKey]; let key=detalleActualKey;
+ let motivo=prompt(`Motivo cancelacion para ${p.repaAsignado}:`, 'Cancelado por admin - cliente cancelo'); if(motivo===null) return;
+ confirmarAccion(`Cancelar y notificar a ${p.repaAsignado}? Se borrara de tu panel.`, 'Cancelar y eliminar', async ()=>{
+   // 1. Notifica a repa
+   await update(ref(db,'kigoPedidosLive/'+key), {etapa:'cancelado', estado:'cancelado', motivoCancelado:motivo, canceladoTs:Date.now()});
+   mostrarAviso('Notificado al repartidor - se eliminara en 2s','Cancelado');
+   cerrarDetalleSeguimiento();
+   // 2. Elimina de tu panel despues de 2s para que repa lo vea
+   setTimeout(async ()=>{
+     await remove(ref(db,'kigoPedidosLive/'+key));
+   }, 2000);
+ }, 'Cancelar y borrar', 'red');
+}
 window.pasarAHistorial=async function(key){ let p=pedidosLive[key]; if(!p) return; if(p.etapa==='cancelado'){ await remove(ref(db,'kigoPedidosLive/'+key)); cerrarDetalleSeguimiento(); mostrarAviso('Eliminado','OK'); return; } let fee=getFeeForItem({tipo:'Moto Mandado', repa:p.repaAsignado, feeKigo:null}); let valor=p.costoSugerido||0; let obj={ iso:p.iso||todayISO(), cliente:p.cliente, tipo:'Moto Mandado', valor:valor, repa:p.repaAsignado, pagado:false, promo:false, feeKigo:fee, ts:Date.now(), origenPedido:key }; let nr=push(ref(db,'ventasKigo')); await set(nr,obj); await remove(ref(db,'kigoPedidosLive/'+key)); mostrarAviso('Pasado a historial','OK'); };
 
 window.showView=function(v){ if(rol==='repa'&&v!=='repartidor') return; document.querySelectorAll('.view').forEach(x=>x.classList.remove('active')); document.getElementById('view-'+v).classList.add('active'); document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active')); let btn=document.getElementById('b-'+v); if(btn) btn.classList.add('active'); if(v==='pedidos'){ setTimeout(()=>{ initMapReal(); initPlaces(); if(map) google.maps.event.trigger(map,'resize'); },150); } if(v==='repartidor'){ setTimeout(()=>{ initMapReal(); if(mapRepa) google.maps.event.trigger(mapRepa,'resize'); },200); } };
@@ -703,7 +707,7 @@ window.renderCalendario=function(){ let grid=document.getElementById('gridCal');
 window.renderEstadisticas=function(){ let mesInput=document.getElementById('estMes'); if(!mesInput.value){ let now=new Date(); mesInput.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'); } let mes=mesInput.value; let datos=ventas.filter(v=>v.iso.startsWith(mes)); let mand=datos.filter(v=>(v.tipo||'Moto Mandado')==='Moto Mandado'&&!v.promo).length; let trans=datos.filter(v=>v.tipo==='Moto Transporte'&&!v.promo).length; let total=datos.length; let res=document.getElementById('resumenEstMes'); if(res) res.innerHTML=`<div class="stats"><div class="stat"><span>Total</span><strong>${total}</strong></div><div class="stat"><span>Mand</span><strong>${mand}</strong></div><div class="stat"><span>Trans</span><strong>${trans}</strong></div><div class="stat red"><span>Bruto</span><strong>$${fmt(datos.filter(v=>!v.promo).reduce((a,b)=>a+b.valor,0))}</strong></div></div>`; };
 window.renderRepartidor=function(){ let repa=repartidorLogueado || document.getElementById('repView')?.value || getRepartidores()[0]; if(!repa) return; if(repartidorLogueado){ document.getElementById('repNombreFijo').style.display='block'; document.getElementById('repNombreFijo').innerText=repartidorLogueado.toUpperCase(); document.getElementById('groupRepSelector').style.display='none'; } else { document.getElementById('repNombreFijo').style.display='none'; document.getElementById('groupRepSelector').style.display='block'; } let avatarImg=document.getElementById('repAvatar'); let avatarLetra=document.getElementById('repAvatarLetra'); let foto=fotosRepas[repa]; if(foto){ avatarImg.src=foto; avatarImg.style.display='block'; avatarLetra.style.display='none'; } else { avatarImg.style.display='none'; avatarLetra.style.display='flex'; avatarLetra.innerText=repa.charAt(0).toUpperCase(); } let todosRepa=ventas.filter(v=>v.repa===repa&&!v.promo); let listaFiltrada=[...todosRepa]; if(filtroMesRepa) listaFiltrada=listaFiltrada.filter(v=>v.iso.startsWith(filtroMesRepa)); if(filtroRepa!=='todos') listaFiltrada=listaFiltrada.filter(v=>(v.tipo||'Moto Mandado')===filtroRepa); let deudas=ventas.filter(v=>!v.pagado&&!v.promo&&v.repa===repa); if(filtroMesRepa) deudas=deudas.filter(v=>v.iso.startsWith(filtroMesRepa)); if(filtroRepa!=='todos') deudas=deudas.filter(v=>(v.tipo||'Moto Mandado')===filtroRepa); let ingresoTotal=todosRepa.reduce((a,b)=>a+(b.valor-(b.feeKigo!=null?b.feeKigo:getFeeForItem(b))),0); let ingresoFiltrado=listaFiltrada.filter(v=>!v.promo).reduce((a,b)=>a+(b.valor-(b.feeKigo!=null?b.feeKigo:getFeeForItem(b))),0); document.getElementById('resumenRepa').innerHTML=`<div class="card" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between"><div style="font-weight:800;font-size:11px">${repa.toUpperCase()}</div><div style="background:#ef4444;color:#fff;padding:6px 10px;border-radius:20px;font-size:10px;font-weight:800">PEND: $${fmt(deudaItems(deudas))}</div></div><div class="stats" style="margin-top:8px"><div class="stat"><span>Filtrados</span><strong>${listaFiltrada.length}</strong></div><div class="stat dark"><span>Ing Mes</span><strong>$${fmt(ingresoFiltrado)}</strong></div><div class="stat"><span>Total</span><strong>${todosRepa.length}</strong></div><div class="stat"><span>Hist $</span><strong>$${fmt(ingresoTotal)}</strong></div></div></div>`; document.getElementById('tbodyRepa').innerHTML=listaFiltrada.length?listaFiltrada.slice(0,200).map(v=>`<tr class="${v.promo?'row-promo':v.pagado?'row-pagado':'row-debe'}"><td>${v.iso.slice(5)}</td><td><b>${v.cliente}</b></td><td>${badge(v.tipo,v.promo)}</td><td>$${fmt(v.valor)}</td><td>${v.promo?'PROMO':v.pagado?'PAGADO':'DEBE'}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;padding:20px;color:#6b7280">Sin historial</td></tr>'; renderBotonOnline(); renderPedidosLiveRepa(); };
 window.renderAjustes=function(){ document.getElementById('adminPinActual').value=pinsData.admin||'0831'; document.getElementById('tarifaMandado').value=tarifas.mandado; document.getElementById('tarifaTransporte').value=tarifas.transporte; renderAjustesKm(); aplicarConfigApp(); let html=''; Object.keys(pinsData.repas).forEach(nombre=>{ let pin=pinsData.repas[nombre]; let tar=tarifasRepas[nombre]||{mandado:tarifas.mandado,transporte:tarifas.transporte}; let st=statusRepas[nombre]; let online=st?.online; let estadoBox=online?'<span style="background:#dcfce7;border:1px solid #86efac;color:#166534;padding:3px 8px;border-radius:8px;font-size:8px;font-weight:800">EN LINEA</span>':'<span style="background:#fee2e2;border:1px solid #fecaca;color:#991b1b;padding:3px 8px;border-radius:8px;font-size:8px">DESACTIVADO</span>'; html+=`<div style="padding:8px 0;border-bottom:1px solid #f3f4f6"><div style="display:flex;gap:6px;align-items:center"><div style="flex:1"><b style="font-size:11px">${nombre}</b> ${estadoBox}<br><small style="color:#6b7280">PIN: ${pin}</small></div><input type="text" id="pin_${nombre}" placeholder="PIN" maxlength="4" style="width:44px;height:32px;border-radius:8px;border:1px solid #e5e7eb;text-align:center"><button onclick="cambiarPinRepa('${nombre}')" style="height:32px;padding:0 6px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;font-size:9px">PIN</button><button onclick="eliminarRepa('${nombre}')" style="height:32px;width:28px;background:#fee2e2;border:1px solid #fecaca;border-radius:8px">x</button></div><div style="display:flex;gap:6px;margin-top:6px;background:#f9fafb;padding:6px;border-radius:8px"><div style="flex:1"><div style="font-size:7px;font-weight:800">MANDADO $</div><input type="number" id="tar_mand_${nombre}" value="${tar.mandado}" style="width:100%;height:30px;border-radius:6px;border:1px solid #e5e7eb;padding:0 6px"></div><div style="flex:1"><div style="font-size:7px;font-weight:800">TRANSPORTE $</div><input type="number" id="tar_trans_${nombre}" value="${tar.transporte}" style="width:100%;height:30px;border-radius:6px;border:1px solid #e5e7eb;padding:0 6px"></div><button onclick="guardarTarifaRepa('${nombre}')" style="height:30px;padding:0 8px;background:#0a0a0a;color:#fff;border:none;border-radius:6px;font-size:9px;margin-top:10px">Guardar</button></div></div>`; }); document.getElementById('listaRepasAjuste').innerHTML=html; };
-window.renderAjustesKm=function(){ let el1=document.getElementById('cfgPorKm'); if(el1) el1.value=tarifasKmConfig.porKm; let el2=document.getElementById('cfgCentroTarifa'); if(el2) el2.value=tarifasKmConfig.centroTarifa; let el3=document.getElementById('cfgCentroRadio'); if(el3) el3.value=tarifasKmConfig.centroRadio; let el4=document.getElementById('cfgLejosRadio'); if(el4) el4.value=tarifasKmConfig.lejosRadio; let el5=document.getElementById('cfgLejosExtra'); if(el5) el5.value=tarifasKmConfig.lejosExtra; let prev=document.getElementById('previewCosto'); if(prev){ prev.style.display='block'; prev.innerHTML=`Mandado: 1km = $${tarifasKmConfig.centroTarifa} | 3km = $${(tarifasKmConfig.centroTarifa + (3-tarifasKmConfig.centroRadio)*tarifasKmConfig.porKm).toFixed(0)} | Compra base $42 + $5/km`; } }
+window.renderAjustesKm=function(){ let el1=document.getElementById('cfgPorKm'); if(el1) el1.value=tarifasKmConfig.porKm; let el2=document.getElementById('cfgCentroTarifa'); if(el2) el2.value=tarifasKmConfig.centroTarifa; let el3=document.getElementById('cfgCentroRadio'); if(el3) el3.value=tarifasKmConfig.centroRadio; let el4=document.getElementById('cfgLejosRadio'); if(el4) el4.value=tarifasKmConfig.lejosRadio; let el5=document.getElementById('cfgLejosExtra'); if(el5) el5.value=tarifasKmConfig.lejosExtra; let prev=document.getElementById('previewCosto'); if(prev){ prev.style.display='block'; prev.innerHTML=`Mandado: 1km = $${tarifasKmConfig.centroTarifa} | Compra base $42 + $5/km`; } }
 window.guardarTarifasKm=async function(){ let porKm=parseFloat(document.getElementById('cfgPorKm').value)||8; let centroTarifa=parseFloat(document.getElementById('cfgCentroTarifa').value)||30; let centroRadio=parseFloat(document.getElementById('cfgCentroRadio').value)||1.5; let lejosRadio=parseFloat(document.getElementById('cfgLejosRadio').value)||4; let lejosExtra=parseFloat(document.getElementById('cfgLejosExtra').value)||15; tarifasKmConfig={porKm, centroRadio, centroTarifa, lejosRadio, lejosExtra}; await set(ref(db,'kigoTarifasKm'), tarifasKmConfig); mostrarAviso('Tarifas Google guardadas','OK'); renderAjustesKm(); }
 window.guardarTarifaRepa=async function(nombre){ let m=parseInt(document.getElementById(`tar_mand_${nombre}`).value); let t=parseInt(document.getElementById(`tar_trans_${nombre}`).value); if(!tarifasRepas[nombre]) tarifasRepas[nombre]={}; tarifasRepas[nombre].mandado=m; tarifasRepas[nombre].transporte=t; await set(ref(db,'kigoTarifasRepas'), tarifasRepas); mostrarAviso('Tarifa guardada','OK'); };
 window.copiarPinAdmin=function(){ navigator.clipboard.writeText(pinsData.admin||'0831'); mostrarAviso('PIN 0831 copiado','Copiado'); };
