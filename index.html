@@ -76,21 +76,18 @@
 </div>
 <div id="view-pedidos" class="view">
 <div class="card" style="padding:8px;margin-bottom:10px"><div id="map" style="height:400px"></div><div id="infoRuta" style="display:none;margin-top:8px;background:#0a0a0a;color:#fff;border-radius:12px;padding:10px 12px;font-size:11px;font-weight:700"></div><div id="botonesDespuesCotizar" style="display:none;margin-top:10px;gap:8px"><button onclick="enviarCotizacionCliente()" style="flex:1;height:44px;background:#10b981;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:10px">Enviar cotizacion</button><button onclick="restaurarCotizacion()" style="flex:1;height:44px;background:#fff;border:1.5px solid var(--border);border-radius:12px;font-weight:800;font-size:10px">Restaurar</button></div></div>
-
 <div class="card" style="margin-bottom:10px;background:#f9fafb;border:1.5px solid #e5e7eb;padding:12px"><div class="label-row"><label>Enviar pedido a repartidor</label><span id="estadoRepaInfo"></span></div><div class="wrap"><select id="pedidoRepaDestino" onchange="actualizarEstadoRepaInfo()"></select></div></div>
-
 <div class="card" style="margin-top:10px">
 <div style="display:flex;gap:8px;margin-bottom:12px">
-<button id="tabRecoger" class="tab-cobro active" onclick="setTabPedido('recoger')" style="flex:1;height:50px;background:#ef4444;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M5.5 17.5L9 7h6l3 10.5"/><path d="M9 7L7 3h4l2 4"/></svg> Recoger y Entregar</button>
-<button id="tabComprar" class="tab-cobro" onclick="setTabPedido('comprar')" style="flex:1;height:50px;background:#10b981;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Comprar y Entregar</button>
+<button id="tabRecoger" class="tab-cobro active" onclick="setTabPedido('recoger')" style="flex:1;height:50px;background:#ef4444;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;gap:8px">Recoger y Entregar</button>
+<button id="tabComprar" class="tab-cobro" onclick="setTabPedido('comprar')" style="flex:1;height:50px;background:#10b981;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;gap:8px">Comprar y Entregar</button>
 </div>
-
 <div id="panelRecoger">
 <div style="background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:14px;padding:10px;margin-bottom:12px">
 <div style="font-weight:800;font-size:10px;margin-bottom:8px">RECOGER DE - 2 OPCIONES</div>
 <div style="display:flex;gap:8px;margin-bottom:10px">
-<button id="btnOpcionCliente" class="recoger-tab active" onclick="setOpcionRecoger('cliente')" style="flex:1;height:46px;background:#0a0a0a;color:#fff;border-radius:12px;font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Cliente registrado</button>
-<button id="btnOpcionDireccion" class="recoger-tab" onclick="setOpcionRecoger('direccion')" style="flex:1;height:46px;background:#fff;border:1.5px solid var(--border);border-radius:12px;font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Dirección manual</button>
+<button id="btnOpcionCliente" class="recoger-tab active" onclick="setOpcionRecoger('cliente')" style="flex:1;height:46px;background:#0a0a0a;color:#fff;border-radius:12px;font-weight:800;font-size:10px">Cliente registrado</button>
+<button id="btnOpcionDireccion" class="recoger-tab" onclick="setOpcionRecoger('direccion')" style="flex:1;height:46px;background:#fff;border:1.5px solid var(--border);border-radius:12px;font-weight:800;font-size:10px">Dirección manual</button>
 </div>
 <div id="panelOpcionCliente">
 <div class="group"><div class="label-row"><label>Buscar cliente registrado <span id="countClientesRecoger" style="color:#10b981;font-size:8px"></span></label></div><div class="wrap" id="wrapBuscadorPedido" style="overflow:visible"><input type="text" id="buscadorClientePedido" placeholder="Escribe nombre..." oninput="buscarClientePedido()" onfocus="buscarClientePedido()" autocomplete="off"><div id="listClientePedido" style="position:absolute;left:0;right:0;top:100%;z-index:30;background:#fff;border:1.5px solid #0a0a0a;border-top:none;border-radius:0 0 14px 14px;max-height:300px;overflow:auto;display:none"></div></div><div id="clienteSeleccionadoPedido" style="display:none;margin-top:8px;background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:10px;font-size:11px;font-weight:700"></div></div>
@@ -101,11 +98,9 @@
 <div class="group"><div class="label-row"><label>Teléfono recogida</label></div><div class="wrap"><input type="tel" id="telefonoRecogidaPedido" placeholder="Tel quien entrega"></div></div>
 </div>
 </div>
-
 <div class="group"><div class="label-row"><label>Nombre cliente entrega</label></div><div class="wrap"><input type="text" id="nombreEntregaPedido" placeholder="Ej. Juan Perez"></div></div>
 <div class="group"><div class="label-row"><label>Dirección entrega - Google Maps</label></div><div class="wrap"><input type="text" id="entregaDirRecoger" placeholder="Busca dirección de entrega Google..."></div></div>
 <div class="group"><div class="label-row"><label>Teléfono entrega</label></div><div class="wrap"><input type="tel" id="telefonoEntregaPedido" placeholder="Ej. 5521234567"></div></div>
-
 <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:14px;padding:12px;margin-top:12px">
 <div class="label-row"><label>⏱️ Tiempo para que pase repartidor</label></div>
 <div style="display:flex;gap:6px;margin-top:6px">
@@ -120,11 +115,9 @@
 <div style="font-size:9px;font-weight:800;color:#92400e;background:#fff;padding:6px 10px;border-radius:20px;border:1px solid #fde68a">Personalizado</div>
 </div>
 </div>
-
 <button onclick="cotizarRuta()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;margin-top:12px">COTIZAR SERVICIO - VER RUTA GOOGLE</button>
 <button onclick="confirmarPedido()" style="width:100%;height:54px;margin-top:10px;background:#ef4444;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:13px">CONFIRMAR PEDIDO</button>
 </div>
-
 <div id="panelComprar" style="display:none">
 <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:14px;padding:10px;margin-bottom:12px">
 <div style="font-weight:800;font-size:10px;color:#166534;margin-bottom:8px">COMPRAR Y ENTREGAR - $40-45 + $5/km</div>
@@ -146,25 +139,53 @@
 <button onclick="cotizarRutaComprar()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px">COTIZAR RUTA GOOGLE</button>
 <button onclick="confirmarPedidoCompra()" style="width:100%;height:54px;margin-top:10px;background:#10b981;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:13px">CONFIRMAR COMPRA</button>
 </div>
-
 </div>
 </div>
 
 <div id="view-hoy" class="view"><div class="filtros-tipo"><button id="fHoyTodos" class="active" onclick="setFiltroHoy('todos')">Todos</button><button id="fHoyMandado" onclick="setFiltroHoy('Moto Mandado')">Mandados</button><button id="fHoyTransporte" onclick="setFiltroHoy('Moto Transporte')">Transporte</button></div><div class="card" style="margin-bottom:8px"><div style="font-size:10px;font-weight:800;margin-bottom:6px">HOY - <span id="hoyFecha"></span></div><div class="stats"><div class="stat"><span>Pedidos</span><strong id="hCount">0</strong></div><div class="stat"><span>Bruto</span><strong id="hBruto">$0</strong></div><div class="stat dark"><span>Repartidor</span><strong id="hRep">$0</strong></div><div class="stat red"><span>KIGO</span><strong id="hKigo">$0</strong></div></div></div><div class="table-wrap"><table><thead><tr><th>Hora</th><th>Cliente</th><th>Tipo</th><th>Bruto</th><th></th></tr></thead><tbody id="tbodyHoy"></tbody></table></div></div>
-
 <div id="view-historial" class="view"><div class="filtros-tipo"><button id="fHistTodos" class="active" onclick="setFiltroHistTipo('todos')">Todos</button><button id="fHistMandado" onclick="setFiltroHistTipo('Moto Mandado')">Mandados</button><button id="fHistTransporte" onclick="setFiltroHistTipo('Moto Transporte')">Transporte</button></div><div style="display:flex;gap:6px;margin-bottom:8px"><input type="date" id="filtroFecha" onchange="filtrarFecha()" style="flex:1;height:34px;border:1.5px solid var(--border);border-radius:10px;padding:0 10px;font-weight:600"><button onclick="limpiarFiltro()" style="height:34px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:10px;font-weight:800">Todos</button></div><div class="stats"><div class="stat"><span>Pedidos</span><strong id="sCount">0</strong></div><div class="stat"><span>Bruto</span><strong id="sBruto">$0</strong></div><div class="stat dark"><span>Repar.</span><strong id="sRep">$0</strong></div><div class="stat red"><span>KIGO</span><strong id="sKigo">$0</strong></div></div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Tipo</th><th>Bruto</th><th>KIGO</th><th>Repar.</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></div>
 
 <div id="view-seguimiento" class="view">
-<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:13px">SEGUIMIENTO EDITABLE</div><div style="font-size:9px;color:#6b7280;font-weight:600;margin-top:2px">Google Maps + estados con colores</div></div><div id="countSeguimiento" style="background:#0a0a0a;color:#fff;padding:6px 12px;border-radius:20px;font-size:10px;font-weight:800">0 activos</div></div><div style="display:flex;gap:6px;margin-top:10px"><button onclick="filtrarSeguimiento('todos')" id="fSegTodos" class="tab-cobro active">Todos</button><button onclick="filtrarSeguimiento('pendiente')" id="fSegPend" class="tab-cobro">Pendientes</button><button onclick="filtrarSeguimiento('en_camino')" id="fSegCamino" class="tab-cobro">En camino</button><button onclick="filtrarSeguimiento('finalizado')" id="fSegFin" class="tab-cobro">Finalizados</button></div></div>
+<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-size:13px">SEGUIMIENTO EDITABLE</div><div style="font-size:9px;color:#6b7280;font-weight:600;margin-top:2px">Edita todo en tiempo real</div></div><div id="countSeguimiento" style="background:#0a0a0a;color:#fff;padding:6px 12px;border-radius:20px;font-size:10px;font-weight:800">0 activos</div></div><div style="display:flex;gap:6px;margin-top:10px"><button onclick="filtrarSeguimiento('todos')" id="fSegTodos" class="tab-cobro active">Todos</button><button onclick="filtrarSeguimiento('pendiente')" id="fSegPend" class="tab-cobro">Pendientes</button><button onclick="filtrarSeguimiento('en_camino')" id="fSegCamino" class="tab-cobro">En camino</button><button onclick="filtrarSeguimiento('finalizado')" id="fSegFin" class="tab-cobro">Finalizados</button></div></div>
+
 <div id="cardDetalleSeguimiento" class="detalle-edit-card" style="display:none">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-weight:800;font-size:13px">DETALLE PEDIDO <span id="detalleKey">#--</span> <span id="detalleEstadoColor" style="margin-left:8px;padding:5px 10px;border-radius:20px;font-size:9px;font-weight:800"></span></div><button onclick="cerrarDetalleSeguimiento()" style="width:28px;height:28px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;font-weight:800">X</button></div>
-<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:14px;padding:10px;margin-bottom:10px"><div style="font-size:8px;font-weight:800;color:#6b7280">CLIENTE / RECOGER DE:</div><div id="detalleCliente" style="font-size:12px;font-weight:800;margin-top:2px">--</div><div id="detalleRecoge" style="font-size:10px;color:#374151;margin-top:2px;line-height:1.3">--</div><div id="detalleHoraRecogida" style="display:none;margin-top:6px;background:#dcfce7;border:1px solid #86efac;color:#166534;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-block"></div></div>
-<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:14px;padding:10px;margin-bottom:10px"><div style="font-size:8px;font-weight:800;color:#92400e">ENTREGAR EN:</div><div id="detalleEntrega" style="font-size:11px;font-weight:700;margin-top:2px;line-height:1.3">--</div></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div><div style="font-size:8px;font-weight:800">KM / MIN GOOGLE</div><div id="detalleKm" style="font-size:11px;font-weight:800;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin-top:4px;text-align:center">--</div></div><div><div style="font-size:8px;font-weight:800">REPARTIDOR</div><div id="detalleRepa" style="font-size:11px;font-weight:800;background:#0a0a0a;color:#fff;border-radius:10px;padding:8px;margin-top:4px;text-align:center">--</div></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-weight:800;font-size:13px">EDITAR PEDIDO <span id="detalleKey">#--</span> <span id="detalleEstadoColor" style="margin-left:8px;padding:5px 10px;border-radius:20px;font-size:9px;font-weight:800"></span></div><button onclick="cerrarDetalleSeguimiento()" style="width:28px;height:28px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;font-weight:800">X</button></div>
+
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin-bottom:10px">
+<div style="font-size:8px;font-weight:800;color:#6b7280;margin-bottom:6px">CLIENTE / RECOGER DE:</div>
+<div id="detalleCliente" style="font-size:12px;font-weight:800">--</div>
+<div class="label-row" style="margin-top:8px"><label>Editar dirección recogida</label></div>
+<div class="wrap" style="margin-top:4px"><input type="text" id="inputDetalleRecoge" placeholder="Nueva dirección recogida Google..."></div>
+<div id="detalleHoraRecogida" style="display:none;margin-top:8px;background:#dcfce7;border:1px solid #86efac;color:#166534;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-block"></div>
+</div>
+
+<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:14px;padding:12px;margin-bottom:10px">
+<div style="font-size:8px;font-weight:800;color:#92400e;margin-bottom:6px">ENTREGAR EN:</div>
+<div class="label-row"><label>Editar dirección entrega</label></div>
+<div class="wrap" style="margin-top:4px"><input type="text" id="inputDetalleEntrega" placeholder="Nueva dirección entrega Google..."></div>
+<div class="label-row" style="margin-top:8px"><label>Nombre cliente entrega</label></div>
+<div class="wrap" style="margin-top:4px"><input type="text" id="inputDetalleNombreEntrega" placeholder="Nombre quien recibe"></div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+<div><div style="font-size:8px;font-weight:800">KM / MIN GOOGLE</div><div id="detalleKm" style="font-size:11px;font-weight:800;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin-top:4px;text-align:center">--</div></div>
+<div><div style="font-size:8px;font-weight:800">REPARTIDOR - CAMBIAR</div><div class="wrap" style="margin-top:4px"><select id="inputDetalleRepa" style="height:40px"></select></div></div>
+</div>
+
+<div class="group">
+<div class="label-row"><label>⏱️ Editar tiempo recogida (min)</label></div>
+<div style="display:flex;gap:6px"><div class="wrap" style="flex:1"><input type="number" id="inputDetalleTiempo" placeholder="Min"></div><button onclick="guardarTiempoDetalle()" style="height:46px;padding:0 12px;background:#f59e0b;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:10px">Actualizar hora</button></div>
+</div>
+
 <div class="group"><div class="label-row"><label>Telefono cliente entrega</label></div><div style="display:flex;gap:6px"><div class="wrap" style="flex:1"><input type="tel" id="inputDetalleTelefono" placeholder="10 digitos..."></div><button onclick="guardarTelefonoDetalle()" style="height:46px;padding:0 12px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:10px">Guardar</button></div></div>
+
 <div class="group" style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:14px;padding:12px"><div class="label-row"><label>Costo envio - editable</label><span id="detalleCostoActual" style="font-size:11px;font-weight:800"></span></div><div style="display:flex;gap:6px;margin-top:6px"><div class="wrap" style="flex:1"><input type="number" id="inputDetalleCosto" placeholder="$"></div><button onclick="guardarCostoDetalle()" style="height:46px;padding:0 14px;background:#10b981;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:11px">Guardar</button></div><div style="display:flex;gap:6px;margin-top:8px"><button onclick="sumarCosto(5)" style="flex:1;height:34px;background:#fff;border:1.5px solid #86efac;border-radius:10px;font-weight:800;font-size:10px;color:#166534">+$5</button><button onclick="sumarCosto(10)" style="flex:1;height:34px;background:#fff;border:1.5px solid #86efac;border-radius:10px;font-weight:800;font-size:10px;color:#166534">+$10</button><button onclick="sumarCosto(15)" style="flex:1;height:34px;background:#10b981;color:#fff;border:none;border-radius:10px;font-weight:800;font-size:10px">+$15</button></div></div>
+
+<button onclick="guardarEdicionCompleta()" style="width:100%;height:52px;background:#0a0a0a;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:12px;margin-top:12px">💾 GUARDAR TODOS LOS CAMBIOS - ACTUALIZAR A REPARTIDOR</button>
+
 <div style="display:flex;gap:8px;margin-top:12px"><button onclick="pasarAHistorial(detalleActualKey)" style="flex:1;height:44px;background:#10b981;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:10px">OK Historial</button><button onclick="cancelarPedidoConNotificacion()" style="flex:1;height:44px;background:#ef4444;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:10px">CANCELAR Y NOTIFICAR</button></div>
 </div>
+
 <div id="listaSeguimiento" style="display:flex;flex-direction:column;gap:10px"></div>
 <div id="emptySeguimiento" style="display:none;text-align:center;padding:32px 10px;color:#6b7280;font-size:11px;font-weight:600" class="card">Sin pedidos activos</div>
 </div>
@@ -175,7 +196,8 @@
 <div id="view-estadisticas" class="view"><div style="display:flex;gap:6px;margin-bottom:8px"><button id="tabEstMes" class="tab-cobro active" onclick="showTabEst('mes')">Por mes</button><button id="tabEstCal" class="tab-cobro" onclick="showTabEst('cal')">Calendario</button></div><div id="panelEstMes"><div class="card" style="margin-bottom:8px"><div style="font-weight:800;font-size:12px;margin-bottom:6px">CONTROL POR MES</div><div class="wrap"><input type="month" id="estMes" onchange="renderEstadisticas()"></div></div><div id="resumenEstMes"></div></div><div id="panelEstCal" style="display:none"><div class="card" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800;font-size:12px" id="tituloCal">CALENDARIO</div><div style="display:flex;gap:6px"><button onclick="cambiarCal(-1)" style="width:32px;height:32px;border-radius:10px;border:1px solid var(--border);background:#fff"> < </button><button onclick="cambiarCal(1)" style="width:32px;height:32px;border-radius:10px;border:1px solid var(--border);background:#fff"> > </button></div></div></div><div class="card"><div id="gridCal" class="cal-grid"></div></div></div></div>
 
 <div id="view-repartidor" class="view">
-<div class="card" style="margin-bottom:10px;padding:12px"><div style="display:flex;gap:10px;align-items:center"><div style="position:relative"><img id="repAvatar" src="" style="width:48px;height:48px;border-radius:50%;background:#e5e7eb;object-fit:cover;display:none;border:2px solid var(--black)"><div id="repAvatarLetra" style="width:48px;height:48px;border-radius:50%;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">J</div><button onclick="document.getElementById('inputFotoRepa').click()" style="position:absolute;bottom:-4px;right:-4px;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid #e5e7eb;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer">C</button></div><div><div style="font-weight:800;font-size:12px">PANEL REPARTIDOR - GOOGLE MAPS</div><div id="repNombreFijo" style="background:var(--black);color:#fff;padding:5px 10px;border-radius:20px;font-size:9px;font-weight:800;display:none;margin-top:4px"></div></div></div><input type="file" id="inputFotoRepa" accept="image/*" style="display:none" onchange="subirFotoRepa(this)"><div class="group" id="groupRepSelector" style="margin-top:12px"><div class="label-row"><label>Repartidor (admin)</label></div><div class="wrap"><select id="repView" onchange="renderRepartidor()"></select></div></div><div style="margin-top:12px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:14px;padding:12px"><div class="label-row"><label>Mi estado</label><span id="estadoOnlineTxt" style="font-size:9px;font-weight:800"></span></div><button id="btnToggleOnline" onclick="toggleOnline()" style="width:100%;height:46px;border-radius:12px;border:none;font-weight:800;font-size:11px;cursor:pointer;margin-top:8px"></button></div></div>
+<audio id="audioNuevoPedido" preload="auto"><source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg"></audio>
+<div class="card" style="margin-bottom:10px;padding:12px"><div style="display:flex;gap:10px;align-items:center"><div style="position:relative"><img id="repAvatar" src="" style="width:48px;height:48px;border-radius:50%;background:#e5e7eb;object-fit:cover;display:none;border:2px solid var(--black)"><div id="repAvatarLetra" style="width:48px;height:48px;border-radius:50%;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">J</div><button onclick="document.getElementById('inputFotoRepa').click()" style="position:absolute;bottom:-4px;right:-4px;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center;cursor:pointer">C</button></div><div><div style="font-weight:800;font-size:12px">PANEL REPARTIDOR - GOOGLE MAPS</div><div id="repNombreFijo" style="background:var(--black);color:#fff;padding:5px 10px;border-radius:20px;font-size:9px;font-weight:800;display:none;margin-top:4px"></div></div></div><input type="file" id="inputFotoRepa" accept="image/*" style="display:none" onchange="subirFotoRepa(this)"><div class="group" id="groupRepSelector" style="margin-top:12px"><div class="label-row"><label>Repartidor (admin)</label></div><div class="wrap"><select id="repView" onchange="renderRepartidor()"></select></div></div><div style="margin-top:12px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:14px;padding:12px"><div class="label-row"><label>Mi estado</label><span id="estadoOnlineTxt" style="font-size:9px;font-weight:800"></span></div><button id="btnToggleOnline" onclick="toggleOnline()" style="width:100%;height:46px;border-radius:12px;border:none;font-weight:800;font-size:11px;cursor:pointer;margin-top:8px"></button></div></div>
 <div style="display:flex;gap:8px;margin-bottom:12px"><button id="tabRepaLive" class="tab-cobro active" onclick="showTabRepa('live')" style="flex:1;height:40px">PEDIDOS <span id="countLive" style="background:#10b981;color:#fff;padding:3px 8px;border-radius:10px;margin-left:6px;font-size:9px">0</span></button><button id="tabRepaHist" class="tab-cobro" onclick="showTabRepa('hist')" style="flex:1;height:40px">HISTORIAL</button></div>
 <div id="panelRepaLive">
   <div class="card" style="padding:8px;margin-bottom:14px;position:relative"><div id="mapRepa"></div><div style="position:absolute;top:12px;right:12px;z-index:10"><button onclick="centerMyLocation()" style="width:42px;height:42px;background:#fff;border:1px solid #e5e7eb;border-radius:14px">M</button></div></div>
@@ -211,7 +233,6 @@
 <button id="b-repartidor" onclick="showView('repartidor')"><span>R</span><span>REPA</span></button>
 <button id="b-ajustes" onclick="showView('ajustes')" style="display:none"><span>A</span><span>AJUSTES</span></button>
 </div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, onValue, set, push, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -239,6 +260,8 @@ let markers=[], markersRepa=[], clientePedidoSeleccionado=null, clienteCompraSel
 let pedidosLive={}, statusRepas={}, pedidoSeleccionadoKey=null, detalleActualKey=null;
 let calDate=new Date(), watchId=null, myMarker=null, posMarkerRepa=null;
 let tipoPedidoActual='recoger';
+let ultimoPedidosKeys=new Set();
+let audioBloqueado=false;
 
 function getEstadoStyle(etapa){
  let e=(etapa||'pendiente').toLowerCase();
@@ -256,6 +279,20 @@ function calcularHoraRecogida(minutos){
  let h=ahora.getHours(); let m=String(ahora.getMinutes()).padStart(2,'0');
  let ampm=h>=12?'PM':'AM'; let h12=h%12||12;
  return {texto:`RECOGER ${h12}:${m} ${ampm}`, iso:ahora.toISOString(), display:`${h12}:${m}`};
+}
+window.reproducirSonidoRappi=function(){
+ try{
+  let audio=document.getElementById('audioNuevoPedido');
+  if(audio){ audio.volume=1; audio.currentTime=0; audio.play().catch(()=>{}); }
+  if(navigator.vibrate) navigator.vibrate([400,100,400,100,400,100,800]);
+  let rep=0;
+  let intv=setInterval(()=>{
+   let a=document.getElementById('audioNuevoPedido');
+   if(a){ a.currentTime=0; a.play().catch(()=>{}); }
+   if(navigator.vibrate) navigator.vibrate([300,80,300]);
+   rep++; if(rep>=5){ clearInterval(intv); }
+  },950);
+ }catch(e){}
 }
 
 window.setTiempoRecogida=function(min){
@@ -294,6 +331,8 @@ function initPlaces(){
  let elEntrega = document.getElementById('entregaDirRecoger');
  let elEntregaCompra = document.getElementById('entregaDirComprar');
  let elDondeComprar = document.getElementById('queComprar');
+ let elDetalleRecoge = document.getElementById('inputDetalleRecoge');
+ let elDetalleEntrega = document.getElementById('inputDetalleEntrega');
  if(elRecogida &&!elRecogida.dataset.ac){
    let ac = new google.maps.places.Autocomplete(elRecogida, opts);
    ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ recogidaCoordsTemp = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; pintarPuntoRecogida(recogidaCoordsTemp); intentarAutoRuta(); } });
@@ -313,6 +352,16 @@ function initPlaces(){
    let ac = new google.maps.places.Autocomplete(elEntregaCompra, opts);
    ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ compraEntregaCoords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; entregaCoordsTemp = compraEntregaCoords; intentarAutoRutaCompra(); } });
    elEntregaCompra.dataset.ac='1';
+ }
+ if(elDetalleRecoge &&!elDetalleRecoge.dataset.ac){
+   let ac = new google.maps.places.Autocomplete(elDetalleRecoge, opts);
+   ac.addListener('place_changed', ()=>{ let p=ac.getPlace(); if(p.geometry){ elDetalleRecoge.dataset.lat=p.geometry.location.lat(); elDetalleRecoge.dataset.lng=p.geometry.location.lng(); } });
+   elDetalleRecoge.dataset.ac='1';
+ }
+ if(elDetalleEntrega &&!elDetalleEntrega.dataset.ac){
+   let ac = new google.maps.places.Autocomplete(elDetalleEntrega, opts);
+   ac.addListener('place_changed', ()=>{ let p=ac.getPlace(); if(p.geometry){ elDetalleEntrega.dataset.lat=p.geometry.location.lat(); elDetalleEntrega.dataset.lng=p.geometry.location.lng(); } });
+   elDetalleEntrega.dataset.ac='1';
  }
 }
 function pintarPuntoRecogida(coords){ if(!map ||!coords) return; map.setCenter(coords); map.setZoom(15); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:coords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}}); markers.push(m1); }
@@ -368,7 +417,19 @@ onValue(ref(db,'kigoClientesDir'), s=>{ let data=s.val()||{}; clientesDireccione
 onValue(ref(db,'kigoAppConfig'), s=>{ if(s.exists()){ appConfig=s.val(); aplicarConfigApp(); } });
 onValue(ref(db,'ventasKigo'), s=>{ let data=s.val()||{}; ventas=Object.entries(data).map(([id,v])=>({...v,_id:id})); ventas.sort((a,b)=> b.iso.localeCompare(a.iso)); actualizarCliCount(); render();renderHoy();renderClientes();renderRepartidor(); renderEstadisticas(); renderCalendario(); renderCobros(); renderHistMes(); });
 onValue(ref(db,'kigoPedidosLive'), s=>{
- let data=s.val()||{}; pedidosLive=data; renderPedidosLiveRepa(); renderSeguimientoAdmin();
+ let data=s.val()||{};
+ // SONIDO NUEVO PEDIDO PARA REPARTIDOR
+ if(rol==='repa' && repartidorLogueado){
+  let actuales=Object.entries(data).filter(([k,v])=>v.repaAsignado===repartidorLogueado && v.etapa==='pendiente');
+  let nuevos=actuales.filter(([k,v])=>!ultimoPedidosKeys.has(k) && (Date.now()-v.ts < 120000));
+  if(nuevos.length>0 && ultimoPedidosKeys.size>0){
+   reproducirSonidoRappi();
+  }
+  ultimoPedidosKeys=new Set(Object.keys(data));
+ } else {
+  ultimoPedidosKeys=new Set(Object.keys(data));
+ }
+ pedidosLive=data; renderPedidosLiveRepa(); renderSeguimientoAdmin();
  if(pedidoSeleccionadoKey && pedidosLive[pedidoSeleccionadoKey]){ actualizarEstadoVisual(pedidosLive[pedidoSeleccionadoKey].etapa); mostrarTarjetaModerna(pedidoSeleccionadoKey); }
  if(detalleActualKey && pedidosLive[detalleActualKey]){ abrirDetalleSeguimiento(detalleActualKey,true); }
 });
@@ -398,13 +459,14 @@ window.guardarConfigApp=async function(){ let nombre=document.getElementById('in
 
 function calcularCostoPorKm(km){ let k=parseFloat(km); if(isNaN(k)) return tarifasKmConfig.centroTarifa; let cfg=tarifasKmConfig; if(k<=cfg.centroRadio) return cfg.centroTarifa; let costo=cfg.centroTarifa + (k-cfg.centroRadio)*cfg.porKm; if(k>=cfg.lejosRadio) costo+=cfg.lejosExtra; return Math.round(costo); }
 function getRepartidores(){ return Object.keys(pinsData.repas); }
-function actualizarSelects(){ let reps=getRepartidores(); let html=reps.map(r=>`<option>${r}</option>`).join(''); ['repa','cobroRepa','histRepa','repView'].forEach(id=>{ let el=document.getElementById(id); if(!el) return; let isTodos=id!=='repa'&&id!=='repView'; el.innerHTML=(isTodos?'<option value="todos">Todos</option>':'')+html; }); actualizarSelectRepaDestino(); }
+function actualizarSelects(){ let reps=getRepartidores(); let html=reps.map(r=>`<option>${r}</option>`).join(''); ['repa','cobroRepa','histRepa','repView','inputDetalleRepa'].forEach(id=>{ let el=document.getElementById(id); if(!el) return; let isTodos=id!=='repa'&&id!=='repView'&&id!=='inputDetalleRepa'; el.innerHTML=(isTodos?'<option value="todos">Todos</option>':'')+html; }); actualizarSelectRepaDestino(); }
 function actualizarCliCount(){ let unicos=[...new Set(ventas.map(v=>v.cliente))].length; let info=document.getElementById('cliCountInfo'); if(info) info.innerText=unicos?`(${unicos})`:''; }
 function getFeeForItem(v){ if(v.feeKigo!=null &&!isNaN(v.feeKigo)) return v.feeKigo; if(v.promo) return 0; if(v.repa && tarifasRepas[v.repa]){ if(v.tipo==='Moto Transporte') return tarifasRepas[v.repa].transporte?? tarifas.transporte; return tarifasRepas[v.repa].mandado?? tarifas.mandado; } if(v.tipo==='Moto Transporte') return tarifas.transporte; return tarifas.mandado; }
 function deudaItems(arr){ return arr.reduce((a,v)=>a+(v.feeKigo!=null?v.feeKigo:getFeeForItem(v)),0); }
 function fmt(n){ return (n||0).toLocaleString('es-CO'); }
 function todayISO(){ let d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function geo(dir){ return new Promise(r=>{ if(!geocoder){ setTimeout(()=>geo(dir).then(r),300); return; } geocoder.geocode({address:dir+', Dolores Hidalgo, Mexico'},(re,s)=>{ if(s==='OK'&&re[0]){ let l=re[0].geometry.location; r({lat:l.lat(),lng:l.lng()}); } else r(null); }); }); }
+function routeGoogle(o,d){ return new Promise(res=>{ if(!dirServ){ setTimeout(()=>routeGoogle(o,d).then(res),300); return; } dirServ.route({origin:o,destination:d,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; res({km:(leg.distance.value/1000).toFixed(1), min:Math.round(leg.duration.value/60)}); } else res(null); }); }); }
 
 window.validarPin=function(){
  let usuarioRaw = document.getElementById('usuarioInput')?.value.trim() || '';
@@ -430,7 +492,9 @@ window.validarPin=function(){
   document.getElementById('b-ajustes').style.display='none'; document.getElementById('b-pedidos').style.display='none'; document.getElementById('b-seguimiento').style.display='none';
   document.querySelectorAll('.bottom button').forEach(b=>{ if(b.id!=='b-repartidor') b.style.display='none'; });
   document.getElementById('b-repartidor').style.display='flex';
-  showView('repartidor'); showTabRepa('live'); initMapReal(); return;
+  showView('repartidor'); showTabRepa('live'); initMapReal();
+  setTimeout(()=>{ let a=document.getElementById('audioNuevoPedido'); if(a){ a.play().then(()=>{ a.pause(); }).catch(()=>{}); } },500);
+  return;
  }
  if(!usuario && pass){
   if(pass==='0831'){ rol='admin'; repartidorLogueado=null; document.getElementById('lockScreen').style.display='none'; document.getElementById('userLabel').style.display='block'; document.getElementById('userLabel').innerText='ADMIN'; document.getElementById('b-ajustes').style.display='flex'; document.getElementById('b-pedidos').style.display='flex'; document.getElementById('b-seguimiento').style.display='flex'; showView('inicio'); initMapReal(); return; }
@@ -653,23 +717,97 @@ window.renderSeguimientoAdmin=function(){
   return `<div class="seguimiento-card" style="${p.etapa==='cancelado'?'border:2px solid #ef4444;background:#fef2f2':''}"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px"><span style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:20px;font-size:8px">#${p._key.slice(-4).toUpperCase()} - ${hora}</span>${horaRecogerHtml}<span style="background:#f3f4f6;padding:4px 8px;border-radius:20px;font-size:8px">${p.repaAsignado||'Sin repa'}</span></div><span style="background:${est.bg};color:${est.color};border:1px solid ${est.border};padding:5px 10px;border-radius:20px;font-size:8px;font-weight:800">${est.txt}</span></div><div style="font-size:12px;font-weight:800;margin-top:6px">${p.cliente}</div><div style="font-size:10px;color:#6b7280">${p.dirRecogida} - ${p.entrega}</div><div style="display:flex;gap:8px;margin-top:12px"><button onclick="abrirDetalleSeguimiento('${p._key}')" style="flex:1;height:38px;background:#fff;border:1.5px solid #e5e7eb;border-radius:12px;font-weight:800;font-size:10px">Ver / Editar</button><button onclick="pasarAHistorial('${p._key}')" style="flex:1;height:38px;background:${p.etapa==='finalizado'?'#10b981':'#9ca3af'};color:#fff;border:none;border-radius:12px;font-weight:800;font-size:10px">OK Historial</button></div></div>`;
  }).join('');
 };
-window.abrirDetalleSeguimiento=function(key,silent=false){ let p=pedidosLive[key]; if(!p) return; detalleActualKey=key; let card=document.getElementById('cardDetalleSeguimiento'); card.style.display='block'; document.getElementById('detalleKey').innerText='#'+key.slice(-4).toUpperCase(); document.getElementById('detalleCliente').innerText=p.cliente; document.getElementById('detalleRecoge').innerText=p.dirRecogida; document.getElementById('detalleEntrega').innerText=(p.nombreEntrega? p.nombreEntrega+' - ':'')+p.entrega; document.getElementById('detalleKm').innerText=`${p.km} km - ${p.min} min (Google)`; document.getElementById('detalleRepa').innerText=p.repaAsignado||'Sin repa'; document.getElementById('inputDetalleTelefono').value=p.telefono||''; document.getElementById('inputDetalleCosto').value=p.costoSugerido||''; document.getElementById('detalleCostoActual').innerText=`Actual $${p.costoSugerido||''}`; let est=getEstadoStyle(p.etapa); let badge=document.getElementById('detalleEstadoColor'); badge.innerText=est.txt; badge.style.background=est.bg; badge.style.color=est.color; badge.style.border=`1px solid ${est.border}`; let hrDet=document.getElementById('detalleHoraRecogida'); if(p.horaRecoger){ hrDet.style.display='inline-block'; hrDet.innerText=p.horaRecoger; } else { hrDet.style.display='none'; } if(!silent) card.scrollIntoView({behavior:'smooth'}); }
+window.abrirDetalleSeguimiento=function(key,silent=false){
+ let p=pedidosLive[key]; if(!p) return; detalleActualKey=key;
+ let card=document.getElementById('cardDetalleSeguimiento'); card.style.display='block';
+ document.getElementById('detalleKey').innerText='#'+key.slice(-4).toUpperCase();
+ document.getElementById('detalleCliente').innerText=p.cliente;
+ document.getElementById('inputDetalleRecoge').value=p.dirRecogida||'';
+ document.getElementById('inputDetalleEntrega').value=p.entrega||'';
+ document.getElementById('inputDetalleNombreEntrega').value=p.nombreEntrega||'';
+ document.getElementById('inputDetalleRecoge').dataset.lat=''; document.getElementById('inputDetalleRecoge').dataset.lng='';
+ document.getElementById('inputDetalleEntrega').dataset.lat=''; document.getElementById('inputDetalleEntrega').dataset.lng='';
+ document.getElementById('detalleKm').innerText=`${p.km} km - ${p.min} min (Google)`;
+ let selRepa=document.getElementById('inputDetalleRepa'); if(selRepa){ selRepa.innerHTML=getRepartidores().map(r=>`<option ${r===p.repaAsignado?'selected':''}>${r}</option>`).join(''); }
+ document.getElementById('inputDetalleTelefono').value=p.telefono||'';
+ document.getElementById('inputDetalleCosto').value=p.costoSugerido||'';
+ document.getElementById('inputDetalleTiempo').value=p.tiempoRecogida||20;
+ document.getElementById('detalleCostoActual').innerText=`Actual $${p.costoSugerido||''}`;
+ let est=getEstadoStyle(p.etapa); let badge=document.getElementById('detalleEstadoColor'); badge.innerText=est.txt; badge.style.background=est.bg; badge.style.color=est.color; badge.style.border=`1px solid ${est.border}`;
+ let hrDet=document.getElementById('detalleHoraRecogida'); if(p.horaRecoger){ hrDet.style.display='inline-block'; hrDet.innerText=p.horaRecoger; } else { hrDet.style.display='none'; }
+ if(!silent) card.scrollIntoView({behavior:'smooth'});
+}
 window.cerrarDetalleSeguimiento=function(){ document.getElementById('cardDetalleSeguimiento').style.display='none'; detalleActualKey=null; }
+
+window.guardarTiempoDetalle=async function(){
+ if(!detalleActualKey) return;
+ let min=parseInt(document.getElementById('inputDetalleTiempo').value)||20;
+ let hora=calcularHoraRecogida(min);
+ await update(ref(db,'kigoPedidosLive/'+detalleActualKey), {tiempoRecogida:min, horaRecoger:hora.texto, horaRecogerISO:hora.iso});
+ mostrarAviso(`Hora actualizada a ${hora.texto}`,'OK');
+}
 window.guardarTelefonoDetalle=async function(){ if(!detalleActualKey) return; let tel=document.getElementById('inputDetalleTelefono').value.trim(); if(!tel) return mostrarAviso('Escribe telefono','Falta'); await update(ref(db,'kigoPedidosLive/'+detalleActualKey), {telefono:tel}); mostrarAviso('Guardado','OK'); }
 window.guardarCostoDetalle=async function(){ if(!detalleActualKey) return; let costo=parseInt(document.getElementById('inputDetalleCosto').value); if(!costo) return mostrarAviso('Costo no valido','Error'); await update(ref(db,'kigoPedidosLive/'+detalleActualKey), {costoSugerido:costo}); mostrarAviso(`Costo $${costo}`,'OK'); }
 window.sumarCosto=async function(extra){ if(!detalleActualKey) return; let p=pedidosLive[detalleActualKey]; let actual=p.costoSugerido||0; let nuevo=actual+extra; document.getElementById('inputDetalleCosto').value=nuevo; await update(ref(db,'kigoPedidosLive/'+detalleActualKey), {costoSugerido:nuevo}); mostrarAviso(`+$${extra}`,'OK'); }
+
+// NUEVA FUNCION EDITAR TODO
+window.guardarEdicionCompleta=async function(){
+ if(!detalleActualKey) return;
+ let p=pedidosLive[detalleActualKey];
+ if(!p) return;
+ let nuevaRecoge=document.getElementById('inputDetalleRecoge').value.trim();
+ let nuevaEntrega=document.getElementById('inputDetalleEntrega').value.trim();
+ let nuevoNombre=document.getElementById('inputDetalleNombreEntrega').value.trim();
+ let nuevoRepa=document.getElementById('inputDetalleRepa').value;
+ let nuevoTel=document.getElementById('inputDetalleTelefono').value.trim();
+ let nuevoCosto=parseInt(document.getElementById('inputDetalleCosto').value)||p.costoSugerido;
+ let nuevoTiempo=parseInt(document.getElementById('inputDetalleTiempo').value)||p.tiempoRecogida||20;
+ if(!nuevaRecoge ||!nuevaEntrega) return mostrarAviso('Falta direccion recogida y entrega','Error');
+
+ let lat1=p.lat1, lng1=p.lng1, lat2=p.lat2, lng2=p.lng2;
+ let needGeoRecoge = nuevaRecoge!==p.dirRecogida;
+ let needGeoEntrega = nuevaEntrega!==p.entrega;
+
+ let recInput=document.getElementById('inputDetalleRecoge');
+ let entInput=document.getElementById('inputDetalleEntrega');
+ if(recInput.dataset.lat && recInput.dataset.lng && needGeoRecoge){ lat1=parseFloat(recInput.dataset.lat); lng1=parseFloat(recInput.dataset.lng); }
+ else if(needGeoRecoge){ let c=await geo(nuevaRecoge); if(c){ lat1=c.lat; lng1=c.lng; } }
+ if(entInput.dataset.lat && entInput.dataset.lng && needGeoEntrega){ lat2=parseFloat(entInput.dataset.lat); lng2=parseFloat(entInput.dataset.lng); }
+ else if(needGeoEntrega){ let c=await geo(nuevaEntrega); if(c){ lat2=c.lat; lng2=c.lng; } }
+
+ let nuevoKm=p.km, nuevoMin=p.min;
+ if(needGeoRecoge || needGeoEntrega){
+  let ruta=await routeGoogle({lat:lat1,lng:lng1},{lat:lat2,lng:lng2});
+  if(ruta){ nuevoKm=ruta.km; nuevoMin=ruta.min; }
+ }
+
+ let hora=calcularHoraRecogida(nuevoTiempo);
+ let updates={
+  dirRecogida:nuevaRecoge,
+  entrega:nuevaEntrega,
+  nombreEntrega:nuevoNombre,
+  repaAsignado:nuevoRepa,
+  telefono:nuevoTel,
+  costoSugerido:nuevoCosto,
+  lat1:lat1, lng1:lng1, lat2:lat2, lng2:lng2,
+  km:nuevoKm, min:nuevoMin,
+  tiempoRecogida:nuevoTiempo,
+  horaRecoger:hora.texto,
+  horaRecogerISO:hora.iso,
+  editadoTs:Date.now()
+ };
+ await update(ref(db,'kigoPedidosLive/'+detalleActualKey), updates);
+ mostrarAviso(`Actualizado: ${hora.texto} - ${nuevoRepa} - ${nuevoKm}km`,'Guardado en vivo');
+}
+
 window.cancelarPedidoConNotificacion=async function(){
  if(!detalleActualKey) return; let p=pedidosLive[detalleActualKey]; let key=detalleActualKey;
  let motivo=prompt(`Motivo cancelacion para ${p.repaAsignado}:`, 'Cancelado por admin - cliente cancelo'); if(motivo===null) return;
  confirmarAccion(`Cancelar y notificar a ${p.repaAsignado}? Se borrara de tu panel.`, 'Cancelar y eliminar', async ()=>{
-   // 1. Notifica a repa
    await update(ref(db,'kigoPedidosLive/'+key), {etapa:'cancelado', estado:'cancelado', motivoCancelado:motivo, canceladoTs:Date.now()});
    mostrarAviso('Notificado al repartidor - se eliminara en 2s','Cancelado');
    cerrarDetalleSeguimiento();
-   // 2. Elimina de tu panel despues de 2s para que repa lo vea
-   setTimeout(async ()=>{
-     await remove(ref(db,'kigoPedidosLive/'+key));
-   }, 2000);
+   setTimeout(async ()=>{ await remove(ref(db,'kigoPedidosLive/'+key)); }, 2000);
  }, 'Cancelar y borrar', 'red');
 }
 window.pasarAHistorial=async function(key){ let p=pedidosLive[key]; if(!p) return; if(p.etapa==='cancelado'){ await remove(ref(db,'kigoPedidosLive/'+key)); cerrarDetalleSeguimiento(); mostrarAviso('Eliminado','OK'); return; } let fee=getFeeForItem({tipo:'Moto Mandado', repa:p.repaAsignado, feeKigo:null}); let valor=p.costoSugerido||0; let obj={ iso:p.iso||todayISO(), cliente:p.cliente, tipo:'Moto Mandado', valor:valor, repa:p.repaAsignado, pagado:false, promo:false, feeKigo:fee, ts:Date.now(), origenPedido:key }; let nr=push(ref(db,'ventasKigo')); await set(nr,obj); await remove(ref(db,'kigoPedidosLive/'+key)); mostrarAviso('Pasado a historial','OK'); };
@@ -718,6 +856,7 @@ function getCurrentFee(tipo,nombreRepa){ let rep=nombreRepa||document.getElement
 document.getElementById('fecha').value=todayISO(); actualizarSelects();
 document.getElementById('pinInput').addEventListener('keydown',e=>{ if(e.key==='Enter') validarPin(); });
 document.getElementById('usuarioInput').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('pinInput').focus(); });
+document.addEventListener('click',()=>{ if(rol==='repa' &&!audioBloqueado){ let a=document.getElementById('audioNuevoPedido'); if(a){ a.play().then(()=>{ a.pause(); a.currentTime=0; audioBloqueado=true; }).catch(()=>{}); } } }, {once:true});
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTV1sm6McEIkv-cheaVFCD_svp_a--6wg&libraries=places" async defer></script>
 </body>
