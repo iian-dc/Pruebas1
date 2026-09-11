@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Kigo xpress - PEDIDOS</title>
+<title>Kigo xpress</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
@@ -29,7 +29,7 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 .btn-small{height:36px;border-radius:10px;font-size:9px;font-weight:800}
 .view{display:none}.view.active{display:block}
 .bottom-app{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;border-top:1.5px solid var(--border);padding:6px 8px;padding-bottom:calc(6px + env(safe-area-inset-bottom));display:flex;gap:6px;box-shadow:0 -2px 10px rgba(0,0,0,.06)}
-.bottom-app button{flex:1;height:44px;background:#fff;border:1.5px solid var(--border);border-radius:12px;font-weight:800;font-size:9px;display:flex;align-items:center;justify-content:center;gap:6px}
+.bottom-app button{flex:1;height:44px;background:#fff;border:1.5px solid var(--border);border-radius:12px;font-weight:800;font-size:8px;display:flex;align-items:center;justify-content:center;gap:4px}
 .bottom-app button.active{background:#0a0a0a;color:#fff;border-color:#0a0a0a;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .filtro-seg{display:flex;gap:4px;overflow-x:auto;padding:8px;margin:0 8px}
 .filtro-seg button{white-space:nowrap;height:30px;padding:0 12px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:8px;font-weight:800;flex-shrink:0}
@@ -47,11 +47,19 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 .btn-historial{height:32px;padding:0 12px;border-radius:10px;border:none;font-size:8px;font-weight:800}
 .btn-historial.inactivo{background:#e5e7eb;color:#9ca3af;cursor:not-allowed}
 .btn-historial.activo{background:#10b981;color:#fff;box-shadow:0 0 8px rgba(34,197,94,.5);cursor:pointer}
+.resumen-box{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px}
+.resumen-item{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:8px;text-align:center}
+.resumen-item b{font-size:12px;display:block}.resumen-item span{font-size:7px;font-weight:800;color:#6b7280;text-transform:uppercase}
+.tab-hist{height:28px;padding:0 12px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:8px;font-weight:800}
+.tab-hist.active{background:#0a0a0a;color:#fff}
+.row-hist{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #f3f4f6}
+.btn-pagado{height:26px;padding:0 10px;border-radius:10px;border:1px solid var(--border);font-size:7px;font-weight:800;background:#fff}
+.btn-pagado.pagado{background:#10b981;color:#fff;border-color:#86efac;box-shadow:0 0 8px rgba(34,197,94,.5)}
 </style>
 </head>
 <body>
 
-<div class="top"><div style="font-weight:800;font-size:11px;display:flex;align-items:center;gap:6px"><span style="width:22px;height:22px;background:#0a0a0a;border-radius:6px;display:flex;align-items:center;justify-content:center"><svg class="ico" viewBox="0 0 24 24" fill="white"><path d="M20 8h-3V4H3v16h14v-4h3c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2z"/></svg></span>KIGO - PEDIDOS</div><div id="topStatus" style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:14px;font-size:8px;font-weight:800">MAPA ACTIVO</div></div>
+<div class="top"><div style="font-weight:800;font-size:11px;display:flex;align-items:center;gap:6px"><span style="width:22px;height:22px;background:#0a0a0a;border-radius:6px;display:flex;align-items:center;justify-content:center"><svg class="ico" viewBox="0 0 24 24" fill="white"><path d="M20 8h-3V4H3v16h14v-4h3c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2z"/></svg></span>KIGO XPRESS</div><div id="topStatus" style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:14px;font-size:8px;font-weight:800">APP ACTIVA</div></div>
 
 <div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><div id="modalTitle" style="font-weight:800;font-size:12px;margin-bottom:6px">Aviso</div><div id="modalText" style="font-size:11px;color:#374151;margin-bottom:12px;line-height:1.4">Mensaje</div><div style="display:flex;gap:6px"><button id="modalCancel" class="kigo-btn kigo-btn-cancel" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">Confirmar</button></div></div></div>
 
@@ -64,6 +72,16 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 <div class="label">Tiempo recogida min</div><div class="wrap"><input type="number" id="editTiempo"><button class="clear-x" id="clear_editTiempo" onclick="clearField('editTiempo')">x</button></div>
 <div class="label">Repartidor</div><div class="wrap"><select id="editRepa"></select></div>
 <div style="display:flex;gap:6px;margin-top:12px"><button onclick="cerrarEditar()" class="kigo-btn kigo-btn-cancel">Cerrar</button><button onclick="guardarEdicionSeguimiento()" class="kigo-btn kigo-btn-confirm">Guardar</button></div>
+</div></div>
+
+<div class="kigo-overlay" id="overlayEditHist"><div class="kigo-modal" style="max-width:360px;max-height:90vh;overflow:auto"><div style="font-weight:800;font-size:12px;margin-bottom:10px">Editar historial</div>
+<div class="label">Cliente</div><div class="wrap"><input type="text" id="editHistCliente"></div>
+<div class="label">Repa</div><div class="wrap"><select id="editHistRepa"></select></div>
+<div class="label">Tipo</div><div class="wrap"><select id="editHistTipo"><option value="Moto Mandado">Moto Mandado</option><option value="Moto Transporte">Moto Transporte</option></select></div>
+<div class="label">Valor total</div><div class="wrap"><input type="number" id="editHistValor"></div>
+<div class="label">Fee Kigo</div><div class="wrap"><input type="number" id="editHistFee"></div>
+<div class="label">Fecha ISO</div><div class="wrap"><input type="date" id="editHistIso"></div>
+<div style="display:flex;gap:6px;margin-top:12px"><button onclick="document.getElementById('overlayEditHist').classList.remove('show')" class="kigo-btn kigo-btn-cancel">Cerrar</button><button onclick="guardarEdicionHistorial()" class="kigo-btn kigo-btn-confirm">Guardar</button></div>
 </div></div>
 
 <div id="view-pedidos" class="view active">
@@ -147,9 +165,39 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 <div style="height:30px"></div>
 </div>
 
+<div id="view-historial" class="view">
+<div style="display:flex;gap:4px;padding:8px;overflow-x:auto">
+<button id="hHoy" class="tab-hist active" onclick="setHistPeriodo('hoy')">HOY</button>
+<button id="hMes" class="tab-hist" onclick="setHistPeriodo('mes')">MES</button>
+<button id="hTodo" class="tab-hist" onclick="setHistPeriodo('todo')">TODO</button>
+<button id="hFecha" class="tab-hist" onclick="setHistPeriodo('fecha')">RANGO</button>
+</div>
+<div id="rangoFechas" style="display:none;padding:0 8px 8px;gap:4px"><div class="wrap" style="flex:1"><input type="date" id="fDesde"><button class="clear-x" id="clear_fDesde" onclick="clearField('fDesde')">x</button></div><div class="wrap" style="flex:1"><input type="date" id="fHasta"><button class="clear-x" id="clear_fHasta" onclick="clearField('fHasta')">x</button></div><button onclick="aplicarFiltroFecha()" style="height:36px;padding:0 12px;border-radius:10px;background:#0a0a0a;color:#fff;border:none;font-size:8px;font-weight:800">FILTRAR</button></div>
+
+<div style="display:flex;gap:4px;padding:0 8px 8px;overflow-x:auto">
+<button id="htTodos" class="tab-hist active" onclick="setHistTipo('todos')" style="background:#0a0a0a;color:#fff">TODOS</button>
+<button id="htMandado" class="tab-hist" onclick="setHistTipo('Moto Mandado')">MANDADOS</button>
+<button id="htTrans" class="tab-hist" onclick="setHistTipo('Moto Transporte')">TRANSPORTE</button>
+</div>
+
+<div class="resumen-box" id="resumenHistorial">
+<div class="resumen-item"><b id="rTotalPedidos">0</b><span>Total pedidos</span></div>
+<div class="resumen-item"><b id="rTotalIngresado">$0</b><span>Total ingresado</span></div>
+<div class="resumen-item"><b id="rTotalRepa">$0</b><span>Total repa gana</span></div>
+<div class="resumen-item" style="border-color:#86efac;background:#f0fdf4"><b id="rMisIngresos" style="color:#10b981">$0</b><span>Mis ingresos pagados</span></div>
+</div>
+
+<div class="card" style="padding:0;overflow:hidden">
+<div style="display:flex;background:#0a0a0a;color:#fff;padding:8px 10px;font-size:7px;font-weight:800;gap:4px"><div style="flex:1">FECHA / CLIENTE / REPA</div><div style="width:90px;text-align:center">VALORES</div><div style="width:90px;text-align:center">ACCIONES</div></div>
+<div id="listaHistorial"></div>
+</div>
+<div style="height:30px"></div>
+</div>
+
 <div class="bottom-app">
 <button id="btnAppPedidos" class="active" onclick="showView('pedidos')"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 1-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>PEDIDOS</button>
-<button id="btnAppSeg" onclick="showView('seguimiento')"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>SEGUIMIENTO</button>
+<button id="btnAppSeg" onclick="showView('seguimiento')"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>SEGUIM</button>
+<button id="btnAppHist" onclick="showView('historial')"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>HISTORIAL</button>
 </div>
 
 <script type="module">
@@ -174,7 +222,7 @@ window.confirmarAccion=function(msg,t,onConfirm,ct='Confirmar',color=''){ mostra
 let tarifasKmConfig={porKm:8, centroRadio:1.5, centroTarifa:30, lejosRadio:4, lejosExtra:15};
 let pinsData={admin:'0831',repas:{'Jose':'1111','Diego Gómez':'2222','Diego':'3333','Carlos':'4444'}};
 let clientesDirecciones={}, ventas=[], tipoPedidoActual='recoger', opcionRecoger='cliente', tiempoRecogidaMin=20, tiempoCompraMin=15;
-let map=null, dirServ=null, dirRend=null, geocoder=null, markers=[], clientePedidoSeleccionado=null, clienteCompraSeleccionado=null, ultimaCotizacion=null, entregaCoordsTemp=null, recogidaCoordsTemp=null, compraOrigenCoords=null, compraEntregaCoords=null, statusRepas={}, pedidosLive={}, filtroSeguimientoActual='todos', detalleActualKey=null, tarifas={mandado:30,transporte:40}, tarifasRepas={};
+let map=null, dirServ=null, dirRend=null, geocoder=null, markers=[], clientePedidoSeleccionado=null, clienteCompraSeleccionado=null, ultimaCotizacion=null, entregaCoordsTemp=null, recogidaCoordsTemp=null, compraOrigenCoords=null, compraEntregaCoords=null, statusRepas={}, pedidosLive={}, filtroSeguimientoActual='todos', detalleActualKey=null, tarifas={mandado:30,transporte:40}, tarifasRepas={}, ventasData={}, filtroHistPeriodo='hoy', filtroHistTipo='todos', fechaDesde=null, fechaHasta=null, histDetalleKey=null;
 
 function calcularHoraRecogida(min){ let ahora=new Date(); ahora.setMinutes(ahora.getMinutes()+parseInt(min||20)); let h=ahora.getHours(); let m=String(ahora.getMinutes()).padStart(2,'0'); let ampm=h>=12?'PM':'AM'; let h12=h%12||12; return {texto:`RECOGER ${h12}:${m} ${ampm}`, iso:ahora.toISOString()}; }
 function initMapReal(){ if(!window.google||!google.maps){ setTimeout(initMapReal,400); return; } if(!geocoder) geocoder=new google.maps.Geocoder(); if(!map){ map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1556,lng:-100.9343},zoom:14}); dirServ=new google.maps.DirectionsService(); dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#10b981',strokeWeight:5}}); } initPlaces(); }
@@ -232,22 +280,23 @@ function geo(dir){ return new Promise(r=>{ if(!geocoder){ setTimeout(()=>geo(dir
 async function routeGoogle(o,d){ return new Promise(res=>{ if(!dirServ){ res(null); return; } dirServ.route({origin:o,destination:d,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; res({km:(leg.distance.value/1000).toFixed(1),min:Math.round(leg.duration.value/60)}); } else res(null); }); }); }
 setTimeout(initMapReal,500); setTimeout(initMapReal,1500); setTimeout(initPlaces,2000);
 
-onValue(ref(db,'kigoPins'), s=>{ if(s.exists()){ let v=s.val(); if(v.admin) pinsData.admin=v.admin; if(v.repas) pinsData.repas=v.repas; else if(v&&!v.admin){ pinsData.repas=v; } } actualizarSelectRepaDestino(); actualizarEditRepa(); });
+onValue(ref(db,'kigoPins'), s=>{ if(s.exists()){ let v=s.val(); if(v.admin) pinsData.admin=v.admin; if(v.repas) pinsData.repas=v.repas; else if(v&&!v.admin){ pinsData.repas=v; } } actualizarSelectRepaDestino(); actualizarEditRepa(); actualizarEditHistRepa(); });
 onValue(ref(db,'kigoTarifasKm'), s=>{ if(s.exists()) tarifasKmConfig=s.val(); });
 onValue(ref(db,'kigoTarifas'), s=>{ if(s.exists()) tarifas=s.val(); });
 onValue(ref(db,'kigoTarifasRepas'), s=>{ if(s.exists()) tarifasRepas=s.val(); });
 onValue(ref(db,'kigoClientesDir'), s=>{ let data=s.val()||{}; clientesDirecciones={}; Object.entries(data).forEach(([k,v])=>{ clientesDirecciones[k.replace(/_/g,' ')]=v; }); });
-onValue(ref(db,'ventasKigo'), s=>{ let data=s.val()||{}; ventas=Object.entries(data).map(([id,v])=>({...v,_id:id})); });
+onValue(ref(db,'ventasKigo'), s=>{ ventasData=s.val()||{}; ventas=Object.entries(ventasData).map(([id,v])=>({...v,_id:id})); renderHistorial(); });
 onValue(ref(db,'kigoStatusRepas'), s=>{ statusRepas=s.val()||{}; actualizarSelectRepaDestino(); });
 onValue(ref(db,'kigoPedidosLive'), s=>{ pedidosLive=s.val()||{}; renderSeguimientoAdmin(); });
 
 window.toggleClear=function(input){ let id='clear_'+input.id; let btn=document.getElementById(id); if(!btn) return; if(input.value.trim().length>0){ btn.classList.add('show'); } else { btn.classList.remove('show'); } }
 window.clearField=function(id){ let el=document.getElementById(id); if(!el) return; el.value=''; let btn=document.getElementById('clear_'+id); if(btn) btn.classList.remove('show'); if(id==='buscadorClientePedido'){ limpiarClienteSeleccionado(); } if(id==='buscadorClienteCompra'){ limpiarClienteCompra(); } el.focus(); }
 
-window.showView=function(v){ document.querySelectorAll('.view').forEach(x=>x.classList.remove('active')); document.getElementById('view-'+v).classList.add('active'); document.querySelectorAll('.bottom-app button').forEach(b=>b.classList.remove('active')); let btn=document.getElementById(v==='pedidos'?'btnAppPedidos':'btnAppSeg'); if(btn) btn.classList.add('active'); if(v==='pedidos'){ setTimeout(()=>{ initMapReal(); initPlaces(); if(map) google.maps.event.trigger(map,'resize'); },150); } if(v==='seguimiento'){ renderSeguimientoAdmin(); } }
+window.showView=function(v){ document.querySelectorAll('.view').forEach(x=>x.classList.remove('active')); document.getElementById('view-'+v).classList.add('active'); document.querySelectorAll('.bottom-app button').forEach(b=>b.classList.remove('active')); let btn=document.getElementById(v==='pedidos'?'btnAppPedidos':v==='seguimiento'?'btnAppSeg':'btnAppHist'); if(btn) btn.classList.add('active'); if(v==='pedidos'){ setTimeout(()=>{ initMapReal(); initPlaces(); if(map) google.maps.event.trigger(map,'resize'); },150); } if(v==='seguimiento'){ renderSeguimientoAdmin(); } if(v==='historial'){ renderHistorial(); } }
 
 window.actualizarSelectRepaDestino=function(){ let sel=document.getElementById('pedidoRepaDestino'); if(!sel) return; let reps=Object.keys(pinsData.repas); sel.innerHTML=reps.map(r=>`<option value="${r}">${r}</option>`).join(''); actualizarEstadoRepaInfo(); };
 window.actualizarEditRepa=function(){ let sel=document.getElementById('editRepa'); if(!sel) return; let reps=Object.keys(pinsData.repas); sel.innerHTML=reps.map(r=>`<option value="${r}">${r}</option>`).join(''); };
+window.actualizarEditHistRepa=function(){ let sel=document.getElementById('editHistRepa'); if(!sel) return; let reps=Object.keys(pinsData.repas); sel.innerHTML=reps.map(r=>`<option value="${r}">${r}</option>`).join(''); };
 window.actualizarEstadoRepaInfo=function(){ let sel=document.getElementById('pedidoRepaDestino'); let info=document.getElementById('estadoRepaInfo'); if(!sel||!info) return; let r=sel.value; let st=statusRepas[r]; info.innerHTML=st?.online?'<span style="background:#dcfce7;border:1px solid #86efac;color:#166534;padding:3px 7px;border-radius:10px;font-size:7px;font-weight:800">EN LINEA</span>':'<span style="background:#fee2e2;border:1px solid #fecaca;color:#991b1b;padding:3px 7px;border-radius:10px;font-size:7px">OFF</span>'; };
 
 window.setTabPedido=function(t){
@@ -354,7 +403,6 @@ window.confirmarPedidoCompra=async function(){
  }, 'Enviar', 'green');
 };
 
-// SEGUIMIENTO LOGIC CON FIX ESTADO ARRIBA PRECIO
 window.filtrarSeguimiento=function(t){
  filtroSeguimientoActual=t;
  document.getElementById('fSegTodos').classList.toggle('active',t==='todos');
@@ -429,6 +477,73 @@ window.pasarAHistorial=async function(key){
  let obj={ iso:p.iso||todayISO(), cliente:p.cliente, tipo:'Moto Mandado', valor:valor, repa:p.repaAsignado, pagado:false, promo:false, feeKigo:fee, ts:Date.now(), origenPedido:key };
  let nr=push(ref(db,'ventasKigo')); await set(nr,obj); await remove(ref(db,'kigoPedidosLive/'+key)); mostrarAviso('Pasado a historial','OK');
 }
+
+// HISTORIAL LOGIC
+window.setHistPeriodo=function(p){
+ filtroHistPeriodo=p;
+ document.getElementById('hHoy').classList.toggle('active',p==='hoy');
+ document.getElementById('hMes').classList.toggle('active',p==='mes');
+ document.getElementById('hTodo').classList.toggle('active',p==='todo');
+ document.getElementById('hFecha').classList.toggle('active',p==='fecha');
+ document.getElementById('rangoFechas').style.display=p==='fecha'?'flex':'none';
+ renderHistorial();
+}
+window.setHistTipo=function(t){
+ filtroHistTipo=t;
+ document.getElementById('htTodos').classList.toggle('active',t==='todos'); document.getElementById('htTodos').style.background=t==='todos'?'#0a0a0a':'#fff'; document.getElementById('htTodos').style.color=t==='todos'?'#fff':'#0a0a0a';
+ document.getElementById('htMandado').classList.toggle('active',t==='Moto Mandado');
+ document.getElementById('htTrans').classList.toggle('active',t==='Moto Transporte');
+ renderHistorial();
+}
+window.aplicarFiltroFecha=function(){ fechaDesde=document.getElementById('fDesde').value||null; fechaHasta=document.getElementById('fHasta').value||null; renderHistorial(); }
+function filtrarVentasLista(){
+ let lista=Object.entries(ventasData).map(([k,v])=>({...v,_id:k,_key:k})).sort((a,b)=>b.ts-a.ts);
+ // periodo
+ let hoyISO=todayISO();
+ if(filtroHistPeriodo==='hoy'){ lista=lista.filter(v=>v.iso===hoyISO); }
+ else if(filtroHistPeriodo==='mes'){ let mes=hoyISO.slice(0,7); lista=lista.filter(v=>v.iso&&v.iso.startsWith(mes)); }
+ else if(filtroHistPeriodo==='fecha'&&fechaDesde&&fechaHasta){ lista=lista.filter(v=>v.iso>=fechaDesde&&v.iso<=fechaHasta); }
+ // tipo
+ if(filtroHistTipo!=='todos'){ lista=lista.filter(v=>v.tipo===filtroHistTipo); }
+ return lista;
+}
+window.renderHistorial=function(){
+ let cont=document.getElementById('listaHistorial'); if(!cont) return;
+ let lista=filtrarVentasLista();
+ let totalPedidos=lista.length;
+ let totalIngresado=lista.reduce((s,v)=>s+(parseInt(v.valor)||0),0);
+ let totalFee=lista.reduce((s,v)=>s+(parseInt(v.feeKigo)||0),0);
+ let totalRepaGana=totalIngresado-totalFee;
+ let totalMisPagados=lista.filter(v=>v.pagado).reduce((s,v)=>s+(parseInt(v.feeKigo)||0),0);
+ document.getElementById('rTotalPedidos').innerText=totalPedidos;
+ document.getElementById('rTotalIngresado').innerText='$'+totalIngresado;
+ document.getElementById('rTotalRepa').innerText='$'+totalRepaGana;
+ document.getElementById('rMisIngresos').innerText='$'+totalMisPagados;
+ if(!lista.length){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af;font-size:9px">Sin historial en este rango</div>'; return; }
+ cont.innerHTML=lista.map(v=>{
+  let gana=(parseInt(v.valor)||0)-(parseInt(v.feeKigo)||0);
+  return `<div class="row-hist">
+   <div style="flex:1;min-width:0">
+    <div style="font-size:8px;color:#6b7280">${v.iso||''} | ${v._id.slice(-4)}</div>
+    <div style="font-size:9px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${v.cliente||'Cliente'}</div>
+    <div style="font-size:7px"><span style="background:#0a0a0a;color:#fff;padding:2px 6px;border-radius:10px">${v.repa||''}</span> <span style="background:#f3f4f6;padding:2px 6px;border-radius:10px">${v.tipo||''}</span></div>
+   </div>
+   <div style="width:90px;text-align:center">
+    <div style="font-size:9px;font-weight:800;color:#10b981">$${v.valor||0}</div>
+    <div style="font-size:7px">Fee: $${v.feeKigo||0}</div>
+    <div style="font-size:7px;color:#3b82f6;font-weight:800">Repa: $${gana}</div>
+   </div>
+   <div style="width:90px;display:flex;flex-direction:column;gap:3px">
+    <button class="btn-pagado ${v.pagado?'pagado':''}" onclick="togglePagadoHist('${v._id}')">${v.pagado?'PAGADO ✓':'PAGAR'}</button>
+    <div style="display:flex;gap:3px"><button class="btn-editar" style="flex:1;height:22px;font-size:7px" onclick="abrirEditarHistorial('${v._id}')">EDITAR</button><button class="btn-editar" style="flex:1;height:22px;font-size:7px;background:#fee2e2;border-color:#fecaca;color:#991b1b" onclick="eliminarHistorial('${v._id}')">X</button></div>
+   </div>
+  </div>`;
+ }).join('');
+}
+window.togglePagadoHist=async function(id){ let v=ventasData[id]; if(!v) return; await update(ref(db,'ventasKigo/'+id), {pagado:!v.pagado}); }
+window.eliminarHistorial=function(id){ confirmarAccion('Eliminar este historial?', 'Eliminar', async()=>{ await remove(ref(db,'ventasKigo/'+id)); mostrarAviso('Eliminado','OK'); }); }
+window.abrirEditarHistorial=function(id){ let v=ventasData[id]; if(!v) return; histDetalleKey=id; document.getElementById('editHistCliente').value=v.cliente||''; document.getElementById('editHistRepa').value=v.repa||''; document.getElementById('editHistTipo').value=v.tipo||'Moto Mandado'; document.getElementById('editHistValor').value=v.valor||0; document.getElementById('editHistFee').value=v.feeKigo||0; document.getElementById('editHistIso').value=v.iso||todayISO(); actualizarEditHistRepa(); setTimeout(()=>{ document.getElementById('editHistRepa').value=v.repa||''; },100); document.getElementById('overlayEditHist').classList.add('show'); }
+window.guardarEdicionHistorial=async function(){ if(!histDetalleKey) return; let updates={ cliente:document.getElementById('editHistCliente').value.trim(), repa:document.getElementById('editHistRepa').value, tipo:document.getElementById('editHistTipo').value, valor:parseInt(document.getElementById('editHistValor').value)||0, feeKigo:parseInt(document.getElementById('editHistFee').value)||0, iso:document.getElementById('editHistIso').value||todayISO() }; await update(ref(db,'ventasKigo/'+histDetalleKey), updates); document.getElementById('overlayEditHist').classList.remove('show'); mostrarAviso('Actualizado','OK'); }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTV1sm6McEIkv-cheaVFCD_svp_a--6wg&libraries=places" async defer></script>
 </body>
