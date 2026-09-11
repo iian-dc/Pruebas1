@@ -7,7 +7,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
 :root{--black:#0a0a0a;--border:#e5e7eb}
-body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden}
+body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 .top{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1.5px solid var(--border);padding:8px 12px;display:flex;justify-content:space-between;align-items:center}
 .card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:10px;margin:8px}
 .wrap{position:relative;background:#fff;border:1.5px solid var(--border);border-radius:10px;display:flex;align-items:center;padding:0 10px;height:36px;margin-top:4px}
@@ -27,6 +27,11 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden}
 .kigo-btn-cancel{background:#fff;border:1.5px solid var(--border)}.kigo-btn-confirm{background:#0a0a0a;color:#fff}
 .ico{width:12px;height:12px;display:inline-block;vertical-align:middle}
 .btn-small{height:36px;border-radius:10px;font-size:9px;font-weight:800}
+
+/* BOTON APP ABAJO FIJO TIPO APLICACION */
+.bottom-app{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;border-top:1.5px solid var(--border);padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;box-shadow:0 -2px 10px rgba(0,0,0,.06)}
+.bottom-app button{width:100%;max-width:340px;height:48px;background:#0a0a0a;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;gap:8px}
+.bottom-app button.active{background:#0a0a0a;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.2)}
 </style>
 </head>
 <body>
@@ -44,7 +49,7 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden}
 </div>
 </div>
 
-<div class="card" style="background:#f9fafb;padding:8px"><div class="label-row"><label style="display:flex;align-items:center;gap:4px"><svg class="ico" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Repartidor</label><span id="estadoRepaInfo"></span></div><div class="wrap"><select id="pedidoRepaDestino" onchange="actualizarEstadoRepaInfo()"></select><button class="clear-x" id="clear_repa" onclick="clearField('pedidoRepaDestino')">x</button></div></div>
+<div class="card" style="background:#f9fafb;padding:8px"><div class="label-row"><label style="display:flex;align-items:center;gap:4px"><svg class="ico" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Repartidor</label><span id="estadoRepaInfo"></span></div><div class="wrap"><select id="pedidoRepaDestino" onchange="actualizarEstadoRepaInfo()"></select></div></div>
 
 <div class="card" style="padding:8px">
 <div style="display:flex;gap:6px;margin-bottom:8px">
@@ -71,7 +76,7 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden}
 </div>
 </div>
 <div class="label">Nombre entrega</div><div class="wrap"><input type="text" id="nombreEntregaPedido" placeholder="Juan Perez" oninput="toggleClear(this)"><button class="clear-x" id="clear_nombreEntregaPedido" onclick="clearField('nombreEntregaPedido')">x</button></div>
-<div class="label">Dirección entrega</div><div class="wrap"><input type="text" id="entregaDirRecoger" placeholder="Busca dirección Google..." oninput="toggleClear(this)"><button class="clear-x" id="clear_entregaDirRecoger" onclick="clearField('entregaDirRecoger');entregaCoordsTemp=null;document.getElementById('botonesDespuesCotizar').style.display='none';document.getElementById('infoRuta').style.display='none'"><span style="font-size:10px">x</span></button></div>
+<div class="label">Dirección entrega</div><div class="wrap"><input type="text" id="entregaDirRecoger" placeholder="Busca dirección Google..." oninput="toggleClear(this)"><button class="clear-x" id="clear_entregaDirRecoger" onclick="clearField('entregaDirRecoger');entregaCoordsTemp=null;document.getElementById('botonesDespuesCotizar').style.display='none';document.getElementById('infoRuta').style.display='none'">x</button></div>
 <div class="label">Teléfono entrega</div><div class="wrap"><input type="tel" id="telefonoEntregaPedido" placeholder="5521234567" oninput="toggleClear(this)"><button class="clear-x" id="clear_telefonoEntregaPedido" onclick="clearField('telefonoEntregaPedido')">x</button></div>
 <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:8px;margin-top:8px">
 <div class="label-row"><label>Tiempo repartidor</label></div>
@@ -79,22 +84,29 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden}
 <div style="display:flex;gap:4px;margin-top:6px;align-items:center"><div class="wrap" style="flex:1;margin-top:0"><input type="number" id="tiempoRecogidaInput" value="20" min="5" max="120" oninput="actualizarTiempoCustom();toggleClear(this)"><button class="clear-x" id="clear_tiempoRecogidaInput" onclick="clearField('tiempoRecogidaInput')">x</button></div><div style="font-size:7px;font-weight:800;color:#92400e;background:#fff;padding:4px 8px;border-radius:12px;border:1px solid #fde68a">Pers</div></div>
 </div>
 <button onclick="confirmarPedido()" style="width:100%;height:52px;margin-top:12px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;gap:8px"><svg class="ico" style="width:16px;height:16px" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>CONFIRMAR SERVICIO</button>
+<div style="height:20px"></div>
 </div>
 
 <div id="panelComprar" style="display:none">
 <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:8px;margin-bottom:8px">
 <div style="font-weight:800;font-size:8px;color:#166534;margin-bottom:6px">COMPRAR - $40-45 + $5/km</div>
 <div class="label">Productos</div><div class="wrap"><input type="text" id="queComprarProductos" placeholder="2 cocas, 1 pan..." oninput="toggleClear(this)"><button class="clear-x" id="clear_queComprarProductos" onclick="clearField('queComprarProductos')">x</button></div>
-<div class="label">Donde comprar</div><div class="wrap"><input type="text" id="queComprar" placeholder="Oxxo centro..." oninput="toggleClear(this)"><button class="clear-x" id="clear_queComprar" onclick="clearField('queComprar');compraOrigenCoords=null"><span>x</span></button></div>
+<div class="label">Donde comprar</div><div class="wrap"><input type="text" id="queComprar" placeholder="Oxxo centro..." oninput="toggleClear(this)"><button class="clear-x" id="clear_queComprar" onclick="clearField('queComprar');compraOrigenCoords=null">x</button></div>
 <div class="label">Cliente entrega</div><div class="wrap" style="overflow:visible"><input type="text" id="buscadorClienteCompra" placeholder="Cliente..." oninput="buscarClienteCompra();toggleClear(this)" onfocus="buscarClienteCompra()"><button class="clear-x" id="clear_buscadorClienteCompra" onclick="clearField('buscadorClienteCompra');limpiarClienteCompra()">x</button><div id="listClienteCompra" style="position:absolute;left:0;right:0;top:100%;z-index:30;background:#fff;border:1.5px solid #0a0a0a;border-top:none;border-radius:0 0 10px 10px;max-height:200px;overflow:auto;display:none"></div></div><div id="clienteCompraSeleccionado" style="display:none;margin-top:6px;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:6px;font-size:10px;font-weight:700"></div>
-<div class="label">Dirección entrega</div><div class="wrap"><input type="text" id="entregaDirComprar" placeholder="Dirección Google..." oninput="toggleClear(this)"><button class="clear-x" id="clear_entregaDirComprar" onclick="clearField('entregaDirComprar');compraEntregaCoords=null"><span>x</span></button></div>
+<div class="label">Dirección entrega</div><div class="wrap"><input type="text" id="entregaDirComprar" placeholder="Dirección Google..." oninput="toggleClear(this)"><button class="clear-x" id="clear_entregaDirComprar" onclick="clearField('entregaDirComprar');compraEntregaCoords=null">x</button></div>
 <div class="label">Teléfono entrega</div><div class="wrap"><input type="tel" id="telefonoEntregaCompra" placeholder="5521234567" oninput="toggleClear(this)"><button class="clear-x" id="clear_telefonoEntregaCompra" onclick="clearField('telefonoEntregaCompra')">x</button></div>
 <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:8px;margin-top:6px">
 <div class="label-row"><label>Tiempo compra</label></div><div style="display:flex;gap:4px;margin-top:4px"><button onclick="setTiempoCompra(15)" id="tc15" class="tab-cobro active" style="flex:1;background:#0a0a0a;color:#fff">15</button><button onclick="setTiempoCompra(30)" id="tc30" class="tab-cobro" style="flex:1">30</button><button onclick="setTiempoCompra(45)" id="tc45" class="tab-cobro" style="flex:1">45</button></div><div class="wrap" style="margin-top:6px"><input type="number" id="tiempoCompraInput" value="15" min="5" max="120" oninput="toggleClear(this)"><button class="clear-x" id="clear_tiempoCompraInput" onclick="clearField('tiempoCompraInput')">x</button></div>
 </div>
 </div>
 <button onclick="confirmarPedidoCompra()" style="width:100%;height:52px;margin-top:12px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;gap:8px"><svg class="ico" style="width:16px;height:16px" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>CONFIRMAR SERVICIO</button>
+<div style="height:20px"></div>
 </div>
+</div>
+
+<!-- BOTON FIJO TIPO APP ABAJO - PEDIDOS -->
+<div class="bottom-app">
+<button id="btnAppPedidos" class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg class="ico" style="width:16px;height:16px" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2.9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>PEDIDOS</button>
 </div>
 
 <script type="module">
