@@ -3,37 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>KIGO XPRESS - Nuevo Pedido</title>
+<title>KIGO XPRESS</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Outfit',sans-serif}
-body{background:#0a0a0a;overflow:hidden;height:100vh;display:flex;flex-direction:column}
-#map{flex:1;width:100%;height:55vh;min-height:45vh}
-#panel{height:55vh;background:#fff;border-radius:28px 28px 0 0;margin-top:-28px;z-index:10;overflow-y:auto;padding:20px 18px 30px;box-shadow:0 -10px 40px rgba(0,0,0,.3)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Outfit',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#fff;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+#map{width:100%;height:48dvh;min-height:48dvh;background:#e5e5e5;position:relative}
+#panel{flex:1;background:#fff;border-radius:28px 28px 0 0;margin-top:-24px;z-index:10;overflow-y:auto;padding:18px 16px 30px;box-shadow:0 -10px 40px rgba(0,0,0,.25)}
 .pill{display:flex;align-items:center;justify-content:space-between;background:#f5f5f7;border:1px solid #eee;border-radius:16px;padding:14px 16px;font-weight:700;font-size:15px;cursor:pointer}
-.pill span{color:#888;font-weight:400}
 .row{display:flex;gap:10px;margin-top:12px}
-.btn{flex:1;border:none;border-radius:16px;padding:15px 10px;font-weight:800;font-size:14px;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:.2s;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.btn{flex:1;border:none;border-radius:16px;padding:14px 10px;font-weight:800;font-size:13px;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:.15s}
 .btn:active{transform:scale(.96)}
 .btn-red{background:#FF1E1E;color:#fff}
 .btn-green{background:#00D26A;color:#fff}
 .btn-black{background:#111;color:#fff}
 .btn-white{background:#fff;color:#111;border:1.5px solid #111}
-.btn-active{ring:2px solid #111;transform:scale(.98);opacity:.9}
+.inactive{opacity:.45}
 .label{font-size:11px;font-weight:800;letter-spacing:1px;color:#aaa;margin:18px 0 8px;text-transform:uppercase}
-.input{width:100%;background:#f5f5f7;border:1.5px solid transparent;border-radius:14px;padding:14px 16px;font-size:14px;font-weight:600;outline:none;transition:.2s}
+.input{width:100%;background:#f5f5f7;border:1.5px solid transparent;border-radius:14px;padding:14px 14px;font-size:14px;font-weight:600;outline:none}
 .input:focus{background:#fff;border-color:#111}
-.input-neon{background:#111;border:1.5px solid #39FF14;color:#fff;border-radius:16px;padding:16px;margin-top:12px;box-shadow:0 0 20px rgba(57,255,20,.25)}
-.input-neon b{display:block;font-size:13px;color:#39FF14;letter-spacing:1px}
-.input-neon p{font-size:15px;font-weight:700;margin-top:4px;line-height:1.3}
-.list-rep{position:absolute;bottom:58vh;left:18px;right:18px;background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.3);z-index:20;max-height:280px;overflow-y:auto;display:none}
-.list-rep div{padding:16px;font-weight:700;border-bottom:1px solid #f5f5f5;display:flex;justify-content:space-between}
+.input-neon{background:#111;border:1px solid #39FF14;color:#fff;border-radius:16px;padding:14px;margin-top:12px;box-shadow:0 0 18px rgba(57,255,20,.2)}
+.list-rep{position:fixed;top:10dvh;left:12px;right:12px;background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);z-index:999;max-height:320px;overflow-y:auto;display:none}
+.list-rep div{padding:16px;font-weight:700;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between}
 .suggest{position:relative}
-.suggest-box{position:absolute;top:48px;left:0;right:0;background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.15);z-index:30;max-height:200px;overflow-y:auto;display:none}
-.suggest-box div{padding:12px 16px;font-weight:600;font-size:14px;border-bottom:1px solid #f7f7f7;cursor:pointer}
-.suggest-box div:hover{background:#f5f5f7}
-.tag{font-size:11px;background:#111;color:#39FF14;padding:4px 8px;border-radius:20px;font-weight:800}
+.suggest-box{position:absolute;top:50px;left:0;right:0;background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.15);z-index:50;max-height:200px;overflow-y:auto;display:none}
+.suggest-box div{padding:12px 14px;font-weight:600;font-size:14px;border-bottom:1px solid #f7f7f7}
+.hidden{display:none!important}
+.tag{font-size:10px;background:#111;color:#39FF14;padding:4px 8px;border-radius:20px;font-weight:800}
+.time-box{display:flex;align-items:center;gap:10px;background:#f5f5f7;border-radius:14px;padding:8px 14px;margin-top:12px}
 </style>
 </head>
 <body>
@@ -42,122 +40,153 @@ body{background:#0a0a0a;overflow:hidden;height:100vh;display:flex;flex-direction
 <div id="repList" class="list-rep"></div>
 
 <div id="panel">
-  <!-- REPARTIDORES -->
   <div class="pill" onclick="toggleReps()">
-    <div style="display:flex;align-items:center;gap:10px"><i data-lucide="bike"></i> Repartidor Asignado</div>
-    <span id="repSelected">Seleccionar <i data-lucide="chevron-down" style="width:16px"></i></span>
+    <div style="display:flex;align-items:center;gap:10px"><i data-lucide="bike" style="width:18px"></i> Repartidor</div>
+    <span id="repSelected" style="display:flex;align-items:center;gap:6px;color:#888">Seleccionar <i data-lucide="chevron-down" style="width:16px"></i></span>
   </div>
 
-  <!-- TIPO PEDIDO -->
   <div class="row">
-    <button id="btnRecoger" class="btn btn-red" onclick="setTipo('recoger')"><i data-lucide="package"></i> RECOGER</button>
-    <button id="btnComprar" class="btn btn-green" onclick="setTipo('comprar')"><i data-lucide="shopping-cart"></i> COMPRAR</button>
+    <button id="btnRecoger" class="btn btn-red" onclick="setTipo('recoger')"><i data-lucide="package" style="width:18px"></i> RECOGER</button>
+    <button id="btnComprar" class="btn btn-green inactive" onclick="setTipo('comprar')"><i data-lucide="shopping-cart" style="width:18px"></i> COMPRAR</button>
   </div>
 
-  <!-- MODO CLIENTE -->
   <div class="row">
-    <button id="btnRegistrado" class="btn btn-black" onclick="setModo('registrado')"><i data-lucide="users"></i> CLIENTE REGISTRADO</button>
-    <button id="btnManual" class="btn btn-white" onclick="setModo('manual')"><i data-lucide="map-pin"></i> DIRECCIÓN MANUAL</button>
+    <button id="btnRegistrado" class="btn btn-black" onclick="setModo('registrado')"><i data-lucide="users" style="width:18px"></i> CLIENTE REGISTRADO</button>
+    <button id="btnManual" class="btn btn-white inactive" onclick="setModo('manual')"><i data-lucide="map-pin" style="width:18px"></i> DIRECCIÓN MANUAL</button>
   </div>
 
-  <!-- BUSCADOR CLIENTE -->
+  <!-- BUSCADOR -->
   <div id="boxBuscador">
-    <div class="label">Buscar Cliente Registrado</div>
+    <div class="label">Buscar Cliente</div>
     <div class="suggest">
-      <input id="searchCliente" class="input" placeholder="Escribe el nombre, ej: Oxxo, Farmacia..." oninput="filtrarClientes(this.value)">
+      <input id="searchCliente" class="input" placeholder="Escribe nombre del cliente" oninput="filtrarClientes(this.value)">
       <div id="suggestClientes" class="suggest-box"></div>
     </div>
-    <div id="clienteNeon" style="display:none" class="input-neon">
-      <b id="neonNombre">NOMBRE CLIENTE</b>
-      <p id="neonDir">Dirección registrada</p>
+    <div id="clienteNeon" class="input-neon hidden">
+      <b id="neonNombre" style="font-size:11px;color:#39FF14;letter-spacing:1px">CLIENTE</b>
+      <p id="neonDir" style="font-size:14px;font-weight:700;margin-top:4px"></p>
     </div>
   </div>
 
-  <!-- DIRECCIONES -->
-  <div class="label">Ruta del Pedido</div>
-  <input id="dirRecogida" class="input" placeholder="📍 Dirección de RECOGIDA" onblur="trazarRuta()">
-  <div style="height:10px"></div>
-  <input id="dirEntrega" class="input" placeholder="🏁 Dirección de ENTREGA" onblur="trazarRuta()">
-
-  <div class="label">Datos de Entrega</div>
-  <input id="nomEntrega" class="input" placeholder="Nombre de quien recibe">
-  <div style="height:10px"></div>
-  <input id="telEntrega" class="input" placeholder="Teléfono de entrega">
-  <div style="height:10px"></div>
-
-  <div class="row" style="align-items:center;background:#f5f5f7;border-radius:14px;padding:6px 14px">
-    <i data-lucide="timer" style="color:#111"></i>
-    <span style="font-weight:700;font-size:14px;flex:1">Tiempo para recoger</span>
-    <input id="tiempo" type="number" style="width:70px;background:#fff;border:none;border-radius:10px;padding:10px;text-align:center;font-weight:800" placeholder="10"> <span style="font-weight:700">min</span>
+  <!-- MODO RECOGER -->
+  <div id="modoRecoger">
+    <div class="label">Ruta de Recogida</div>
+    <input id="dirRecogida" class="input" placeholder="Dirección donde se recoge" onblur="trazarRuta()">
+    <div style="height:10px"></div>
+    <input id="dirEntregaRec" class="input" placeholder="Dirección donde se entrega" onblur="trazarRuta()">
   </div>
 
-  <button class="btn btn-black" style="width:100%;margin-top:18px;padding:18px;border-radius:18px;font-size:16px" onclick="crearPedido()"><i data-lucide="zap"></i> CREAR PEDIDO AHORA</button>
+  <!-- MODO COMPRAR -->
+  <div id="modoComprar" class="hidden">
+    <div class="label">Que se va a comprar</div>
+    <input id="producto" class="input" placeholder="Ej: 2 refrescos, 1k tortillas, medicina">
+    <div style="height:10px"></div>
+    <div class="label">En donde se compra (Google Maps)</div>
+    <input id="negocio" class="input" placeholder="Ej: Oxxo centro, Farmacia Guadalajara">
+    <div class="label">Entregar a</div>
+    <input id="nomEntregaCompra" class="input" placeholder="Nombre de quien recibe">
+    <div style="height:10px"></div>
+    <input id="dirEntregaCompra" class="input" placeholder="Dirección de entrega" onblur="trazarRutaCompra()">
+    <div style="height:10px"></div>
+    <input id="telEntregaCompra" class="input" placeholder="Teléfono de quien recibe" inputmode="numeric">
+  </div>
+
+  <!-- DATOS COMUNES RECOGER -->
+  <div id="datosRecoger">
+    <div class="label">Datos de quien recibe</div>
+    <input id="nomEntrega" class="input" placeholder="Nombre de quien recibe">
+    <div style="height:10px"></div>
+    <input id="telEntrega" class="input" placeholder="Teléfono" inputmode="numeric">
+  </div>
+
+  <div class="time-box">
+    <i data-lucide="timer" style="width:20px"></i>
+    <span style="font-weight:700;font-size:14px;flex:1">Tiempo para recoger</span>
+    <input id="tiempo" type="number" style="width:64px;background:#fff;border:none;border-radius:10px;padding:10px;text-align:center;font-weight:800" placeholder="10">
+    <b style="font-size:13px">MIN</b>
+  </div>
+
+  <button class="btn btn-black" style="width:100%;margin-top:18px;padding:18px;border-radius:18px;font-size:15px" onclick="crearPedido()"><i data-lucide="zap" style="width:18px"></i> CREAR PEDIDO AHORA</button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script>
-lucide.createIcons();
+// CONFIG
 const firebaseConfig={apiKey:"AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE",authDomain:"historial-kigo-xpress.firebaseapp.com",databaseURL:"https://historial-kigo-xpress-default-rtdb.firebaseio.com",projectId:"historial-kigo-xpress",storageBucket:"historial-kigo-xpress.firebasestorage.app",messagingSenderId:"571399920545",appId:"1:571399920545:web:aa16407753b43cbe2e89e0"};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
-let map, dirService, dirRender, geocoder, markers=[], tipo='recoger', modo='registrado', clientes=[], repSeleccionado=null;
+firebase.initializeApp(firebaseConfig); const db=firebase.database();
+let map, dirService, dirRender, autocompleteNegocio, tipo='recoger', modo='registrado', clientes=[], repSeleccionado=null, markers=[];
 
-function initMap(){
-  map=new google.maps.Map(document.getElementById("map"),{center:{lat:21.0924,lng:-101.6616},zoom:14,disableDefaultUI:true,styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]});
+window.initMap = function(){
+  map=new google.maps.Map(document.getElementById("map"),{center:{lat:21.0924,lng:-101.6616},zoom:14,disableDefaultUI:false,zoomControl:false});
   dirService=new google.maps.DirectionsService();
-  dirRender=new google.maps.DirectionsRenderer({map,suppressMarkers:true,polylineOptions:{strokeColor:"#111",strokeWeight:6}});
-  geocoder=new google.maps.Geocoder();
-  map.addListener("click", e=>{
-    if(!document.getElementById("dirRecogida").value){document.getElementById("dirRecogida").value=e.latLng.lat().toFixed(5)+","+e.latLng.lng().toFixed(5); addPin(e.latLng,"R");}
-    else{document.getElementById("dirEntrega").value=e.latLng.lat().toFixed(5)+","+e.latLng.lng().toFixed(5); addPin(e.latLng,"E"); trazarRuta();}
-  });
+  dirRender=new google.maps.DirectionsRenderer({map:map,suppressMarkers:false,polylineOptions:{strokeColor:"#111",strokeWeight:5}});
+  const inputNeg=document.getElementById("negocio");
+  autocompleteNegocio=new google.maps.places.Autocomplete(inputNeg,{componentRestrictions:{country:["mx"]}});
+  autocompleteNegocio.bindTo("bounds",map);
+  autocompleteNegocio.addListener("place_changed",()=>{ const p=autocompleteNegocio.getPlace(); if(p.geometry){map.panTo(p.geometry.location); trazarRutaCompra()} });
   cargarClientes(); cargarReps();
+  setTimeout(()=>{google.maps.event.trigger(map,"resize"); map.setCenter({lat:21.0924,lng:-101.6616});},500);
+  if(window.lucide) lucide.createIcons();
 }
-function addPin(pos,label){markers.forEach(m=>m.setMap(null)); const m=new google.maps.Marker({position:pos,map,label:{text:label,color:"#fff",fontWeight:"800"}}); markers.push(m);}
 function toggleReps(){const l=document.getElementById("repList");l.style.display=l.style.display==="block"?"none":"block";}
 function cargarReps(){
   db.ref("repartidores").on("value",snap=>{
     const c=document.getElementById("repList");c.innerHTML="";
-    snap.forEach(s=>{const r=s.val();const d=document.createElement("div");d.innerHTML=`${r.nombre||s.key}<span class='tag'>${r.estado||'libre'}</span>`;d.onclick=()=>{repSeleccionado=s.key;document.getElementById("repSelected").innerHTML=r.nombre;toggleReps()};c.appendChild(d)});
+    snap.forEach(s=>{const r=s.val();const d=document.createElement("div");d.innerHTML=`<span>${r.nombre||s.key}</span><span class='tag'>${r.estado||'libre'}</span>`;d.onclick=()=>{repSeleccionado=s.key;document.getElementById("repSelected").innerHTML=r.nombre;document.getElementById("repSelected").style.color="#111";toggleReps()};c.appendChild(d)});
   });
 }
-function setTipo(t){tipo=t;document.getElementById("btnRecoger").style.opacity=t==='recoger'?1:.5;document.getElementById("btnComprar").style.opacity=t==='comprar'?1:.5}
-function setModo(m){modo=m;document.getElementById("btnRegistrado").style.opacity=m==='registrado'?1:.5;document.getElementById("btnManual").style.opacity=m==='manual'?1:.5;document.getElementById("boxBuscador").style.display=m==='registrado'?"block":"none"}
-function cargarClientes(){
-  db.ref("clientes").on("value",snap=>{clientes=[];snap.forEach(s=>{clientes.push({id:s.key,...s.val()})})});
+function setTipo(t){
+  tipo=t;
+  document.getElementById("btnRecoger").classList.toggle("inactive",t!=="recoger");
+  document.getElementById("btnComprar").classList.toggle("inactive",t!=="comprar");
+  document.getElementById("modoRecoger").classList.toggle("hidden",t!=="recoger");
+  document.getElementById("datosRecoger").classList.toggle("hidden",t!=="recoger");
+  document.getElementById("modoComprar").classList.toggle("hidden",t!=="comprar");
 }
+function setModo(m){
+  modo=m;
+  document.getElementById("btnRegistrado").classList.toggle("inactive",m!=="registrado");
+  document.getElementById("btnManual").classList.toggle("inactive",m!=="manual");
+  document.getElementById("boxBuscador").classList.toggle("hidden",m!=="registrado");
+}
+function cargarClientes(){db.ref("clientes").on("value",snap=>{clientes=[];snap.forEach(s=>{clientes.push({id:s.key,...s.val()})})})}
 function filtrarClientes(txt){
   const box=document.getElementById("suggestClientes");
   if(!txt){box.style.display="none";return}
   const f=clientes.filter(c=>c.nombre&&c.nombre.toLowerCase().includes(txt.toLowerCase())).slice(0,6);
-  box.innerHTML="";f.forEach(c=>{const d=document.createElement("div");d.textContent=c.nombre; d.onclick=()=>selectCliente(c);box.appendChild(d)});
+  box.innerHTML=""; f.forEach(c=>{const d=document.createElement("div");d.textContent=c.nombre; d.onclick=()=>selectCliente(c); box.appendChild(d)});
   box.style.display=f.length?"block":"none";
 }
 function selectCliente(c){
   document.getElementById("searchCliente").value=c.nombre;
   document.getElementById("suggestClientes").style.display="none";
-  document.getElementById("clienteNeon").style.display="block";
+  document.getElementById("clienteNeon").classList.remove("hidden");
   document.getElementById("neonNombre").textContent=c.nombre.toUpperCase();
-  document.getElementById("neonDir").textContent=c.direccion||c.dir||"Sin dirección";
-  document.getElementById("dirRecogida").value=c.direccion||c.dir||c.nombre;
-  document.getElementById("nomEntrega").value=c.nombre;
-  trazarRuta(); lucide.createIcons();
+  document.getElementById("neonDir").textContent=c.direccion||c.dir||"";
+  if(tipo==="recoger"){document.getElementById("dirRecogida").value=c.direccion||c.nombre; document.getElementById("nomEntrega").value=c.nombre}
+  else{document.getElementById("dirEntregaCompra").value=c.direccion||c.nombre; document.getElementById("nomEntregaCompra").value=c.nombre}
+  trazarRuta(); trazarRutaCompra();
 }
 function trazarRuta(){
-  const o=document.getElementById("dirRecogida").value, d=document.getElementById("dirEntrega").value;
-  if(!o||!d)return;
-  dirService.route({origin:o,destination:d,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
-    if(status==="OK"){dirRender.setDirections(res); map.fitBounds(res.routes[0].bounds);}
-  });
+  const o=document.getElementById("dirRecogida").value, d=document.getElementById("dirEntregaRec").value;
+  if(!o||!d||tipo!=="recoger")return;
+  dirService.route({origin:o,destination:d,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{if(status==="OK"){dirRender.setDirections(res)}});
+}
+function trazarRutaCompra(){
+  const o=document.getElementById("negocio").value, d=document.getElementById("dirEntregaCompra").value;
+  if(!o||!d||tipo!=="comprar")return;
+  dirService.route({origin:o,destination:d,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{if(status==="OK"){dirRender.setDirections(res)}});
 }
 function crearPedido(){
   if(!repSeleccionado)return alert("Selecciona repartidor");
-  const pedido={tipo,modo,cliente:document.getElementById("searchCliente").value||"Manual",recogida:document.getElementById("dirRecogida").value,entrega:document.getElementById("dirEntrega").value,nombreEntrega:document.getElementById("nomEntrega").value,tel:document.getElementById("telEntrega").value,tiempo:document.getElementById("tiempo").value,repartidor:repSeleccionado,estado:"pendiente",fecha:Date.now()};
-  db.ref("pedidos").push(pedido).then(()=>{alert("✅ Pedido creado y enviado a "+repSeleccionado);});
+  let pedido={tipo,modo,repartidor:repSeleccionado,estado:"pendiente",fecha:Date.now(),tiempo:document.getElementById("tiempo").value};
+  if(tipo==="recoger"){pedido.cliente=document.getElementById("searchCliente").value; pedido.recogida=document.getElementById("dirRecogida").value; pedido.entrega=document.getElementById("dirEntregaRec").value; pedido.nombreEntrega=document.getElementById("nomEntrega").value; pedido.tel=document.getElementById("telEntrega").value}
+  else{pedido.producto=document.getElementById("producto").value; pedido.negocio=document.getElementById("negocio").value; pedido.entrega=document.getElementById("dirEntregaCompra").value; pedido.nombreEntrega=document.getElementById("nomEntregaCompra").value; pedido.tel=document.getElementById("telEntregaCompra").value}
+  db.ref("pedidos").push(pedido).then(()=>alert("Pedido creado")).catch(e=>alert(e.message));
 }
 setTipo('recoger'); setModo('registrado');
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>
