@@ -1,9 +1,11 @@
+<!-- INICIO PARTE 1 -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Kigo xpress</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
 :root{--black:#0a0a0a;--border:#e5e7eb;--green:#10b981;--red:#ef4444;--yellow:#f59e0b}
@@ -39,7 +41,7 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 .rappi-card-vertical{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:12px;display:flex;gap:10px;align-items:center}
 .seguimiento-card{background:#fff;border:1.5px solid var(--border);border-radius:18px;padding:12px}
 .detalle-edit-card{background:#fff;border:2px solid #0a0a0a;border-radius:20px;padding:14px;margin-bottom:12px}
-#map{height:400px;width:100%;border-radius:14px;background:#f3f4f6} #mapRepa{height:420px;width:100%;border-radius:14px;background:#f3f4f6}
+#map{height:400px;width:100%;border-radius:14px;background:#e5e7eb;z-index:1} #mapRepa{height:420px;width:100%;border-radius:14px;background:#e5e7eb;z-index:1}
 #lockScreen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0a0a0a,#1f2937);display:flex;align-items:center;justify-content:center;padding:18px}
 .lock-card{background:#fff;border-radius:22px;padding:22px;width:100%;max-width:360px}
 .kigo-overlay{position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
@@ -53,11 +55,8 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 </head>
 <body>
 <div class="top"><div class="logo"><div class="logo-img" id="logoTop"><img id="logoImg" style="width:100%;height:100%;object-fit:cover;display:none"><span id="logoLetra">K</span></div><span id="appNombreTop">Kigo xpress</span></div><div style="display:flex;gap:8px;align-items:center"><div id="userLabel" style="display:none;background:#0a0a0a;color:#fff;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800"></div><button onclick="cerrarSesion()" style="width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:#fff;font-weight:800">X</button></div></div>
-
 <div id="lockScreen"><div class="lock-card"><div style="display:flex;gap:12px;align-items:center;margin-bottom:16px"><div id="lockLogoWrap" style="width:52px;height:52px;border-radius:14px;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden"><img id="lockLogoImg" style="width:100%;height:100%;object-fit:cover;display:none"><span id="lockLogoLetra" style="font-weight:800;font-size:20px">K</span></div><div><div style="font-weight:800;font-size:14px" id="appNombreLogin">KIGO XPRESS</div><div style="font-size:10px;color:#6b7280;font-weight:600">Panel repartidor</div></div></div><div class="group"><div class="label-row"><label>Usuario</label></div><div class="wrap"><input type="text" id="usuarioInput" placeholder="admin o nombre repartidor" autocomplete="off"></div></div><div class="group" style="margin-top:10px"><div class="label-row"><label>Contrasena / PIN</label></div><div class="wrap"><input type="password" id="pinInput" placeholder="PIN 4 digitos" autocomplete="off"></div></div><div id="pinError" style="display:none;background:#fee2e2;border:1px solid #fecaca;color:#991b1b;padding:8px 10px;border-radius:10px;font-size:10px;font-weight:700;margin-top:10px"></div><button onclick="validarPin()" style="width:100%;height:50px;background:#0a0a0a;color:#fff;border:none;border-radius:14px;font-weight:800;margin-top:14px">INGRESAR</button></div></div>
-
 <div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><div id="modalTitle" style="font-weight:800;font-size:14px;margin-bottom:8px">Aviso</div><div id="modalText" style="font-size:12px;color:#374151;margin-bottom:14px;line-height:1.4">Mensaje</div><div style="display:flex;gap:8px"><button id="modalCancel" class="kigo-btn kigo-btn-cancel" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">Confirmar</button></div></div></div>
-
 <div id="view-inicio" class="view active">
 <div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="font-weight:800;font-size:12px">REGISTRO DIARIO <span id="cliCountInfo" style="color:#10b981;font-size:10px"></span></div><button id="btnPromo" onclick="togglePromo()" style="height:28px;padding:0 10px;border-radius:20px;border:1.5px solid #e5e7eb;background:#fff;font-size:9px;font-weight:800">PROMO $0</button></div>
 <div class="group"><div class="label-row"><label>Fecha</label></div><div class="wrap"><input type="date" id="fecha"></div></div>
@@ -87,12 +86,12 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 </div>
 <div id="panelOpcionDireccion" style="display:none">
 <div class="group"><div class="label-row"><label>Nombre cliente nuevo</label></div><div class="wrap"><input type="text" id="nombreClienteNuevo" placeholder="Ej. Maria - Papeleria" oninput="limpiarOpcionClienteSiEscribe()"></div></div>
-<div class="group"><div class="label-row"><label>Direccion recogida - Google Maps</label></div><div class="wrap"><input type="text" id="direccionRecogidaManual" placeholder="Busca direccion Google..." oninput="limpiarOpcionClienteSiEscribe()"></div></div>
+<div class="group"><div class="label-row"><label>Direccion recogida - Manual</label></div><div class="wrap"><input type="text" id="direccionRecogidaManual" placeholder="Escribe direccion..." oninput="limpiarOpcionClienteSiEscribe()"></div></div>
 <div class="group"><div class="label-row"><label>Telefono recogida</label></div><div class="wrap"><input type="tel" id="telefonoRecogidaPedido" placeholder="Tel quien entrega"></div></div>
 </div>
 </div>
 <div class="group"><div class="label-row"><label>Nombre cliente entrega</label></div><div class="wrap"><input type="text" id="nombreEntregaPedido" placeholder="Ej. Juan Perez"></div></div>
-<div class="group"><div class="label-row"><label>Direccion entrega - Google Maps</label></div><div class="wrap"><input type="text" id="entregaDirRecoger" placeholder="Busca direccion de entrega Google..."></div></div>
+<div class="group"><div class="label-row"><label>Direccion entrega - Manual</label></div><div class="wrap"><input type="text" id="entregaDirRecoger" placeholder="Escribe direccion de entrega..."></div></div>
 <div class="group"><div class="label-row"><label>Telefono entrega</label></div><div class="wrap"><input type="tel" id="telefonoEntregaPedido" placeholder="Ej. 5521234567"></div></div>
 <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:14px;padding:12px;margin-top:12px">
 <div class="label-row"><label>Tiempo para que pase repartidor</label></div>
@@ -108,16 +107,16 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 <div style="font-size:9px;font-weight:800;color:#92400e;background:#fff;padding:6px 10px;border-radius:20px;border:1px solid #fde68a">Personalizado</div>
 </div>
 </div>
-<button onclick="cotizarRuta()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;margin-top:12px">COTIZAR SERVICIO - VER RUTA GOOGLE</button>
+<button onclick="cotizarRuta()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px;margin-top:12px">COTIZAR SERVICIO - CALCULAR KM</button>
 <button onclick="confirmarPedido()" style="width:100%;height:54px;margin-top:10px;background:#ef4444;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:13px">CONFIRMAR PEDIDO</button>
 </div>
 <div id="panelComprar" style="display:none">
 <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:14px;padding:10px;margin-bottom:12px">
 <div style="font-weight:800;font-size:10px;color:#166534;margin-bottom:8px">COMPRAR Y ENTREGAR - $40-45 + $5/km</div>
 <div class="group"><div class="label-row"><label>Que productos comprar</label></div><div class="wrap"><input type="text" id="queComprarProductos" placeholder="Ej. 2 cocas, 1 pan..."></div></div>
-<div class="group"><div class="label-row"><label>Donde comprar - Google Maps</label></div><div class="wrap"><input type="text" id="queComprar" placeholder="Ej. Oxxo centro, Soriana..."></div></div>
+<div class="group"><div class="label-row"><label>Donde comprar</label></div><div class="wrap"><input type="text" id="queComprar" placeholder="Ej. Oxxo centro, Soriana..."></div></div>
 <div class="group"><div class="label-row"><label>Cliente entrega - Buscar registrado</label></div><div class="wrap" style="overflow:visible"><input type="text" id="buscadorClienteCompra" placeholder="Escribe cliente registrado..." oninput="buscarClienteCompra()" onfocus="buscarClienteCompra()" autocomplete="off"><div id="listClienteCompra" style="position:absolute;left:0;right:0;top:100%;z-index:30;background:#fff;border:1.5px solid #0a0a0a;border-top:none;border-radius:0 0 14px 14px;max-height:300px;overflow:auto;display:none"></div></div><div id="clienteCompraSeleccionado" style="display:none;margin-top:8px;background:#fef3c7;border:1px solid #fde68a;border-radius:12px;padding:10px;font-size:11px;font-weight:700"></div></div>
-<div class="group"><div class="label-row"><label>Direccion entrega - Google Maps</label></div><div class="wrap"><input type="text" id="entregaDirComprar" placeholder="Busca direccion Google entrega..."></div></div>
+<div class="group"><div class="label-row"><label>Direccion entrega</label></div><div class="wrap"><input type="text" id="entregaDirComprar" placeholder="Direccion entrega..."></div></div>
 <div class="group"><div class="label-row"><label>Telefono entrega</label></div><div class="wrap"><input type="tel" id="telefonoEntregaCompra" placeholder="Ej. 5521234567"></div></div>
 <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:14px;padding:12px;margin-top:10px">
 <div class="label-row"><label>Tiempo compra</label></div>
@@ -129,11 +128,13 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 <div class="wrap" style="margin-top:8px"><input type="number" id="tiempoCompraInput" value="15" min="5" max="120"></div>
 </div>
 </div>
-<button onclick="cotizarRutaComprar()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px">COTIZAR RUTA GOOGLE</button>
+<button onclick="cotizarRutaComprar()" style="width:100%;height:46px;background:var(--black);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:11px">COTIZAR RUTA</button>
 <button onclick="confirmarPedidoCompra()" style="width:100%;height:54px;margin-top:10px;background:#10b981;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:13px">CONFIRMAR COMPRA</button>
 </div>
 </div>
 </div>
+<!-- FIN PARTE 1 -->
+<!-- INICIO PARTE 2 -->
 <div id="view-hoy" class="view"><div class="filtros-tipo"><button id="fHoyTodos" class="active" onclick="setFiltroHoy('todos')">Todos</button><button id="fHoyMandado" onclick="setFiltroHoy('Moto Mandado')">Mandados</button><button id="fHoyTransporte" onclick="setFiltroHoy('Moto Transporte')">Transporte</button></div><div class="card" style="margin-bottom:8px"><div style="font-size:10px;font-weight:800;margin-bottom:6px">HOY - <span id="hoyFecha"></span></div><div class="stats"><div class="stat"><span>Pedidos</span><strong id="hCount">0</strong></div><div class="stat"><span>Bruto</span><strong id="hBruto">$0</strong></div><div class="stat dark"><span>Repartidor</span><strong id="hRep">$0</strong></div><div class="stat red"><span>KIGO</span><strong id="hKigo">$0</strong></div></div></div><div class="table-wrap"><table><thead><tr><th>Hora</th><th>Cliente</th><th>Tipo</th><th>Bruto</th><th></th></tr></thead><tbody id="tbodyHoy"></tbody></table></div></div>
 <div id="view-historial" class="view"><div class="filtros-tipo"><button id="fHistTodos" class="active" onclick="setFiltroHistTipo('todos')">Todos</button><button id="fHistMandado" onclick="setFiltroHistTipo('Moto Mandado')">Mandados</button><button id="fHistTransporte" onclick="setFiltroHistTipo('Moto Transporte')">Transporte</button></div><div style="display:flex;gap:6px;margin-bottom:8px"><input type="date" id="filtroFecha" onchange="filtrarFecha()" style="flex:1;height:34px;border:1.5px solid var(--border);border-radius:10px;padding:0 10px;font-weight:600"><button onclick="limpiarFiltro()" style="height:34px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:10px;font-weight:800">Todos</button></div><div class="stats"><div class="stat"><span>Pedidos</span><strong id="sCount">0</strong></div><div class="stat"><span>Bruto</span><strong id="sBruto">$0</strong></div><div class="stat dark"><span>Repar.</span><strong id="sRep">$0</strong></div><div class="stat red"><span>KIGO</span><strong id="sKigo">$0</strong></div></div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Tipo</th><th>Bruto</th><th>KIGO</th><th>Repar.</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></div>
 
@@ -147,20 +148,20 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 <div style="font-size:8px;font-weight:800;color:#6b7280;margin-bottom:6px">CLIENTE / RECOGER DE:</div>
 <div id="detalleCliente" style="font-size:12px;font-weight:800">--</div>
 <div class="label-row" style="margin-top:8px"><label>Editar direccion recogida</label></div>
-<div class="wrap" style="margin-top:4px"><input type="text" id="inputDetalleRecoge" placeholder="Nueva direccion recogida Google..."></div>
-<div id="detalleHoraRecogida" style="display:none;margin-top:8px;background:#dcfce7;border:1px solid #86efac;color:#166534;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-block"></div>
+<div class="wrap" style="margin-top:4px"><input type="text" id="inputDetalleRecoge" placeholder="Nueva direccion recogida..."></div>
+<div id="detalleHoraRecogida" style="display:none;margin-top:8px;background:#dcfce7;border:1px solid #86efac;color:#166534;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:800"></div>
 </div>
 
 <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:14px;padding:12px;margin-bottom:10px">
 <div style="font-size:8px;font-weight:800;color:#92400e;margin-bottom:6px">ENTREGAR EN:</div>
 <div class="label-row"><label>Editar direccion entrega</label></div>
-<div class="wrap" style="margin-top:4px"><input type="text" id="inputDetalleEntrega" placeholder="Nueva direccion entrega Google..."></div>
+<div class="wrap" style="margin-top:4px"><input type="text" id="inputDetalleEntrega" placeholder="Nueva direccion entrega..."></div>
 <div class="label-row" style="margin-top:8px"><label>Nombre cliente entrega</label></div>
 <div class="wrap" style="margin-top:4px"><input type="text" id="inputDetalleNombreEntrega" placeholder="Nombre quien recibe"></div>
 </div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-<div><div style="font-size:8px;font-weight:800">KM / MIN GOOGLE</div><div id="detalleKm" style="font-size:11px;font-weight:800;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin-top:4px;text-align:center">--</div></div>
+<div><div style="font-size:8px;font-weight:800">KM / MIN</div><div id="detalleKm" style="font-size:11px;font-weight:800;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:8px;margin-top:4px;text-align:center">--</div></div>
 <div><div style="font-size:8px;font-weight:800">REPARTIDOR - CAMBIAR</div><div class="wrap" style="margin-top:4px"><select id="inputDetalleRepa" style="height:40px"></select></div></div>
 </div>
 
@@ -186,6 +187,8 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 <div id="view-clientes" class="view"><div style="display:flex;gap:6px;margin-bottom:8px"><button id="tabCliList" class="tab-cobro active" onclick="showTabClientes('lista')">Listado</button><button id="tabCliRank" class="tab-cobro" onclick="showTabClientes('ranking')">Ranking</button></div><div id="panelCliLista"><div class="card" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800;font-size:12px">CLIENTES</div><input type="text" id="buscCli" placeholder="Buscar" oninput="renderClientes()" style="height:30px;width:120px;border:1.5px solid var(--border);border-radius:10px;padding:0 10px;font-size:10px"></div><div id="resumenClientes" style="margin-top:8px;font-size:10px;font-weight:700"></div></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Direccion</th><th>Total</th><th></th></tr></thead><tbody id="tbodyClientes"></tbody></table></div></div></div><div id="panelCliRanking" style="display:none"><div class="card"><div class="table-wrap"><table><thead><tr><th>#</th><th>Cliente</th><th>Pedidos</th></tr></thead><tbody id="tbodyRanking"></tbody></table></div></div></div></div>
 
 <div id="view-estadisticas" class="view"><div style="display:flex;gap:6px;margin-bottom:8px"><button id="tabEstMes" class="tab-cobro active" onclick="showTabEst('mes')">Por mes</button><button id="tabEstCal" class="tab-cobro" onclick="showTabEst('cal')">Calendario</button></div><div id="panelEstMes"><div class="card" style="margin-bottom:8px"><div style="font-weight:800;font-size:12px;margin-bottom:6px">CONTROL POR MES</div><div class="wrap"><input type="month" id="estMes" onchange="renderEstadisticas()"></div></div><div id="resumenEstMes"></div></div><div id="panelEstCal" style="display:none"><div class="card" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800;font-size:12px" id="tituloCal">CALENDARIO</div><div style="display:flex;gap:6px"><button onclick="cambiarCal(-1)" style="width:32px;height:32px;border-radius:10px;border:1px solid var(--border);background:#fff"> < </button><button onclick="cambiarCal(1)" style="width:32px;height:32px;border-radius:10px;border:1px solid var(--border);background:#fff"> > </button></div></div></div><div class="card"><div id="gridCal" class="cal-grid"></div></div></div></div>
+<!-- FIN PARTE 2 -->
+<!-- INICIO PARTE 3 -->
 <div id="view-repartidor" class="view">
 <audio id="audioNuevoPedido" preload="auto"><source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg"></audio>
 
@@ -249,13 +252,11 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 </div>
 </div>
 
-<!-- MAPA REPA CORREGIDO -->
 <div class="card" style="padding:6px;margin-bottom:10px;position:relative">
 <div id="mapRepa"></div>
 <div style="position:absolute;top:10px;right:10px;z-index:10"><button onclick="centerMyLocation()" style="width:42px;height:42px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.1);font-weight:800">M</button></div>
 </div>
 
-<!-- TARJETA MINIMIZADA - PRECIO VERDE NEON ESQUINA DERECHA -->
 <div id="cardPedidoModerna" style="display:none;background:#fff;border-radius:16px;padding:10px;box-shadow:0 8px 24px rgba(0,0,0,.08);border:1px solid #f0f0f0;margin-bottom:12px">
     <div id="boxCanceladoRepa" style="display:none;background:#fee2e2;border:2px solid #ef4444;border-radius:14px;padding:10px;margin-bottom:10px;text-align:center"><div style="font-size:13px;font-weight:800;color:#991b1b">PEDIDO CANCELADO POR ADMIN</div><div id="txtCanceladoMotivo" style="font-size:8px;color:#7f1d1d;margin-top:4px;background:#fff;padding:4px 8px;border-radius:8px"></div><button onclick="aceptarCancelacionRepa()" style="width:100%;height:42px;background:#991b1b;color:#fff;border:none;border-radius:12px;font-weight:800;margin-top:8px;font-size:10px">ACEPTAR - ELIMINAR</button></div>
     <div id="boxNormalRepa">
@@ -323,6 +324,8 @@ table{width:100%;border-collapse:collapse;font-size:11px} th{font-size:9px;color
 <button id="b-repartidor" onclick="showView('repartidor')"><span>R</span><span>REPA</span></button>
 <button id="b-ajustes" onclick="showView('ajustes')" style="display:none"><span>A</span><span>AJUSTES</span></button>
 </div>
+<!-- FIN PARTE 3 -->
+<!-- INICIO PARTE 4 - MAPA CORREGIDO CON FALLBACK OPENSTREETMAP -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, onValue, set, push, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -353,6 +356,75 @@ let tipoPedidoActual='recoger';
 let ultimoPedidosKeys=new Set();
 let adminRepasSeleccionados=new Set();
 let myCurrentPos=null, destinoActualRuta=null;
+let leafletMap=null, leafletMapRepa=null, leafletMarkers=[], leafletMarkersRepa=[], leafletLine=null, leafletLineRepa=null;
+let usandoFallback=false;
+
+window.gm_authFailure=function(){
+ console.log('Google Maps auth failure - usando fallback');
+ activarFallbackMaps();
+}
+
+function activarFallbackMaps(){
+ if(usandoFallback) return;
+ usandoFallback=true;
+ setTimeout(()=>{ initLeafletMaps(); },300);
+ let info=document.getElementById('infoRuta');
+ if(info){ info.style.display='block'; info.innerHTML='MODO OFFLINE - Mapa OpenStreetMap activo - Sin costo Google'; }
+}
+
+function initLeafletMaps(){
+ if(!window.L) { setTimeout(initLeafletMaps,400); return; }
+ try{
+  if(!leafletMap){
+   let mapDiv=document.getElementById('map');
+   if(mapDiv){ mapDiv.innerHTML=''; leafletMap=L.map('map').setView([21.1556,-100.9343],14); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19, attribution:'OSM'}).addTo(leafletMap); }
+  }
+  if(!leafletMapRepa){
+   let mapDivRepa=document.getElementById('mapRepa');
+   if(mapDivRepa){ mapDivRepa.innerHTML=''; leafletMapRepa=L.map('mapRepa').setView([21.1556,-100.9343],14); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19, attribution:'OSM'}).addTo(leafletMapRepa); }
+  }
+ }catch(e){ console.log('leaflet error',e); }
+}
+
+function pintarLeaflet(origen,destino,esRepa){
+ try{
+  if(esRepa){
+   if(!leafletMapRepa) return;
+   leafletMarkersRepa.forEach(m=>leafletMapRepa.removeLayer(m)); leafletMarkersRepa=[];
+   if(leafletLineRepa) leafletMapRepa.removeLayer(leafletLineRepa);
+   if(origen){ let m=L.marker([origen.lat, origen.lng]).addTo(leafletMapRepa).bindPopup('Origen'); leafletMarkersRepa.push(m); }
+   if(destino){ let m=L.marker([destino.lat, destino.lng]).addTo(leafletMapRepa).bindPopup('Destino'); leafletMarkersRepa.push(m); }
+   if(origen&&destino){ leafletLineRepa=L.polyline([[origen.lat,origen.lng],[destino.lat,destino.lng]],{color:'#0a0a0a',weight:5}).addTo(leafletMapRepa); leafletMapRepa.fitBounds([[origen.lat,origen.lng],[destino.lat,destino.lng]],{padding:[30,30]}); }
+   else if(origen){ leafletMapRepa.setView([origen.lat,origen.lng],15); }
+   else if(destino){ leafletMapRepa.setView([destino.lat,destino.lng],15); }
+  } else {
+   if(!leafletMap) return;
+   leafletMarkers.forEach(m=>leafletMap.removeLayer(m)); leafletMarkers=[];
+   if(leafletLine) leafletMap.removeLayer(leafletLine);
+   if(origen){ let m=L.marker([origen.lat, origen.lng]).addTo(leafletMap).bindPopup('Recogida'); leafletMarkers.push(m); }
+   if(destino){ let m=L.marker([destino.lat, destino.lng]).addTo(leafletMap).bindPopup('Entrega'); leafletMarkers.push(m); }
+   if(origen&&destino){ leafletLine=L.polyline([[origen.lat,origen.lng],[destino.lat,destino.lng]],{color:'#10b981',weight:5}).addTo(leafletMap); leafletMap.fitBounds([[origen.lat,origen.lng],[destino.lat,destino.lng]],{padding:[30,30]}); let dist=calcularDistancia(origen,destino); let km=dist.toFixed(1); let costo=calcularCostoPorKm(km); let info=document.getElementById('infoRuta'); if(info){ info.style.display='block'; info.innerHTML=`OSM: ${km} km - $${costo} - Recoger ${tiempoRecogidaMin}min`; } ultimaCotizacionActualizarFallback(origen,destino,km,costo); }
+   else if(origen){ leafletMap.setView([origen.lat,origen.lng],15); }
+   else if(destino){ leafletMap.setView([destino.lat,destino.lng],15); }
+  }
+ }catch(e){}
+}
+function calcularDistancia(o,d){ let R=6371; let dLat=(d.lat-o.lat)*Math.PI/180; let dLon=(d.lng-o.lng)*Math.PI/180; let a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(o.lat*Math.PI/180)*Math.cos(d.lat*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2); let c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); return R*c; }
+function ultimaCotizacionActualizarFallback(orig,dest,km,costo){
+ let nombreRec = clientePedidoSeleccionado || document.getElementById('nombreClienteNuevo')?.value || 'Recogida';
+ let entregaTxt = document.getElementById('entregaDirRecoger')?.value || document.getElementById('entregaDirComprar')?.value || '';
+ let nombreEnt = document.getElementById('nombreEntregaPedido')?.value || '';
+ let telRec = document.getElementById('telefonoRecogidaPedido')?.value || '';
+ if(!entregaTxt && tipoPedidoActual==='comprar') entregaTxt=document.getElementById('entregaDirComprar').value;
+ if(tipoPedidoActual==='comprar'){
+  let prod=document.getElementById('queComprarProductos')?.value || '';
+  let donde=document.getElementById('queComprar')?.value || '';
+  ultimaCotizacion={cliente:donde||'Compra', nombreEntrega:clienteCompraSeleccionado||'', dirRecogida:donde, productos:prod, dirRecogidaObj:{direccion:donde, lat:orig.lat, lng:orig.lng}, entrega:entregaTxt, km:km, min:Math.round(km*2), lat1:orig.lat, lng1:orig.lng, lat2:dest.lat, lng2:dest.lng, costoSugerido:costo, sinRuta:false, esCompra:true, tiempoRecogida:tiempoCompraMin};
+ } else {
+  ultimaCotizacion={cliente:nombreRec, nombreEntrega:nombreEnt, dirRecogida:nombreRec, dirRecogidaObj:{direccion:nombreRec, lat:orig.lat, lng:orig.lng}, entrega:entregaTxt, km:km, min:Math.round(km*2), lat1:orig.lat, lng1:orig.lng, lat2:dest.lat, lng2:dest.lng, costoSugerido:costo, sinRuta:false, telefonoRecogida:telRec, tiempoRecogida:tiempoRecogidaMin};
+ }
+ document.getElementById('botonesDespuesCotizar').style.display='flex';
+}
 
 function getEstadoStyle(etapa){
  let e=(etapa||'pendiente').toLowerCase();
@@ -466,94 +538,98 @@ window.setTiempoCompra=function(min){
  let act=document.getElementById('tc'+min); if(act){ act.classList.add('active'); act.style.background='#0a0a0a'; act.style.color='#fff'; }
 }
 
-// MAPA FIX - SIN SymbolPath
+// MAPA CORREGIDO CON FALLBACK
 function initMapReal(){
- if(!window.google ||!google.maps){ setTimeout(initMapReal,500); return; }
+ if(usandoFallback){ initLeafletMaps(); return; }
+ if(!window.google ||!google.maps){
+   setTimeout(()=>{ if(!window.google ||!google.maps){ activarFallbackMaps(); } else initMapReal(); },1500);
+   return;
+ }
  try{
   if(!geocoder) geocoder=new google.maps.Geocoder();
   if(!map){
-   map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1556,lng:-100.9343},zoom:14, disableDefaultUI:false});
+   map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1556,lng:-100.9343},zoom:14});
    dirServ=new google.maps.DirectionsService();
    dirRend=new google.maps.DirectionsRenderer({map:map, suppressMarkers:true, polylineOptions:{strokeColor:'#10b981',strokeWeight:5}});
   }
   if(!mapRepa){
-   mapRepa=new google.maps.Map(document.getElementById('mapRepa'),{center:{lat:21.1556,lng:-100.9343},zoom:14, disableDefaultUI:false});
+   mapRepa=new google.maps.Map(document.getElementById('mapRepa'),{center:{lat:21.1556,lng:-100.9343},zoom:14});
    dirServRepa=new google.maps.DirectionsService();
    dirRendRepa=new google.maps.DirectionsRenderer({map:mapRepa, suppressMarkers:true, polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}});
   }
   initPlaces();
- }catch(e){ console.log('map init error',e); setTimeout(initMapReal,800); }
+ }catch(e){ console.log('map init error',e); activarFallbackMaps(); }
 }
 function initPlaces(){
+ if(usandoFallback) return;
  if(!window.google ||!google.maps.places) { setTimeout(initPlaces,600); return; }
  let opts = { componentRestrictions: { country: 'mx' } };
  let elRecogida = document.getElementById('direccionRecogidaManual');
  let elEntrega = document.getElementById('entregaDirRecoger');
  let elEntregaCompra = document.getElementById('entregaDirComprar');
  let elDondeComprar = document.getElementById('queComprar');
- let elDetalleRecoge = document.getElementById('inputDetalleRecoge');
- let elDetalleEntrega = document.getElementById('inputDetalleEntrega');
  if(elRecogida &&!elRecogida.dataset.ac){
-   let ac = new google.maps.places.Autocomplete(elRecogida, opts);
-   ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ recogidaCoordsTemp = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; pintarPuntoRecogida(recogidaCoordsTemp); intentarAutoRuta(); } });
-   elRecogida.dataset.ac='1';
+   try{ let ac = new google.maps.places.Autocomplete(elRecogida, opts); ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ recogidaCoordsTemp = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; pintarPuntoRecogida(recogidaCoordsTemp); intentarAutoRuta(); } }); elRecogida.dataset.ac='1'; }catch(e){}
  }
  if(elEntrega &&!elEntrega.dataset.ac){
-   let ac = new google.maps.places.Autocomplete(elEntrega, opts);
-   ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ entregaCoordsTemp = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; intentarAutoRuta(); } });
-   elEntrega.dataset.ac='1';
+   try{ let ac = new google.maps.places.Autocomplete(elEntrega, opts); ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ entregaCoordsTemp = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; intentarAutoRuta(); } }); elEntrega.dataset.ac='1'; }catch(e){}
  }
  if(elDondeComprar &&!elDondeComprar.dataset.ac){
-   let ac = new google.maps.places.Autocomplete(elDondeComprar, opts);
-   ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ compraOrigenCoords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; intentarAutoRutaCompra(); } });
-   elDondeComprar.dataset.ac='1';
+   try{ let ac = new google.maps.places.Autocomplete(elDondeComprar, opts); ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ compraOrigenCoords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; intentarAutoRutaCompra(); } }); elDondeComprar.dataset.ac='1'; }catch(e){}
  }
  if(elEntregaCompra &&!elEntregaCompra.dataset.ac){
-   let ac = new google.maps.places.Autocomplete(elEntregaCompra, opts);
-   ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ compraEntregaCoords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; entregaCoordsTemp = compraEntregaCoords; intentarAutoRutaCompra(); } });
-   elEntregaCompra.dataset.ac='1';
- }
- if(elDetalleRecoge &&!elDetalleRecoge.dataset.ac){
-   let ac = new google.maps.places.Autocomplete(elDetalleRecoge, opts);
-   ac.addListener('place_changed', ()=>{ let p=ac.getPlace(); if(p.geometry){ elDetalleRecoge.dataset.lat=p.geometry.location.lat(); elDetalleRecoge.dataset.lng=p.geometry.location.lng(); } });
-   elDetalleRecoge.dataset.ac='1';
- }
- if(elDetalleEntrega &&!elDetalleEntrega.dataset.ac){
-   let ac = new google.maps.places.Autocomplete(elDetalleEntrega, opts);
-   ac.addListener('place_changed', ()=>{ let p=ac.getPlace(); if(p.geometry){ elDetalleEntrega.dataset.lat=p.geometry.location.lat(); elDetalleEntrega.dataset.lng=p.geometry.location.lng(); } });
-   elDetalleEntrega.dataset.ac='1';
+   try{ let ac = new google.maps.places.Autocomplete(elEntregaCompra, opts); ac.addListener('place_changed', ()=>{ let place = ac.getPlace(); if(place.geometry){ compraEntregaCoords = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }; entregaCoordsTemp = compraEntregaCoords; intentarAutoRutaCompra(); } }); elEntregaCompra.dataset.ac='1'; }catch(e){}
  }
 }
-function pintarPuntoRecogida(coords){ if(!map ||!coords) return; map.setCenter(coords); map.setZoom(15); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:coords,map:map}); markers.push(m1); }
-function pintarSoloEntrega(coords){ if(!map ||!coords) return; if(!recogidaCoordsTemp){ map.setCenter(coords); map.setZoom(15); markers.forEach(m=>m.setMap(null)); markers=[]; let m2=new google.maps.Marker({position:coords,map:map}); markers=[m2]; } }
+function pintarPuntoRecogida(coords){
+ if(usandoFallback){ pintarLeaflet(coords,null,false); return; }
+ if(!map ||!coords) return; map.setCenter(coords); map.setZoom(15); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:coords,map:map}); markers.push(m1);
+}
+function pintarSoloEntrega(coords){
+ if(usandoFallback){ pintarLeaflet(null,coords,false); return; }
+ if(!map ||!coords) return; if(!recogidaCoordsTemp){ map.setCenter(coords); map.setZoom(15); markers.forEach(m=>m.setMap(null)); markers=[]; let m2=new google.maps.Marker({position:coords,map:map}); markers=[m2]; }
+}
 function intentarAutoRuta(){
+ if(usandoFallback){
+  if(recogidaCoordsTemp && entregaCoordsTemp) pintarLeaflet(recogidaCoordsTemp,entregaCoordsTemp,false);
+  else if(entregaCoordsTemp) pintarLeaflet(null,entregaCoordsTemp,false);
+  else if(recogidaCoordsTemp) pintarLeaflet(recogidaCoordsTemp,null,false);
+  return;
+ }
  if(!recogidaCoordsTemp ||!entregaCoordsTemp) { if(entregaCoordsTemp &&!recogidaCoordsTemp) pintarSoloEntrega(entregaCoordsTemp); if(recogidaCoordsTemp &&!entregaCoordsTemp) pintarPuntoRecogida(recogidaCoordsTemp); return; }
  if(!dirServ) return;
  dirServ.route({origin:recogidaCoordsTemp, destination:entregaCoordsTemp, travelMode:'DRIVING'},(r,s)=>{
   if(s==='OK'){
    dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:recogidaCoordsTemp,map:map}); let m2=new google.maps.Marker({position:entregaCoordsTemp,map:map}); markers=[m1,m2]; let leg=r.routes[0].legs[0]; let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let costo=calcularCostoPorKm(km); let info=document.getElementById('infoRuta'); if(info){ info.style.display='block'; info.innerHTML=`AUTO GOOGLE: ${km} km - ${min} min - $${costo} - Recoger en ${tiempoRecogidaMin}min`; } let nombreRec = clientePedidoSeleccionado || document.getElementById('nombreClienteNuevo')?.value || 'Recogida'; let entregaTxt = document.getElementById('entregaDirRecoger')?.value || ''; let nombreEnt = document.getElementById('nombreEntregaPedido')?.value || ''; let telRec = document.getElementById('telefonoRecogidaPedido')?.value || ''; ultimaCotizacion={cliente:nombreRec, nombreEntrega:nombreEnt, dirRecogida:nombreRec, dirRecogidaObj:{direccion:nombreRec, lat:recogidaCoordsTemp.lat, lng:recogidaCoordsTemp.lng}, entrega:entregaTxt, km:km, min:min, lat1:recogidaCoordsTemp.lat, lng1:recogidaCoordsTemp.lng, lat2:entregaCoordsTemp.lat, lng2:entregaCoordsTemp.lng, costoSugerido:costo, sinRuta:false, telefonoRecogida:telRec, tiempoRecogida:tiempoRecogidaMin}; document.getElementById('botonesDespuesCotizar').style.display='flex'; }
+  else { pintarLeaflet(recogidaCoordsTemp,entregaCoordsTemp,false); }
  });
 }
 function intentarAutoRutaCompra(){
+ if(usandoFallback){ if(compraOrigenCoords && compraEntregaCoords) pintarLeaflet(compraOrigenCoords,compraEntregaCoords,false); return; }
  if(!compraOrigenCoords ||!compraEntregaCoords) return;
  if(!dirServ) return;
  dirServ.route({origin:compraOrigenCoords, destination:compraEntregaCoords, travelMode:'DRIVING'},(r,s)=>{
   if(s==='OK'){
    dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:compraOrigenCoords,map:map}); let m2=new google.maps.Marker({position:compraEntregaCoords,map:map}); markers=[m1,m2]; let leg=r.routes[0].legs[0]; let km=(leg.distance.value/1000).toFixed(1); let min=Math.round(leg.duration.value/60); let costo=calcularCostoCompra(km); let info=document.getElementById('infoRuta'); if(info){ info.style.display='block'; info.innerHTML=`COMPRA GOOGLE: ${km} km - ${min} min - $${costo} - Recoger en ${tiempoCompraMin}min`; } let prod=document.getElementById('queComprarProductos')?.value || ''; let donde=document.getElementById('queComprar')?.value || ''; let entregaTxt=document.getElementById('entregaDirComprar')?.value || ''; ultimaCotizacion={cliente:donde||'Compra', nombreEntrega:clienteCompraSeleccionado||'', dirRecogida:donde, productos:prod, dirRecogidaObj:{direccion:donde, lat:compraOrigenCoords.lat, lng:compraOrigenCoords.lng}, entrega:entregaTxt, km:km, min:min, lat1:compraOrigenCoords.lat, lng1:compraOrigenCoords.lng, lat2:compraEntregaCoords.lat, lng2:compraEntregaCoords.lng, costoSugerido:costo, sinRuta:false, esCompra:true, tiempoRecogida:tiempoCompraMin}; document.getElementById('botonesDespuesCotizar').style.display='flex'; }
+  else { pintarLeaflet(compraOrigenCoords,compraEntregaCoords,false); }
  });
 }
 function calcularCostoCompra(km){ let k=parseFloat(km); if(isNaN(k)) return 42; let base=42; let radio=tarifasKmConfig.centroRadio||1.5; if(k<=radio) return base; let costo=base + (k-radio)*5; return Math.round(costo); }
 
-setTimeout(initMapReal,600); setTimeout(initMapReal,1500); setTimeout(initPlaces,2200);
+setTimeout(()=>{ if(!window.google ||!google.maps){ activarFallbackMaps(); } else { initMapReal(); } },1200);
+setTimeout(initMapReal,1800); setTimeout(initPlaces,2500);
 window.centerMyLocation=function(){
  if(!navigator.geolocation) return;
  navigator.geolocation.getCurrentPosition(pos=>{
   let p={lat:pos.coords.latitude,lng:pos.coords.longitude};
-  if(mapRepa){ mapRepa.setCenter(p); mapRepa.setZoom(17); if(myMarker) myMarker.setMap(null); myMarker=new google.maps.Marker({position:p,map:mapRepa}); }
+  if(usandoFallback){ if(leafletMapRepa){ leafletMapRepa.setView([p.lat,p.lng],17); L.marker([p.lat,p.lng]).addTo(leafletMapRepa); } }
+  else { if(mapRepa){ mapRepa.setCenter(p); mapRepa.setZoom(17); if(myMarker) myMarker.setMap(null); myMarker=new google.maps.Marker({position:p,map:mapRepa}); } }
  },null,{enableHighAccuracy:true});
 }
 function actualizarRutaTiempoReal(){
- if(!myCurrentPos ||!destinoActualRuta ||!dirServRepa ||!mapRepa) return;
+ if(!myCurrentPos ||!destinoActualRuta) return;
+ if(usandoFallback){ pintarLeaflet(myCurrentPos,destinoActualRuta,true); return; }
+ if(!dirServRepa ||!mapRepa) return;
  dirServRepa.route({origin:myCurrentPos, destination:destinoActualRuta, travelMode:'DRIVING'},(r,s)=>{
    if(s==='OK'){ dirRendRepa.setDirections(r); dirRendRepa.setMap(mapRepa); }
  });
@@ -563,8 +639,8 @@ function startTracking(){
  watchId=navigator.geolocation.watchPosition(pos=>{
   let p={lat:pos.coords.latitude,lng:pos.coords.longitude};
   myCurrentPos=p;
-  if(posMarkerRepa) posMarkerRepa.setPosition(p); else { posMarkerRepa=new google.maps.Marker({position:p,map:mapRepa}); }
-  if(mapRepa) mapRepa.panTo(p);
+  if(usandoFallback){ if(leafletMapRepa){ leafletMapRepa.panTo([p.lat,p.lng]); } }
+  else { if(posMarkerRepa) posMarkerRepa.setPosition(p); else { posMarkerRepa=new google.maps.Marker({position:p,map:mapRepa}); } if(mapRepa) mapRepa.panTo(p); }
   if(destinoActualRuta){ actualizarRutaTiempoReal(); }
  },null,{enableHighAccuracy:true,maximumAge:0,timeout:10000});
 }
@@ -658,8 +734,21 @@ function getFeeForItem(v){ if(v.feeKigo!=null &&!isNaN(v.feeKigo)) return v.feeK
 function deudaItems(arr){ return arr.reduce((a,v)=>a+(v.feeKigo!=null?v.feeKigo:getFeeForItem(v)),0); }
 function fmt(n){ return (n||0).toLocaleString('es-CO'); }
 function todayISO(){ let d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function geo(dir){ return new Promise(r=>{ if(!geocoder){ setTimeout(()=>geo(dir).then(r),300); return; } geocoder.geocode({address:dir+', Dolores Hidalgo, Mexico'},(re,s)=>{ if(s==='OK'&&re[0]){ let l=re[0].geometry.location; r({lat:l.lat(),lng:l.lng()}); } else r(null); }); }); }
-function routeGoogle(o,d){ return new Promise(res=>{ if(!dirServ){ setTimeout(()=>routeGoogle(o,d).then(res),300); return; } dirServ.route({origin:o,destination:d,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; res({km:(leg.distance.value/1000).toFixed(1), min:Math.round(leg.duration.value/60)}); } else res(null); }); }); }
+async function geo(dir){
+ if(usandoFallback){
+   try{
+     let res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(dir+', Dolores Hidalgo, Mexico')}`);
+     let data=await res.json();
+     if(data && data[0]) return {lat:parseFloat(data[0].lat), lng:parseFloat(data[0].lon)};
+   }catch(e){}
+   return null;
+ }
+ return new Promise(r=>{ if(!geocoder){ setTimeout(()=>geo(dir).then(r),300); return; } geocoder.geocode({address:dir+', Dolores Hidalgo, Mexico'},(re,s)=>{ if(s==='OK'&&re[0]){ let l=re[0].geometry.location; r({lat:l.lat(),lng:l.lng()}); } else r(null); }); });
+}
+function routeGoogle(o,d){
+ if(usandoFallback) return Promise.resolve({km:calcularDistancia(o,d).toFixed(1), min:Math.round(calcularDistancia(o,d)*2)});
+ return new Promise(res=>{ if(!dirServ){ setTimeout(()=>routeGoogle(o,d).then(res),300); return; } dirServ.route({origin:o,destination:d,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ let leg=r.routes[0].legs[0]; res({km:(leg.distance.value/1000).toFixed(1), min:Math.round(leg.duration.value/60)}); } else res(null); }); });
+}
 
 window.validarPin=function(){
  let usuarioRaw = document.getElementById('usuarioInput')?.value.trim() || '';
@@ -741,14 +830,14 @@ window.cotizarRuta=async function(){
   if(!dirManual) return mostrarAviso('Escribe direccion manual','Falta direccion');
   nombreClienteFinal=nombreNuevo||'Cliente nuevo'; dirRecogidaTxt=dirManual;
   let coords=recogidaCoordsTemp || await geo(dirManual);
-  if(!coords){ mostrarAviso('Direccion no encontrada Google','Error'); return; }
+  if(!coords){ mostrarAviso('Direccion no encontrada','Error'); return; }
   recogidaCoordsTemp=coords; dirRecogida={direccion:dirManual, lat:coords.lat, lng:coords.lng};
  }
  let entregaTxt=document.getElementById('entregaDirRecoger').value.trim();
  let nombreEntrega = document.getElementById('nombreEntregaPedido')?.value.trim() || '';
  if(!entregaTxt &&!entregaCoordsTemp) return mostrarAviso('Falta direccion de entrega','Error');
  let dest=entregaCoordsTemp || await geo(entregaTxt);
- if(!dest){ mostrarAviso('Entrega no encontrada Google','Error'); return; }
+ if(!dest){ mostrarAviso('Entrega no encontrada','Error'); return; }
  entregaCoordsTemp=dest;
  intentarAutoRuta();
 };
@@ -758,12 +847,12 @@ window.cotizarRutaComprar=async function(){
  if(!donde||!ent) return mostrarAviso('Falta donde comprar y entrega','Error');
  let orig=compraOrigenCoords || await geo(donde);
  let dest=compraEntregaCoords || entregaCoordsTemp || await geo(ent);
- if(!orig ||!dest) return mostrarAviso('No se encontro direccion Google','Error');
+ if(!orig ||!dest) return mostrarAviso('No se encontro direccion','Error');
  compraOrigenCoords=orig; compraEntregaCoords=dest; entregaCoordsTemp=dest;
  intentarAutoRutaCompra();
 };
-window.enviarCotizacionCliente=function(){ if(!ultimaCotizacion) return mostrarAviso('Cotiza primero','Error'); let c=ultimaCotizacion; let texto=`KIGO - COTIZACION GOOGLE: Recoger: ${c.dirRecogida} Entregar: ${c.entrega} ${c.km} km - ${c.min} min Costo: $${c.costoSugerido} - Recoger en ${c.tiempoRecogida||20}min`; window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank'); };
-window.restaurarCotizacion=function(){ if(dirRend) dirRend.setDirections({routes:[]}); markers.forEach(m=>m.setMap(null)); markers=[]; document.getElementById('infoRuta').style.display='none'; document.getElementById('botonesDespuesCotizar').style.display='none'; document.getElementById('entregaDirRecoger').value=''; document.getElementById('entregaDirComprar').value=''; document.getElementById('queComprar').value=''; document.getElementById('queComprarProductos').value=''; document.getElementById('nombreEntregaPedido').value=''; document.getElementById('telefonoEntregaPedido').value=''; let telR=document.getElementById('telefonoRecogidaPedido'); if(telR) telR.value=''; document.getElementById('buscadorClientePedido').value=''; document.getElementById('buscadorClienteCompra').value=''; document.getElementById('nombreClienteNuevo').value=''; document.getElementById('direccionRecogidaManual').value=''; let box=document.getElementById('clienteSeleccionadoPedido'); if(box) box.style.display='none'; let box2=document.getElementById('clienteCompraSeleccionado'); if(box2) box2.style.display='none'; clientePedidoSeleccionado=null; clienteCompraSeleccionado=null; ultimaCotizacion=null; entregaCoordsTemp=null; recogidaCoordsTemp=null; compraOrigenCoords=null; compraEntregaCoords=null; };
+window.enviarCotizacionCliente=function(){ if(!ultimaCotizacion) return mostrarAviso('Cotiza primero','Error'); let c=ultimaCotizacion; let texto=`KIGO - COTIZACION: Recoger: ${c.dirRecogida} Entregar: ${c.entrega} ${c.km} km - $${c.costoSugerido} - Recoger en ${c.tiempoRecogida||20}min`; window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`,'_blank'); };
+window.restaurarCotizacion=function(){ if(dirRend) dirRend.setDirections({routes:[]}); markers.forEach(m=>m.setMap(null)); markers=[]; if(leafletLine) { try{leafletMap.removeLayer(leafletLine);}catch(e){} leafletLine=null; } leafletMarkers.forEach(m=>{ try{leafletMap.removeLayer(m);}catch(e){} }); leafletMarkers=[]; document.getElementById('infoRuta').style.display='none'; document.getElementById('botonesDespuesCotizar').style.display='none'; document.getElementById('entregaDirRecoger').value=''; document.getElementById('entregaDirComprar').value=''; document.getElementById('queComprar').value=''; document.getElementById('queComprarProductos').value=''; document.getElementById('nombreEntregaPedido').value=''; document.getElementById('telefonoEntregaPedido').value=''; let telR=document.getElementById('telefonoRecogidaPedido'); if(telR) telR.value=''; document.getElementById('buscadorClientePedido').value=''; document.getElementById('buscadorClienteCompra').value=''; document.getElementById('nombreClienteNuevo').value=''; document.getElementById('direccionRecogidaManual').value=''; let box=document.getElementById('clienteSeleccionadoPedido'); if(box) box.style.display='none'; let box2=document.getElementById('clienteCompraSeleccionado'); if(box2) box2.style.display='none'; clientePedidoSeleccionado=null; clienteCompraSeleccionado=null; ultimaCotizacion=null; entregaCoordsTemp=null; recogidaCoordsTemp=null; compraOrigenCoords=null; compraEntregaCoords=null; };
 window.confirmarPedido=async function(){
  if(!ultimaCotizacion) return mostrarAviso('Cotiza primero en el mapa','Falta');
  let entTxt=document.getElementById('entregaDirRecoger').value || ultimaCotizacion.entrega;
@@ -775,7 +864,7 @@ window.confirmarPedido=async function(){
  let tiempoMin=tiempoRecogidaMin||parseInt(document.getElementById('tiempoRecogidaInput').value)||20;
  let horaRec=calcularHoraRecogida(tiempoMin);
  if(!repaDestino) return mostrarAviso('Falta repartidor','Error');
- confirmarAccion(`Enviar pedido de ${ultimaCotizacion.cliente} a ${repaDestino} por $${ultimaCotizacion.costoSugerido}? Recoger ${horaRec.texto}`, 'Confirmar Google', async ()=>{
+ confirmarAccion(`Enviar pedido de ${ultimaCotizacion.cliente} a ${repaDestino} por $${ultimaCotizacion.costoSugerido}? Recoger ${horaRec.texto}`, 'Confirmar', async ()=>{
   let pedido={cliente:ultimaCotizacion.cliente, nombreEntrega:nombreEnt, dirRecogida:ultimaCotizacion.dirRecogida, lat1:ultimaCotizacion.lat1, lng1:ultimaCotizacion.lng1, entrega:entTxt, lat2:dest.lat, lng2:dest.lng, km:ultimaCotizacion.km, min:ultimaCotizacion.min, costoSugerido:ultimaCotizacion.costoSugerido, etapa:'pendiente', estado:'pendiente', repaAsignado:repaDestino, telefono:tel, telefonoRecogida:telRec, ts:Date.now(), iso:todayISO(), sinRuta:false, tiempoRecogida:tiempoMin, horaRecoger:horaRec.texto, horaRecogerISO:horaRec.iso};
   let nr=push(ref(db,'kigoPedidosLive')); await set(nr, pedido); mostrarAviso(`Enviado a ${repaDestino} - ${horaRec.texto}`,'Enviado'); restaurarCotizacion();
  }, 'Enviar', 'green');
@@ -822,7 +911,6 @@ window.actualizarEstadoVisual=function(etapa){
  bAceptar.style.display='none'; bCamino.style.display='none'; bRecogido.style.display='none'; bVoy.style.display='none'; bEnt.style.display='none'; fin.style.display='none';
  let esperaIds=['btnEspera2','btnEspera3','btnEspera4'];
  esperaIds.forEach(id=>{ let el=document.getElementById(id); if(el) el.style.display='none'; });
- document.querySelectorAll('.btn-espera').forEach(b=>{ if(b.id!=='' && b.id!=='btnAceptar') {} });
  estadoTxt.innerText=estilo.txt; estadoTxt.style.background=estilo.bg; estadoTxt.style.color=estilo.color; estadoTxt.style.border=`1px solid ${estilo.border}`;
  if(etapa==='pendiente'){ bAceptar.style.display='flex'; let primera=document.querySelector('.btn-espera'); if(primera) primera.style.display='flex'; }
  else if(etapa==='aceptado'){ bCamino.style.display='flex'; let e=document.getElementById('btnEspera2'); if(e) e.style.display='flex'; }
@@ -833,13 +921,14 @@ window.actualizarEstadoVisual=function(etapa){
 }
 window.verRutaLive=function(key){
  let p=pedidosLive[key]; if(!p ||!p.lat1 ||!p.lat2) return;
- if(!mapRepa) initMapReal();
- let origen=myCurrentPos || {lat:p.lat1,lng:p.lng1};
  let dest=destinoActualRuta || {lat:p.lat1,lng:p.lng1};
  if(!destinoActualRuta){
    if((p.etapa==='en_camino_recoger'||p.etapa==='aceptado')) dest={lat:p.lat1,lng:p.lng1};
    else dest={lat:p.lat2,lng:p.lng2};
  }
+ if(usandoFallback){ pintarLeaflet(myCurrentPos||{lat:p.lat1,lng:p.lng1},dest,true); return; }
+ if(!mapRepa) initMapReal();
+ let origen=myCurrentPos || {lat:p.lat1,lng:p.lng1};
  if(!dirServRepa) return;
  dirServRepa.route({origin:origen,destination:dest,travelMode:'DRIVING'},(r,s)=>{
   if(s==='OK'){
@@ -935,9 +1024,7 @@ window.abrirDetalleSeguimiento=function(key,silent=false){
  document.getElementById('inputDetalleRecoge').value=p.dirRecogida||'';
  document.getElementById('inputDetalleEntrega').value=p.entrega||'';
  document.getElementById('inputDetalleNombreEntrega').value=p.nombreEntrega||'';
- document.getElementById('inputDetalleRecoge').dataset.lat=''; document.getElementById('inputDetalleRecoge').dataset.lng='';
- document.getElementById('inputDetalleEntrega').dataset.lat=''; document.getElementById('inputDetalleEntrega').dataset.lng='';
- document.getElementById('detalleKm').innerText=`${p.km} km - ${p.min} min (Google)`;
+ document.getElementById('detalleKm').innerText=`${p.km} km - ${p.min} min`;
  let selRepa=document.getElementById('inputDetalleRepa'); if(selRepa){ selRepa.innerHTML=getRepartidores().map(r=>`<option ${r===p.repaAsignado?'selected':''}>${r}</option>`).join(''); }
  document.getElementById('inputDetalleTelefono').value=p.telefono||'';
  document.getElementById('inputDetalleCosto').value=p.costoSugerido||'';
@@ -972,12 +1059,8 @@ window.guardarEdicionCompleta=async function(){
  let lat1=p.lat1, lng1=p.lng1, lat2=p.lat2, lng2=p.lng2;
  let needGeoRecoge = nuevaRecoge!==p.dirRecogida;
  let needGeoEntrega = nuevaEntrega!==p.entrega;
- let recInput=document.getElementById('inputDetalleRecoge');
- let entInput=document.getElementById('inputDetalleEntrega');
- if(recInput.dataset.lat && recInput.dataset.lng && needGeoRecoge){ lat1=parseFloat(recInput.dataset.lat); lng1=parseFloat(recInput.dataset.lng); }
- else if(needGeoRecoge){ let c=await geo(nuevaRecoge); if(c){ lat1=c.lat; lng1=c.lng; } }
- if(entInput.dataset.lat && entInput.dataset.lng && needGeoEntrega){ lat2=parseFloat(entInput.dataset.lat); lng2=parseFloat(entInput.dataset.lng); }
- else if(needGeoEntrega){ let c=await geo(nuevaEntrega); if(c){ lat2=c.lat; lng2=c.lng; } }
+ if(needGeoRecoge){ let c=await geo(nuevaRecoge); if(c){ lat1=c.lat; lng1=c.lng; } }
+ if(needGeoEntrega){ let c=await geo(nuevaEntrega); if(c){ lat2=c.lat; lng2=c.lng; } }
  let nuevoKm=p.km, nuevoMin=p.min;
  if(needGeoRecoge || needGeoEntrega){
   let ruta=await routeGoogle({lat:lat1,lng:lng1},{lat:lat2,lng:lng2});
@@ -991,7 +1074,7 @@ window.guardarEdicionCompleta=async function(){
 window.cancelarPedidoConNotificacion=async function(){
  if(!detalleActualKey) return; let p=pedidosLive[detalleActualKey]; let key=detalleActualKey;
  let motivo=prompt(`Motivo cancelacion para ${p.repaAsignado}:`, 'Cancelado por admin - cliente cancelo'); if(motivo===null) return;
- confirmarAccion(`Cancelar y notificar a ${p.repaAsignado}? Se borrara de tu panel.`, 'Cancelar y eliminar', async ()=>{
+ confirmarAccion(`Cancelar y notificar a ${p.repaAsignado}?`, 'Cancelar y eliminar', async ()=>{
    await update(ref(db,'kigoPedidosLive/'+key), {etapa:'cancelado', estado:'cancelado', motivoCancelado:motivo, canceladoTs:Date.now()});
    mostrarAviso('Notificado al repartidor','Cancelado');
    cerrarDetalleSeguimiento();
@@ -1000,7 +1083,7 @@ window.cancelarPedidoConNotificacion=async function(){
 }
 window.pasarAHistorial=async function(key){ let p=pedidosLive[key]; if(!p) return; if(p.etapa==='cancelado'){ await remove(ref(db,'kigoPedidosLive/'+key)); cerrarDetalleSeguimiento(); mostrarAviso('Eliminado','OK'); return; } let fee=getFeeForItem({tipo:'Moto Mandado', repa:p.repaAsignado, feeKigo:null}); let valor=p.costoSugerido||0; let obj={ iso:p.iso||todayISO(), cliente:p.cliente, tipo:'Moto Mandado', valor:valor, repa:p.repaAsignado, pagado:false, promo:false, feeKigo:fee, ts:Date.now(), origenPedido:key }; let nr=push(ref(db,'ventasKigo')); await set(nr,obj); await remove(ref(db,'kigoPedidosLive/'+key)); mostrarAviso('Pasado a historial','OK'); };
 
-window.showView=function(v){ if(rol==='repa'&&v!=='repartidor') return; document.querySelectorAll('.view').forEach(x=>x.classList.remove('active')); document.getElementById('view-'+v).classList.add('active'); document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active')); let btn=document.getElementById('b-'+v); if(btn) btn.classList.add('active'); if(v==='pedidos'){ setTimeout(()=>{ initMapReal(); initPlaces(); if(map) google.maps.event.trigger(map,'resize'); },300); } if(v==='repartidor'){ setTimeout(()=>{ initMapReal(); if(mapRepa) google.maps.event.trigger(mapRepa,'resize'); },300); } };
+window.showView=function(v){ if(rol==='repa'&&v!=='repartidor') return; document.querySelectorAll('.view').forEach(x=>x.classList.remove('active')); document.getElementById('view-'+v).classList.add('active'); document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active')); let btn=document.getElementById('b-'+v); if(btn) btn.classList.add('active'); if(v==='pedidos'){ setTimeout(()=>{ initMapReal(); if(map) try{google.maps.event.trigger(map,'resize');}catch(e){} if(leafletMap) leafletMap.invalidateSize(); },400); } if(v==='repartidor'){ setTimeout(()=>{ initMapReal(); if(mapRepa) try{google.maps.event.trigger(mapRepa,'resize');}catch(e){} if(leafletMapRepa) leafletMapRepa.invalidateSize(); },400); } };
 window.showTabCobros=function(t){ document.getElementById('tabEnvio').classList.toggle('active',t==='envio'); document.getElementById('tabHist').classList.toggle('active',t==='hist'); document.getElementById('panelEnvio').style.display=t==='envio'?'block':'none'; document.getElementById('panelHist').style.display=t==='hist'?'block':'none'; };
 window.showTabClientes=function(t){ document.getElementById('tabCliList').classList.toggle('active',t==='lista'); document.getElementById('tabCliRank').classList.toggle('active',t==='ranking'); document.getElementById('panelCliLista').style.display=t==='lista'?'block':'none'; document.getElementById('panelCliRanking').style.display=t==='ranking'?'block':'none'; };
 window.showTabEst=function(t){ document.getElementById('tabEstMes').classList.toggle('active',t==='mes'); document.getElementById('tabEstCal').classList.toggle('active',t==='cal'); document.getElementById('panelEstMes').style.display=t==='mes'?'block':'none'; document.getElementById('panelEstCal').style.display=t==='cal'?'block':'none'; };
@@ -1045,6 +1128,8 @@ document.getElementById('fecha').value=todayISO(); actualizarSelects();
 document.getElementById('pinInput').addEventListener('keydown',e=>{ if(e.key==='Enter') validarPin(); });
 document.getElementById('usuarioInput').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('pinInput').focus(); });
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTV1sm6McEIkv-cheaVFCD_svp-a--6wg&libraries=places" async defer></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTV1sm6McEIkv-cheaVFCD_svp-a--6wg&libraries=places" async defer onerror="activarFallbackMaps()"></script>
 </body>
 </html>
+<!-- FIN PARTE 4 -->    
