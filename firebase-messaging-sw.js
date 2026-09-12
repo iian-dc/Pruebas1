@@ -1,26 +1,28 @@
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
 firebase.initializeApp({
-  apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE",
-  authDomain: "historial-kigo-xpress.firebaseapp.com",
-  databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com",
-  projectId: "historial-kigo-xpress",
-  storageBucket: "historial-kigo-xpress.firebasestorage.app",
-  messagingSenderId: "571399920545",
-  appId: "1:571399920545:web:aa16407753b43cbe2e89e0"
+ apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE",
+ authDomain: "historial-kigo-xpress.firebaseapp.com",
+ databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com",
+ projectId: "historial-kigo-xpress",
+ storageBucket: "historial-kigo-xpress.firebasestorage.app",
+ messagingSenderId: "571399920545",
+ appId: "1:571399920545:web:aa16407753b43cbe2e89e0"
 });
-const messaging = firebase.messaging();
-messaging.onBackgroundMessage((payload) => {
-  const d = payload.data || {};
-  self.registration.showNotification('🔔 Nuevo pedido disponible', {
-    body: `Pedido #${(d.key||'').slice(-4)} | ${d.cliente} -> ${d.entrega} | $${d.costo}`,
-    icon: 'https://cdn-icons-png.flaticon.com/512/3774/3774089.png',
-    vibrate: [400,100,400],
+self.addEventListener('push', function(event) {
+  const data = event.data? event.data.json() : {};
+  const title = data.notification?.title || '🔔 NUEVO PEDIDO KIGO';
+  const options = {
+    body: data.notification?.body || 'Tienes un pedido nuevo urgente',
+    icon: 'https://cdn-icons-png.flaticon.com/512/2972/2972185.png',
+    badge: 'https://cdn-icons-png.flaticon.com/512/2972/2972185.png',
+    vibrate: [500,100,500,100,1000],
     requireInteraction: true,
-    data: { key: d.key }
-  });
+    tag: 'kigo-pedido'
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
 });
-self.addEventListener('notificationclick', (e) => {
-  e.notification.close();
-  e.waitUntil(clients.openWindow('/?pedido='+e.notification.data.key));
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  event.waitUntil(clients.openWindow('./'));
 });
