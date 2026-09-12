@@ -4,6 +4,10 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Kigo Xpress - Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
 body{height:100vh;width:100vw;overflow:hidden;display:flex;align-items:center;justify-content:center;background: radial-gradient(1200px at 20% 10%, #7dd3fc 0%, #38bdf8 15%, #0ea5e9 35%, #0369a1 70%, #082f49 100%);position:relative}
@@ -14,7 +18,7 @@ body::before{content:"";position:absolute;inset:-20%;background: radial-gradient
 .titulo{text-align:center;font-weight:800;font-size:16px;letter-spacing:.3px;color:#0a0a0a}
 .subtitulo{text-align:center;font-size:8px;font-weight:800;color:#6b7280;letter-spacing:1px;margin-top:2px;text-transform:uppercase}
 .wrap{position:relative;background:#fff;border:1.5px solid #e5e7eb;border-radius:12px;display:flex;align-items:center;padding:0 12px;height:44px;margin-top:10px}
-.wrap input{width:100%;height:100%;border:none;outline:none;font-size:12px;font-weight:600;background:transparent}
+.wrap input{width:100%;height:100%;border:none;outline:none;font-size:12px;font-weight:600;background:transparent;padding-right:28px}
 .wrap:focus-within{border-color:#0ea5e9;box-shadow:0 0 0 3px rgba(14,165,233,.15)}
 .label{font-size:8px;font-weight:800;color:#374151;margin:12px 0 0 2px;display:block;text-transform:uppercase;letter-spacing:.6px}
 .btn-login{width:100%;height:48px;margin-top:16px;background:#0a0a0a;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:12px;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.2)}
@@ -23,7 +27,7 @@ body::before{content:"";position:absolute;inset:-20%;background: radial-gradient
 .error-text.show{display:block;animation:shake.3s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 .footer{margin-top:12px;text-align:center;font-size:7px;font-weight:700;color:#6b7280;letter-spacing:.5px}
-.clear-x{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:20px;height:20px;background:#fff;border:1px solid #e5e7eb;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#0a0a0a;cursor:pointer}
+.clear-x{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:#fff;border:1px solid #e5e7eb;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#0a0a0a;cursor:pointer;line-height:1}
 .clear-x.show{display:flex}
 </style>
 </head>
@@ -35,7 +39,7 @@ body::before{content:"";position:absolute;inset:-20%;background: radial-gradient
 <div class="subtitulo">Panel de acceso seguro</div>
 
 <div class="label">Usuario</div>
-<div class="wrap"><input type="text" id="usuario" placeholder="admin o Jose" oninput="toggleClear(this)" autocomplete="username"><button class="clear-x" id="clear_usuario" onclick="clearField('usuario')">x</button></div>
+<div class="wrap"><input type="text" id="usuario" placeholder="INGRESAR USUARIO" oninput="toggleClear(this)" autocomplete="username"><button class="clear-x" id="clear_usuario" onclick="clearField('usuario')">x</button></div>
 
 <div class="label">Contraseña</div>
 <div class="wrap"><input type="password" id="password" placeholder="••••" oninput="toggleClear(this)" autocomplete="current-password"><button class="clear-x" id="clear_password" onclick="clearField('password')">x</button></div>
@@ -43,11 +47,12 @@ body::before{content:"";position:absolute;inset:-20%;background: radial-gradient
 <button class="btn-login" onclick="hacerLogin()"><svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="white"><path d="M10 17l5-5-5-5v10zM4 4h7v2H6v12h5v2H4V4z"/></svg>INGRESAR</button>
 
 <div id="errorMsg" class="error-text">Usuario o contraseña incorrecta</div>
-<div class="footer">Acceso solo personal autorizado • Kigo 2026</div>
+<div class="footer">Acceso solo personal autorizado • Kigo 2026<br><span style="font-size:6px">Instálala desde Chrome: ⋮ > Instalar app</span></div>
 </div>
 
 <script>
-const USUARIOS = {
+// USUARIOS POR DEFECTO (si en Ajustes cambias, se sobreescriben solos)
+let USUARIOS_DEFAULT = {
   "admin": { pass: "0831", ruta: "admin/" },
   "Jose": { pass: "1111", ruta: "repa/?repa=Jose" },
   "Diego Gómez": { pass: "2222", ruta: "repa/?repa=Diego%20Gómez" },
@@ -55,7 +60,15 @@ const USUARIOS = {
   "Carlos": { pass: "4444", ruta: "repa/?repa=Carlos" }
 };
 
-function toggleClear(input){ let btn=document.getElementById('clear_'+input.id); if(!btn) return; if(input.value.trim().length>0) btn.classList.add('show'); else btn.classList.remove('show'); }
+function getUsuarios(){
+  try{
+    let guardados = localStorage.getItem('kigoUsuariosConfig');
+    if(guardados){ return JSON.parse(guardados); }
+  }catch(e){}
+  return USUARIOS_DEFAULT;
+}
+
+function toggleClear(input){ let btn=document.getElementById('clear_'+input.id); if(!btn) return; if(input.value.length>0) btn.classList.add('show'); else btn.classList.remove('show'); }
 function clearField(id){ let el=document.getElementById(id); if(!el) return; el.value=''; let btn=document.getElementById('clear_'+id); if(btn) btn.classList.remove('show'); el.focus(); }
 
 function sonidoError(){
@@ -72,22 +85,28 @@ function hacerLogin(){
  let u=document.getElementById('usuario').value.trim();
  let p=document.getElementById('password').value.trim();
  let error=document.getElementById('errorMsg');
+ let USUARIOS = getUsuarios();
+
  if(USUARIOS[u] && USUARIOS[u].pass===p){
   error.classList.remove('show');
   localStorage.setItem('kigoUser', u);
   localStorage.setItem('kigoPass', p);
+  localStorage.setItem('kigoLoginTime', Date.now());
   window.location.href = USUARIOS[u].ruta;
  } else {
   error.classList.add('show');
-  error.innerText = 'Usuario o contraseña incorrecta';
   sonidoError();
   document.getElementById('password').value='';
   toggleClear(document.getElementById('password'));
  }
 }
-
 document.getElementById('password').addEventListener('keydown', e=>{ if(e.key==='Enter') hacerLogin(); });
 document.getElementById('usuario').addEventListener('keydown', e=>{ if(e.key==='Enter') hacerLogin(); });
+
+// --- PWA INSTALABLE ---
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
 </script>
 </body>
 </html>
