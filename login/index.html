@@ -2,59 +2,156 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kigo Login Auto</title>
+<title>Kigo Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
-body{background:#0a0a0a;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{background:#fff;border-radius:20px;padding:24px;width:100%;max-width:360px}
-.input{width:100%;height:44px;border:1.5px solid #e5e7eb;border-radius:12px;padding:0 14px;font-size:13px;font-weight:600;margin-top:8px}
-.btn{width:100%;height:46px;border-radius:12px;background:#0a0a0a;color:#fff;font-weight:800;border:none;margin-top:14px;cursor:pointer}
+body{background:#0a0a0a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;color:#0a0a0a;border-radius:20px;padding:24px;width:100%;max-width:360px;box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.input{width:100%;height:44px;border:1.5px solid #e5e7eb;border-radius:12px;padding:0 14px;font-size:13px;font-weight:600;margin-top:8px;outline:none}
+.btn{width:100%;height:46px;border-radius:12px;border:none;background:#0a0a0a;color:#fff;font-weight:800;font-size:12px;margin-top:12px;cursor:pointer}
+.label{font-size:8px;font-weight:800;color:#6b7280;margin-top:12px;display:block;text-transform:uppercase}
+.tab{display:flex;gap:6px;margin-bottom:16px}
+.tab button{flex:1;height:38px;border-radius:10px;border:1.5px solid #e5e7eb;background:#fff;font-weight:800;font-size:9px}
+.tab button.active{background:#0a0a0a;color:#fff}
+.info{font-size:7px;color:#6b7280;margin-top:8px;text-align:center}
 </style>
 </head>
 <body>
 <div class="card">
-<div style="text-align:center;margin-bottom:14px"><b>KIGO XPRESS</b><div style="font-size:7px;color:#6b7280">LOGIN AUTOMATICO</div></div>
-<input id="user" class="input" placeholder="Usuario">
-<input id="pass" class="input" type="password" placeholder="Contraseña">
-<button class="btn" onclick="login()">ENTRAR</button>
-<div id="msg" style="font-size:8px;color:#6b7280;margin-top:10px;text-align:center"></div>
+<div style="text-align:center;margin-bottom:16px"><div style="font-weight:800;font-size:18px">KIGO XPRESS</div><div style="font-size:8px;font-weight:800;color:#6b7280">LOGIN DINAMICO</div></div>
+
+<div class="tab">
+<button id="btnTabAdmin" class="active" onclick="setTab('admin')">ADMIN</button>
+<button id="btnTabRepa" onclick="setTab('repa')">REPARTIDOR</button>
 </div>
+
+<div class="label">Usuario</div>
+<input id="user" class="input" placeholder="usuario" autocomplete="off">
+<div class="label">Contraseña / PIN</div>
+<input id="pass" class="input" type="password" placeholder="****" autocomplete="off">
+
+<button class="btn" onclick="login()">ENTRAR</button>
+<div id="msg" class="info"></div>
+<div class="info" id="statusFirebase">Conectando con Firebase...</div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
 const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", authDomain: "historial-kigo-xpress.firebaseapp.com", databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com", projectId: "historial-kigo-xpress", storageBucket: "historial-kigo-xpress.firebasestorage.app", messagingSenderId: "571399920545", appId: "1:571399920545:web:aa16407753b43cbe2e89e0" };
-const app = initializeApp(firebaseConfig); const db = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let tabActual = 'admin';
+let dbCache = {pins:null, repasFull:null, usuarios:null, repas:null};
+
+async function cargarTodo(){
+ try{
+  let sPins = await get(ref(db,'kigoPins'));
+  let sFull = await get(ref(db,'kigoRepasFull'));
+  let sUsuarios = await get(ref(db,'kigoUsuarios'));
+  let sRepas = await get(ref(db,'kigoRepas'));
+  dbCache.pins = sPins.val() || {};
+  dbCache.repasFull = sFull.val() || {};
+  dbCache.usuarios = sUsuarios.val() || {};
+  dbCache.repas = sRepas.val() || {};
+  document.getElementById('statusFirebase').innerText = '✅ Conectado - Login dinámico activo';
+ }catch(e){
+  document.getElementById('statusFirebase').innerText = '❌ Error Firebase: '+e.message;
+ }
+}
+cargarTodo();
+
+window.setTab=function(t){
+ tabActual=t;
+ document.getElementById('btnTabAdmin').classList.toggle('active',t==='admin');
+ document.getElementById('btnTabRepa').classList.toggle('active',t==='repa');
+ document.getElementById('msg').innerText='';
+}
+
+function buscarRepa(user, pass){
+ let u = user.trim();
+ let p = pass.trim();
+ // 1. Busca en kigoRepasFull (lo que ves en ADMIN)
+ let full = dbCache.repasFull[u];
+ if(full){
+   let passOk = full.pass || full.password || full.pin;
+   if(passOk == p) return {ok:true, data:full, origen:'kigoRepasFull'};
+ }
+ // 2. Busca en kigoPins (PIN principal)
+ let pins = dbCache.pins;
+ if(pins.repas && pins.repas[u]){
+   if(pins.repas[u] == p) return {ok:true, data:{usuario:u, pass:p}, origen:'kigoPins'};
+ }
+ // 3. Busca en kigoUsuarios (donde guarda el repa cuando cambia)
+ let usu = dbCache.usuarios[u];
+ if(usu){
+   let passOk = usu.pass || usu.password || usu.pin;
+   if(passOk == p) return {ok:true, data:usu, origen:'kigoUsuarios'};
+ }
+ // 4. Busca en kigoRepas
+ let repa = dbCache.repas[u];
+ if(repa){
+   let passOk = repa.pass || repa.password || repa.pin;
+   if(passOk == p) return {ok:true, data:repa, origen:'kigoRepas'};
+ }
+ // 5. Busca por usuario insensible a mayusculas
+ let allKeys = [...Object.keys(dbCache.repasFull),...Object.keys(dbCache.usuarios),...Object.keys(dbCache.repas),...Object.keys(dbCache.pins.repas||{})];
+ let foundKey = allKeys.find(k=>k.toLowerCase()===u.toLowerCase());
+ if(foundKey){
+   return buscarRepa(foundKey, p);
+ }
+ return {ok:false};
+}
 
 window.login=async function(){
- let u = document.getElementById('user').value.trim();
- let p = document.getElementById('pass').value.trim();
- if(!u||!p){ document.getElementById('msg').innerText='Falta usuario'; return; }
- document.getElementById('msg').innerText='Verificando...';
- try{
-  let sPins = await get(ref(db,'kigoPins')); let pins = sPins.val()||{};
-  // ES ADMIN?
-  if(u.toLowerCase()==='admin' && pins.admin==p){
-    localStorage.setItem('kigoUser','admin'); localStorage.setItem('kigoRol','admin'); window.location.href='../admin/'; return;
-  }
-  // BUSCA SI ES REPA EN CUALQUIER NODO
-  let keys = [ref(db,'kigoRepasFull/'+u), ref(db,'kigoUsuarios/'+u), ref(db,'kigoRepas/'+u)];
-  for(let r of keys){
-   let snap = await get(r); if(snap.exists()){
-    let d = snap.val(); let passOk = d.pass||d.password||d.pin;
-    if(passOk==p){
-     localStorage.setItem('kigoUser', d.usuario||d.nombre||u); localStorage.setItem('kigoPass',p); localStorage.setItem('kigoRol','repa');
-     window.location.href='../repa/?repa='+(d.usuario||u); return;
-    }
+ let user = document.getElementById('user').value.trim();
+ let pass = document.getElementById('pass').value.trim();
+ let msg = document.getElementById('msg');
+ if(!user ||!pass){ msg.innerText='Falta usuario y contraseña'; return; }
+ msg.innerText='Verificando...';
+ await cargarTodo();
+
+ if(tabActual==='admin'){
+   let pins = dbCache.pins;
+   let adminPass = pins.admin || '0831';
+   if(user.toLowerCase()==='admin' && (adminPass==pass)){
+     localStorage.setItem('kigoUser','admin');
+     localStorage.setItem('kigoPass',pass);
+     localStorage.setItem('kigoRol','admin');
+     msg.innerText='✅ Admin OK';
+     setTimeout(()=>{ window.location.href='../admin/'; },500);
+     return;
    }
-  }
-  // BUSCA EN kigoPins/repas
-  if(pins.repas && pins.repas[u] && pins.repas[u]==p){
-   localStorage.setItem('kigoUser',u); localStorage.setItem('kigoPass',p); localStorage.setItem('kigoRol','repa');
-   window.location.href='../repa/?repa='+u; return;
-  }
-  document.getElementById('msg').innerText='❌ Usuario o contraseña incorrecta';
- }catch(e){ document.getElementById('msg').innerText='Error: '+e.message; }
+   let adminExtra = dbCache.usuarios[user] || dbCache.repasFull[user];
+   if(adminExtra && (adminExtra.rol==='admin' || user.toLowerCase()==='admin')){
+     let ok = (adminExtra.pass||adminExtra.password||adminExtra.pin)==pass;
+     if(ok){
+       localStorage.setItem('kigoUser',user);
+       localStorage.setItem('kigoPass',pass);
+       localStorage.setItem('kigoRol','admin');
+       msg.innerText='✅ Admin OK';
+       setTimeout(()=>{ window.location.href='../admin/'; },500);
+       return;
+     }
+   }
+   msg.innerText='❌ Usuario o contraseña admin incorrecta. Clave actual: '+adminPass;
+   return;
+ }
+
+ let res = buscarRepa(user, pass);
+ if(res.ok){
+   localStorage.setItem('kigoUser', res.data.usuario || res.data.nombre || user);
+   localStorage.setItem('kigoPass', pass);
+   localStorage.setItem('kigoRol','repa');
+   localStorage.setItem('kigoLoginTime', Date.now().toString());
+   msg.innerText='✅ Repa OK desde '+res.origen;
+   setTimeout(()=>{ window.location.href='../repa/?repa='+(res.data.usuario||user); },500);
+ }else{
+   msg.innerText='❌ Usuario o pass incorrecto. Verifica en ADMIN > AJUSTES > REPARTIDORES';
+ }
 }
 </script>
 </body>
