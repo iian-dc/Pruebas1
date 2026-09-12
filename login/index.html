@@ -3,23 +3,120 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kigo Login</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
-body{background:#0a0a0a;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{background:#fff;border-radius:20px;padding:24px;width:100%;max-width:340px;text-align:center}
-.input{width:100%;height:44px;border:1.5px solid #e5e7eb;border-radius:12px;padding:0 14px;font-size:13px;font-weight:600;margin-top:10px}
-.btn{width:100%;height:46px;border-radius:12px;background:#0a0a0a;color:#fff;font-weight:800;border:none;margin-top:14px;cursor:pointer}
+body{
+ min-height:100vh;
+ display:flex;align-items:center;justify-content:center;padding:20px;
+ background: linear-gradient(135deg, #87CEEB 0%, #38bdf8 40%, #0ea5e9 70%, #0c4a6e 100%);
+ position:relative;
+ overflow:hidden;
+}
+body::before{
+ content:'';
+ position:absolute;top:-100px;left:-100px;width:400px;height:400px;
+ background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+ border-radius:50%;
+}
+body::after{
+ content:'';
+ position:absolute;bottom:-120px;right:-80px;width:500px;height:500px;
+ background: radial-gradient(circle, rgba(14,165,233,0.5) 0%, transparent 70%);
+ border-radius:50%;
+}
+.card{
+ background:rgba(255,255,255,0.95);
+ backdrop-filter: blur(12px);
+ border-radius:24px;
+ padding:28px 24px;
+ width:100%;max-width:360px;
+ box-shadow:0 20px 50px rgba(12,74,110,0.25), 0 0 0 1px rgba(255,255,255,0.6) inset;
+ position:relative;z-index:1;
+ text-align:center;
+}
+.titulo{font-weight:800;font-size:22px;letter-spacing:-0.5px;color:#0c4a6e}
+.sub{font-size:9px;font-weight:600;color:#0ea5e9;margin-top:4px;letter-spacing:0.5px}
+.sub2{font-size:8px;font-weight:700;color:#64748b;margin-top:2px;font-style:italic}
+
+.wrap-input{position:relative;margin-top:14px;text-align:left}
+.label{font-size:8px;font-weight:800;color:#0c4a6e;margin-bottom:4px;display:block;letter-spacing:0.6px}
+.input-box{
+ position:relative;
+ display:flex;align-items:center;
+ background:#f8fafc;
+ border:1.5px solid #e0f2fe;
+ border-radius:14px;
+ height:46px;
+ padding:0 12px;
+ transition:.2s;
+}
+.input-box:focus-within{border-color:#0ea5e9;background:#fff;box-shadow:0 0 0 3px rgba(14,165,233,0.15)}
+.input-box input{
+ flex:1;border:none;background:transparent;outline:none;
+ font-size:13px;font-weight:600;color:#0f172a;
+}
+.input-box input::placeholder{color:#94a3b8;font-weight:500}
+.btn-clear{
+ width:22px;height:22px;border-radius:50%;
+ background:#e0f2fe;color:#0ea5e9;
+ border:none;display:flex;align-items:center;justify-content:center;
+ font-size:12px;font-weight:800;cursor:pointer;
+ margin-left:8px;
+}
+.btn-clear:hover{background:#bae6fd}
+
+.btn-entrar{
+ width:100%;height:48px;border-radius:14px;
+ background: linear-gradient(135deg, #0ea5e9, #0284c7);
+ color:#fff;font-weight:800;font-size:13px;letter-spacing:0.3px;
+ border:none;margin-top:18px;cursor:pointer;
+ display:flex;align-items:center;justify-content:center;gap:8px;
+ box-shadow:0 8px 20px rgba(14,165,233,0.35);
+ transition:.2s;
+}
+.btn-entrar:active{transform:scale(0.98)}
+
+#msg{
+ font-size:8px;font-weight:700;
+ margin-top:12px;
+ min-height:16px;
+ color:#ef4444;
+ background:#fef2f2;
+ border:1px solid #fecaca;
+ border-radius:10px;
+ padding:0;
+ display:none;
+}
+#msg.show{display:block;padding:8px 10px}
 </style>
 </head>
 <body>
 <div class="card">
-<div style="font-weight:800;font-size:18px">KIGO XPRESS</div>
-<div style="font-size:7px;color:#6b7280;font-weight:800;margin-bottom:14px">LOGIN ORIGINAL</div>
-<input id="user" class="input" placeholder="Usuario">
-<input id="pass" class="input" type="password" placeholder="Contraseña">
-<button class="btn" onclick="login()">ENTRAR</button>
-<div id="msg" style="font-size:8px;color:#ef4444;margin-top:10px"></div>
+<div class="titulo">KEO EXPRESS</div>
+<div class="sub">Hacemos las cosas con amor</div>
+
+<div class="wrap-input">
+<span class="label">USUARIO</span>
+<div class="input-box">
+<input id="user" type="text" placeholder="Ingresa tu usuario" autocomplete="off">
+<button class="btn-clear" onclick="clearInput('user')" type="button">×</button>
+</div>
+</div>
+
+<div class="wrap-input">
+<span class="label">CONTRASEÑA</span>
+<div class="input-box">
+<input id="pass" type="password" placeholder="Ingresa tu contraseña" autocomplete="off">
+<button class="btn-clear" onclick="clearInput('pass')" type="button">×</button>
+</div>
+</div>
+
+<button class="btn-entrar" onclick="login()">
+<span>↵</span> ENTRAR
+</button>
+
+<div id="msg"></div>
 </div>
 
 <script type="module">
@@ -28,11 +125,24 @@ import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.
 const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", authDomain: "historial-kigo-xpress.firebaseapp.com", databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com", projectId: "historial-kigo-xpress", storageBucket: "historial-kigo-xpress.firebasestorage.app", messagingSenderId: "571399920545", appId: "1:571399920545:web:aa16407753b43cbe2e89e0" };
 const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
+window.clearInput=function(id){
+ document.getElementById(id).value='';
+ document.getElementById(id).focus();
+}
+
 window.login=async function(){
  let u = document.getElementById('user').value.trim();
  let p = document.getElementById('pass').value.trim();
- if(!u||!p){ document.getElementById('msg').innerText='Falta datos'; return; }
- document.getElementById('msg').innerText='Verificando...';
+ let msg = document.getElementById('msg');
+ if(!u||!p){
+   msg.innerText='Completa usuario y contraseña';
+   msg.classList.add('show');
+   return;
+ }
+ msg.classList.remove('show');
+ msg.innerText='Verificando...';
+ msg.style.color='#0ea5e9'; msg.style.background='#f0f9ff'; msg.style.borderColor='#bae6fd';
+ msg.classList.add('show');
  try{
   let snap = await get(ref(db,'kigoPins'));
   let data = snap.val()||{admin:'0831', repas:{Jose:'1234'}};
@@ -47,7 +157,6 @@ window.login=async function(){
     localStorage.setItem('kigoRol','repa');
     window.location.href='../repa/?repa='+u; return;
   }
-  // tambien intenta con Jose si escribes diferente
   let allRepas = Object.keys(data.repas||{});
   let found = allRepas.find(k=>k.toLowerCase()===u.toLowerCase());
   if(found && data.repas[found]===p){
@@ -56,9 +165,13 @@ window.login=async function(){
     localStorage.setItem('kigoRol','repa');
     window.location.href='../repa/?repa='+found; return;
   }
-  document.getElementById('msg').innerText='Usuario o contraseña incorrecta';
+  msg.style.color='#ef4444'; msg.style.background='#fef2f2'; msg.style.borderColor='#fecaca';
+  msg.innerText='Usuario y contraseña no coincide, intenta de nuevo';
+  msg.classList.add('show');
  }catch(e){
-  document.getElementById('msg').innerText='Error: '+e.message;
+  msg.style.color='#ef4444'; msg.style.background='#fef2f2'; msg.style.borderColor='#fecaca';
+  msg.innerText='Error: '+e.message;
+  msg.classList.add('show');
  }
 }
 </script>
