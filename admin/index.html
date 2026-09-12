@@ -17,7 +17,7 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 .tab-cobro.active{background:#0a0a0a;color:#fff}
 #map{height:400px;border-radius:12px;width:100%;background:#e5e7eb;display:block}
 #infoRuta{display:none;margin-top:8px;background:#0a0a0a;color:#fff;border-radius:10px;padding:8px 10px;text-align:center;font-size:10px;font-weight:700}
-.kigo-overlay{position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.kigo-overlay{position:fixed;inset:0;z-index:10020;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
 .kigo-overlay.show{display:flex}
 .kigo-modal{background:#fff;border-radius:16px;padding:14px;width:100%;max-width:340px}
 .kigo-btn{height:38px;border-radius:10px;border:none;font-weight:800;font-size:10px;flex:1;display:flex;align-items:center;justify-content:center}
@@ -52,10 +52,11 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 .ajuste-tab{height:36px;padding:0 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:9px;font-weight:800;flex:1}
 .ajuste-tab.active{background:#0a0a0a;color:#fff}
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block}.dot.on{background:#10b981;box-shadow:0 0 6px #10b981}.dot.off{background:#ef4444}
+#overlayEditar{ z-index: 10010; } /* editar abajo */
+#kigoOverlay{ z-index: 10030; } /* confirmación de cancelar ENCIMA de editar */
 </style>
 </head>
 <body>
-
 <div class="top"><div style="font-weight:800;font-size:11px">KIGO XPRESS</div><div id="topStatus" style="background:#0a0a0a;color:#fff;padding:4px 8px;border-radius:14px;font-size:8px;font-weight:800">APP ACTIVA</div></div>
 
 <div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><div id="modalTitle" style="font-weight:800;font-size:12px;margin-bottom:6px">Aviso</div><div id="modalText" style="font-size:11px;color:#374151;margin-bottom:12px">Mensaje</div><div style="display:flex;gap:6px"><button id="modalCancel" class="kigo-btn kigo-btn-cancel" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">Confirmar</button></div></div></div>
@@ -249,9 +250,10 @@ window.limpiarClienteCompra=function(){ clienteCompraSeleccionado=null; compraEn
 function todayISO(){ let d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 window.enviarCotizacionCliente=function(){ if(!ultimaCotizacion) return mostrarAviso('Cotiza primero','Falta'); let c=ultimaCotizacion; let mensaje = `KIGO XPRESS - COTIZACION\n\nRECOGIDA: ${c.dirRecogida}\nENTREGA: ${c.entrega}\nDistancia: ${c.km} km\nTiempo: ${c.min} min\n\nValor: $${c.costoSugerido}`; window.open(`https://wa.me/?text=${encodeURIComponent(mensaje)}`,'_blank'); };
 window.restaurarCotizacion=function(){ if(dirRend) dirRend.setDirections({routes:[]}); markers.forEach(m=>m.setMap(null)); markers=[]; document.getElementById('infoRuta').style.display='none'; document.getElementById('botonesDespuesCotizar').style.display='none'; document.getElementById('entregaDirRecoger').value=''; document.getElementById('entregaDirComprar').value=''; document.getElementById('queComprar').value=''; document.getElementById('queComprarProductos').value=''; document.getElementById('nombreEntregaPedido').value=''; document.getElementById('telefonoEntregaPedido').value=''; document.getElementById('buscadorClientePedido').value=''; document.getElementById('buscadorClienteCompra').value=''; document.getElementById('nombreClienteNuevo').value=''; document.getElementById('direccionRecogidaManual').value=''; let box=document.getElementById('clienteSeleccionadoPedido'); if(box) box.style.display='none'; let box2=document.getElementById('clienteCompraSeleccionado'); if(box2) box2.style.display='none'; clientePedidoSeleccionado=null; clienteCompraSeleccionado=null; ultimaCotizacion=null; entregaCoordsTemp=null; recogidaCoordsTemp=null; compraOrigenCoords=null; compraEntregaCoords=null; };
-window.confirmarPedido=async function(){ if(!ultimaCotizacion) return mostrarAviso('Cotiza primero','Falta'); let entTxt=document.getElementById('entregaDirRecoger').value||ultimaCotizacion.entrega; let nombreEnt=document.getElementById('nombreEntregaPedido')?.value.trim()||''; let dest=entregaCoordsTemp||{lat:ultimaCotizacion.lat2, lng:ultimaCotizacion.lng2}; let repaDestino=document.getElementById('pedidoRepaDestino')?.value||''; let tel=document.getElementById('telefonoEntregaPedido')?.value.trim()||''; let telRec=ultimaCotizacion.telefonoRecogida||''; let tiempoMin=tiempoRecogidaMin||20; let horaRec=calcularHoraRecogida(tiempoMin); if(!repaDestino) return mostrarAviso('Falta repartidor','Error'); confirmarAccion(`Enviar a ${repaDestino} por $${ultimaCotizacion.costoSugerido}? ${horaRec.texto}`, 'Confirmar', async ()=>{ let pedido={cliente:ultimaCotizacion.cliente, nombreEntrega:nombreEnt, dirRecogida:ultimaCotizacion.dirRecogida, lat1:ultimaCotizacion.lat1, lng1:ultimaCotizacion.lng1, entrega:entTxt, lat2:dest.lat, lng2:dest.lng, km:ultimaCotizacion.km, min:ultimaCotizacion.min, costoSugerido:ultimaCotizacion.costoSugerido, etapa:'pendiente', estado:'pendiente', repaAsignado:repaDestino, telefono:tel, telefonoRecogida:telRec, ts:Date.now(), iso:todayISO(), tiempoRecogida:tiempoMin, horaRecoger:horaRec.texto, horaRecogerISO:horaRec.iso}; let nr=push(ref(db,'kigoPedidosLive')); await set(nr, pedido); mostrarAviso(`Enviado a ${repaDestino}`,'Enviado'); restaurarCotizacion(); }, 'Enviar', 'green'); };
-window.confirmarPedidoCompra=async function(){ if(!ultimaCotizacion||!ultimaCotizacion.esCompra) return mostrarAviso('Cotiza compra','Falta'); let entTxt=document.getElementById('entregaDirComprar').value||ultimaCotizacion.entrega; let repaDestino=document.getElementById('pedidoRepaDestino')?.value||''; let tel=document.getElementById('telefonoEntregaCompra')?.value.trim()||''; let tiempoMin=tiempoCompraMin||15; let horaRec=calcularHoraRecogida(tiempoMin); if(!repaDestino) return mostrarAviso('Falta repartidor','Error'); confirmarAccion(`Enviar compra a ${repaDestino}?`, 'Confirmar', async ()=>{ let pedido={cliente:`COMPRA: ${ultimaCotizacion.productos||''} en ${ultimaCotizacion.dirRecogida}`, nombreEntrega:clienteCompraSeleccionado||'', productos:ultimaCotizacion.productos, dirRecogida:ultimaCotizacion.dirRecogida, lat1:ultimaCotizacion.lat1, lng1:ultimaCotizacion.lng1, entrega:entTxt, lat2:ultimaCotizacion.lat2, lng2:ultimaCotizacion.lng2, km:ultimaCotizacion.km, min:ultimaCotizacion.min, costoSugerido:ultimaCotizacion.costoSugerido, etapa:'pendiente', estado:'pendiente', repaAsignado:repaDestino, telefono:tel, ts:Date.now(), iso:todayISO(), esCompra:true, tiempoRecogida:tiempoMin, horaRecoger:horaRec.texto, horaRecogerISO:horaRec.iso}; let nr=push(ref(db,'kigoPedidosLive')); await set(nr, pedido); mostrarAviso(`Compra enviada a ${repaDestino}`,'Enviado'); restaurarCotizacion(); }, 'Enviar', 'green'); };
-// SEGUIMIENTO CORREGIDO
+window.confirmarPedido=async function(){ if(!ultimaCotizacion) return mostrarAviso('Cotiza primero','Falta'); let entTxt=document.getElementById('entregaDirRecoger').value||ultimaCotizacion.entrega; let nombreEnt=document.getElementById('nombreEntregaPedido')?.value.trim()||''; let dest=entregaCoordsTemp||{lat:ultimaCotizacion.lat2, lng:ultimaCotizacion.lng2}; let repaDestino=document.getElementById('pedidoRepaDestino')?.value||''; let tel=document.getElementById('telefonoEntregaPedido')?.value.trim()||''; let telRec=ultimaCotizacion.telefonoRecogida||''; let tiempoMin=tiempoRecogidaMin||20; let horaRec=calcularHoraRecogida(tiempoMin); if(!repaDestino) return mostrarAviso('Falta repartidor','Error'); confirmarAccion(`Enviar a ${repaDestino} por $${ultimaCotizacion.costoSugerido}? ${horaRec.texto}`, 'Confirmar', async ()=>{ let pedido={cliente:ultimaCotizacion.cliente, nombreEntrega:nombreEnt, dirRecogida:ultimaCotizacion.dirRecogida, lat1:ultimaCotizacion.lat1, lng1:ultimaCotizacion.lng1, entrega:entTxt, lat2:dest.lat, lng2:dest.lng, km:ultimaCotizacion.km, min:ultimaCotizacion.min, costoSugerido:ultimaCotizacion.costoSugerido, etapa:'pendiente', subEtapa:'pendiente', estado:'pendiente', repaAsignado:repaDestino, telefono:tel, telefonoRecogida:telRec, ts:Date.now(), iso:todayISO(), tiempoRecogida:tiempoMin, horaRecoger:horaRec.texto, horaRecogerISO:horaRec.iso}; let nr=push(ref(db,'kigoPedidosLive')); await set(nr, pedido); mostrarAviso(`Enviado a ${repaDestino}`,'Enviado'); restaurarCotizacion(); }, 'Enviar', 'green'); };
+window.confirmarPedidoCompra=async function(){ if(!ultimaCotizacion||!ultimaCotizacion.esCompra) return mostrarAviso('Cotiza compra','Falta'); let entTxt=document.getElementById('entregaDirComprar').value||ultimaCotizacion.entrega; let repaDestino=document.getElementById('pedidoRepaDestino')?.value||''; let tel=document.getElementById('telefonoEntregaCompra')?.value.trim()||''; let tiempoMin=tiempoCompraMin||15; let horaRec=calcularHoraRecogida(tiempoMin); if(!repaDestino) return mostrarAviso('Falta repartidor','Error'); confirmarAccion(`Enviar compra a ${repaDestino}?`, 'Confirmar', async ()=>{ let pedido={cliente:`COMPRA: ${ultimaCotizacion.productos||''} en ${ultimaCotizacion.dirRecogida}`, nombreEntrega:clienteCompraSeleccionado||'', productos:ultimaCotizacion.productos, dirRecogida:ultimaCotizacion.dirRecogida, lat1:ultimaCotizacion.lat1, lng1:ultimaCotizacion.lng1, entrega:entTxt, lat2:ultimaCotizacion.lat2, lng2:ultimaCotizacion.lng2, km:ultimaCotizacion.km, min:ultimaCotizacion.min, costoSugerido:ultimaCotizacion.costoSugerido, etapa:'pendiente', subEtapa:'pendiente', estado:'pendiente', repaAsignado:repaDestino, telefono:tel, ts:Date.now(), iso:todayISO(), esCompra:true, tiempoRecogida:tiempoMin, horaRecoger:horaRec.texto, horaRecogerISO:horaRec.iso}; let nr=push(ref(db,'kigoPedidosLive')); await set(nr, pedido); mostrarAviso(`Compra enviada a ${repaDestino}`,'Enviado'); restaurarCotizacion(); }, 'Enviar', 'green'); };
+
+// SEGUIMIENTO CORREGIDO - LEE subEtapa DEL REPA EN TIEMPO REAL
 window.filtrarSeguimiento=function(t){
  filtroSeguimientoActual=t;
  document.getElementById('fSegTodos').classList.toggle('active',t==='todos');
@@ -263,50 +265,76 @@ window.filtrarSeguimiento=function(t){
  renderSeguimientoAdmin();
 }
 function getFeeForItem(it){ if(it.feeKigo!=null) return it.feeKigo; if(it.tipo==='Moto Transporte') return tarifas.transporte; return tarifas.mandado; }
+
+function getEstadoReal(p){
+  // Prioriza subEtapa del repa
+  let sub = (p.subEtapa||'').toLowerCase();
+  let etapa = (p.etapa||'pendiente').toLowerCase();
+  let clave = sub||etapa;
+  if(clave==='pendiente' || clave==='') return 'pendiente';
+  if(clave==='voy_en_camino' || clave==='en_camino' || clave==='camino') return 'en_camino';
+  if(clave==='recogido') return 'recogido';
+  if(clave==='voy_entregar' || clave==='en_entrega' || clave==='entrega') return 'en_entrega';
+  if(clave==='entregado' || clave==='finalizado') return 'entregado';
+  if(clave==='aceptado') return 'aceptado';
+  if(clave==='en_espera') return 'en_espera';
+  return 'pendiente';
+}
+
 window.renderSeguimientoAdmin=function(){
  let cont=document.getElementById('listaSeguimiento'); if(!cont) return;
  let lista=Object.entries(pedidosLive).map(([k,v])=>({...v,_key:k})).sort((a,b)=>b.ts-a.ts);
  let filtrada=lista.filter(p=>{
-  let et=(p.etapa||'pendiente').toLowerCase();
+  let est=getEstadoReal(p);
   if(filtroSeguimientoActual==='todos') return true;
-  if(filtroSeguimientoActual==='pendiente') return et==='pendiente' || et==='en_espera';
-  if(filtroSeguimientoActual==='aceptado') return et==='aceptado';
-  if(filtroSeguimientoActual==='en_camino') return et==='en_camino' || et==='camino';
-  if(filtroSeguimientoActual==='recogido') return et==='recogido';
-  if(filtroSeguimientoActual==='entregado') return et==='entregado' || et==='en_entrega' || et==='entrega' || et==='finalizado';
+  if(filtroSeguimientoActual==='pendiente') return est==='pendiente' || est==='en_espera';
+  if(filtroSeguimientoActual==='aceptado') return est==='aceptado';
+  if(filtroSeguimientoActual==='en_camino') return est==='en_camino';
+  if(filtroSeguimientoActual==='recogido') return est==='recogido';
+  if(filtroSeguimientoActual==='entregado') return est==='entregado' || est==='en_entrega';
   return true;
  });
- let totalActivos=lista.filter(p=>!['cancelado'].includes(p.etapa)).length;
- document.getElementById('countTexto').innerText=`${totalActivos} ACTIVOS / ${lista.length} TOTAL`;
+ let totalActivos=lista.length;
+ document.getElementById('countTexto').innerText=`${totalActivos} ACTIVOS`;
  if(!filtrada.length){ cont.innerHTML='<div style="text-align:center;padding:30px;color:#9ca3af;font-size:10px">Sin pedidos</div>'; return; }
  cont.innerHTML=filtrada.map(p=>{
-  let etapa=(p.etapa||'pendiente').toLowerCase();
+  let est=getEstadoReal(p);
   let mapa={
-   pendiente:{txt:'PENDIENTE',c:'#f97316',bg:'#fff7ed',b:'#fed7aa',card:'pendiente'},
-   en_espera:{txt:'EN ESPERA',c:'#a855f7',bg:'#faf5ff',b:'#e9d5ff',card:'en_espera'},
-   aceptado:{txt:'ACEPTADO',c:'#0a0a0a',bg:'#f3f4f6',b:'#d1d5db',card:'en_camino'},
-   en_camino:{txt:'VOY EN CAMINO',c:'#3b82f6',bg:'#eff6ff',b:'#93c5fd',card:'en_camino'},
-   camino:{txt:'VOY EN CAMINO',c:'#3b82f6',bg:'#eff6ff',b:'#93c5fd',card:'en_camino'},
-   recogido:{txt:'RECOGIDO',c:'#f59e0b',bg:'#fef3c7',b:'#fde68a',card:'en_camino'},
-   en_entrega:{txt:'VOY A ENTREGAR',c:'#8b5cf6',bg:'#f5f3ff',b:'#ddd6fe',card:'en_camino'},
-   entrega:{txt:'VOY A ENTREGAR',c:'#8b5cf6',bg:'#f5f3ff',b:'#ddd6fe',card:'en_camino'},
-   entregado:{txt:'ENTREGADO ✓',c:'#fff',bg:'#10b981',b:'#059669',card:'finalizado'},
-   finalizado:{txt:'ENTREGADO ✓',c:'#fff',bg:'#10b981',b:'#059669',card:'finalizado'},
+   pendiente:{txt:'PENDIENTE',c:'#f97316',bg:'#fff7ed',b:'#fed7aa',card:'pendiente',step:0},
+   en_espera:{txt:'EN ESPERA',c:'#a855f7',bg:'#faf5ff',b:'#e9d5ff',card:'en_espera',step:0},
+   aceptado:{txt:'ACEPTADO ✓',c:'#0a0a0a',bg:'#f3f4f6',b:'#d1d5db',card:'en_camino',step:1},
+   en_camino:{txt:'VOY EN CAMINO',c:'#3b82f6',bg:'#eff6ff',b:'#93c5fd',card:'en_camino',step:2},
+   recogido:{txt:'RECOGIDO',c:'#f59e0b',bg:'#fef3c7',b:'#fde68a',card:'en_camino',step:3},
+   en_entrega:{txt:'VOY A ENTREGAR',c:'#8b5cf6',bg:'#f5f3ff',b:'#ddd6fe',card:'en_camino',step:4},
+   entregado:{txt:'ENTREGADO ✓',c:'#fff',bg:'#10b981',b:'#059669',card:'finalizado',step:5},
   };
-  let m=mapa[etapa]||mapa.pendiente;
-  let esEntregado = etapa==='entregado' || etapa==='finalizado';
+  let m=mapa[est]||mapa.pendiente;
+  let esEntregado = est==='entregado';
   let horaLlegada=new Date(p.ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
   let numPedido=`#${p._key.slice(-4).toUpperCase()}`;
   let recogerTxt=p.horaRecoger||`RECOGER ${p.tiempoRecogida||20}min`;
   let precio=p.costoSugerido||0;
   let estiloCard = esEntregado? 'border-color:#10b981;background:#dcfce7;box-shadow:0 0 18px rgba(16,185,129,.6);' : '';
   let estiloPrecio = esEntregado? 'background:#10b981;color:#fff;border-color:#059669' : '';
+  let step=m.step;
+  // barra de pasos coordinada
   return `<div class="card-pedido ${m.card}" style="${estiloCard}">
    <div style="display:flex;justify-content:space-between">
     <div style="flex:1"><div style="display:flex;align-items:center;gap:6px"><span class="num-pedido">${numPedido}</span><span style="font-size:9px;color:#6b7280">${horaLlegada}</span><span style="font-size:7px;background:#0a0a0a;color:#fff;padding:2px 6px;border-radius:10px">${p.repaAsignado||''}</span></div>
      <div class="hora-recoger" style="${esEntregado?'background:#10b981;color:#fff':''}">${recogerTxt}</div>
      <div style="margin-top:6px"><div style="font-size:10px;font-weight:800">${p.cliente||'Cliente'}</div><div style="font-size:8px;color:#374151"><b>REC:</b> ${(p.dirRecogida||'').slice(0,45)}</div><div style="font-size:8px;color:#374151"><b>ENT:</b> ${(p.entrega||'').slice(0,45)}</div><div style="font-size:7px;color:#6b7280">${p.km||'--'}km | ${p.telefono||''}</div></div>
-     <div style="margin-top:6px;display:flex;gap:2px;align-items:center"><span style="width:16px;height:16px;border-radius:50%;background:#10b981;color:#fff;display:flex;align-items:center;justify-content:center;font-size:7px">1</span><span style="width:10px;height:2px;background:${['aceptado','en_camino','camino','recogido','en_entrega','entrega','entregado','finalizado'].includes(etapa)?'#10b981':'#e5e7eb'}"></span><span style="width:16px;height:16px;border-radius:50%;background:${['aceptado','en_camino','camino','recogido','en_entrega','entrega','entregado','finalizado'].includes(etapa)?'#0a0a0a':'#e5e7eb'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:7px">2</span><span style="width:10px;height:2px;background:${['recogido','en_entrega','entrega','entregado','finalizado'].includes(etapa)?'#10b981':'#e5e7eb'}"></span><span style="width:16px;height:16px;border-radius:50%;background:${['recogido','en_entrega','entrega','entregado','finalizado'].includes(etapa)?'#f59e0b':'#e5e7eb'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:7px">3</span><span style="width:10px;height:2px;background:${['en_entrega','entrega','entregado','finalizado'].includes(etapa)?'#10b981':'#e5e7eb'}"></span><span style="width:16px;height:16px;border-radius:50%;background:${['en_entrega','entrega','entregado','finalizado'].includes(etapa)?'#8b5cf6':'#e5e7eb'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:7px">4</span><span style="width:10px;height:2px;background:${['entregado','finalizado'].includes(etapa)?'#10b981':'#e5e7eb'}"></span><span style="width:16px;height:16px;border-radius:50%;background:${['entregado','finalizado'].includes(etapa)?'#10b981':'#e5e7eb'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:7px">✓</span></div>
+     <div style="margin-top:6px;display:flex;gap:2px;align-items:center">
+       <span style="width:16px;height:16px;border-radius:50%;background:${step>=1?'#0a0a0a':'#e5e7eb'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:7px">1</span>
+       <span style="width:10px;height:2px;background:${step>=2?'#10b981':'#e5e7eb'}"></span>
+       <span style="width:16px;height:16px;border-radius:50%;background:${step>=2?'#3b82f6':'#e5e7eb'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:7px">2</span>
+       <span style="width:10px;height:2px;background:${step>=3?'#10b981':'#e5e7eb'}"></span>
+       <span style="width:16px;height:16px;border-radius:50%;background:${step>=3?'#f59e0b':'#e5e7eb'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:7px">3</span>
+       <span style="width:10px;height:2px;background:${step>=4?'#10b981':'#e5e7eb'}"></span>
+       <span style="width:16px;height:16px;border-radius:50%;background:${step>=4?'#8b5cf6':'#e5e7eb'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:7px">4</span>
+       <span style="width:10px;height:2px;background:${step>=5?'#10b981':'#e5e7eb'}"></span>
+       <span style="width:16px;height:16px;border-radius:50%;background:${step>=5?'#10b981':'#e5e7eb'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:7px">✓</span>
+       <span style="margin-left:6px;font-size:6px;color:#6b7280;font-weight:700">${step===0?'PENDIENTE':step===1?'ACEPTADO':step===2?'EN CAMINO':step===3?'RECOGIDO':step===4?'A ENTREGAR':'ENTREGADO'}</span>
+     </div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;min-width:110px"><span style="font-size:7px;font-weight:800;color:${m.c};background:${m.bg};border:1.5px solid ${m.b};padding:4px 10px;border-radius:20px;text-align:center">${m.txt}</span><span class="precio-neon" style="${estiloPrecio}">$${precio}</span><div style="display:flex;gap:4px"><button class="btn-editar" onclick="abrirEditar('${p._key}')">EDITAR</button><button class="btn-historial ${esEntregado?'activo':''}" ${esEntregado?`onclick="pasarAHistorial('${p._key}')"`:'disabled'} style="${esEntregado?'background:#0a0a0a;color:#fff':''}">HISTORIAL</button></div>${esEntregado?'<div style="font-size:6px;color:#166534;font-weight:800;background:#fff;padding:2px 6px;border-radius:8px;border:1px solid #86efac">LISTO PARA HISTORIAL</div>':''}</div>
    </div>
@@ -315,7 +343,7 @@ window.renderSeguimientoAdmin=function(){
 }
 window.abrirEditar=function(key){ let p=pedidosLive[key]; if(!p) return; detalleActualKey=key; document.getElementById('editRecoge').value=p.dirRecogida||p.cliente||''; document.getElementById('editEntrega').value=p.entrega||''; document.getElementById('editNombre').value=p.nombreEntrega||''; document.getElementById('editTel').value=p.telefono||''; document.getElementById('editCosto').value=p.costoSugerido||''; document.getElementById('editTiempo').value=p.tiempoRecogida||20; document.getElementById('editRepa').value=p.repaAsignado||''; document.getElementById('overlayEditar').classList.add('show'); }
 window.guardarEdicionSeguimiento=async function(){ if(!detalleActualKey) return; let p=pedidosLive[detalleActualKey]; if(!p) return; let nuevaRecoge=document.getElementById('editRecoge').value.trim(); let nuevaEntrega=document.getElementById('editEntrega').value.trim(); let nuevoNombre=document.getElementById('editNombre').value.trim(); let nuevoRepa=document.getElementById('editRepa').value; let nuevoTel=document.getElementById('editTel').value.trim(); let nuevoCosto=parseInt(document.getElementById('editCosto').value)||p.costoSugerido; let nuevoTiempo=parseInt(document.getElementById('editTiempo').value)||20; if(!nuevaRecoge||!nuevaEntrega) return mostrarAviso('Falta datos','Error'); let lat1=p.lat1,lng1=p.lng1,lat2=p.lat2,lng2=p.lng2; if(nuevaRecoge!==p.dirRecogida){ let c=await geo(nuevaRecoge); if(c){ lat1=c.lat; lng1=c.lng; } } if(nuevaEntrega!==p.entrega){ let c=await geo(nuevaEntrega); if(c){ lat2=c.lat; lng2=c.lng; } } let nuevoKm=p.km, nuevoMin=p.min; let ruta=await routeGoogle({lat:lat1,lng:lng1},{lat:lat2,lng:lng2}); if(ruta){ nuevoKm=ruta.km; nuevoMin=ruta.min; } let hora=calcularHoraRecogida(nuevoTiempo); let updates={dirRecogida:nuevaRecoge, entrega:nuevaEntrega, nombreEntrega:nuevoNombre, repaAsignado:nuevoRepa, telefono:nuevoTel, costoSugerido:nuevoCosto, lat1:lat1,lng1:lng1,lat2:lat2,lng2:lng2, km:nuevoKm, min:nuevoMin, tiempoRecogida:nuevoTiempo, horaRecoger:hora.texto, horaRecogerISO:hora.iso}; await update(ref(db,'kigoPedidosLive/'+detalleActualKey), updates); mostrarAviso(`Actualizado`,'Guardado'); cerrarEditar(); }
-window.cancelarPedidoDesdeAdmin=async function(){ if(!detalleActualKey) return; let p=pedidosLive[detalleActualKey]; if(!p) return; confirmarAccion(`Cancelar ${p.cliente}?`, 'Cancelar', async()=>{ await set(ref(db,'kigoPedidosCancelados/'+detalleActualKey), {...p, etapa:'cancelado', cancelado:true, tsCancel:Date.now()}); await set(ref(db,'kigoAlertasRepa/'+p.repaAsignado+'/'+detalleActualKey), {tipo:'cancelado', pedidoId:detalleActualKey, cliente:p.cliente, ts:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+detalleActualKey)); cerrarEditar(); mostrarAviso('Cancelado','OK'); }, 'Si, cancelar', 'red'); }
+window.cancelarPedidoDesdeAdmin=async function(){ if(!detalleActualKey) return; let p=pedidosLive[detalleActualKey]; if(!p) return; confirmarAccion(`Cancelar ${p.cliente}?`, 'Cancelar servicio', async()=>{ await set(ref(db,'kigoPedidosCancelados/'+detalleActualKey), {...p, etapa:'cancelado', subEtapa:'cancelado', cancelado:true, tsCancel:Date.now()}); await set(ref(db,'kigoAlertasRepa/'+p.repaAsignado+'/'+detalleActualKey), {tipo:'cancelado', pedidoId:detalleActualKey, cliente:p.cliente, ts:Date.now()}); await remove(ref(db,'kigoPedidosLive/'+detalleActualKey)); cerrarEditar(); mostrarAviso('Cancelado y notificado al repa','OK'); }, 'Si, cancelar', 'red'); }
 window.pasarAHistorial=async function(key){ let p=pedidosLive[key]; if(!p) return; let fee=getFeeForItem({tipo:'Moto Mandado', repa:p.repaAsignado}); let valor=p.costoSugerido||0; let obj={ iso:p.iso||todayISO(), cliente:p.cliente, tipo:'Moto Mandado', valor:valor, repa:p.repaAsignado, pagado:false, promo:false, feeKigo:fee, ts:Date.now(), origenPedido:key }; let nr=push(ref(db,'ventasKigo')); await set(nr,obj); await remove(ref(db,'kigoPedidosLive/'+key)); mostrarAviso('Pasado a historial','OK'); }
 
 window.setHistPeriodo=function(p){ filtroHistPeriodo=p; document.getElementById('hHoy').classList.toggle('active',p==='hoy'); document.getElementById('hMes').classList.toggle('active',p==='mes'); document.getElementById('hTodo').classList.toggle('active',p==='todo'); document.getElementById('hFecha').classList.toggle('active',p==='fecha'); document.getElementById('rangoFechas').style.display=p==='fecha'?'flex':'none'; renderHistorial(); }
@@ -328,7 +356,6 @@ window.eliminarHistorial=function(id){ confirmarAccion('Eliminar?', 'Eliminar', 
 window.abrirEditarHistorial=function(id){ let v=ventasData[id]; if(!v) return; histDetalleKey=id; document.getElementById('editHistCliente').value=v.cliente||''; document.getElementById('editHistRepa').value=v.repa||''; document.getElementById('editHistTipo').value=v.tipo||'Moto Mandado'; document.getElementById('editHistValor').value=v.valor||0; document.getElementById('editHistFee').value=v.feeKigo||0; document.getElementById('editHistIso').value=v.iso||todayISO(); document.getElementById('overlayEditHist').classList.add('show'); }
 window.guardarEdicionHistorial=async function(){ if(!histDetalleKey) return; let updates={ cliente:document.getElementById('editHistCliente').value.trim(), repa:document.getElementById('editHistRepa').value, tipo:document.getElementById('editHistTipo').value, valor:parseInt(document.getElementById('editHistValor').value)||0, feeKigo:parseInt(document.getElementById('editHistFee').value)||0, iso:document.getElementById('editHistIso').value||todayISO() }; await update(ref(db,'ventasKigo/'+histDetalleKey), updates); document.getElementById('overlayEditHist').classList.remove('show'); }
 
-// CLIENTES NUEVO
 window.setClienteTab=function(t){
  clienteTabActual=t;
  document.getElementById('btnCliList').classList.toggle('active',t==='lista');
@@ -376,7 +403,6 @@ window.borrarClienteDir=function(nombre){
   mostrarAviso('Eliminado','OK');
  });
 }
-
 window.setAjusteTab=function(tab){ document.getElementById('btnAjusteRepas').classList.toggle('active',tab==='repas'); document.getElementById('btnAjusteTarifas').classList.toggle('active',tab==='tarifas'); document.getElementById('panelAjusteRepas').style.display=tab==='repas'?'block':'none'; document.getElementById('panelAjusteTarifas').style.display=tab==='tarifas'?'block':'none'; }
 function cargarInputsTarifas(){ document.getElementById('tarifaCentro').value=tarifasKmConfig.centroTarifa||30; document.getElementById('tarifaRadioCentro').value=tarifasKmConfig.centroRadio||1.5; document.getElementById('tarifaPorKm').value=tarifasKmConfig.porKm||8; document.getElementById('tarifaLejosRadio').value=tarifasKmConfig.lejosRadio||4; document.getElementById('tarifaLejosExtra').value=tarifasKmConfig.lejosExtra||15; document.getElementById('tarifaCompraBase').value=tarifasKmConfig.compraBase||42; }
 window.guardarTarifasKm=async function(){ let nuevo={ centroTarifa: parseInt(document.getElementById('tarifaCentro').value)||30, centroRadio: parseFloat(document.getElementById('tarifaRadioCentro').value)||1.5, porKm: parseInt(document.getElementById('tarifaPorKm').value)||8, lejosRadio: parseFloat(document.getElementById('tarifaLejosRadio').value)||4, lejosExtra: parseInt(document.getElementById('tarifaLejosExtra').value)||15, compraBase: parseInt(document.getElementById('tarifaCompraBase').value)||42 }; await set(ref(db,'kigoTarifasKm'), nuevo); document.getElementById('tarifasInfo').innerText='Guardado en tiempo real'; setTimeout(()=>{ document.getElementById('tarifasInfo').innerText=''; },3000); }
@@ -388,4 +414,4 @@ window.eliminarRepaFull=function(nombre){ confirmarAccion(`Eliminar ${nombre}?`,
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTV1sm6McEIkv-cheaVFCD_svp_a--6wg&libraries=places" async defer></script>
 </body>
-</html> 
+</html>
