@@ -80,8 +80,27 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 <div style="display:flex;gap:6px;margin-bottom:10px"><button id="tabDatos" class="tab-aj active" onclick="showTabAj('datos')">MIS DATOS</button><button id="tabModif" class="tab-aj" onclick="showTabAj('modif')">MODIFICACIONES</button></div>
 <div id="aj-datos">
 <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div><div style="font-size:10px;font-weight:800">Sonido y Notificaciones</div><div style="font-size:7px;color:#6b7280" id="txtEstadoSonido">Desactivado</div></div><div id="switchWrap" style="width:50px;height:28px;background:#e5e7eb;border-radius:20px;position:relative;cursor:pointer;transition:.2s" onclick="toggleSonido()"><div id="switchBolita" style="width:22px;height:22px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.2)"></div></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div><div style="font-size:10px;font-weight:800">Sonido y Notificaciones</div><div style="font-size:7px;color:#6b7280" id="txtEstadoSonido">Desactivado</div></div><div id="switchWrap" style="width:50px;height:28px;background:#e5e7eb;border-radius:20px;position:relative;cursor:pointer;transition:.2s" onclick="toggleSonido()"><div id="switchBolita" style="width:22px;height:22px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.2)"></div></div></div>
 <button onclick="probarSonido()" style="width:100%;height:40px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;margin-top:8px;font-weight:800;font-size:9px">🔊 PROBAR SONIDO 6 SEG</button>
+
+<!-- NUEVO CODIGO PRECIOS ADMIN EN MIS DATOS - SOLO LECTURA NEON -->
+<div style="margin-top:14px;border-top:1px solid #f3f4f6;padding-top:12px">
+<div style="font-size:9px;font-weight:800;margin-bottom:8px">💰 MIS TARIFAS (DEL ADMIN)</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:10px;text-align:center">
+<div style="font-size:7px;font-weight:800;color:#166534">MOTO MANDADO</div>
+<div id="txtPrecioMandado" style="font-size:18px;font-weight:800;color:#10b981;background:#dcfce7;border:1px solid #86efac;padding:4px;border-radius:8px;margin-top:4px">$5</div>
+<div style="font-size:6px;color:#6b7280;margin-top:3px">Se descuenta a KIGO</div>
+</div>
+<div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:10px;padding:10px;text-align:center">
+<div style="font-size:7px;font-weight:800;color:#991b1b">MOTO TRANSPORTE</div>
+<div id="txtPrecioTrans" style="font-size:18px;font-weight:800;color:#ef4444;background:#fee2e2;border:1px solid #fecaca;padding:4px;border-radius:8px;margin-top:4px">$10</div>
+<div style="font-size:6px;color:#6b7280;margin-top:3px">Se descuenta a KIGO</div>
+</div>
+</div>
+<div style="font-size:6px;color:#6b7280;margin-top:8px;text-align:center">Ej: Si cobras $50 y tu tarifa es $5, tú ganas $45 y $5 va a tu deuda con KIGO</div>
+</div>
+
 </div>
 </div>
 <div id="aj-modif" style="display:none"><div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:center"><div id="previewFoto" style="width:80px;height:80px;background:#f3f4f6;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:800">K</div><input type="file" id="inputFoto" accept="image/*" style="display:none" onchange="cambiarFoto(event)"><button onclick="document.getElementById('inputFoto').click()" style="height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--border);background:#fff;font-weight:800;font-size:8px">SUBIR FOTO</button><div style="margin-top:14px;text-align:left"><div style="font-size:9px;font-weight:800">Nombre visible</div><input id="ajNombreVisible" class="input-kigo"></div><button onclick="guardarModif()" style="width:100%;height:42px;background:#10b981;color:#fff;border:none;border-radius:10px;margin-top:12px;font-weight:800;font-size:9px">ACTUALIZAR</button></div></div>
@@ -98,7 +117,6 @@ import { getDatabase, ref, onValue, update, push, set, remove } from "https://ww
 const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", authDomain: "historial-kigo-xpress.firebaseapp.com", databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com", projectId: "historial-kigo-xpress", storageBucket: "historial-kigo-xpress.firebasestorage.app", messagingSenderId: "571399920545", appId: "1:571399920545:web:aa16407753b43cbe2e89e0" };
 const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
-// CODIGO CONFIG USUARIO - REPARTIDOR LOGUEADO
 let currentRepa = new URLSearchParams(window.location.search).get('repa') || localStorage.getItem('kigoUser') || 'Jose';
 let currentFoto = localStorage.getItem('kigoFoto_'+currentRepa) || '';
 let currentNombreVisible = localStorage.getItem('kigoNombreVisible_'+currentRepa) || currentRepa;
@@ -112,12 +130,17 @@ let pedidosLive={}, ventasData={}, activoKey=null, prevKeys=new Set(), firstLoad
 let audioUnlocked = localStorage.getItem('kigoSonidoActivo')==='1';
 let sonidoActivo = audioUnlocked;
 let tarifasRepaActual = {mandado:5, transporte:10};
-onValue(ref(db,'kigoTarifasRepas/'+currentRepa), s=>{ if(s.exists()) tarifasRepaActual=s.val(); });
+
+// CODIGO TARIFAS ENLAZADAS CON ADMIN - ESTE ES EL VALOR QUE SE COBRA
+onValue(ref(db,'kigoTarifasRepas/'+currentRepa), s=>{
+  if(s.exists()) tarifasRepaActual=s.val();
+  document.getElementById('txtPrecioMandado').innerText = '$'+ (tarifasRepaActual.mandado||5);
+  document.getElementById('txtPrecioTrans').innerText = '$'+ (tarifasRepaActual.transporte||10);
+});
 
 function todayISO(){ let d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('./firebase-messaging-sw.js').catch(()=>{}); }
 
-// CODIGO SONIDO
 function actualizarSwitchUI(){
  let wrap=document.getElementById('switchWrap'); let bolita=document.getElementById('switchBolita'); let txt=document.getElementById('txtEstadoSonido'); let status=document.getElementById('statusTxt');
  if(sonidoActivo){ wrap.style.background='#10b981'; bolita.style.left='25px'; txt.innerText='Activado'; txt.style.color='#10b981'; status.innerText='● SONIDO ACTIVO'; }
@@ -129,15 +152,8 @@ window.toggleSonido = async function(){
  else { sonidoActivo=false; audioUnlocked=false; localStorage.setItem('kigoSonidoActivo','0'); let a=document.getElementById('alarmAudio'); a.pause(); a.currentTime=0; actualizarSwitchUI(); }
 }
 window.probarSonido=function(){ if(!sonidoActivo){ alert('Activa primero'); return; } sonidoNuevoPedido(); }
-function sonidoNuevoPedido(){
- if(!sonidoActivo) return;
- try{
-  let audio=document.getElementById('alarmAudio');
-  if(audioUnlocked){ audio.currentTime=0; audio.volume=1; audio.play().catch(()=>{}); setTimeout(()=>{ audio.pause(); audio.currentTime=0; },6000); }
- }catch(e){}
-}
+function sonidoNuevoPedido(){ if(!sonidoActivo) return; try{ let audio=document.getElementById('alarmAudio'); if(audioUnlocked){ audio.currentTime=0; audio.volume=1; audio.play().catch(()=>{}); setTimeout(()=>{ audio.pause(); audio.currentTime=0; },6000); } }catch(e){} }
 
-// CODIGO MAPA - NO HACE AUTO-CENTER AL HACER ZOOM
 function initMap(){ if(!window.google){ setTimeout(initMap,300); return; } map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1556,lng:-100.9343},zoom:14, gestureHandling:'greedy'}); dirServ=new google.maps.DirectionsService(); dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); trackLocation(); }
 setTimeout(initMap,500);
 
@@ -146,51 +162,38 @@ function trackLocation(){
    navigator.geolocation.watchPosition(pos=>{
      myLocation={lat:pos.coords.latitude,lng:pos.coords.longitude};
      if(map){
-       if(!myMarker){
-         myMarker = new google.maps.Marker({ position: myLocation, map: map, icon: { path: google.maps.SymbolPath.CIRCLE, scale:10, fillColor:'#3b82f6', fillOpacity:1, strokeColor:'#ffffff', strokeWeight:3 }, title:'Mi ubicación' });
-       } else { myMarker.setPosition(myLocation); }
+       if(!myMarker){ myMarker = new google.maps.Marker({ position: myLocation, map: map, icon: { path: google.maps.SymbolPath.CIRCLE, scale:10, fillColor:'#3b82f6', fillOpacity:1, strokeColor:'#ffffff', strokeWeight:3 }, title:'Mi ubicación' }); }
+       else { myMarker.setPosition(myLocation); }
        if(activoKey && pedidosLive[activoKey]){ actualizarRutaSegunEstado(pedidosLive[activoKey]); }
      }
    },()=>{},{enableHighAccuracy:true, maximumAge:0, timeout:10000});
  }
 }
-
-// CODIGO MARCADORES Y RUTA TIEMPO REAL
 function limpiarMarcadoresPedido(){ if(markerRecogida){ markerRecogida.setMap(null); markerRecogida=null; } if(markerEntrega){ markerEntrega.setMap(null); markerEntrega=null; } }
 function trazarPedidoCompleto(p){
-  if(!dirServ||!dirRend||!map) return;
-  limpiarMarcadoresPedido();
-  markerRecogida = new google.maps.Marker({ position:{lat:p.lat1,lng:p.lng1}, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:9, fillColor:'#10b981', fillOpacity:1, strokeColor:'#fff', strokeWeight:2}, title:'Recoger aquí' });
-  markerEntrega = new google.maps.Marker({ position:{lat:p.lat2,lng:p.lng2}, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:9, fillColor:'#ef4444', fillOpacity:1, strokeColor:'#fff', strokeWeight:2}, title:'Entregar aquí' });
+  if(!dirServ||!dirRend||!map) return; limpiarMarcadoresPedido();
+  markerRecogida = new google.maps.Marker({ position:{lat:p.lat1,lng:p.lng1}, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:9, fillColor:'#10b981', fillOpacity:1, strokeColor:'#fff', strokeWeight:2}, title:'Recoger' });
+  markerEntrega = new google.maps.Marker({ position:{lat:p.lat2,lng:p.lng2}, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:9, fillColor:'#ef4444', fillOpacity:1, strokeColor:'#fff', strokeWeight:2}, title:'Entregar' });
   dirServ.route({origin:{lat:p.lat1,lng:p.lng1},destination:{lat:p.lat2,lng:p.lng2},travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); } });
 }
 function trazarDesdeMiUbicacion(destino, tipo){
-  if(!dirServ||!dirRend||!map||!myLocation) return;
-  limpiarMarcadoresPedido();
-  if(tipo==='recogida'){
-    markerRecogida = new google.maps.Marker({ position:destino, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:10, fillColor:'#10b981', fillOpacity:1, strokeColor:'#fff', strokeWeight:2}, title:'Punto de recogida' });
-  } else {
-    markerEntrega = new google.maps.Marker({ position:destino, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:10, fillColor:'#ef4444', fillOpacity:1, strokeColor:'#fff', strokeWeight:2}, title:'Punto de entrega' });
-  }
+  if(!dirServ||!dirRend||!map||!myLocation) return; limpiarMarcadoresPedido();
+  if(tipo==='recogida'){ markerRecogida = new google.maps.Marker({ position:destino, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:10, fillColor:'#10b981', fillOpacity:1, strokeColor:'#fff', strokeWeight:2} }); }
+  else { markerEntrega = new google.maps.Marker({ position:destino, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:10, fillColor:'#ef4444', fillOpacity:1, strokeColor:'#fff', strokeWeight:2} }); }
   dirServ.route({origin:myLocation, destination:destino, travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); } });
 }
 function actualizarRutaSegunEstado(p){
-  if(!p ||!map ||!dirServ) return;
-  let sub = p.subEtapa || 'pendiente';
+  if(!p ||!map ||!dirServ) return; let sub = p.subEtapa || 'pendiente';
   if(sub==='pendiente'){ trazarPedidoCompleto(p); }
   else if(sub==='voy_en_camino'){ if(myLocation) trazarDesdeMiUbicacion({lat:p.lat1, lng:p.lng1},'recogida'); else trazarPedidoCompleto(p); }
   else if(sub==='recogido' || sub==='voy_entregar'){ if(myLocation) trazarDesdeMiUbicacion({lat:p.lat2, lng:p.lng2},'entrega'); else trazarPedidoCompleto(p); }
 }
 
 onValue(ref(db,'kigoPedidosLive'), s=>{
- let data=s.val()||{};
- let listaRepaKeys=Object.entries(data).filter(([k,v])=>v.repaAsignado===currentRepa).map(([k])=>k);
+ let data=s.val()||{}; let listaRepaKeys=Object.entries(data).filter(([k,v])=>v.repaAsignado===currentRepa).map(([k])=>k);
  if(firstLoad){ prevKeys=new Set(listaRepaKeys); firstLoad=false; pedidosLive=data; renderPedidosRepa(); return; }
  let newKeys=listaRepaKeys.filter(k=>!prevKeys.has(k));
- if(newKeys.length>0){
-   newKeys.forEach(k=>{ let p=data[k]; if(p.etapa==='pendiente' &&!p.activo){ update(ref(db,'kigoPedidosLive/'+k),{etapa:'en_espera'}); } });
-   let nuevo=data[newKeys[0]]; sonidoNuevoPedido(); document.getElementById('notiTexto').innerText=`${nuevo.cliente} - ${nuevo.dirRecogida || nuevo.cliente}`; document.getElementById('overlayNoti').classList.add('show');
- }
+ if(newKeys.length>0){ newKeys.forEach(k=>{ let p=data[k]; if(p.etapa==='pendiente' &&!p.activo){ update(ref(db,'kigoPedidosLive/'+k),{etapa:'en_espera'}); } }); let nuevo=data[newKeys[0]]; sonidoNuevoPedido(); document.getElementById('notiTexto').innerText=`${nuevo.cliente} - ${nuevo.dirRecogida || nuevo.cliente}`; document.getElementById('overlayNoti').classList.add('show'); }
  prevKeys=new Set(listaRepaKeys); pedidosLive=data; renderPedidosRepa();
 });
 onValue(ref(db,'ventasKigo'), s=>{ ventasData=s.val()||{}; renderHistRepa(); });
@@ -208,23 +211,18 @@ window.showRepaView=function(v){
 }
 window.showTabAj=function(t){ document.getElementById('aj-datos').style.display=t==='datos'?'block':'none'; document.getElementById('aj-modif').style.display=t==='modif'?'block':'none'; document.getElementById('tabDatos').classList.toggle('active',t==='datos'); document.getElementById('tabModif').classList.toggle('active',t==='modif'); }
 
-// CODIGO TARJETA PEDIDO ACTIVO - CON HORA RECOGIDA NEON
 function getHoraBadge(p){
   let texto = p.horaRecoger || (p.tiempoRecogida? `RECOGER ${p.tiempoRecogida}MIN` : '');
-  if(!texto) return '';
-  let sub = p.subEtapa || 'pendiente';
+  if(!texto) return ''; let sub = p.subEtapa || 'pendiente';
   if(sub==='recogido' || sub==='voy_entregar') return `<span class="hora-neon">${texto}</span>`;
-  let iso = p.horaRecogerISO || null;
-  if(!iso) return `<span class="hora-neon">${texto}</span>`;
+  let iso = p.horaRecogerISO || null; if(!iso) return `<span class="hora-neon">${texto}</span>`;
   let ahora = new Date(); let target = new Date(iso); let diffMin = (target - ahora)/60000;
-  if(diffMin <=5){
-    return `<span class="hora-neon amarillo">⚠️ ${texto}</span>`;
-  }
+  if(diffMin <=5){ return `<span class="hora-neon amarillo">⚠️ ${texto}</span>`; }
   return `<span class="hora-neon">${texto}</span>`;
 }
 
 window.renderPedidosRepa=function(){
- let lista=Object.entries(pedidosLive).map(([k,v])=>({...v,_key:k})).filter(p=>p.repaAsignado===currentRepa).sort((a,b)=>b.ts-a.ts);
+ let lista=Object.entries(pedidosLive).map(([k][v])=>({...v,_key:k})).filter(p=>p.repaAsignado===currentRepa).sort((a,b)=>b.ts-a.ts);
  let activos=lista.filter(p=>p.activo===true && p.etapa!=='en_espera' && p.etapa!=='finalizado');
  let espera=lista.filter(p=>p.etapa==='en_espera' ||!p.activo);
  let principal = activos.length>0? activos[0] : null;
@@ -235,9 +233,7 @@ window.renderPedidosRepa=function(){
   let p=principal; let sub=p.subEtapa||'pendiente';
   let estadoTxt = sub==='pendiente'?'ACEPTADO':sub==='voy_en_camino'?'VOY EN CAMINO':sub==='recogido'?'RECOGIDO':sub==='voy_entregar'?'VOY A ENTREGAR':p.etapa.toUpperCase();
   let btnTxt = sub==='pendiente'?'VOY EN CAMINO':sub==='voy_en_camino'?'RECOGIDO':sub==='recogido'?'VOY A ENTREGAR':'ENTREGADO';
-  actualizarRutaSegunEstado(p);
-  let horaBadge = getHoraBadge(p);
-  let dirRecoger = p.dirRecogida || p.direccionRecogida || p.cliente || '';
+  actualizarRutaSegunEstado(p); let horaBadge = getHoraBadge(p); let dirRecoger = p.dirRecogida || p.direccionRecogida || p.cliente || '';
   cont.innerHTML=`<div class="card-activo"><div class="head-activo"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="num-neon">#${p._key.slice(-4).toUpperCase()}</span>${horaBadge}<span class="estado-badge">${estadoTxt}</span></div><div class="precio-neon">$${p.costoSugerido||0}</div></div><div class="bloque-recoger"><div style="font-size:7px;font-weight:800;color:#166534">RECOGER EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">${p.cliente||''}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #bbf7d0">📍 ${dirRecoger}</div><div style="font-size:8px;font-weight:700;margin-top:4px">📞 ${p.telefonoRecogida||''}</div><button class="btn-ruta" onclick="abrirRuta(${p.lat1},${p.lng1})">RUTA ↗</button></div><div class="bloque-entregar"><div style="font-size:7px;font-weight:800;color:#991b1b">ENTREGAR EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">${p.nombreEntrega||'Cliente'}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #fecaca">📍 ${p.entrega||''}</div><button class="btn-ruta" style="background:#ef4444" onclick="abrirRuta(${p.lat2},${p.lng2})">RUTA ↗</button></div><div style="display:flex;gap:6px;padding:8px 10px"><button class="btn-accion wait" onclick="ponerEspera('${p._key}')">ESPERA</button><button class="btn-accion primary" onclick="accionPrincipal('${p._key}')">${btnTxt}</button></div></div>`;
  }
  let contE=document.getElementById('contEspera'); document.getElementById('countEspera').innerText=espera.length;
@@ -271,6 +267,8 @@ async function pasarAHistorial(k, pObj){
 }
 window.cerrarEntregado=function(){ document.getElementById('overlayEntregado').classList.remove('show'); }
 window.limpiarFiltros=function(){ document.getElementById('filtroTipo').value=''; document.getElementById('filtroFecha').value=''; document.getElementById('filtroMes').value=''; renderHistRepa(); }
+
+// CODIGO HISTORIAL - GANADO CON PUNTO DECIMAL
 window.renderHistRepa=function(){
  let lista=Object.entries(ventasData).map(([k,v])=>({...v,_key:k})).filter(v=>v.repa===currentRepa).sort((a,b)=>b.ts-a.ts);
  let tipo=document.getElementById('filtroTipo')?.value||''; let fecha=document.getElementById('filtroFecha')?.value||''; let mes=document.getElementById('filtroMes')?.value||'';
@@ -280,10 +278,11 @@ window.renderHistRepa=function(){
  document.getElementById('hTotal').innerText=lista.length;
  let ganado=lista.reduce((s,v)=>s+((parseInt(v.valor)||0)-(parseInt(v.feeKigo)||0)),0);
  let debe=lista.filter(v=>!v.pagado).reduce((s,v)=>s+(parseInt(v.feeKigo)||0),0);
- document.getElementById('hGanado').innerText='$'+ganado; document.getElementById('hDebe').innerText='$'+debe;
+ document.getElementById('hGanado').innerText='$'+ganado.toLocaleString('es-MX');
+ document.getElementById('hDebe').innerText='$'+debe.toLocaleString('es-MX');
  let cont=document.getElementById('listaHistRepa');
  if(!lista.length){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af;font-size:9px">Sin resultados</div>'; return; }
- cont.innerHTML=lista.map(v=>`<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #f3f4f6"><div><div style="font-size:7px;color:#6b7280;font-weight:700">${v.iso} • ${v.tipo||'Moto'}</div><div style="font-size:9px;font-weight:800;margin-top:2px">${v.cliente}</div><div style="font-size:6px;margin-top:2px;padding:2px 6px;border-radius:10px;display:inline-block;background:${v.pagado?'#dcfce7;color:#166534':'#fee2e2;color:#991b1b'}">${v.pagado?'PAGADO':'DEBE $'+(v.feeKigo||5)}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#10b981">$${v.valor}</div><div style="font-size:7px;color:#6b7280">Neto $${(v.valor||0)-(v.feeKigo||0)}</div></div></div>`).join('');
+ cont.innerHTML=lista.map(v=>`<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #f3f4f6"><div><div style="font-size:7px;color:#6b7280;font-weight:700">${v.iso} • ${v.tipo||'Moto'}</div><div style="font-size:9px;font-weight:800;margin-top:2px">${v.cliente}</div><div style="font-size:6px;margin-top:2px;padding:2px 6px;border-radius:10px;display:inline-block;background:${v.pagado?'#dcfce7;color:#166534':'#fee2e2;color:#991b1b'}">${v.pagado?'PAGADO':'DEBE $'+(v.feeKigo||5)}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#10b981">$${(v.valor||0).toLocaleString('es-MX')}</div><div style="font-size:7px;color:#6b7280">Neto $${((v.valor||0)-(v.feeKigo||0)).toLocaleString('es-MX')}</div></div></div>`).join('');
 }
 window.cambiarFoto=function(e){ let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=function(ev){ currentFoto=ev.target.result; document.getElementById('previewFoto').innerHTML=`<img src="${currentFoto}" style="width:100%;height:100%;object-fit:cover">`; document.getElementById('logoRepa').innerHTML=`<img src="${currentFoto}">`; localStorage.setItem('kigoFoto_'+currentRepa, currentFoto); }; reader.readAsDataURL(file); }
 window.guardarModif=function(){ let nom=document.getElementById('ajNombreVisible').value.trim(); if(nom){ currentNombreVisible=nom; localStorage.setItem('kigoNombreVisible_'+currentRepa, nom); document.getElementById('nombreRepaTxt').innerText=nom; } alert('Actualizado ✅'); }
