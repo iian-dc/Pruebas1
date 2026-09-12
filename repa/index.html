@@ -116,7 +116,6 @@ function todayISO(){ let d=new Date(); return d.getFullYear()+'-'+String(d.getMo
 
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('./firebase-messaging-sw.js').catch(()=>{}); }
 
-// APLICAR ESTADO VISUAL DEL SWITCH AL CARGAR
 function actualizarSwitchUI(){
  let wrap=document.getElementById('switchWrap'); let bolita=document.getElementById('switchBolita'); let txt=document.getElementById('txtEstadoSonido'); let status=document.getElementById('statusTxt');
  if(sonidoActivo){
@@ -142,7 +141,6 @@ window.toggleSonido = async function(){
    actualizarSwitchUI();
  }
 }
-// Si ya estaba activo, desbloquear audio al primer click
 document.addEventListener('click', async ()=>{ if(sonidoActivo &&!audioUnlocked){ try{ let a=document.getElementById('alarmAudio'); a.volume=1; await a.play(); a.pause(); a.currentTime=0; audioUnlocked=true; }catch(e){} } },{once:true});
 
 window.probarSonido=function(){ if(!sonidoActivo){ alert('Activa primero el sonido'); return; } sonidoNuevoPedido(); }
@@ -175,7 +173,6 @@ function trackLocation(){ if(navigator.geolocation){ navigator.geolocation.watch
 function trazarRuta(o,d){ if(!dirServ||!dirRend) return; dirServ.route({origin:o,destination:d,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; } }); }
 function trazarPedidoCompleto(p){ if(!dirServ||!dirRend) return; dirServ.route({origin:{lat:p.lat1,lng:p.lng1},destination:{lat:p.lat2,lng:p.lng2},travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; } }); }
 
-// CORREGIDO: SUENA DESDE EL PRIMER PEDIDO
 onValue(ref(db,'kigoPedidosLive'), s=>{
  let data=s.val()||{};
  let listaRepaKeys=Object.entries(data).filter(([k,v])=>v.repaAsignado===currentRepa).map(([k])=>k);
@@ -247,41 +244,61 @@ window.activarDesdeEspera=async function(k){
  for(let [kk] of lista){ await update(ref(db,'kigoPedidosLive/'+kk),{activo:false, etapa:'en_espera'}); }
  await update(ref(db,'kigoPedidosLive/'+k),{etapa:'en_camino', subEtapa:'pendiente', activo:true});
 }
+
+// --- CORREGIDO: FINALIZA Y PASA A HISTORIAL AUTOMATICAMENTE ---
 window.accionPrincipal=async function(k){
  let p=pedidosLive[k]; if(!p) return;
+ let pCopia = {...p}; // guardamos copia antes de borrar
  if(p.subEtapa==='pendiente'){ await update(ref(db,'kigoPedidosLive/'+k),{subEtapa:'voy_en_camino'}); }
  else if(p.subEtapa==='voy_en_camino'){ await update(ref(db,'kigoPedidosLive/'+k),{subEtapa:'recogido'}); }
  else if(p.subEtapa==='recogido'){ await update(ref(db,'kigoPedidosLive/'+k),{subEtapa:'voy_entregar'}); }
- else if(p.subEtapa==='voy_entregar'){ await update(ref(db,'kigoPedidosLive/'+k),{etapa:'finalizado',subEtapa:'entregado'}); document.getElementById('overlayEntregado').classList.add('show'); setTimeout(()=>pasarAHistorial(k),1000); }
+ else if(p.subEtapa==='voy_entregar'){
+   await update(ref(db,'kigoPedidosLive/'+k),{etapa:'finalizado',subEtapa:'entregado'});
+   document.getElementById('overlayEntregado').classList.add('show');
+   setTimeout(()=>pasarAHistorial(k, pCopia),1000);
+ }
 }
-async function pasarAHistorial(k){ let p=pedidosLive[k]; if(!p) return; let obj={ iso:todayISO(), cliente:p.cliente, tipo:p.tipo||'Moto', valor:p.costoSugerido||0, repa:currentRepa, pagado:false, feeKigo:30, ts:Date.now() }; let nr=push(ref(db,'ventasKigo')); await set(nr,obj); await remove(ref(db,'kigoPedidosLive/'+k)); }
+async function pasarAHistorial(k, pObj){
+ let p = pObj || pedidosLive[k];
+ if(!p) return;
+ try{
+   let obj={ iso:todayISO(), cliente:p.cliente||'Cliente', tipo:p.tipo||'Moto', valor:p.costoSugerido||0, repa:currentRepa, pagado:false, feeKigo:30, ts:Date.now() };
+   let nr=push(ref(db,'ventasKigo'));
+   await set(nr,obj);
+   await remove(ref(db,'kigoPedidosLive/'+k));
+ }catch(e){ console.error(e); }
+}
 window.cerrarEntregado=function(){ document.getElementById('overlayEntregado').classList.remove('show'); }
 
 window.limpiarFiltros=function(){ document.getElementById('filtroTipo').value=''; document.getElementById('filtroFecha').value=''; document.getElementById('filtroMes').value=''; renderHistRepa(); }
 
 window.renderHistRepa=function(){
  let lista=Object.entries(ventasData).map(([k,v])=>({...v,_key:k})).filter(v=>v.repa===currentRepa).sort((a,b)=>b.ts-a.ts);
- // FILTROS
  let tipo=document.getElementById('filtroTipo')?.value||'';
  let fecha=document.getElementById('filtroFecha')?.value||'';
  let mes=document.getElementById('filtroMes')?.value||'';
  if(tipo){ lista=lista.filter(v=>(v.tipo||'').toLowerCase().includes(tipo.toLowerCase())); }
  if(fecha){ lista=lista.filter(v=>v.iso===fecha); }
  if(mes){ lista=lista.filter(v=>v.iso && v.iso.startsWith(mes)); }
-
  document.getElementById('hTotal').innerText=lista.length;
  let ganado=lista.reduce((s,v)=>s+((parseInt(v.valor)||0)-(parseInt(v.feeKigo)||0)),0);
  let debe=lista.filter(v=>!v.pagado).reduce((s,v)=>s+(parseInt(v.feeKigo)||0),0);
  document.getElementById('hGanado').innerText='$'+ganado;
  document.getElementById('hDebe').innerText='$'+debe;
-
  let cont=document.getElementById('listaHistRepa');
  if(!lista.length){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af;font-size:9px">Sin resultados con esos filtros</div>'; return; }
  cont.innerHTML=lista.map(v=>`<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #f3f4f6"><div><div style="font-size:7px;color:#6b7280;font-weight:700">${v.iso} • ${v.tipo||'Moto'}</div><div style="font-size:9px;font-weight:800;margin-top:2px">${v.cliente}</div><div style="font-size:6px;margin-top:2px;padding:2px 6px;border-radius:10px;display:inline-block;background:${v.pagado?'#dcfce7;color:#166534':'#fee2e2;color:#991b1b'}">${v.pagado?'PAGADO':'DEBE $'+(v.feeKigo||30)}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#10b981">$${v.valor}</div><div style="font-size:7px;color:#6b7280">Neto $${(v.valor||0)-(v.feeKigo||0)}</div></div></div>`).join('');
 }
 window.cambiarFoto=function(e){ let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=function(ev){ currentFoto=ev.target.result; document.getElementById('previewFoto').innerHTML=`<img src="${currentFoto}" style="width:100%;height:100%;object-fit:cover">`; document.getElementById('logoRepa').innerHTML=`<img src="${currentFoto}">`; localStorage.setItem('kigoFoto_'+currentRepa, currentFoto); }; reader.readAsDataURL(file); }
 window.guardarModif=function(){ let nom=document.getElementById('ajNombreVisible').value.trim(); if(nom){ currentNombreVisible=nom; localStorage.setItem('kigoNombreVisible_'+currentRepa, nom); document.getElementById('nombreRepaTxt').innerText=nom; } alert('Actualizado ✅'); }
-window.cerrarSesion=function(){ localStorage.removeItem('kigoUser'); window.location.href='../'; }
+
+// --- CORREGIDO: SALIR MANDA A LOGIN ---
+window.cerrarSesion=function(){
+  localStorage.removeItem('kigoUser');
+  localStorage.removeItem('kigoPass');
+  localStorage.removeItem('kigoLoginTime');
+  window.location.href='../login/';
+}
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTV1sm6McEIkv-cheaVFCD_svp_a--6wg&libraries=places" async defer></script>
 </body>
