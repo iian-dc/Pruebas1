@@ -20,8 +20,6 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 .num-neon{background:#0a0a0a;color:#fff;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800}
 .precio-neon{color:#10b981;font-weight:800;font-size:16px;background:#dcfce7;border:1.5px solid #86efac;padding:4px 12px;border-radius:12px}
 .estado-badge{font-size:7px;font-weight:800;padding:3px 8px;border-radius:20px;border:1px solid #fed7aa;background:#fffbeb;color:#f97316}
-.hora-neon{color:#10b981;font-weight:800;font-size:8px;background:#dcfce7;border:1.5px solid #86efac;padding:3px 8px;border-radius:12px;display:inline-block;margin-left:4px}
-.hora-neon.amarillo{color:#92400e;background:#fef3c7;border-color:#fde68a}
 .bloque-recoger{background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:10px;margin:8px 10px;position:relative}
 .bloque-entregar{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:10px;margin:8px 10px;position:relative}
 .btn-ruta{position:absolute;right:8px;top:50%;transform:translateY(-50%);height:36px;padding:0 10px;border-radius:10px;border:none;background:#0a0a0a;color:#fff;font-size:8px;font-weight:800}
@@ -62,6 +60,7 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:10px;text-align:center"><b id="hGanado" style="font-size:16px;color:#10b981">$0</b><br><span style="font-size:7px;font-weight:800">GANADO</span></div>
 <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:10px;text-align:center"><b id="hDebe" style="font-size:16px;color:#ef4444">$0</b><br><span style="font-size:7px;font-weight:800;color:#991b1b">DEBES A KIGO</span></div>
 </div>
+
 <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:10px;margin-bottom:8px">
 <div style="font-size:8px;font-weight:800;margin-bottom:6px">FILTROS DE HISTORIAL</div>
 <div style="display:flex;gap:6px;margin-bottom:6px">
@@ -73,6 +72,7 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 <button onclick="limpiarFiltros()" style="height:36px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:7px;font-weight:800">LIMPIAR</button>
 </div>
 </div>
+
 <div id="listaHistRepa" style="background:#fff;border:1.5px solid var(--border);border-radius:12px;overflow:hidden"></div>
 </div>
 
@@ -80,25 +80,17 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 <div style="display:flex;gap:6px;margin-bottom:10px"><button id="tabDatos" class="tab-aj active" onclick="showTabAj('datos')">MIS DATOS</button><button id="tabModif" class="tab-aj" onclick="showTabAj('modif')">MODIFICACIONES</button></div>
 <div id="aj-datos">
 <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div><div style="font-size:10px;font-weight:800">Sonido y Notificaciones</div><div style="font-size:7px;color:#6b7280" id="txtEstadoSonido">Desactivado</div></div><div id="switchWrap" style="width:50px;height:28px;background:#e5e7eb;border-radius:20px;position:relative;cursor:pointer;transition:.2s" onclick="toggleSonido()"><div id="switchBolita" style="width:22px;height:22px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.2)"></div></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div><div style="font-size:10px;font-weight:800">Sonido y Notificaciones</div><div style="font-size:7px;color:#6b7280" id="txtEstadoSonido">Desactivado</div></div><div id="switchWrap" style="width:50px;height:28px;background:#e5e7eb;border-radius:20px;position:relative;cursor:pointer;transition:.2s" onclick="toggleSonido()"><div id="switchBolita" style="width:22px;height:22px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.2)"></div></div></div>
 <button onclick="probarSonido()" style="width:100%;height:40px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;margin-top:8px;font-weight:800;font-size:9px">🔊 PROBAR SONIDO 6 SEG</button>
+<div style="font-size:7px;color:#6b7280;margin-top:6px;text-align:center">Actívalo una vez, quedará activo para siempre hasta que lo desactives</div>
 
-<!-- NUEVO CODIGO PRECIOS ADMIN EN MIS DATOS - SOLO LECTURA NEON -->
+<!-- TARIFAS ADMIN SOLO LECTURA NEON -->
 <div style="margin-top:14px;border-top:1px solid #f3f4f6;padding-top:12px">
-<div style="font-size:9px;font-weight:800;margin-bottom:8px">💰 MIS TARIFAS (DEL ADMIN)</div>
+<div style="font-size:9px;font-weight:800;margin-bottom:8px">💰 MIS TARIFAS (ADMIN)</div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:10px;text-align:center">
-<div style="font-size:7px;font-weight:800;color:#166534">MOTO MANDADO</div>
-<div id="txtPrecioMandado" style="font-size:18px;font-weight:800;color:#10b981;background:#dcfce7;border:1px solid #86efac;padding:4px;border-radius:8px;margin-top:4px">$5</div>
-<div style="font-size:6px;color:#6b7280;margin-top:3px">Se descuenta a KIGO</div>
+<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:10px;text-align:center"><div style="font-size:7px;font-weight:800;color:#166534">MOTO MANDADO</div><div id="txtPrecioMandado" style="font-size:16px;font-weight:800;color:#10b981;background:#dcfce7;border:1px solid #86efac;padding:4px;border-radius:8px;margin-top:4px">$5</div></div>
+<div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:10px;padding:10px;text-align:center"><div style="font-size:7px;font-weight:800;color:#991b1b">MOTO TRANSPORTE</div><div id="txtPrecioTrans" style="font-size:16px;font-weight:800;color:#ef4444;background:#fee2e2;border:1px solid #fecaca;padding:4px;border-radius:8px;margin-top:4px">$10</div></div>
 </div>
-<div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:10px;padding:10px;text-align:center">
-<div style="font-size:7px;font-weight:800;color:#991b1b">MOTO TRANSPORTE</div>
-<div id="txtPrecioTrans" style="font-size:18px;font-weight:800;color:#ef4444;background:#fee2e2;border:1px solid #fecaca;padding:4px;border-radius:8px;margin-top:4px">$10</div>
-<div style="font-size:6px;color:#6b7280;margin-top:3px">Se descuenta a KIGO</div>
-</div>
-</div>
-<div style="font-size:6px;color:#6b7280;margin-top:8px;text-align:center">Ej: Si cobras $50 y tu tarifa es $5, tú ganas $45 y $5 va a tu deuda con KIGO</div>
 </div>
 
 </div>
@@ -109,6 +101,7 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 <div class="bottom-repa"><button id="btnPedidos" class="active" onclick="showRepaView('pedidos')">PEDIDOS</button><button id="btnHist" onclick="showRepaView('historial')">HISTORIAL</button><button id="btnAjustes" onclick="showRepaView('ajustes')">AJUSTES</button></div>
 
 <div class="overlay" id="overlayNoti"><div class="modal" style="border:2px solid #ef4444"><div style="width:70px;height:70px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:32px">🔔</div><div style="font-weight:800;font-size:16px;color:#ef4444">¡NUEVO PEDIDO!</div><div id="notiTexto" style="font-size:10px;color:#6b7280;margin-top:6px"></div><button onclick="cerrarNoti()" style="width:100%;height:48px;margin-top:14px;background:#ef4444;color:#fff;border:none;border-radius:12px;font-weight:800">VER EN ESPERA</button></div></div>
+
 <div class="overlay" id="overlayEntregado"><div class="modal"><div style="width:50px;height:50px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">✓</div><div style="font-weight:800">Entregado</div><button onclick="cerrarEntregado()" style="width:100%;height:40px;margin-top:12px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;font-weight:800">OK</button></div></div>
 
 <script type="module">
@@ -125,17 +118,17 @@ document.getElementById('logoRepa').innerHTML = currentFoto? `<img src="${curren
 document.getElementById('previewFoto').innerHTML = currentFoto? `<img src="${currentFoto}" style="width:100%;height:100%;object-fit:cover">` : currentNombreVisible.charAt(0).toUpperCase();
 document.getElementById('ajNombreVisible').value=currentNombreVisible;
 
-let map=null, dirServ=null, dirRend=null, myLocation=null, myMarker=null, markerRecogida=null, markerEntrega=null;
-let pedidosLive={}, ventasData={}, activoKey=null, prevKeys=new Set(), firstLoad=true;
+let map=null, dirServ=null, dirRend=null, markers=[], myLocation=null, pedidosLive={}, ventasData={}, activoKey=null, prevKeys=new Set(), firstLoad=true;
 let audioUnlocked = localStorage.getItem('kigoSonidoActivo')==='1';
 let sonidoActivo = audioUnlocked;
 let tarifasRepaActual = {mandado:5, transporte:10};
 
-// CODIGO TARIFAS ENLAZADAS CON ADMIN - ESTE ES EL VALOR QUE SE COBRA
 onValue(ref(db,'kigoTarifasRepas/'+currentRepa), s=>{
-  if(s.exists()) tarifasRepaActual=s.val();
-  document.getElementById('txtPrecioMandado').innerText = '$'+ (tarifasRepaActual.mandado||5);
-  document.getElementById('txtPrecioTrans').innerText = '$'+ (tarifasRepaActual.transporte||10);
+  if(s.exists()) tarifasRepaActual = s.val();
+  let elM = document.getElementById('txtPrecioMandado');
+  let elT = document.getElementById('txtPrecioTrans');
+  if(elM) elM.innerText = '$'+(tarifasRepaActual.mandado||5);
+  if(elT) elT.innerText = '$'+(tarifasRepaActual.transporte||10);
 });
 
 function todayISO(){ let d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
@@ -143,57 +136,46 @@ if('serviceWorker' in navigator){ navigator.serviceWorker.register('./firebase-m
 
 function actualizarSwitchUI(){
  let wrap=document.getElementById('switchWrap'); let bolita=document.getElementById('switchBolita'); let txt=document.getElementById('txtEstadoSonido'); let status=document.getElementById('statusTxt');
- if(sonidoActivo){ wrap.style.background='#10b981'; bolita.style.left='25px'; txt.innerText='Activado'; txt.style.color='#10b981'; status.innerText='● SONIDO ACTIVO'; }
+ if(sonidoActivo){ wrap.style.background='#10b981'; bolita.style.left='25px'; txt.innerText='Activado - Sonará aunque minimices 6s'; txt.style.color='#10b981'; status.innerText='● SONIDO ACTIVO'; }
  else { wrap.style.background='#e5e7eb'; bolita.style.left='3px'; txt.innerText='Desactivado'; txt.style.color='#6b7280'; status.innerText='● EN LINEA'; }
 }
 setTimeout(actualizarSwitchUI,100);
+
 window.toggleSonido = async function(){
- if(!sonidoActivo){ try{ let audio=document.getElementById('alarmAudio'); audio.volume=1; audio.muted=false; await audio.play(); audio.pause(); audio.currentTime=0; audioUnlocked=true; sonidoActivo=true; localStorage.setItem('kigoSonidoActivo','1'); if('Notification' in window){ await Notification.requestPermission(); } actualizarSwitchUI(); }catch(e){} }
- else { sonidoActivo=false; audioUnlocked=false; localStorage.setItem('kigoSonidoActivo','0'); let a=document.getElementById('alarmAudio'); a.pause(); a.currentTime=0; actualizarSwitchUI(); }
+ if(!sonidoActivo){
+   try{ let audio=document.getElementById('alarmAudio'); audio.volume=1; audio.muted=false; await audio.play(); audio.pause(); audio.currentTime=0; audioUnlocked=true; sonidoActivo=true; localStorage.setItem('kigoSonidoActivo','1'); if('Notification' in window){ await Notification.requestPermission(); } actualizarSwitchUI(); }catch(e){ alert('Dale permiso de audio'); }
+ } else { sonidoActivo=false; audioUnlocked=false; localStorage.setItem('kigoSonidoActivo','0'); let a=document.getElementById('alarmAudio'); a.pause(); a.currentTime=0; actualizarSwitchUI(); }
 }
-window.probarSonido=function(){ if(!sonidoActivo){ alert('Activa primero'); return; } sonidoNuevoPedido(); }
-function sonidoNuevoPedido(){ if(!sonidoActivo) return; try{ let audio=document.getElementById('alarmAudio'); if(audioUnlocked){ audio.currentTime=0; audio.volume=1; audio.play().catch(()=>{}); setTimeout(()=>{ audio.pause(); audio.currentTime=0; },6000); } }catch(e){} }
+document.addEventListener('click', async ()=>{ if(sonidoActivo &&!audioUnlocked){ try{ let a=document.getElementById('alarmAudio'); a.volume=1; await a.play(); a.pause(); a.currentTime=0; audioUnlocked=true; }catch(e){} } },{once:true});
+window.probarSonido=function(){ if(!sonidoActivo){ alert('Activa primero el sonido'); return; } sonidoNuevoPedido(); }
+function sonidoNuevoPedido(){
+ if(!sonidoActivo) return;
+ try{
+  let audio=document.getElementById('alarmAudio');
+  if(audioUnlocked){ audio.currentTime=0; audio.volume=1; audio.play().catch(()=>{}); setTimeout(()=>{ audio.pause(); audio.currentTime=0; },6000); }
+  let ctx=new (window.AudioContext||window.webkitAudioContext)();
+  for(let i=0;i<3;i++){ let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='square'; o.frequency.setValueAtTime(1000, ctx.currentTime+i*0.9); o.frequency.linearRampToValueAtTime(1500, ctx.currentTime+i*0.9+0.4); g.gain.setValueAtTime(0.9, ctx.currentTime+i*0.9); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+i*0.9+0.6); o.connect(g); g.connect(ctx.destination); o.start(ctx.currentTime+i*0.9); o.stop(ctx.currentTime+i*0.9+0.6); }
+  setTimeout(()=>{ try{ ctx.close(); }catch(e){} },6500);
+  if(navigator.vibrate) navigator.vibrate([600,150,600,150,800]);
+  if('Notification' in window && Notification.permission==='granted'){ navigator.serviceWorker.ready.then(reg=>{ reg.showNotification('🔔 NUEVO PEDIDO KIGO', {body:'Pedido nuevo en espera', icon:'https://cdn-icons-png.flaticon.com/512/2972/2972185.png', vibrate:[600,150,600], tag:'kigo-'+Date.now()}); }); }
+ }catch(e){}
+}
 
-function initMap(){ if(!window.google){ setTimeout(initMap,300); return; } map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1556,lng:-100.9343},zoom:14, gestureHandling:'greedy'}); dirServ=new google.maps.DirectionsService(); dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); trackLocation(); }
+function initMap(){ if(!window.google){ setTimeout(initMap,300); return; } map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1556,lng:-100.9343},zoom:14}); dirServ=new google.maps.DirectionsService(); dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); trackLocation(); }
 setTimeout(initMap,500);
-
-function trackLocation(){
- if(navigator.geolocation){
-   navigator.geolocation.watchPosition(pos=>{
-     myLocation={lat:pos.coords.latitude,lng:pos.coords.longitude};
-     if(map){
-       if(!myMarker){ myMarker = new google.maps.Marker({ position: myLocation, map: map, icon: { path: google.maps.SymbolPath.CIRCLE, scale:10, fillColor:'#3b82f6', fillOpacity:1, strokeColor:'#ffffff', strokeWeight:3 }, title:'Mi ubicación' }); }
-       else { myMarker.setPosition(myLocation); }
-       if(activoKey && pedidosLive[activoKey]){ actualizarRutaSegunEstado(pedidosLive[activoKey]); }
-     }
-   },()=>{},{enableHighAccuracy:true, maximumAge:0, timeout:10000});
- }
-}
-function limpiarMarcadoresPedido(){ if(markerRecogida){ markerRecogida.setMap(null); markerRecogida=null; } if(markerEntrega){ markerEntrega.setMap(null); markerEntrega=null; } }
-function trazarPedidoCompleto(p){
-  if(!dirServ||!dirRend||!map) return; limpiarMarcadoresPedido();
-  markerRecogida = new google.maps.Marker({ position:{lat:p.lat1,lng:p.lng1}, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:9, fillColor:'#10b981', fillOpacity:1, strokeColor:'#fff', strokeWeight:2}, title:'Recoger' });
-  markerEntrega = new google.maps.Marker({ position:{lat:p.lat2,lng:p.lng2}, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:9, fillColor:'#ef4444', fillOpacity:1, strokeColor:'#fff', strokeWeight:2}, title:'Entregar' });
-  dirServ.route({origin:{lat:p.lat1,lng:p.lng1},destination:{lat:p.lat2,lng:p.lng2},travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); } });
-}
-function trazarDesdeMiUbicacion(destino, tipo){
-  if(!dirServ||!dirRend||!map||!myLocation) return; limpiarMarcadoresPedido();
-  if(tipo==='recogida'){ markerRecogida = new google.maps.Marker({ position:destino, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:10, fillColor:'#10b981', fillOpacity:1, strokeColor:'#fff', strokeWeight:2} }); }
-  else { markerEntrega = new google.maps.Marker({ position:destino, map:map, icon:{path:google.maps.SymbolPath.CIRCLE, scale:10, fillColor:'#ef4444', fillOpacity:1, strokeColor:'#fff', strokeWeight:2} }); }
-  dirServ.route({origin:myLocation, destination:destino, travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); } });
-}
-function actualizarRutaSegunEstado(p){
-  if(!p ||!map ||!dirServ) return; let sub = p.subEtapa || 'pendiente';
-  if(sub==='pendiente'){ trazarPedidoCompleto(p); }
-  else if(sub==='voy_en_camino'){ if(myLocation) trazarDesdeMiUbicacion({lat:p.lat1, lng:p.lng1},'recogida'); else trazarPedidoCompleto(p); }
-  else if(sub==='recogido' || sub==='voy_entregar'){ if(myLocation) trazarDesdeMiUbicacion({lat:p.lat2, lng:p.lng2},'entrega'); else trazarPedidoCompleto(p); }
-}
+function trackLocation(){ if(navigator.geolocation){ navigator.geolocation.watchPosition(pos=>{ myLocation={lat:pos.coords.latitude,lng:pos.coords.longitude}; },()=>{},{enableHighAccuracy:true}); } }
+function trazarRuta(o,d){ if(!dirServ||!dirRend) return; dirServ.route({origin:o,destination:d,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; } }); }
+function trazarPedidoCompleto(p){ if(!dirServ||!dirRend) return; dirServ.route({origin:{lat:p.lat1,lng:p.lng1},destination:{lat:p.lat2,lng:p.lng2},travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; } }); }
 
 onValue(ref(db,'kigoPedidosLive'), s=>{
- let data=s.val()||{}; let listaRepaKeys=Object.entries(data).filter(([k,v])=>v.repaAsignado===currentRepa).map(([k])=>k);
+ let data=s.val()||{};
+ let listaRepaKeys=Object.entries(data).filter(([k,v])=>v.repaAsignado===currentRepa).map(([k])=>k);
  if(firstLoad){ prevKeys=new Set(listaRepaKeys); firstLoad=false; pedidosLive=data; renderPedidosRepa(); return; }
  let newKeys=listaRepaKeys.filter(k=>!prevKeys.has(k));
- if(newKeys.length>0){ newKeys.forEach(k=>{ let p=data[k]; if(p.etapa==='pendiente' &&!p.activo){ update(ref(db,'kigoPedidosLive/'+k),{etapa:'en_espera'}); } }); let nuevo=data[newKeys[0]]; sonidoNuevoPedido(); document.getElementById('notiTexto').innerText=`${nuevo.cliente} - ${nuevo.dirRecogida || nuevo.cliente}`; document.getElementById('overlayNoti').classList.add('show'); }
+ if(newKeys.length>0){
+   newKeys.forEach(k=>{ let p=data[k]; if(p.etapa==='pendiente' &&!p.activo){ update(ref(db,'kigoPedidosLive/'+k),{etapa:'en_espera'}); } });
+   let nuevo=data[newKeys[0]]; sonidoNuevoPedido(); document.getElementById('notiTexto').innerText=`${nuevo.cliente} - ${nuevo.dirRecogida || nuevo.cliente}`; document.getElementById('overlayNoti').classList.add('show');
+ }
  prevKeys=new Set(listaRepaKeys); pedidosLive=data; renderPedidosRepa();
 });
 onValue(ref(db,'ventasKigo'), s=>{ ventasData=s.val()||{}; renderHistRepa(); });
@@ -207,34 +189,25 @@ window.showRepaView=function(v){
  document.getElementById('btnPedidos').classList.toggle('active',v==='pedidos');
  document.getElementById('btnHist').classList.toggle('active',v==='historial');
  document.getElementById('btnAjustes').classList.toggle('active',v==='ajustes');
- if(v==='pedidos' && map) setTimeout(()=>{ google.maps.event.trigger(map,'resize'); if(activoKey && pedidosLive[activoKey]) actualizarRutaSegunEstado(pedidosLive[activoKey]); },150);
+ if(v==='pedidos' && map) setTimeout(()=>google.maps.event.trigger(map,'resize'),100);
 }
 window.showTabAj=function(t){ document.getElementById('aj-datos').style.display=t==='datos'?'block':'none'; document.getElementById('aj-modif').style.display=t==='modif'?'block':'none'; document.getElementById('tabDatos').classList.toggle('active',t==='datos'); document.getElementById('tabModif').classList.toggle('active',t==='modif'); }
 
-function getHoraBadge(p){
-  let texto = p.horaRecoger || (p.tiempoRecogida? `RECOGER ${p.tiempoRecogida}MIN` : '');
-  if(!texto) return ''; let sub = p.subEtapa || 'pendiente';
-  if(sub==='recogido' || sub==='voy_entregar') return `<span class="hora-neon">${texto}</span>`;
-  let iso = p.horaRecogerISO || null; if(!iso) return `<span class="hora-neon">${texto}</span>`;
-  let ahora = new Date(); let target = new Date(iso); let diffMin = (target - ahora)/60000;
-  if(diffMin <=5){ return `<span class="hora-neon amarillo">⚠️ ${texto}</span>`; }
-  return `<span class="hora-neon">${texto}</span>`;
-}
-
 window.renderPedidosRepa=function(){
- let lista=Object.entries(pedidosLive).map(([k][v])=>({...v,_key:k})).filter(p=>p.repaAsignado===currentRepa).sort((a,b)=>b.ts-a.ts);
+ let lista=Object.entries(pedidosLive).map(([k,v])=>({...v,_key:k})).filter(p=>p.repaAsignado===currentRepa).sort((a,b)=>b.ts-a.ts);
  let activos=lista.filter(p=>p.activo===true && p.etapa!=='en_espera' && p.etapa!=='finalizado');
  let espera=lista.filter(p=>p.etapa==='en_espera' ||!p.activo);
  let principal = activos.length>0? activos[0] : null;
  if(principal) activoKey=principal._key; else activoKey=null;
  let cont=document.getElementById('contActivo');
- if(!principal){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af"><b style="font-size:10px">Sin pedido activo</b><br><span style="font-size:8px">Acepta uno de espera</span></div>'; if(dirRend) dirRend.setDirections({routes:[]}); limpiarMarcadoresPedido(); }
+ if(!principal){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af"><b style="font-size:10px">Sin pedido activo</b><br><span style="font-size:8px">Acepta uno de espera</span></div>'; if(dirRend) dirRend.setDirections({routes:[]}); }
  else {
   let p=principal; let sub=p.subEtapa||'pendiente';
   let estadoTxt = sub==='pendiente'?'ACEPTADO':sub==='voy_en_camino'?'VOY EN CAMINO':sub==='recogido'?'RECOGIDO':sub==='voy_entregar'?'VOY A ENTREGAR':p.etapa.toUpperCase();
   let btnTxt = sub==='pendiente'?'VOY EN CAMINO':sub==='voy_en_camino'?'RECOGIDO':sub==='recogido'?'VOY A ENTREGAR':'ENTREGADO';
-  actualizarRutaSegunEstado(p); let horaBadge = getHoraBadge(p); let dirRecoger = p.dirRecogida || p.direccionRecogida || p.cliente || '';
-  cont.innerHTML=`<div class="card-activo"><div class="head-activo"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="num-neon">#${p._key.slice(-4).toUpperCase()}</span>${horaBadge}<span class="estado-badge">${estadoTxt}</span></div><div class="precio-neon">$${p.costoSugerido||0}</div></div><div class="bloque-recoger"><div style="font-size:7px;font-weight:800;color:#166534">RECOGER EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">${p.cliente||''}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #bbf7d0">📍 ${dirRecoger}</div><div style="font-size:8px;font-weight:700;margin-top:4px">📞 ${p.telefonoRecogida||''}</div><button class="btn-ruta" onclick="abrirRuta(${p.lat1},${p.lng1})">RUTA ↗</button></div><div class="bloque-entregar"><div style="font-size:7px;font-weight:800;color:#991b1b">ENTREGAR EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">${p.nombreEntrega||'Cliente'}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #fecaca">📍 ${p.entrega||''}</div><button class="btn-ruta" style="background:#ef4444" onclick="abrirRuta(${p.lat2},${p.lng2})">RUTA ↗</button></div><div style="display:flex;gap:6px;padding:8px 10px"><button class="btn-accion wait" onclick="ponerEspera('${p._key}')">ESPERA</button><button class="btn-accion primary" onclick="accionPrincipal('${p._key}')">${btnTxt}</button></div></div>`;
+  if(sub==='pendiente'){ trazarPedidoCompleto(p); }
+  let dirRecoger = p.dirRecogida || p.direccionRecogida || p.cliente || '';
+  cont.innerHTML=`<div class="card-activo"><div class="head-activo"><div style="display:flex;gap:6px;align-items:center"><span class="num-neon">#${p._key.slice(-4).toUpperCase()}</span><span class="estado-badge">${estadoTxt}</span></div><div class="precio-neon">$${p.costoSugerido||0}</div></div><div class="bloque-recoger"><div style="font-size:7px;font-weight:800;color:#166534">RECOGER EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">${p.cliente||''}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #bbf7d0">📍 ${dirRecoger}</div><div style="font-size:8px;font-weight:700;margin-top:4px">📞 ${p.telefonoRecogida||''}</div><button class="btn-ruta" onclick="abrirRuta(${p.lat1},${p.lng1})">RUTA ↗</button></div><div class="bloque-entregar"><div style="font-size:7px;font-weight:800;color:#991b1b">ENTREGAR EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">${p.nombreEntrega||'Cliente'}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #fecaca">📍 ${p.entrega||''}</div><button class="btn-ruta" style="background:#ef4444" onclick="abrirRuta(${p.lat2},${p.lng2})">RUTA ↗</button></div><div style="display:flex;gap:6px;padding:8px 10px"><button class="btn-accion wait" onclick="ponerEspera('${p._key}')">ESPERA</button><button class="btn-accion primary" onclick="accionPrincipal('${p._key}')">${btnTxt}</button></div></div>`;
  }
  let contE=document.getElementById('contEspera'); document.getElementById('countEspera').innerText=espera.length;
  if(!espera.length) contE.innerHTML='<div style="text-align:center;padding:10px;color:#9ca3af;font-size:8px">Sin pedidos en espera</div>';
@@ -249,7 +222,7 @@ window.activarDesdeEspera=async function(k){
  await update(ref(db,'kigoPedidosLive/'+k),{etapa:'en_camino', subEtapa:'pendiente', activo:true});
 }
 window.accionPrincipal=async function(k){
- let p=pedidosLive[k]; if(!p) return; let pCopia={...p};
+ let p=pedidosLive[k]; if(!p) return; let pCopia = {...p};
  if(p.subEtapa==='pendiente'){ await update(ref(db,'kigoPedidosLive/'+k),{subEtapa:'voy_en_camino'}); }
  else if(p.subEtapa==='voy_en_camino'){ await update(ref(db,'kigoPedidosLive/'+k),{subEtapa:'recogido'}); }
  else if(p.subEtapa==='recogido'){ await update(ref(db,'kigoPedidosLive/'+k),{subEtapa:'voy_entregar'}); }
@@ -263,12 +236,10 @@ async function pasarAHistorial(k, pObj){
    let tipoFinal = esTrans? 'Moto Transporte' : 'Moto Mandado';
    let obj={ iso:todayISO(), cliente:p.cliente||'Cliente', tipo:tipoFinal, valor:p.costoSugerido||0, repa:currentRepa, pagado:false, feeKigo:fee, ts:Date.now() };
    let nr=push(ref(db,'ventasKigo')); await set(nr,obj); await remove(ref(db,'kigoPedidosLive/'+k));
- }catch(e){}
+ }catch(e){ console.error(e); }
 }
 window.cerrarEntregado=function(){ document.getElementById('overlayEntregado').classList.remove('show'); }
 window.limpiarFiltros=function(){ document.getElementById('filtroTipo').value=''; document.getElementById('filtroFecha').value=''; document.getElementById('filtroMes').value=''; renderHistRepa(); }
-
-// CODIGO HISTORIAL - GANADO CON PUNTO DECIMAL
 window.renderHistRepa=function(){
  let lista=Object.entries(ventasData).map(([k,v])=>({...v,_key:k})).filter(v=>v.repa===currentRepa).sort((a,b)=>b.ts-a.ts);
  let tipo=document.getElementById('filtroTipo')?.value||''; let fecha=document.getElementById('filtroFecha')?.value||''; let mes=document.getElementById('filtroMes')?.value||'';
@@ -281,8 +252,8 @@ window.renderHistRepa=function(){
  document.getElementById('hGanado').innerText='$'+ganado.toLocaleString('es-MX');
  document.getElementById('hDebe').innerText='$'+debe.toLocaleString('es-MX');
  let cont=document.getElementById('listaHistRepa');
- if(!lista.length){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af;font-size:9px">Sin resultados</div>'; return; }
- cont.innerHTML=lista.map(v=>`<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #f3f4f6"><div><div style="font-size:7px;color:#6b7280;font-weight:700">${v.iso} • ${v.tipo||'Moto'}</div><div style="font-size:9px;font-weight:800;margin-top:2px">${v.cliente}</div><div style="font-size:6px;margin-top:2px;padding:2px 6px;border-radius:10px;display:inline-block;background:${v.pagado?'#dcfce7;color:#166534':'#fee2e2;color:#991b1b'}">${v.pagado?'PAGADO':'DEBE $'+(v.feeKigo||5)}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#10b981">$${(v.valor||0).toLocaleString('es-MX')}</div><div style="font-size:7px;color:#6b7280">Neto $${((v.valor||0)-(v.feeKigo||0)).toLocaleString('es-MX')}</div></div></div>`).join('');
+ if(!lista.length){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af;font-size:9px">Sin resultados con esos filtros</div>'; return; }
+ cont.innerHTML=lista.map(v=>`<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #f3f4f6"><div><div style="font-size:7px;color:#6b7280;font-weight:700">${v.iso} • ${v.tipo||'Moto'}</div><div style="font-size:9px;font-weight:800;margin-top:2px">${v.cliente}</div><div style="font-size:6px;margin-top:2px;padding:2px 6px;border-radius:10px;display:inline-block;background:${v.pagado?'#dcfce7;color:#166534':'#fee2e2;color:#991b1b'}">${v.pagado?'PAGADO':'DEBE $'+(v.feeKigo||30)}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#10b981">$${Number(v.valor||0).toLocaleString('es-MX')}</div><div style="font-size:7px;color:#6b7280">Neto $${(Number(v.valor||0)-Number(v.feeKigo||0)).toLocaleString('es-MX')}</div></div></div>`).join('');
 }
 window.cambiarFoto=function(e){ let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=function(ev){ currentFoto=ev.target.result; document.getElementById('previewFoto').innerHTML=`<img src="${currentFoto}" style="width:100%;height:100%;object-fit:cover">`; document.getElementById('logoRepa').innerHTML=`<img src="${currentFoto}">`; localStorage.setItem('kigoFoto_'+currentRepa, currentFoto); }; reader.readAsDataURL(file); }
 window.guardarModif=function(){ let nom=document.getElementById('ajNombreVisible').value.trim(); if(nom){ currentNombreVisible=nom; localStorage.setItem('kigoNombreVisible_'+currentRepa, nom); document.getElementById('nombreRepaTxt').innerText=nom; } alert('Actualizado ✅'); }
