@@ -20,6 +20,8 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 .num-neon{background:#0a0a0a;color:#fff;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800}
 .precio-neon{color:#10b981;font-weight:800;font-size:16px;background:#dcfce7;border:1.5px solid #86efac;padding:4px 12px;border-radius:12px}
 .estado-badge{font-size:7px;font-weight:800;padding:3px 8px;border-radius:20px;border:1px solid #fed7aa;background:#fffbeb;color:#f97316}
+.hora-neon{color:#10b981;font-weight:800;font-size:8px;background:#dcfce7;border:1.5px solid #86efac;padding:3px 8px;border-radius:12px;display:inline-block;margin-left:4px}
+.hora-neon.amarillo{color:#92400e;background:#fef3c7;border-color:#fde68a}
 .bloque-recoger{background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:10px;margin:8px 10px;position:relative}
 .bloque-entregar{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:10px;margin:8px 10px;position:relative}
 .btn-ruta{position:absolute;right:8px;top:50%;transform:translateY(-50%);height:36px;padding:0 10px;border-radius:10px;border:none;background:#0a0a0a;color:#fff;font-size:8px;font-weight:800}
@@ -83,16 +85,39 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 </div>
 </div>
 </div>
-<div id="aj-modif" style="display:none"><div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:center"><div id="previewFoto" style="width:80px;height:80px;background:#f3f4f6;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:800">K</div><input type="file" id="inputFoto" accept="image/*" style="display:none" onchange="cambiarFoto(event)"><button onclick="document.getElementById('inputFoto').click()" style="height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--border);background:#fff;font-weight:800;font-size:8px">SUBIR FOTO</button><div style="margin-top:14px;text-align:left"><div style="font-size:9px;font-weight:800">Nombre visible</div><input id="ajNombreVisible" class="input-kigo"></div><button onclick="guardarModif()" style="width:100%;height:42px;background:#10b981;color:#fff;border:none;border-radius:10px;margin-top:12px;font-weight:800;font-size:9px">ACTUALIZAR</button></div></div>
+
+<div id="aj-modif" style="display:none">
+<div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:center">
+<div id="previewFoto" style="width:80px;height:80px;background:#f3f4f6;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:800">K</div>
+<input type="file" id="inputFoto" accept="image/*" style="display:none" onchange="cambiarFoto(event)">
+<button onclick="document.getElementById('inputFoto').click()" style="height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--border);background:#fff;font-weight:800;font-size:8px">SUBIR FOTO</button>
+<div style="margin-top:14px;text-align:left"><div style="font-size:9px;font-weight:800">Nombre visible</div><input id="ajNombreVisible" class="input-kigo"></div>
+<button onclick="guardarModif()" style="width:100%;height:42px;background:#10b981;color:#fff;border:none;border-radius:10px;margin-top:12px;font-weight:800;font-size:9px">ACTUALIZAR</button>
 </div>
+
+<!-- CAMBIAR USUARIO Y CONTRASEÑA LOGIN -->
+<div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px;margin-top:10px">
+<div style="font-size:10px;font-weight:800;margin-bottom:8px">🔐 CAMBIAR USUARIO Y CONTRASEÑA LOGIN</div>
+<div style="text-align:left;margin-bottom:8px"><div style="font-size:8px;font-weight:800;color:#6b7280">USUARIO ACTUAL: <span id="txtUserActual" style="color:#0a0a0a"></span></div></div>
+<div style="text-align:left"><div style="font-size:8px;font-weight:800">Nuevo usuario</div><input id="nuevoUsuario" class="input-kigo" placeholder="Ej: Jose2"></div>
+<div style="text-align:left;margin-top:8px"><div style="font-size:8px;font-weight:800">Nueva contraseña</div><input id="nuevaPass" type="password" class="input-kigo" placeholder="Nueva contraseña"></div>
+<button onclick="guardarLoginRepa()" style="width:100%;height:42px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;margin-top:12px;font-weight:800;font-size:9px">GUARDAR USUARIO Y CONTRASEÑA</button>
+<div style="font-size:6px;color:#6b7280;margin-top:6px;text-align:center">Se guardará y podrás entrar con esos datos nuevos</div>
+</div>
+
+</div>
+</div>
+
 <div class="bottom-repa"><button id="btnPedidos" class="active" onclick="showRepaView('pedidos')">PEDIDOS</button><button id="btnHist" onclick="showRepaView('historial')">HISTORIAL</button><button id="btnAjustes" onclick="showRepaView('ajustes')">AJUSTES</button></div>
 <div class="overlay" id="overlayNoti"><div class="modal" style="border:2px solid #ef4444"><div style="width:70px;height:70px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:32px">🔔</div><div style="font-weight:800;font-size:16px;color:#ef4444">¡NUEVO PEDIDO!</div><div id="notiTexto" style="font-size:10px;color:#6b7280;margin-top:6px"></div><button onclick="cerrarNoti()" style="width:100%;height:48px;margin-top:14px;background:#ef4444;color:#fff;border:none;border-radius:12px;font-weight:800">VER EN ESPERA</button></div></div>
 <div class="overlay" id="overlayEntregado"><div class="modal"><div style="width:50px;height:50px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">✓</div><div style="font-weight:800">Entregado</div><button onclick="cerrarEntregado()" style="width:100%;height:40px;margin-top:12px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;font-weight:800">OK</button></div></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, update, push, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, update, push, set, remove, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const firebaseConfig = { apiKey: "AIzaSyDGTYI2ZZnP49DbaMIpRSoGIjZrU6RAEiE", authDomain: "historial-kigo-xpress.firebaseapp.com", databaseURL: "https://historial-kigo-xpress-default-rtdb.firebaseio.com", projectId: "historial-kigo-xpress", storageBucket: "historial-kigo-xpress.firebasestorage.app", messagingSenderId: "571399920545", appId: "1:571399920545:web:aa16407753b43cbe2e89e0" };
 const app = initializeApp(firebaseConfig); const db = getDatabase(app);
+
 let currentRepa = new URLSearchParams(window.location.search).get('repa') || localStorage.getItem('kigoUser') || 'Jose';
 let currentFoto = localStorage.getItem('kigoFoto_'+currentRepa) || '';
 let currentNombreVisible = localStorage.getItem('kigoNombreVisible_'+currentRepa) || currentRepa;
@@ -100,61 +125,50 @@ document.getElementById('nombreRepaTxt').innerText = currentNombreVisible;
 document.getElementById('logoRepa').innerHTML = currentFoto? `<img src="${currentFoto}">` : currentNombreVisible.charAt(0).toUpperCase();
 document.getElementById('previewFoto').innerHTML = currentFoto? `<img src="${currentFoto}" style="width:100%;height:100%;object-fit:cover">` : currentNombreVisible.charAt(0).toUpperCase();
 document.getElementById('ajNombreVisible').value=currentNombreVisible;
+document.getElementById('txtUserActual').innerText=currentRepa;
+
 let map=null, dirServ=null, dirRend=null, markers=[], myLocation=null, pedidosLive={}, ventasData={}, activoKey=null, prevKeys=new Set(), firstLoad=true;
 let audioUnlocked = localStorage.getItem('kigoSonidoActivo')==='1';
 let sonidoActivo = audioUnlocked;
 let tarifasRepaActual = {mandado:5, transporte:10};
+
 onValue(ref(db,'kigoTarifasRepas/'+currentRepa), s=>{
   if(s.exists()) tarifasRepaActual = s.val();
-  let elM = document.getElementById('txtPrecioMandado');
-  let elT = document.getElementById('txtPrecioTrans');
+  let elM = document.getElementById('txtPrecioMandado'); let elT = document.getElementById('txtPrecioTrans');
   if(elM) elM.innerText = '$'+(tarifasRepaActual.mandado||5);
   if(elT) elT.innerText = '$'+(tarifasRepaActual.transporte||10);
 });
+
 function todayISO(){ let d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('./firebase-messaging-sw.js').catch(()=>{}); }
+
 function actualizarSwitchUI(){
  let wrap=document.getElementById('switchWrap'); let bolita=document.getElementById('switchBolita'); let txt=document.getElementById('txtEstadoSonido'); let status=document.getElementById('statusTxt');
- if(sonidoActivo){ wrap.style.background='#10b981'; bolita.style.left='25px'; txt.innerText='Activado - Sonará aunque minimices 6s'; txt.style.color='#10b981'; status.innerText='● SONIDO ACTIVO'; }
+ if(sonidoActivo){ wrap.style.background='#10b981'; bolita.style.left='25px'; txt.innerText='Activado'; txt.style.color='#10b981'; status.innerText='● SONIDO ACTIVO'; }
  else { wrap.style.background='#e5e7eb'; bolita.style.left='3px'; txt.innerText='Desactivado'; txt.style.color='#6b7280'; status.innerText='● EN LINEA'; }
 }
 setTimeout(actualizarSwitchUI,100);
 window.toggleSonido = async function(){
- if(!sonidoActivo){
-   try{ let audio=document.getElementById('alarmAudio'); audio.volume=1; audio.muted=false; await audio.play(); audio.pause(); audio.currentTime=0; audioUnlocked=true; sonidoActivo=true; localStorage.setItem('kigoSonidoActivo','1'); if('Notification' in window){ await Notification.requestPermission(); } actualizarSwitchUI(); }catch(e){ alert('Dale permiso de audio'); }
- } else { sonidoActivo=false; audioUnlocked=false; localStorage.setItem('kigoSonidoActivo','0'); let a=document.getElementById('alarmAudio'); a.pause(); a.currentTime=0; actualizarSwitchUI(); }
+ if(!sonidoActivo){ try{ let audio=document.getElementById('alarmAudio'); audio.volume=1; audio.muted=false; await audio.play(); audio.pause(); audio.currentTime=0; audioUnlocked=true; sonidoActivo=true; localStorage.setItem('kigoSonidoActivo','1'); if('Notification' in window){ await Notification.requestPermission(); } actualizarSwitchUI(); }catch(e){} }
+ else { sonidoActivo=false; audioUnlocked=false; localStorage.setItem('kigoSonidoActivo','0'); let a=document.getElementById('alarmAudio'); a.pause(); a.currentTime=0; actualizarSwitchUI(); }
 }
-document.addEventListener('click', async ()=>{ if(sonidoActivo &&!audioUnlocked){ try{ let a=document.getElementById('alarmAudio'); a.volume=1; await a.play(); a.pause(); a.currentTime=0; audioUnlocked=true; }catch(e){} } },{once:true});
-window.probarSonido=function(){ if(!sonidoActivo){ alert('Activa primero el sonido'); return; } sonidoNuevoPedido(); }
-function sonidoNuevoPedido(){
- if(!sonidoActivo) return;
- try{
-  let audio=document.getElementById('alarmAudio');
-  if(audioUnlocked){ audio.currentTime=0; audio.volume=1; audio.play().catch(()=>{}); setTimeout(()=>{ audio.pause(); audio.currentTime=0; },6000); }
-  let ctx=new (window.AudioContext||window.webkitAudioContext)();
-  for(let i=0;i<3;i++){ let o=ctx.createOscillator(); let g=ctx.createGain(); o.type='square'; o.frequency.setValueAtTime(1000, ctx.currentTime+i*0.9); o.frequency.linearRampToValueAtTime(1500, ctx.currentTime+i*0.9+0.4); g.gain.setValueAtTime(0.9, ctx.currentTime+i*0.9); g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+i*0.9+0.6); o.connect(g); g.connect(ctx.destination); o.start(ctx.currentTime+i*0.9); o.stop(ctx.currentTime+i*0.9+0.6); }
-  setTimeout(()=>{ try{ ctx.close(); }catch(e){} },6500);
-  if(navigator.vibrate) navigator.vibrate([600,150,600,150,800]);
-  if('Notification' in window && Notification.permission==='granted'){ navigator.serviceWorker.ready.then(reg=>{ reg.showNotification('🔔 NUEVO PEDIDO KIGO', {body:'Pedido nuevo en espera', icon:'https://cdn-icons-png.flaticon.com/512/2972/2972185.png', vibrate:[600,150,600], tag:'kigo-'+Date.now()}); }); }
- }catch(e){}
-}
+window.probarSonido=function(){ if(!sonidoActivo){ alert('Activa primero'); return; } sonidoNuevoPedido(); }
+function sonidoNuevoPedido(){ if(!sonidoActivo) return; try{ let audio=document.getElementById('alarmAudio'); if(audioUnlocked){ audio.currentTime=0; audio.volume=1; audio.play().catch(()=>{}); setTimeout(()=>{ audio.pause(); audio.currentTime=0; },6000); } }catch(e){} }
+
 function initMap(){ if(!window.google){ setTimeout(initMap,300); return; } map=new google.maps.Map(document.getElementById('map'),{center:{lat:21.1556,lng:-100.9343},zoom:14}); dirServ=new google.maps.DirectionsService(); dirRend=new google.maps.DirectionsRenderer({suppressMarkers:true,map:map,polylineOptions:{strokeColor:'#0a0a0a',strokeWeight:5}}); trackLocation(); }
 setTimeout(initMap,500);
 function trackLocation(){ if(navigator.geolocation){ navigator.geolocation.watchPosition(pos=>{ myLocation={lat:pos.coords.latitude,lng:pos.coords.longitude}; },()=>{},{enableHighAccuracy:true}); } }
-function trazarRuta(o,d){ if(!dirServ||!dirRend) return; dirServ.route({origin:o,destination:d,travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; } }); }
 function trazarPedidoCompleto(p){ if(!dirServ||!dirRend) return; dirServ.route({origin:{lat:p.lat1,lng:p.lng1},destination:{lat:p.lat2,lng:p.lng2},travelMode:'DRIVING'},(r,s)=>{ if(s==='OK'){ dirRend.setDirections(r); dirRend.setMap(map); markers.forEach(m=>m.setMap(null)); markers=[]; } }); }
+
 onValue(ref(db,'kigoPedidosLive'), s=>{
- let data=s.val()||{};
- let listaRepaKeys=Object.entries(data).filter(([k,v])=>v.repaAsignado===currentRepa).map(([k])=>k);
+ let data=s.val()||{}; let listaRepaKeys=Object.entries(data).filter(([k,v])=>v.repaAsignado===currentRepa).map(([k])=>k);
  if(firstLoad){ prevKeys=new Set(listaRepaKeys); firstLoad=false; pedidosLive=data; renderPedidosRepa(); return; }
  let newKeys=listaRepaKeys.filter(k=>!prevKeys.has(k));
- if(newKeys.length>0){
-   newKeys.forEach(k=>{ let p=data[k]; if(p.etapa==='pendiente' &&!p.activo){ update(ref(db,'kigoPedidosLive/'+k),{etapa:'en_espera'}); } });
-   let nuevo=data[newKeys[0]]; sonidoNuevoPedido(); document.getElementById('notiTexto').innerText=`${nuevo.cliente} - ${nuevo.dirRecogida || nuevo.cliente}`; document.getElementById('overlayNoti').classList.add('show');
- }
+ if(newKeys.length>0){ newKeys.forEach(k=>{ let p=data[k]; if(p.etapa==='pendiente' &&!p.activo){ update(ref(db,'kigoPedidosLive/'+k),{etapa:'en_espera'}); } }); let nuevo=data[newKeys[0]]; sonidoNuevoPedido(); document.getElementById('notiTexto').innerText=`${nuevo.cliente} - ${nuevo.dirRecogida || nuevo.cliente}`; document.getElementById('overlayNoti').classList.add('show'); }
  prevKeys=new Set(listaRepaKeys); pedidosLive=data; renderPedidosRepa();
 });
 onValue(ref(db,'ventasKigo'), s=>{ ventasData=s.val()||{}; renderHistRepa(); });
+
 window.cerrarNoti=function(){ document.getElementById('overlayNoti').classList.remove('show'); let a=document.getElementById('alarmAudio'); a.pause(); a.currentTime=0; }
 window.showRepaView=function(v){
  document.getElementById('view-pedidos-repa').style.display=v==='pedidos'?'block':'none';
@@ -167,6 +181,18 @@ window.showRepaView=function(v){
  if(v==='pedidos' && map) setTimeout(()=>google.maps.event.trigger(map,'resize'),100);
 }
 window.showTabAj=function(t){ document.getElementById('aj-datos').style.display=t==='datos'?'block':'none'; document.getElementById('aj-modif').style.display=t==='modif'?'block':'none'; document.getElementById('tabDatos').classList.toggle('active',t==='datos'); document.getElementById('tabModif').classList.toggle('active',t==='modif'); }
+
+// HORA RECOGER EN NEON VERDE / AMARILLO SI FALTAN 5 MIN
+function getHoraBadge(p){
+  let texto = p.horaRecoger || p.horaRecogerTexto || (p.tiempoRecogida? `RECOGER ${p.tiempoRecogida}MIN` : (p.hora||''));
+  if(!texto) return '';
+  let sub = p.subEtapa||'pendiente';
+  if(sub==='recogido' || sub==='voy_entregar') return `<span class="hora-neon">${texto}</span>`;
+  let iso = p.horaRecogerISO || p.horaISO || null;
+  if(!iso) return `<span class="hora-neon">${texto}</span>`;
+  try{ let ahora=new Date(); let target=new Date(iso); let diff=(target-ahora)/60000; if(diff<=5){ return `<span class="hora-neon amarillo">⚠️ ${texto}</span>`; } }catch(e){}
+  return `<span class="hora-neon">${texto}</span>`;
+}
 
 window.renderPedidosRepa=function(){
  let lista=Object.entries(pedidosLive).map(([k,v])=>({...v,_key:k})).filter(p=>p.repaAsignado===currentRepa).sort((a,b)=>b.ts-a.ts);
@@ -181,14 +207,16 @@ window.renderPedidosRepa=function(){
   let estadoTxt = sub==='pendiente'?'ACEPTADO':sub==='voy_en_camino'?'VOY EN CAMINO':sub==='recogido'?'RECOGIDO':sub==='voy_entregar'?'VOY A ENTREGAR':p.etapa.toUpperCase();
   let btnTxt = sub==='pendiente'?'VOY EN CAMINO':sub==='voy_en_camino'?'RECOGIDO':sub==='recogido'?'VOY A ENTREGAR':'ENTREGADO';
   if(sub==='pendiente'){ trazarPedidoCompleto(p); }
-  // CORREGIDO: SOLO 1 CAMPO CLIENTE Y 1 CAMPO DIRECCION RECOGIDA
-  let nombreClienteRecogida = p.cliente || 'Cliente';
-  let dirRecogerSolo = p.dirRecogida || p.direccionRecogida || '';
-  cont.innerHTML=`<div class="card-activo"><div class="head-activo"><div style="display:flex;gap:6px;align-items:center"><span class="num-neon">#${p._key.slice(-4).toUpperCase()}</span><span class="estado-badge">${estadoTxt}</span></div><div class="precio-neon">$${p.costoSugerido||0}</div></div><div class="bloque-recoger"><div style="font-size:7px;font-weight:800;color:#166534">RECOGER EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">👤 ${nombreClienteRecogida}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #bbf7d0">📍 ${dirRecogerSolo}</div><div style="font-size:8px;font-weight:700;margin-top:4px">📞 ${p.telefonoRecogida||''}</div><button class="btn-ruta" onclick="abrirRuta(${p.lat1},${p.lng1})">RUTA ↗</button></div><div class="bloque-entregar"><div style="font-size:7px;font-weight:800;color:#991b1b">ENTREGAR EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">${p.nombreEntrega||'Cliente'}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #fecaca">📍 ${p.entrega||''}</div><button class="btn-ruta" style="background:#ef4444" onclick="abrirRuta(${p.lat2},${p.lng2})">RUTA ↗</button></div><div style="display:flex;gap:6px;padding:8px 10px"><button class="btn-accion wait" onclick="ponerEspera('${p._key}')">ESPERA</button><button class="btn-accion primary" onclick="accionPrincipal('${p._key}')">${btnTxt}</button></div></div>`;
+  let nombreCliente = p.cliente || p.nombreCliente || p.clienteRecogida || 'Cliente';
+  let dirRecogerSolo = p.dirRecogida || p.direccionRecogida || p.direccion || '';
+  let tel = p.telefonoRecogida || p.telefono || p.telCliente || '';
+  let telHtml = tel? `<div style="font-size:8px;font-weight:700;margin-top:4px">📞 ${tel}</div>` : '';
+  let horaBadge = getHoraBadge(p);
+  cont.innerHTML=`<div class="card-activo"><div class="head-activo"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="num-neon">#${p._key.slice(-4).toUpperCase()}</span>${horaBadge}<span class="estado-badge">${estadoTxt}</span></div><div class="precio-neon">$${p.costoSugerido||0}</div></div><div class="bloque-recoger"><div style="font-size:7px;font-weight:800;color:#166534">RECOGER EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">👤 ${nombreCliente}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #bbf7d0">📍 ${dirRecogerSolo}</div>${telHtml}<button class="btn-ruta" onclick="abrirRuta(${p.lat1},${p.lng1})">RUTA ↗</button></div><div class="bloque-entregar"><div style="font-size:7px;font-weight:800;color:#991b1b">ENTREGAR EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">${p.nombreEntrega||'Cliente'}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #fecaca">📍 ${p.entrega||''}</div><button class="btn-ruta" style="background:#ef4444" onclick="abrirRuta(${p.lat2},${p.lng2})">RUTA ↗</button></div><div style="display:flex;gap:6px;padding:8px 10px"><button class="btn-accion wait" onclick="ponerEspera('${p._key}')">ESPERA</button><button class="btn-accion primary" onclick="accionPrincipal('${p._key}')">${btnTxt}</button></div></div>`;
  }
  let contE=document.getElementById('contEspera'); document.getElementById('countEspera').innerText=espera.length;
  if(!espera.length) contE.innerHTML='<div style="text-align:center;padding:10px;color:#9ca3af;font-size:8px">Sin pedidos en espera</div>';
- else contE.innerHTML=espera.map(p=>{ let dir=p.dirRecogida||''; return `<div style="background:#fff;border:1.5px solid #fde68a;border-radius:12px;padding:10px;margin:8px;display:flex;justify-content:space-between;align-items:center"><div style="flex:1"><div style="font-size:8px;font-weight:800">#${p._key.slice(-4).toUpperCase()} • $${p.costoSugerido||0}</div><div style="font-size:9px;font-weight:800;margin-top:2px">${p.cliente}</div><div style="font-size:8px;color:#374151;margin-top:2px">📍 ${dir.slice(0,50)}</div><div style="font-size:7px;color:#6b7280">-> ${ (p.entrega||'').slice(0,40)}</div></div><button onclick="activarDesdeEspera('${p._key}')" style="height:36px;padding:0 14px;border-radius:10px;background:#0a0a0a;color:#fff;border:none;font-size:8px;font-weight:800;margin-left:8px">ACEPTAR</button></div>`; }).join('');
+ else contE.innerHTML=espera.map(p=>{ let dir=p.dirRecogida||p.direccionRecogida||''; return `<div style="background:#fff;border:1.5px solid #fde68a;border-radius:12px;padding:10px;margin:8px;display:flex;justify-content:space-between;align-items:center"><div style="flex:1"><div style="font-size:8px;font-weight:800">#${p._key.slice(-4).toUpperCase()} • $${p.costoSugerido||0}</div><div style="font-size:9px;font-weight:800;margin-top:2px">${p.cliente}</div><div style="font-size:8px;color:#374151;margin-top:2px">📍 ${dir.slice(0,50)}</div><div style="font-size:7px;color:#6b7280">-> ${ (p.entrega||'').slice(0,40)}</div></div><button onclick="activarDesdeEspera('${p._key}')" style="height:36px;padding:0 14px;border-radius:10px;background:#0a0a0a;color:#fff;border:none;font-size:8px;font-weight:800;margin-left:8px">ACEPTAR</button></div>`; }).join('');
 }
 window.abrirRuta=function(lat,lng){ if(lat&&lng) window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,'_blank'); }
 window.ponerEspera=async function(k){ await update(ref(db,'kigoPedidosLive/'+k),{etapa:'en_espera', activo:false, subEtapa:'pendiente'}); }
@@ -228,11 +256,44 @@ window.renderHistRepa=function(){
  document.getElementById('hGanado').innerText='$'+ganado.toLocaleString('es-MX');
  document.getElementById('hDebe').innerText='$'+debe.toLocaleString('es-MX');
  let cont=document.getElementById('listaHistRepa');
- if(!lista.length){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af;font-size:9px">Sin resultados con esos filtros</div>'; return; }
+ if(!lista.length){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af;font-size:9px">Sin resultados</div>'; return; }
  cont.innerHTML=lista.map(v=>`<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #f3f4f6"><div><div style="font-size:7px;color:#6b7280;font-weight:700">${v.iso} • ${v.tipo||'Moto'}</div><div style="font-size:9px;font-weight:800;margin-top:2px">${v.cliente}</div><div style="font-size:6px;margin-top:2px;padding:2px 6px;border-radius:10px;display:inline-block;background:${v.pagado?'#dcfce7;color:#166534':'#fee2e2;color:#991b1b'}">${v.pagado?'PAGADO':'DEBE $'+(v.feeKigo||5)}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#10b981">$${Number(v.valor||0).toLocaleString('es-MX')}</div><div style="font-size:7px;color:#6b7280">Neto $${(Number(v.valor||0)-Number(v.feeKigo||0)).toLocaleString('es-MX')}</div></div></div>`).join('');
 }
 window.cambiarFoto=function(e){ let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=function(ev){ currentFoto=ev.target.result; document.getElementById('previewFoto').innerHTML=`<img src="${currentFoto}" style="width:100%;height:100%;object-fit:cover">`; document.getElementById('logoRepa').innerHTML=`<img src="${currentFoto}">`; localStorage.setItem('kigoFoto_'+currentRepa, currentFoto); }; reader.readAsDataURL(file); }
 window.guardarModif=function(){ let nom=document.getElementById('ajNombreVisible').value.trim(); if(nom){ currentNombreVisible=nom; localStorage.setItem('kigoNombreVisible_'+currentRepa, nom); document.getElementById('nombreRepaTxt').innerText=nom; } alert('Actualizado ✅'); }
+
+window.guardarLoginRepa=async function(){
+ let nuevoUser = document.getElementById('nuevoUsuario').value.trim();
+ let nuevaPass = document.getElementById('nuevaPass').value.trim();
+ if(!nuevoUser &&!nuevaPass){ alert('Escribe usuario o contraseña'); return; }
+ try{
+   let userFinal = nuevoUser || currentRepa;
+   // Guarda en Firebase para que el admin lo vea - actualiza nodo usuarios
+   await update(ref(db,'kigoUsuarios/'+currentRepa), { usuario: userFinal, pass: nuevaPass||null, updated: Date.now() });
+   // Si cambió el nombre de usuario, crea nuevo nodo y borra viejo después
+   if(nuevoUser && nuevoUser!==currentRepa){
+     let snap = await get(ref(db,'kigoUsuarios/'+currentRepa));
+     if(snap.exists()){
+       await set(ref(db,'kigoUsuarios/'+nuevoUser), snap.val());
+       snap.val().usuario = nuevoUser;
+       if(nuevaPass) snap.val().pass = nuevaPass;
+       await set(ref(db,'kigoUsuarios/'+nuevoUser), {...snap.val(), usuario:nuevoUser, pass: nuevaPass||snap.val().pass});
+     }
+     // Guarda también tarifa con nuevo nombre
+     await set(ref(db,'kigoTarifasRepas/'+nuevoUser), tarifasRepaActual);
+   }
+   if(nuevaPass) await update(ref(db,'kigoUsuarios/'+userFinal), {pass:nuevaPass});
+   // Actualiza localStorage para login futuro
+   localStorage.setItem('kigoUser', userFinal);
+   if(nuevaPass) localStorage.setItem('kigoPass', nuevaPass);
+   if(nuevoUser) localStorage.setItem('kigoNombreVisible_'+nuevoUser, localStorage.getItem('kigoNombreVisible_'+currentRepa)||nuevoUser);
+   alert('✅ Usuario y contraseña actualizados. Entra con: '+userFinal);
+   currentRepa = userFinal;
+   document.getElementById('txtUserActual').innerText=currentRepa;
+   document.getElementById('nombreRepaTxt').innerText=currentRepa;
+ }catch(e){ console.error(e); alert('Error guardando'); }
+}
+
 window.cerrarSesion=function(){ localStorage.removeItem('kigoUser'); localStorage.removeItem('kigoPass'); localStorage.removeItem('kigoLoginTime'); window.location.href='../login/'; }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTV1sm6McEIkv-cheaVFCD_svp_a--6wg&libraries=places" async defer></script>
