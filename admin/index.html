@@ -63,6 +63,7 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 
 <div class="kigo-overlay" id="kigoOverlay"><div class="kigo-modal"><div id="modalTitle" style="font-weight:800;font-size:12px;margin-bottom:6px">Aviso</div><div id="modalText" style="font-size:11px;color:#374151;margin-bottom:12px;line-height:1.4">Mensaje</div><div style="display:flex;gap:6px"><button id="modalCancel" class="kigo-btn kigo-btn-cancel" onclick="cerrarModal()">Cancelar</button><button id="modalConfirm" class="kigo-btn kigo-btn-confirm">Confirmar</button></div></div></div>
 
+<!-- MODAL EDITAR CON BOTON CANCELAR NUEVO -->
 <div class="kigo-overlay" id="overlayEditar"><div class="kigo-modal" style="max-width:360px;max-height:90vh;overflow:auto"><div style="font-weight:800;font-size:12px;margin-bottom:10px">Editar pedido</div>
 <div class="label">Recogida</div><div class="wrap"><input type="text" id="editRecoge"><button class="clear-x" id="clear_editRecoge" onclick="clearField('editRecoge')">x</button></div>
 <div class="label">Entrega</div><div class="wrap"><input type="text" id="editEntrega"><button class="clear-x" id="clear_editEntrega" onclick="clearField('editEntrega')">x</button></div>
@@ -72,6 +73,9 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 <div class="label">Tiempo recogida min</div><div class="wrap"><input type="number" id="editTiempo"><button class="clear-x" id="clear_editTiempo" onclick="clearField('editTiempo')">x</button></div>
 <div class="label">Repartidor</div><div class="wrap"><select id="editRepa"></select></div>
 <div style="display:flex;gap:6px;margin-top:12px"><button onclick="cerrarEditar()" class="kigo-btn kigo-btn-cancel">Cerrar</button><button onclick="guardarEdicionSeguimiento()" class="kigo-btn kigo-btn-confirm">Guardar</button></div>
+<!-- BOTON NUEVO CANCELAR ROJO -->
+<button onclick="cancelarPedidoDesdeAdmin()" style="width:100%;height:46px;margin-top:10px;background:#ef4444;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;gap:6px">❌ CANCELAR SERVICIO</button>
+<div style="font-size:7px;color:#6b7280;text-align:center;margin-top:4px">Se borra al repartidor y le aparece PEDIDO CANCELADO</div>
 </div></div>
 
 <div class="kigo-overlay" id="overlayEditHist"><div class="kigo-modal" style="max-width:360px;max-height:90vh;overflow:auto"><div style="font-weight:800;font-size:12px;margin-bottom:10px">Editar historial</div>
@@ -194,10 +198,20 @@ body{background:#f8f9fb;color:#0a0a0a;overflow-x:hidden;padding-bottom:90px}
 <div style="height:30px"></div>
 </div>
 
+<!-- NUEVA CATEGORIA AJUSTES -->
+<div id="view-ajustes" class="view">
+<div class="card" style="text-align:center;padding:30px">
+<div style="font-size:14px;font-weight:800">⚙️ AJUSTES</div>
+<div style="font-size:9px;color:#6b7280;margin-top:6px">Categoría en blanco lista para configuración de repartidores y tarifas</div>
+<div style="margin-top:12px;background:#f9fafb;border:1px dashed #e5e7eb;border-radius:10px;padding:12px;font-size:8px;color:#9ca3af">Aquí vamos a agregar:<br>- Repartidores (usuario / contraseña / precios $5 / $10)<br>- Tarifas<br>- Etc</div>
+</div>
+</div>
+
 <div class="bottom-app">
 <button id="btnAppPedidos" class="active" onclick="showView('pedidos')"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 1-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>PEDIDOS</button>
 <button id="btnAppSeg" onclick="showView('seguimiento')"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>SEGUIM</button>
 <button id="btnAppHist" onclick="showView('historial')"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>HISTORIAL</button>
+<button id="btnAppAjustes" onclick="showView('ajustes')"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.11-.2-.36-.29-.57-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.35 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.57.22L2.76 8.87c-.12.21-.06.47.12.61l2.03 1.58c-.04.3-.06.61-.06.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.11.2.36.29.57.22l2.39-.96c.5.38 1.03.7 1.62.94l.35 2.54c.04.24.24.41.48.41h3.84c.24 0.44-.17.47-.41l.35-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0.57-.22l1.92-3.32c.11-.2.06-.47-.12-.61l-2.03-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>AJUSTES</button>
 </div>
 
 <script type="module">
@@ -238,6 +252,7 @@ function initPlaces(){
  if(elDondeComprar&&!elDondeComprar.dataset.ac){ let ac=new google.maps.places.Autocomplete(elDondeComprar, opts); ac.addListener('place_changed',()=>{ let place=ac.getPlace(); if(place.geometry){ compraOrigenCoords={lat:place.geometry.location.lat(),lng:place.geometry.location.lng()}; intentarAutoRutaCompra(); } }); elDondeComprar.dataset.ac='1'; }
  if(elEntregaCompra&&!elEntregaCompra.dataset.ac){ let ac=new google.maps.places.Autocomplete(elEntregaCompra, opts); ac.addListener('place_changed',()=>{ let place=ac.getPlace(); if(place.geometry){ compraEntregaCoords={lat:place.geometry.location.lat(),lng:place.geometry.location.lng()}; entregaCoordsTemp=compraEntregaCoords; intentarAutoRutaCompra(); } }); elEntregaCompra.dataset.ac='1'; }
 }
+
 function pintarPuntoRecogida(coords){ if(!map||!coords) return; map.setCenter(coords); map.setZoom(15); markers.forEach(m=>m.setMap(null)); markers=[]; let m1=new google.maps.Marker({position:coords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#10b981',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); markers.push(m1); }
 function pintarSoloEntrega(coords){ if(!map||!coords) return; if(!recogidaCoordsTemp){ map.setCenter(coords); map.setZoom(15); markers.forEach(m=>m.setMap(null)); markers=[]; let m2=new google.maps.Marker({position:coords,map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#ef4444',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}}); markers=[m2]; } }
 
@@ -292,7 +307,16 @@ onValue(ref(db,'kigoPedidosLive'), s=>{ pedidosLive=s.val()||{}; renderSeguimien
 window.toggleClear=function(input){ let id='clear_'+input.id; let btn=document.getElementById(id); if(!btn) return; if(input.value.trim().length>0){ btn.classList.add('show'); } else { btn.classList.remove('show'); } }
 window.clearField=function(id){ let el=document.getElementById(id); if(!el) return; el.value=''; let btn=document.getElementById('clear_'+id); if(btn) btn.classList.remove('show'); if(id==='buscadorClientePedido'){ limpiarClienteSeleccionado(); } if(id==='buscadorClienteCompra'){ limpiarClienteCompra(); } el.focus(); }
 
-window.showView=function(v){ document.querySelectorAll('.view').forEach(x=>x.classList.remove('active')); document.getElementById('view-'+v).classList.add('active'); document.querySelectorAll('.bottom-app button').forEach(b=>b.classList.remove('active')); let btn=document.getElementById(v==='pedidos'?'btnAppPedidos':v==='seguimiento'?'btnAppSeg':'btnAppHist'); if(btn) btn.classList.add('active'); if(v==='pedidos'){ setTimeout(()=>{ initMapReal(); initPlaces(); if(map) google.maps.event.trigger(map,'resize'); },150); } if(v==='seguimiento'){ renderSeguimientoAdmin(); } if(v==='historial'){ renderHistorial(); } }
+window.showView=function(v){
+ document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+ document.getElementById('view-'+v).classList.add('active');
+ document.querySelectorAll('.bottom-app button').forEach(b=>b.classList.remove('active'));
+ let btnId = v==='pedidos'?'btnAppPedidos':v==='seguimiento'?'btnAppSeg':v==='historial'?'btnAppHist':'btnAppAjustes';
+ let btn=document.getElementById(btnId); if(btn) btn.classList.add('active');
+ if(v==='pedidos'){ setTimeout(()=>{ initMapReal(); initPlaces(); if(map) google.maps.event.trigger(map,'resize'); },150); }
+ if(v==='seguimiento'){ renderSeguimientoAdmin(); }
+ if(v==='historial'){ renderHistorial(); }
+}
 
 window.actualizarSelectRepaDestino=function(){ let sel=document.getElementById('pedidoRepaDestino'); if(!sel) return; let reps=Object.keys(pinsData.repas); sel.innerHTML=reps.map(r=>`<option value="${r}">${r}</option>`).join(''); actualizarEstadoRepaInfo(); };
 window.actualizarEditRepa=function(){ let sel=document.getElementById('editRepa'); if(!sel) return; let reps=Object.keys(pinsData.repas); sel.innerHTML=reps.map(r=>`<option value="${r}">${r}</option>`).join(''); };
@@ -470,6 +494,23 @@ window.guardarEdicionSeguimiento=async function(){
  await update(ref(db,'kigoPedidosLive/'+detalleActualKey), updates);
  mostrarAviso(`Actualizado: ${hora.texto} - ${nuevoRepa} - ${nuevoKm}km`,'Guardado'); cerrarEditar();
 }
+
+// NUEVA FUNCION CANCELAR
+window.cancelarPedidoDesdeAdmin=async function(){
+ if(!detalleActualKey) return;
+ let p=pedidosLive[detalleActualKey]; if(!p) return;
+ confirmarAccion(`¿Cancelar pedido de ${p.cliente} a ${p.entrega}? Se borrará del repartidor ${p.repaAsignado} y le aparecerá como PEDIDO CANCELADO`, 'Cancelar servicio', async()=>{
+  // Guardamos en cancelados para historial
+  await set(ref(db,'kigoPedidosCancelados/'+detalleActualKey), {...p, etapa:'cancelado', cancelado:true, canceladoPor:'admin', tsCancel:Date.now()});
+  // Notificación para el repa
+  await set(ref(db,'kigoAlertasRepa/'+p.repaAsignado+'/'+detalleActualKey), {tipo:'cancelado', pedidoId:detalleActualKey, cliente:p.cliente, msg:'PEDIDO CANCELADO POR ADMIN - '+p.cliente, ts:Date.now()});
+  // Borramos del live = desaparece de espera y activos
+  await remove(ref(db,'kigoPedidosLive/'+detalleActualKey));
+  cerrarEditar();
+  mostrarAviso('Pedido cancelado - Repartidor notificado','Cancelado');
+ }, 'Si, cancelar', 'red');
+}
+
 window.pasarAHistorial=async function(key){
  let p=pedidosLive[key]; if(!p) return;
  if(p.etapa==='cancelado'){ await remove(ref(db,'kigoPedidosLive/'+key)); mostrarAviso('Eliminado','OK'); return; }
@@ -498,12 +539,10 @@ window.setHistTipo=function(t){
 window.aplicarFiltroFecha=function(){ fechaDesde=document.getElementById('fDesde').value||null; fechaHasta=document.getElementById('fHasta').value||null; renderHistorial(); }
 function filtrarVentasLista(){
  let lista=Object.entries(ventasData).map(([k,v])=>({...v,_id:k,_key:k})).sort((a,b)=>b.ts-a.ts);
- // periodo
  let hoyISO=todayISO();
  if(filtroHistPeriodo==='hoy'){ lista=lista.filter(v=>v.iso===hoyISO); }
  else if(filtroHistPeriodo==='mes'){ let mes=hoyISO.slice(0,7); lista=lista.filter(v=>v.iso&&v.iso.startsWith(mes)); }
  else if(filtroHistPeriodo==='fecha'&&fechaDesde&&fechaHasta){ lista=lista.filter(v=>v.iso>=fechaDesde&&v.iso<=fechaHasta); }
- // tipo
  if(filtroHistTipo!=='todos'){ lista=lista.filter(v=>v.tipo===filtroHistTipo); }
  return lista;
 }
