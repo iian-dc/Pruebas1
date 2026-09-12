@@ -85,7 +85,6 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 </div>
 </div>
 </div>
-
 <div id="aj-modif" style="display:none">
 <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:center">
 <div id="previewFoto" style="width:80px;height:80px;background:#f3f4f6;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:800">K</div>
@@ -94,23 +93,19 @@ body{background:#f8f9fb;color:#0a0a0a;padding-bottom:80px}
 <div style="margin-top:14px;text-align:left"><div style="font-size:9px;font-weight:800">Nombre visible</div><input id="ajNombreVisible" class="input-kigo"></div>
 <button onclick="guardarModif()" style="width:100%;height:42px;background:#10b981;color:#fff;border:none;border-radius:10px;margin-top:12px;font-weight:800;font-size:9px">ACTUALIZAR</button>
 </div>
-
-<!-- CAMBIAR USUARIO Y CONTRASEÑA LOGIN -->
 <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px;margin-top:10px">
 <div style="font-size:10px;font-weight:800;margin-bottom:8px">🔐 CAMBIAR USUARIO Y CONTRASEÑA LOGIN</div>
 <div style="text-align:left;margin-bottom:8px"><div style="font-size:8px;font-weight:800;color:#6b7280">USUARIO ACTUAL: <span id="txtUserActual" style="color:#0a0a0a"></span></div></div>
 <div style="text-align:left"><div style="font-size:8px;font-weight:800">Nuevo usuario</div><input id="nuevoUsuario" class="input-kigo" placeholder="Ej: Jose2"></div>
 <div style="text-align:left;margin-top:8px"><div style="font-size:8px;font-weight:800">Nueva contraseña</div><input id="nuevaPass" type="password" class="input-kigo" placeholder="Nueva contraseña"></div>
 <button onclick="guardarLoginRepa()" style="width:100%;height:42px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;margin-top:12px;font-weight:800;font-size:9px">GUARDAR USUARIO Y CONTRASEÑA</button>
-<div style="font-size:6px;color:#6b7280;margin-top:6px;text-align:center">Se guardará y podrás entrar con esos datos nuevos</div>
-</div>
-
+<div style="font-size:6px;color:#6b7280;margin-top:6px;text-align:center">Se guardará y podrás entrar con esos datos nuevos y se refleja en admin</div>
 </div>
 </div>
-
+</div>
 <div class="bottom-repa"><button id="btnPedidos" class="active" onclick="showRepaView('pedidos')">PEDIDOS</button><button id="btnHist" onclick="showRepaView('historial')">HISTORIAL</button><button id="btnAjustes" onclick="showRepaView('ajustes')">AJUSTES</button></div>
 <div class="overlay" id="overlayNoti"><div class="modal" style="border:2px solid #ef4444"><div style="width:70px;height:70px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:32px">🔔</div><div style="font-weight:800;font-size:16px;color:#ef4444">¡NUEVO PEDIDO!</div><div id="notiTexto" style="font-size:10px;color:#6b7280;margin-top:6px"></div><button onclick="cerrarNoti()" style="width:100%;height:48px;margin-top:14px;background:#ef4444;color:#fff;border:none;border-radius:12px;font-weight:800">VER EN ESPERA</button></div></div>
-<div class="overlay" id="overlayEntregado"><div class="modal"><div style="width:50px;height:50px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">✓</div><div style="font-weight:800">Entregado</div><button onclick="cerrarEntregado()" style="width:100%;height:40px;margin-top:12px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;font-weight:800">OK</button></div></div>
+<div class="overlay" id="overlayEntregado"><div class="modal"><div style="width:50px;height:50px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">✓</div><div style="font-weight:800">Entregado - Esperando confirmación admin</div><button onclick="cerrarEntregado()" style="width:100%;height:40px;margin-top:12px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;font-weight:800">OK</button></div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -182,7 +177,6 @@ window.showRepaView=function(v){
 }
 window.showTabAj=function(t){ document.getElementById('aj-datos').style.display=t==='datos'?'block':'none'; document.getElementById('aj-modif').style.display=t==='modif'?'block':'none'; document.getElementById('tabDatos').classList.toggle('active',t==='datos'); document.getElementById('tabModif').classList.toggle('active',t==='modif'); }
 
-// HORA RECOGER EN NEON VERDE / AMARILLO SI FALTAN 5 MIN
 function getHoraBadge(p){
   let texto = p.horaRecoger || p.horaRecogerTexto || (p.tiempoRecogida? `RECOGER ${p.tiempoRecogida}MIN` : (p.hora||''));
   if(!texto) return '';
@@ -204,15 +198,16 @@ window.renderPedidosRepa=function(){
  if(!principal){ cont.innerHTML='<div style="text-align:center;padding:20px;color:#9ca3af"><b style="font-size:10px">Sin pedido activo</b><br><span style="font-size:8px">Acepta uno de espera</span></div>'; if(dirRend) dirRend.setDirections({routes:[]}); }
  else {
   let p=principal; let sub=p.subEtapa||'pendiente';
-  let estadoTxt = sub==='pendiente'?'ACEPTADO':sub==='voy_en_camino'?'VOY EN CAMINO':sub==='recogido'?'RECOGIDO':sub==='voy_entregar'?'VOY A ENTREGAR':p.etapa.toUpperCase();
-  let btnTxt = sub==='pendiente'?'VOY EN CAMINO':sub==='voy_en_camino'?'RECOGIDO':sub==='recogido'?'VOY A ENTREGAR':'ENTREGADO';
+  let estadoTxt = sub==='pendiente'?'ACEPTADO':sub==='voy_en_camino'?'VOY EN CAMINO':sub==='recogido'?'RECOGIDO':sub==='voy_entregar'?'VOY A ENTREGAR':sub==='entregado'?'ENTREGADO - ESPERA ADMIN':p.etapa.toUpperCase();
+  let btnTxt = sub==='pendiente'?'VOY EN CAMINO':sub==='voy_en_camino'?'RECOGIDO':sub==='recogido'?'VOY A ENTREGAR':sub==='voy_entregar'?'ENTREGADO': 'ENTREGADO ✓';
+  let deshabilitado = sub==='entregado'? 'disabled' : '';
   if(sub==='pendiente'){ trazarPedidoCompleto(p); }
-  let nombreCliente = p.cliente || p.nombreCliente || p.clienteRecogida || 'Cliente';
-  let dirRecogerSolo = p.dirRecogida || p.direccionRecogida || p.direccion || '';
-  let tel = p.telefonoRecogida || p.telefono || p.telCliente || '';
+  let nombreCliente = p.cliente || p.nombreCliente || 'Cliente';
+  let dirRecogerSolo = p.dirRecogida || p.direccionRecogida || '';
+  let tel = p.telefonoRecogida || p.telefono || '';
   let telHtml = tel? `<div style="font-size:8px;font-weight:700;margin-top:4px">📞 ${tel}</div>` : '';
   let horaBadge = getHoraBadge(p);
-  cont.innerHTML=`<div class="card-activo"><div class="head-activo"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="num-neon">#${p._key.slice(-4).toUpperCase()}</span>${horaBadge}<span class="estado-badge">${estadoTxt}</span></div><div class="precio-neon">$${p.costoSugerido||0}</div></div><div class="bloque-recoger"><div style="font-size:7px;font-weight:800;color:#166534">RECOGER EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">👤 ${nombreCliente}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #bbf7d0">📍 ${dirRecogerSolo}</div>${telHtml}<button class="btn-ruta" onclick="abrirRuta(${p.lat1},${p.lng1})">RUTA ↗</button></div><div class="bloque-entregar"><div style="font-size:7px;font-weight:800;color:#991b1b">ENTREGAR EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">${p.nombreEntrega||'Cliente'}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #fecaca">📍 ${p.entrega||''}</div><button class="btn-ruta" style="background:#ef4444" onclick="abrirRuta(${p.lat2},${p.lng2})">RUTA ↗</button></div><div style="display:flex;gap:6px;padding:8px 10px"><button class="btn-accion wait" onclick="ponerEspera('${p._key}')">ESPERA</button><button class="btn-accion primary" onclick="accionPrincipal('${p._key}')">${btnTxt}</button></div></div>`;
+  cont.innerHTML=`<div class="card-activo"><div class="head-activo"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="num-neon">#${p._key.slice(-4).toUpperCase()}</span>${horaBadge}<span class="estado-badge">${estadoTxt}</span></div><div class="precio-neon">$${p.costoSugerido||0}</div></div><div class="bloque-recoger"><div style="font-size:7px;font-weight:800;color:#166534">RECOGER EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">👤 ${nombreCliente}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #bbf7d0">📍 ${dirRecogerSolo}</div>${telHtml}<button class="btn-ruta" onclick="abrirRuta(${p.lat1},${p.lng1})">RUTA ↗</button></div><div class="bloque-entregar"><div style="font-size:7px;font-weight:800;color:#991b1b">ENTREGAR EN</div><div style="font-size:10px;font-weight:800;margin-top:3px">${p.nombreEntrega||'Cliente'}</div><div style="font-size:9px;font-weight:600;color:#1f2937;margin-top:4px;background:#fff;padding:4px 6px;border-radius:6px;border:1px solid #fecaca">📍 ${p.entrega||''}</div><button class="btn-ruta" style="background:#ef4444" onclick="abrirRuta(${p.lat2},${p.lng2})">RUTA ↗</button></div><div style="display:flex;gap:6px;padding:8px 10px"><button class="btn-accion wait" onclick="ponerEspera('${p._key}')">ESPERA</button><button class="btn-accion primary" onclick="accionPrincipal('${p._key}')" ${deshabilitado}>${btnTxt}</button></div></div>`;
  }
  let contE=document.getElementById('contEspera'); document.getElementById('countEspera').innerText=espera.length;
  if(!espera.length) contE.innerHTML='<div style="text-align:center;padding:10px;color:#9ca3af;font-size:8px">Sin pedidos en espera</div>';
@@ -226,21 +221,14 @@ window.activarDesdeEspera=async function(k){
  await update(ref(db,'kigoPedidosLive/'+k),{etapa:'en_camino', subEtapa:'pendiente', activo:true});
 }
 window.accionPrincipal=async function(k){
- let p=pedidosLive[k]; if(!p) return; let pCopia = {...p};
+ let p=pedidosLive[k]; if(!p) return;
  if(p.subEtapa==='pendiente'){ await update(ref(db,'kigoPedidosLive/'+k),{subEtapa:'voy_en_camino'}); }
  else if(p.subEtapa==='voy_en_camino'){ await update(ref(db,'kigoPedidosLive/'+k),{subEtapa:'recogido'}); }
  else if(p.subEtapa==='recogido'){ await update(ref(db,'kigoPedidosLive/'+k),{subEtapa:'voy_entregar'}); }
- else if(p.subEtapa==='voy_entregar'){ await update(ref(db,'kigoPedidosLive/'+k),{etapa:'finalizado',subEtapa:'entregado'}); document.getElementById('overlayEntregado').classList.add('show'); setTimeout(()=>pasarAHistorial(k, pCopia),1000); }
-}
-async function pasarAHistorial(k, pObj){
- let p = pObj || pedidosLive[k]; if(!p) return;
- try{
-   let esTrans = (p.tipo||'').toLowerCase().includes('trans');
-   let fee = esTrans? tarifasRepaActual.transporte : tarifasRepaActual.mandado;
-   let tipoFinal = esTrans? 'Moto Transporte' : 'Moto Mandado';
-   let obj={ iso:todayISO(), cliente:p.cliente||'Cliente', tipo:tipoFinal, valor:p.costoSugerido||0, repa:currentRepa, pagado:false, feeKigo:fee, ts:Date.now() };
-   let nr=push(ref(db,'ventasKigo')); await set(nr,obj); await remove(ref(db,'kigoPedidosLive/'+k));
- }catch(e){ console.error(e); }
+ else if(p.subEtapa==='voy_entregar'){
+   await update(ref(db,'kigoPedidosLive/'+k),{etapa:'finalizado', subEtapa:'entregado'});
+   document.getElementById('overlayEntregado').classList.add('show');
+ }
 }
 window.cerrarEntregado=function(){ document.getElementById('overlayEntregado').classList.remove('show'); }
 window.limpiarFiltros=function(){ document.getElementById('filtroTipo').value=''; document.getElementById('filtroFecha').value=''; document.getElementById('filtroMes').value=''; renderHistRepa(); }
@@ -262,36 +250,64 @@ window.renderHistRepa=function(){
 window.cambiarFoto=function(e){ let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=function(ev){ currentFoto=ev.target.result; document.getElementById('previewFoto').innerHTML=`<img src="${currentFoto}" style="width:100%;height:100%;object-fit:cover">`; document.getElementById('logoRepa').innerHTML=`<img src="${currentFoto}">`; localStorage.setItem('kigoFoto_'+currentRepa, currentFoto); }; reader.readAsDataURL(file); }
 window.guardarModif=function(){ let nom=document.getElementById('ajNombreVisible').value.trim(); if(nom){ currentNombreVisible=nom; localStorage.setItem('kigoNombreVisible_'+currentRepa, nom); document.getElementById('nombreRepaTxt').innerText=nom; } alert('Actualizado ✅'); }
 
+// ENLAZADO CON ADMIN - CORREGIDO
 window.guardarLoginRepa=async function(){
  let nuevoUser = document.getElementById('nuevoUsuario').value.trim();
  let nuevaPass = document.getElementById('nuevaPass').value.trim();
  if(!nuevoUser &&!nuevaPass){ alert('Escribe usuario o contraseña'); return; }
+ let userFinal = nuevoUser || currentRepa;
  try{
-   let userFinal = nuevoUser || currentRepa;
-   // Guarda en Firebase para que el admin lo vea - actualiza nodo usuarios
-   await update(ref(db,'kigoUsuarios/'+currentRepa), { usuario: userFinal, pass: nuevaPass||null, updated: Date.now() });
-   // Si cambió el nombre de usuario, crea nuevo nodo y borra viejo después
-   if(nuevoUser && nuevoUser!==currentRepa){
-     let snap = await get(ref(db,'kigoUsuarios/'+currentRepa));
-     if(snap.exists()){
-       await set(ref(db,'kigoUsuarios/'+nuevoUser), snap.val());
-       snap.val().usuario = nuevoUser;
-       if(nuevaPass) snap.val().pass = nuevaPass;
-       await set(ref(db,'kigoUsuarios/'+nuevoUser), {...snap.val(), usuario:nuevoUser, pass: nuevaPass||snap.val().pass});
-     }
-     // Guarda también tarifa con nuevo nombre
-     await set(ref(db,'kigoTarifasRepas/'+nuevoUser), tarifasRepaActual);
+   let snapU = await get(ref(db,'kigoUsuarios/'+currentRepa));
+   let snapR = await get(ref(db,'kigoRepas/'+currentRepa));
+   let snapFull = await get(ref(db,'kigoRepasFull/'+currentRepa));
+   let snapPins = await get(ref(db,'kigoPins'));
+   let datosBase = {};
+   if(snapU.exists()) datosBase = {...datosBase,...snapU.val()};
+   if(snapR.exists()) datosBase = {...datosBase,...snapR.val()};
+   if(snapFull.exists()) datosBase = {...datosBase,...snapFull.val()};
+   if(!datosBase.usuario) datosBase.usuario = currentRepa;
+   if(nuevaPass){ datosBase.pass = nuevaPass; datosBase.password = nuevaPass; datosBase.pin = nuevaPass; }
+   datosBase.usuario = userFinal;
+   datosBase.nombre = datosBase.nombre || currentRepa;
+   datosBase.updated = Date.now();
+
+   await set(ref(db,'kigoUsuarios/'+userFinal), datosBase);
+   await set(ref(db,'kigoRepas/'+userFinal), datosBase);
+   await set(ref(db,'kigoRepartidores/'+userFinal), datosBase).catch(()=>{});
+
+   await set(ref(db,'kigoRepasFull/'+userFinal), {
+     nombre: userFinal,
+     usuario: userFinal,
+     pass: nuevaPass || datosBase.pass,
+     pin: nuevaPass || datosBase.pass,
+     mandado: datosBase.mandado || tarifasRepaActual.mandado,
+     transporte: datosBase.transporte || tarifasRepaActual.transporte,
+     actualizado: Date.now(),
+     activo: true
+   });
+
+   let pinsData = snapPins.val() || {admin:'0831', repas:{}};
+   if(!pinsData.repas) pinsData.repas = {};
+   if(userFinal!== currentRepa){ delete pinsData.repas[currentRepa]; }
+   pinsData.repas[userFinal] = nuevaPass || pinsData.repas[currentRepa] || datosBase.pass;
+   await set(ref(db,'kigoPins'), pinsData);
+
+   if(userFinal!== currentRepa){
+     await set(ref(db,'kigoTarifasRepas/'+userFinal), tarifasRepaActual);
+     await remove(ref(db,'kigoUsuarios/'+currentRepa)).catch(()=>{});
+     await remove(ref(db,'kigoRepas/'+currentRepa)).catch(()=>{});
+     await remove(ref(db,'kigoRepasFull/'+currentRepa)).catch(()=>{});
+     await remove(ref(db,'kigoTarifasRepas/'+currentRepa)).catch(()=>{});
    }
-   if(nuevaPass) await update(ref(db,'kigoUsuarios/'+userFinal), {pass:nuevaPass});
-   // Actualiza localStorage para login futuro
+
    localStorage.setItem('kigoUser', userFinal);
    if(nuevaPass) localStorage.setItem('kigoPass', nuevaPass);
-   if(nuevoUser) localStorage.setItem('kigoNombreVisible_'+nuevoUser, localStorage.getItem('kigoNombreVisible_'+currentRepa)||nuevoUser);
-   alert('✅ Usuario y contraseña actualizados. Entra con: '+userFinal);
+
+   alert('✅ Guardado y enlazado con admin.\nUsuario: '+userFinal+'\nPass: '+(nuevaPass||'(misma)'));
    currentRepa = userFinal;
    document.getElementById('txtUserActual').innerText=currentRepa;
    document.getElementById('nombreRepaTxt').innerText=currentRepa;
- }catch(e){ console.error(e); alert('Error guardando'); }
+ }catch(e){ console.error(e); alert('Error: '+e.message); }
 }
 
 window.cerrarSesion=function(){ localStorage.removeItem('kigoUser'); localStorage.removeItem('kigoPass'); localStorage.removeItem('kigoLoginTime'); window.location.href='../login/'; }
